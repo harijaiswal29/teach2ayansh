@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Times Quest</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred play-board column. The quest map sits on top; a level replaces it in place. Chunky ink outlines, sticker shadows. */
+:root{
+  --ground:#E2F2EC; --dot:#CBE6DC; --board:#FFFFFF;
+  --ink:#1D3A3F; --ink-soft:#4A676B;
+  --mango:#FFB627; --mango-soft:#FFF0C7;
+  --coral:#E8553D; --coral-soft:#FFE0D8;
+  --leaf:#2A8F56; --leaf-soft:#D6F0DF;
+  --sky:#2F7FC1; --sky-soft:#DCEBF8;
+  --night:#1C2A57; --soil:#8A5A3B; --soil-soft:#EAD7C4; --water:#BEE5F4;
+  --on-dark:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background-color:var(--ground);color:var(--ink)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;
+  background-image:radial-gradient(var(--dot) 1.6px,transparent 1.8px);background-size:24px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.chunky{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-size:clamp(28px,6vw,38px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--ink-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;background:var(--mango);border:3px solid var(--ink);border-radius:999px;padding:2px 14px;box-shadow:0 3px 0 var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--mango)}
+.btn.go{background:var(--leaf);color:var(--on-dark)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+
+/* mascot + speech */
+.mascot{flex:none;width:68px;height:68px;border-radius:50%;background:var(--sky-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:38px;line-height:1}
+.mascot.sm{width:56px;height:56px;font-size:30px}
+
+/* map: hello card */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-width:240px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.mini{display:flex;gap:10px;flex-wrap:wrap}
+.minigroup{background:var(--mango-soft);border:2px solid var(--ink);border-radius:14px;padding:6px 10px;font-size:26px;line-height:1;letter-spacing:2px}
+.mini-eq{font-family:var(--display);font-size:24px;font-weight:600}
+.mini-eq b{font-weight:800;background:var(--mango);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+
+/* map: stops */
+.section-title{font-size:24px;margin-bottom:-6px}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dashed var(--ink-soft);opacity:.35}
+.stop{position:relative;width:min(100%,470px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:4px 5px 0 var(--ink);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#F1F5F4;box-shadow:4px 5px 0 #9DB2B0;border-color:#9DB2B0}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1}
+.stop:nth-child(1) .stopicon{background:var(--coral-soft)}
+.stop:nth-child(2) .stopicon{background:var(--leaf-soft)}
+.stop:nth-child(3) .stopicon{background:var(--soil-soft)}
+.stop:nth-child(4) .stopicon{background:var(--sky-soft)}
+.stop:nth-child(5) .stopicon{background:var(--night)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:#C9D6D3}
+.stars span.on{color:var(--mango);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:-6px;top:-14px;background:var(--coral);color:var(--on-dark);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+
+/* map: treasure chart */
+.treasure{padding:20px;display:flex;flex-direction:column;gap:12px}
+.treasure h2{font-size:24px}
+.chart{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:3px;max-width:440px;width:100%}
+.ch{aspect-ratio:1;display:grid;place-items:center;border-radius:6px;background:#EEF4F2;font-size:clamp(9px,2.4vw,13px);font-weight:800;font-variant-numeric:tabular-nums}
+.ch.hd{background:transparent;color:var(--ink-soft);font-size:clamp(10px,2.6vw,14px)}
+.ch.got{background:var(--mango);color:var(--ink)}
+.chartcount{font-weight:800}
+
+/* parent corner */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:65ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level screen */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);background:var(--board)}
+.dots i.done{background:var(--leaf)}
+.dots i.now{background:var(--mango);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;box-shadow:3px 4px 0 var(--ink)}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--mango);box-shadow:0 3px 0 var(--ink);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:32px;min-width:96px;min-height:74px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.eqs{font-size:26px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--leaf);color:var(--on-dark);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--coral-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center}
+.fb.good{color:var(--leaf)}
+.fb.oops{color:var(--coral)}
+.fact{background:var(--mango-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%}
+.fact .eq{font-family:var(--display);font-weight:800;font-size:clamp(38px,10vw,54px);line-height:1.05;font-variant-numeric:tabular-nums}
+.fact .cap{margin-top:4px;font-weight:700;color:var(--ink-soft);max-width:40ch}
+.helper{display:flex;flex-direction:column;align-items:center;gap:6px}
+.counter{font-family:var(--display);font-weight:800;font-size:22px;min-height:1.4em;text-align:center;color:var(--sky)}
+
+/* level 1: laddoo boxes */
+.boxes{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.box{width:130px;min-height:136px;border:3px solid var(--ink);border-radius:16px;background:var(--coral-soft);box-shadow:0 4px 0 var(--ink);padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.box:disabled{cursor:default}
+.box.full{background:var(--leaf-soft)}
+.box:active:not(:disabled){transform:translateY(2px)}
+.slots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-content:center;flex:1;width:100%;min-height:68px}
+.lid,.meter{font-size:13px;font-weight:800;color:var(--ink-soft)}
+.laddoo{position:relative;flex:none;width:30px;height:30px;border-radius:50%;border:2px solid #9A5A06;
+  background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.7) 0 13%,transparent 15%),radial-gradient(circle,#C97707 1.1px,transparent 1.5px) 0 0/6px 6px,radial-gradient(circle at 45% 40%,#FFCB45,#F09A12 70%,#D8820A);
+  animation:drop .35s ease-out}
+.laddoo.big{width:46px;height:46px;animation:none}
+.laddoo.lit{box-shadow:0 0 0 3px var(--sky)}
+.num{position:absolute;top:-9px;right:-9px;z-index:2;background:var(--ink);color:var(--on-dark);font-family:var(--body);font-size:11px;font-weight:800;min-width:19px;height:19px;border-radius:10px;display:grid;place-items:center;padding:0 4px;animation:pop .25s}
+
+/* level 2: froggy hops */
+.pond{width:100%;max-width:660px;height:auto;display:block}
+.pond .water{fill:var(--water)}
+.pond .nl{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.pond .tick{stroke:var(--ink);stroke-width:2}
+.pond .tk{font-family:var(--body);font-size:16px;font-weight:700;fill:var(--ink-soft)}
+.pond .tk.hit{font-size:21px;font-weight:800;fill:var(--ink)}
+.pond .arc{fill:none;stroke:var(--leaf);stroke-width:3;stroke-dasharray:7 6}
+.pond .arclabel{font-family:var(--display);font-size:20px;font-weight:800;fill:var(--leaf)}
+.pond .pad{fill:var(--leaf);opacity:.85}
+.pond .frog{font-size:40px}
+.hoprow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+.hopcount{font-weight:800;color:var(--ink-soft)}
+.sum{font-family:var(--display);font-size:clamp(22px,6vw,30px);font-weight:800;min-height:1.3em;text-align:center;font-variant-numeric:tabular-nums}
+
+/* level 3: garden */
+.steppers{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.stepper{display:flex;align-items:center;gap:8px;background:var(--sky-soft);border:3px solid var(--ink);border-radius:999px;padding:5px 7px}
+.stepper .lab{font-weight:800;padding:0 4px 0 8px}
+.stepper button{width:42px;height:42px;border-radius:50%;border:3px solid var(--ink);background:var(--board);font-size:24px;font-weight:800;line-height:1;cursor:pointer}
+.stepper button:disabled{opacity:.4;cursor:default}
+.stepper output{font-family:var(--display);font-size:28px;font-weight:800;min-width:1.4ch;text-align:center}
+.plotwrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.plot{--cell:44px;display:grid;gap:6px;padding:12px;background:var(--soil-soft);border:3px solid var(--ink);border-radius:16px;transition:transform .38s ease-in,opacity .38s}
+.plot.turning{transform:rotate(90deg) scale(.7);opacity:0}
+.cell{position:relative;width:var(--cell);height:var(--cell);border-radius:10px;background:var(--soil);display:grid;place-items:center;font-size:calc(var(--cell) * .66);line-height:1}
+.cell.new .fl{animation:grow .4s ease-out}
+.cell.lit{background:var(--mango)}
+.fl{display:block}
+.plotlabel{font-family:var(--display);font-weight:800;font-size:22px}
+
+/* level 4: story bazaar */
+.story{font-size:clamp(19px,4.4vw,22px);font-weight:800;text-align:center;max-width:34ch}
+.groups{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.group{background:var(--mango-soft);border:3px solid var(--ink);border-radius:16px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;width:104px}
+.group .obj{font-size:40px;line-height:1.1}
+.gdots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:84px}
+.dotc{width:14px;height:14px;border-radius:50%;background:var(--ink);transition:background .15s}
+.dotc.lit{background:var(--sky);transform:scale(1.2)}
+
+/* level 5: rocket */
+.rocketgame{display:grid;grid-template-columns:112px 1fr;gap:16px;width:100%}
+.sky{position:relative;border:3px solid var(--ink);border-radius:16px;min-height:330px;overflow:hidden;
+  background:radial-gradient(rgba(255,255,255,.9) 1px,transparent 1.6px) 0 0/26px 26px,radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.6px) 13px 9px/31px 31px,linear-gradient(var(--night),#33407A 70%,#6E62A0)}
+.sky::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;background:var(--leaf);border-top:3px solid var(--ink)}
+.fuel{position:absolute;top:8px;left:0;right:0;text-align:center;color:var(--on-dark);font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+.rocket{position:absolute;left:50%;font-size:46px;line-height:1;transform:translateX(-50%) rotate(-45deg);transition:bottom .8s cubic-bezier(.3,1.5,.5,1);z-index:1}
+.sky.launch .rocket{bottom:115%!important;transition:bottom 1.1s ease-in}
+.quiz{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.bigq{font-family:var(--display);font-weight:800;font-size:clamp(36px,9vw,50px);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center;font-variant-numeric:tabular-nums}
+.entry{min-width:2.2ch;border-bottom:5px solid var(--ink);text-align:center;color:var(--sky)}
+.entry.empty{color:#B9C9C6}
+.entry.right{color:var(--leaf)}
+.keypad{display:grid;grid-template-columns:repeat(3,64px);gap:8px}
+.keypad button{height:56px;font-family:var(--display);font-size:26px;font-weight:800;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 3px 0 var(--ink);cursor:pointer}
+.keypad button:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.keypad button:disabled{opacity:.4;cursor:default}
+.keypad .ok{background:var(--leaf);color:var(--on-dark);font-size:21px}
+.keypad .del{background:var(--coral-soft)}
+.hintbox{background:var(--sky-soft);border:2px dashed var(--ink);border-radius:14px;padding:10px 14px;text-align:center;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:8px;max-width:100%}
+.hintdots{display:flex;flex-direction:column;gap:4px;align-items:center}
+.hintrow{display:flex;gap:3px}
+.hintrow i{width:9px;height:9px;border-radius:50%;background:var(--ink)}
+.skip{font-family:var(--display);font-weight:800;font-size:19px;color:var(--sky)}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(29,58,63,.55);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:34px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D3DEDB;display:inline-block}
+.bigstars span.on{color:var(--mango);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes drop{0%{transform:translateY(-22px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes grow{0%{transform:scale(0) translateY(10px)}100%{transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 12px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .rocketgame{grid-template-columns:78px 1fr;gap:10px}
+  .keypad{grid-template-columns:repeat(3,54px);gap:7px}
+  .keypad button{height:52px}
+  .plot{--cell:36px;gap:5px;padding:10px}
+  .box{width:120px}
+  .choice{min-width:84px;font-size:28px}
+  .mascot{width:56px;height:56px;font-size:30px}
+  .mascot.sm{width:46px;height:46px;font-size:24px}
+  .say{width:46px;height:46px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Times Quest<small>Ayansh's multiplication adventure</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 15</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP SCREEN -->
+  <main id="map" class="app">
+    <section class="hello chunky">
+      <div class="mascot" aria-hidden="true">🐘</div>
+      <div class="hello-text">
+        <h2>Namaste, Ayansh! I'm Golu.</h2>
+        <p>Multiplication is a quick way to add <b>equal groups</b>. Look at these 3 baskets with 2 mangoes in each:</p>
+        <div class="mini" aria-hidden="true">
+          <span class="minigroup">🥭🥭</span><span class="minigroup">🥭🥭</span><span class="minigroup">🥭🥭</span>
+        </div>
+        <p class="mini-eq">2 + 2 + 2 = 6 &nbsp;→&nbsp; <b>3 × 2 = 6</b></p>
+        <p class="note">Say it like this: “3 groups of 2 make 6.” Visit every stop and collect all 15 stars!</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">The quest</h2>
+    <ol class="stops" id="stops"></ol>
+
+    <section class="treasure chunky">
+      <h2>Treasure chart</h2>
+      <p class="note">Every fact you get right fills a square. Learn 3 × 4 and you get 4 × 3 free, because turning a group around never changes the total!</p>
+      <div class="chart" id="chart" role="img" aria-label="Multiplication chart from 1 to 10"></div>
+      <p class="chartcount" id="chartCount"></p>
+    </section>
+
+    <details class="parent chunky">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <h3>How the quest teaches</h3>
+        <ol>
+          <li><b>Laddoo Boxes</b>: fill equal groups with your hands, then count. This is what “×” really means.</li>
+          <li><b>Froggy Hops</b>: the same idea as repeated addition and skip counting on a number line. Later rounds ask him to guess before hopping.</li>
+          <li><b>Sunflower Garden</b>: arrays (rows × columns). Turning the garden shows that 3 × 5 = 5 × 3.</li>
+          <li><b>Story Bazaar</b>: everyday word problems. He first picks which sum tells the story, then solves it.</li>
+          <li><b>Rocket Launch</b>: quick recall of the 2, 5 and 10 tables, then 3 and 4. A wrong answer shows a picture hint, never a penalty timer.</li>
+        </ol>
+        <p>Ten to fifteen minutes a day works better than one long session. Let him replay a stop to win 3 stars; repeating is how facts stick. The 🔊 button reads each question aloud if reading is still new.</p>
+        <h3>Try it away from the screen</h3>
+        <ul>
+          <li>Dinner: put 2 rotis on each of 3 plates. “How many plates? How many on each? How many altogether?”</li>
+          <li>Shoes by the door: count in pairs, “2, 4, 6, 8…”, then say “4 pairs of 2 is 8.”</li>
+          <li>Egg tray or chocolate bar: count rows and columns, then turn it around.</li>
+          <li>On the road: “Each auto has 3 wheels. How many wheels on those 2 autos?”</li>
+        </ul>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL SCREEN -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐘</div>
+      <p class="bubble chunky" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage chunky" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+const skip = (n, by) => Array.from({ length: n }, (_, i) => (i + 1) * by).join(', ');
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, text) { const el = document.createElementNS(SVGNS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text != null) el.textContent = text; return el; }
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-times-quest-v1';
+let P = { stars: {}, unlocked: 1, facts: [], sound: true };
+let factSet = new Set();
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  if (saved && typeof saved === 'object') {
+    P = { stars: saved.stars || {}, unlocked: saved.unlocked || 1, facts: Array.isArray(saved.facts) ? saved.facts : [], sound: saved.sound !== false };
+  }
+  factSet = new Set(P.facts);
+}
+function save() { P.facts = [...factSet]; try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} }
+function learned(a, b) { if (a >= 1 && a <= 10 && b >= 1 && b <= 10) { factSet.add(a + 'x' + b); factSet.add(b + 'x' + a); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tick: i => tone(440 * Math.pow(2, Math.min(i, 24) / 24), 0.08, 'triangle'),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  hop: () => tone(300, 0.25, 'triangle', 0, 0.12, 760),
+  whoosh: () => tone(110, 1.0, 'sawtooth', 0, 0.05, 900),
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/×/g, ' times ').replace(/−/g, ' minus '));
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+
+/* ---------- shared pieces ---------- */
+function laddoo(big) { return h('span', { class: 'laddoo' + (big ? ' big' : ''), 'aria-hidden': 'true' }); }
+
+function choices(ans, a, b) {
+  const set = new Set([ans]);
+  if (a + b !== ans) set.add(a + b); // the classic mix-up: adding instead of multiplying
+  for (const x of shuffle([ans + b, ans - b, ans + a, ans - a, ans + 1, ans - 1, ans + 2])) {
+    if (set.size >= 3) break;
+    if (x > 0 && x !== ans) set.add(x);
+  }
+  return shuffle([...set]);
+}
+
+function askChoice(parent, { prompt, options, answer, onDone, hint, once = false, cls = '' }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const btns = []; let over = false;
+  const finish = right => { over = true; btns.forEach(x => x.disabled = true); onDone && onDone(right); };
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
+      if (over) return;
+      if (opt === answer) { b.classList.add('right'); sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; finish(true); }
+      else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        if (once) { fb.textContent = "Good guess! Let's check."; fb.className = 'fb oops'; finish(false); }
+        else { fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops'; hint && hint(); }
+      }
+    } }, String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb); parent.append(wrap);
+  return wrap;
+}
+
+function factCard(a, b, caption) {
+  return h('div', { class: 'fact' }, h('div', { class: 'eq' }, `${a} × ${b} = ${a * b}`), caption ? h('p', { class: 'cap' }, caption) : null);
+}
+
+async function countAlong(items, display, badge) {
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.add('lit');
+    if (badge) items[i].append(h('span', { class: 'num' }, String(i + 1)));
+    display.textContent = 'Counting: ' + (i + 1);
+    sfx.tick(i);
+    await wait(320);
+  }
+  display.textContent += '. All counted!';
+}
+function helpButton(parent, label, runner) {
+  const display = h('p', { class: 'counter', 'aria-live': 'polite' });
+  const btn = h('button', { class: 'btn small', type: 'button', onclick: async () => { btn.disabled = true; await runner(display); } }, label);
+  parent.append(h('div', { class: 'helper' }, btn, display));
+  return { trigger: () => { if (!btn.disabled) btn.click(); } };
+}
+function fresh(gen) {
+  for (let i = 0; i < 40; i++) { const v = gen(); const k = v.join('x'); if (!run.used.has(k)) { run.used.add(k); return v; } }
+  return gen();
+}
+
+/* ---------- STOP 1: Laddoo Boxes (equal groups) ---------- */
+function playLaddoo(api) {
+  const r = run.round;
+  const [g, s] = fresh(() => [rand(2, r < 2 ? 3 : 4), rand(2, r < 2 ? 3 : 5)]);
+  api.guide(`Put ${s} laddoos in each box. Tap a box to add one.`);
+  const boxes = h('div', { class: 'boxes' });
+  const counts = Array(g).fill(0); const boxEls = [];
+  const below = h('div', { class: 'below' });
+  for (let i = 0; i < g; i++) {
+    const slots = h('div', { class: 'slots' });
+    const meter = h('span', { class: 'meter' }, `0 of ${s}`);
+    const box = h('button', { class: 'box', type: 'button', 'aria-label': `Box ${i + 1}, tap to add a laddoo`, onclick: () => {
+      if (counts[i] >= s) { box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); api.guide(`That box already has ${s}. Fill another box!`); return; }
+      counts[i]++; slots.append(laddoo()); meter.textContent = `${counts[i]} of ${s}`; sfx.pop();
+      if (counts[i] === s) box.classList.add('full');
+      if (counts.every(c => c === s)) { boxEls.forEach(b => b.disabled = true); setTimeout(afterFill, 400); }
+    } }, h('span', { class: 'lid' }, `Box ${i + 1}`), slots, meter);
+    boxEls.push(box); boxes.append(box);
+  }
+  api.stage.append(boxes, below);
+
+  function afterFill() {
+    api.guide(`${g} boxes with ${s} laddoos in each. How many laddoos altogether?`);
+    let helper;
+    askChoice(below, { options: choices(g * s, g, s), answer: g * s, hint: () => helper.trigger(), onDone: () => {
+      const intro = r === 0 ? ' The × sign means “groups of”.' : '';
+      below.append(factCard(g, s, `${g} groups of ${s} make ${g * s}. Skip count: ${skip(g, s)}.${intro}`));
+      api.guide(`Yes! ${g} groups of ${s} is ${g * s}. We write it ${g} × ${s} = ${g * s}.`);
+      learned(g, s); api.done();
+    } });
+    helper = helpButton(below, '👆 Help me count', d => countAlong([...boxes.querySelectorAll('.laddoo')], d, true));
+  }
+}
+
+/* ---------- STOP 2: Froggy Hops (skip counting) ---------- */
+function playFrog(api) {
+  const r = run.round, predict = r >= 3;
+  const [hops, s] = fresh(() => { let a, b; do { a = rand(2, 4); b = rand(2, 5); } while (a * b > 20); return [a, b]; });
+  const total = hops * s, end = Math.min(22, Math.max(10, total + 2));
+  const W = 600, H = 190, x0 = 24, x1 = W - 24, base = 146;
+  const X = i => x0 + i * (x1 - x0) / end;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, class: 'pond', role: 'img', 'aria-label': `Number line from 0 to ${end}` });
+  svg.append(sv('rect', { class: 'water', x: 0, y: base - 14, width: W, height: 30, rx: 14 }));
+  svg.append(sv('line', { class: 'nl', x1: x0, y1: base, x2: x1, y2: base }));
+  const labels = [];
+  for (let i = 0; i <= end; i++) {
+    svg.append(sv('line', { class: 'tick', x1: X(i), y1: base - 7, x2: X(i), y2: base + 7 }));
+    const t = sv('text', { class: 'tk', x: X(i), y: base + 34, 'text-anchor': 'middle' }, i); labels.push(t); svg.append(t);
+  }
+  const marks = sv('g', {}); svg.append(marks);
+  marks.append(sv('ellipse', { class: 'pad', cx: X(0), cy: base, rx: 18, ry: 7 }));
+  const frog = sv('text', { class: 'frog', x: X(0), y: base - 6, 'text-anchor': 'middle' }, '🐸');
+  svg.append(frog);
+  let pos = 0, done = 0, busy = false;
+
+  const sum = h('p', { class: 'sum', 'aria-live': 'polite' });
+  const counter = h('span', { class: 'hopcount' }, `Hop 0 of ${hops}`);
+  const hopBtn = h('button', { class: 'btn primary big', type: 'button' }, 'Hop! 🐸');
+  const row = h('div', { class: 'hoprow' }, hopBtn, counter);
+  const below = h('div', { class: 'below' });
+  api.stage.append(svg, sum, row, below);
+
+  function hopOnce() {
+    return new Promise(res => {
+      const from = pos, to = pos + s, t0 = performance.now(), dur = reduce ? 1 : 480;
+      sfx.hop();
+      const step = t => {
+        const k = Math.min(1, (t - t0) / dur);
+        frog.setAttribute('x', X(from) + (X(to) - X(from)) * k);
+        frog.setAttribute('y', base - 6 - Math.sin(Math.PI * k) * 72);
+        if (k < 1) return requestAnimationFrame(step);
+        pos = to; done++;
+        const mid = (X(from) + X(to)) / 2;
+        marks.append(sv('path', { class: 'arc', d: `M ${X(from)} ${base - 4} Q ${mid} ${base - 112} ${X(to)} ${base - 4}` }));
+        marks.append(sv('text', { class: 'arclabel', x: mid, y: base - 64, 'text-anchor': 'middle' }, '+' + s));
+        marks.append(sv('ellipse', { class: 'pad', cx: X(to), cy: base, rx: 18, ry: 7 }));
+        labels[to] && labels[to].classList.add('hit');
+        counter.textContent = `Hop ${done} of ${hops}`;
+        sum.textContent = Array(done).fill(s).join(' + ') + (done > 1 ? ` = ${done * s}` : '');
+        res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  if (!predict) {
+    api.guide(`Froggy jumps ${s} steps every hop. Make ${hops} hops!`);
+    hopBtn.addEventListener('click', async () => {
+      if (busy || done >= hops) return;
+      busy = true; await hopOnce(); busy = false;
+      if (done >= hops) {
+        hopBtn.disabled = true;
+        api.guide(`${hops} hops of ${s}. So ${hops} × ${s} = ?`);
+        askChoice(below, { options: choices(total, hops, s), answer: total, onDone: finishRound });
+      }
+    });
+  } else {
+    row.hidden = true;
+    api.guide(`Froggy will make ${hops} hops of ${s}. Where will Froggy land? Guess first!`);
+    askChoice(below, { prompt: `${hops} × ${s} = ?`, options: choices(total, hops, s), answer: total, once: true, onDone: right => {
+      row.hidden = false; hopBtn.textContent = 'Hop to check! 🐸';
+      hopBtn.addEventListener('click', async () => {
+        if (busy) return; busy = true; hopBtn.disabled = true;
+        while (done < hops) { await hopOnce(); await wait(220); }
+        if (right) { sfx.good(); api.guide(`You guessed it! Froggy landed on ${total}.`); }
+        else api.guide(`Froggy landed on ${total}. Now you know ${hops} × ${s} = ${total}!`);
+        finishRound();
+      }, { once: true });
+    } });
+  }
+  function finishRound() {
+    below.append(factCard(hops, s, `${hops} hops of ${s} land on ${total}. Skip count: ${skip(hops, s)}.`));
+    if (!predict) api.guide(`Yes! ${hops} hops of ${s} land on ${total}.`);
+    learned(hops, s); api.done();
+  }
+}
+
+/* ---------- STOP 3: Sunflower Garden (arrays) ---------- */
+function playGarden(api) {
+  const [R, C] = fresh(() => { let a, b; do { a = rand(2, 4); b = rand(2, 6); } while (a === b); return [a, b]; });
+  api.guide(`Plant ${R} rows with ${C} sunflowers in each row. Use the + and − buttons.`);
+  let rows = 1, cols = 1, prevR = 0, prevC = 0, locked = false;
+  const plot = h('div', { class: 'plot' });
+  const label = h('p', { class: 'plotlabel' });
+  function draw(animate = true) {
+    plot.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+    const cells = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const isNew = animate && (r >= prevR || c >= prevC);
+      cells.push(h('span', { class: 'cell' + (isNew ? ' new' : '') }, h('span', { class: 'fl', 'aria-hidden': 'true' }, '🌻')));
+    }
+    plot.replaceChildren(...cells); prevR = rows; prevC = cols;
+    label.textContent = `${rows} ${rows === 1 ? 'row' : 'rows'} of ${cols}`;
+  }
+  function stepper(text, get, set, max) {
+    const out = h('output', {}, String(get()));
+    const change = d => { if (locked) return; const v = get() + d; if (v < 1 || v > max) return; set(v); out.textContent = v; sfx.pop(); draw(); };
+    const minus = h('button', { type: 'button', 'aria-label': `Fewer ${text.toLowerCase()}`, onclick: () => change(-1) }, '−');
+    const plus = h('button', { type: 'button', 'aria-label': `More ${text.toLowerCase()}`, onclick: () => change(1) }, '+');
+    return { el: h('div', { class: 'stepper' }, h('span', { class: 'lab' }, text), minus, out, plus), btns: [minus, plus] };
+  }
+  const sr = stepper('Rows', () => rows, v => rows = v, 5);
+  const sc = stepper('In each row', () => cols, v => cols = v, 6);
+  const doneBtn = h('button', { class: 'btn go', type: 'button', onclick: check }, '✔ Done planting');
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('div', { class: 'steppers' }, sr.el, sc.el), h('div', { class: 'plotwrap' }, plot, label), doneBtn, below);
+  draw();
+
+  async function skipRows(display) {
+    const cells = [...plot.children], seq = [];
+    for (let r = 0; r < rows; r++) {
+      const rc = cells.slice(r * cols, (r + 1) * cols);
+      rc.forEach(c => c.classList.add('lit'));
+      seq.push((r + 1) * cols);
+      rc[rc.length - 1].append(h('span', { class: 'num' }, String((r + 1) * cols)));
+      display.textContent = 'Count by rows: ' + seq.join(', ');
+      sfx.tick(r * 4); await wait(700);
+    }
+  }
+  function check() {
+    if (rows === R && cols === C) {
+      locked = true; [...sr.btns, ...sc.btns].forEach(b => b.disabled = true); doneBtn.remove(); sfx.good();
+      api.guide(`Lovely garden! ${R} rows of ${C}. How many sunflowers in all?`);
+      let helper;
+      askChoice(below, { options: choices(R * C, R, C), answer: R * C, hint: () => helper.trigger(), onDone: () => {
+        below.append(factCard(R, C, `${R} rows of ${C} make ${R * C}.`));
+        learned(R, C);
+        const turn = h('button', { class: 'btn', type: 'button', onclick: async () => {
+          turn.disabled = true; sfx.hop(); plot.classList.add('turning'); await wait(400);
+          [rows, cols] = [cols, rows]; prevR = rows; prevC = cols; draw(false); plot.classList.remove('turning');
+          below.append(factCard(C, R, `Turned around: ${C} rows of ${R}. Still ${R * C}! So ${R} × ${C} = ${C} × ${R}.`));
+          api.guide(`Turning the garden does not change how many flowers there are. ${R} × ${C} = ${C} × ${R}.`);
+        } }, '↻ Turn the garden');
+        below.append(turn);
+        api.guide(`Yes! ${R} × ${C} = ${R * C}. Tap “Turn the garden” to see a trick!`);
+        api.done();
+      } });
+      helper = helpButton(below, '👆 Count by rows', skipRows);
+    } else {
+      sfx.oops(); run.mistakes++;
+      const tips = [];
+      if (rows !== R) tips.push(`You have ${rows} ${rows === 1 ? 'row' : 'rows'}. We need ${R}.`);
+      if (cols !== C) tips.push(`Each row has ${cols}. We need ${C} in each row.`);
+      api.guide(tips.join(' '));
+      plot.classList.remove('shake'); void plot.offsetWidth; plot.classList.add('shake');
+    }
+  }
+}
+
+/* ---------- STOP 4: Story Bazaar (real-life problems) ---------- */
+const STORIES = [
+  { e: '🕷️', s: 8, g: [2, 3], each: 'legs', t: g => `A spider has 8 legs. How many legs do ${g} spiders have?` },
+  { e: '🛺', s: 3, g: [2, 5], each: 'wheels', t: g => `An auto-rickshaw has 3 wheels. How many wheels do ${g} autos have?` },
+  { e: '🚗', s: 4, g: [2, 5], each: 'wheels', t: g => `A car has 4 wheels. How many wheels do ${g} cars have?` },
+  { e: '✋', s: 5, g: [2, 4], each: 'fingers', t: g => `One hand has 5 fingers. How many fingers are on ${g} hands?` },
+  { e: '🏏', s: 6, g: [2, 3], each: 'balls', t: g => `In cricket, one over has 6 balls. How many balls are bowled in ${g} overs?` },
+  { e: '🚲', s: 2, g: [3, 6], each: 'wheels', t: g => `A bicycle has 2 wheels. How many wheels do ${g} bicycles have?` },
+  { e: '🍌', s: 4, g: [2, 5], each: 'bananas', t: g => `Each bunch has 4 bananas. How many bananas are in ${g} bunches?` },
+  { e: '🍽️', s: 3, g: [2, 4], each: 'idlis', t: g => `Each plate has 3 idlis. How many idlis are on ${g} plates?` },
+  { e: '🐞', s: 6, g: [2, 3], each: 'legs', t: g => `A ladybird has 6 legs. How many legs do ${g} ladybirds have?` },
+  { e: '✏️', s: 10, g: [2, 4], each: 'pencils', t: g => `A box holds 10 pencils. How many pencils are in ${g} boxes?` },
+  { e: '🐄', s: 4, g: [2, 4], each: 'legs', t: g => `A cow has 4 legs. How many legs do ${g} cows have?` },
+  { e: '📅', s: 7, g: [2, 2], each: 'days', t: g => `A week has 7 days. How many days are in ${g} weeks?` },
+];
+function playStory(api) {
+  let idx = 0;
+  for (let t = 0; t < 60; t++) { idx = rand(0, STORIES.length - 1); if (!run.used.has('st' + idx)) break; }
+  run.used.add('st' + idx);
+  const st = STORIES[idx], g = rand(st.g[0], st.g[1]), s = st.s, total = g * s;
+  api.guide(st.t(g));
+  const groups = h('div', { class: 'groups', 'aria-hidden': 'true' });
+  for (let i = 0; i < g; i++) {
+    const dots = h('div', { class: 'gdots' });
+    for (let j = 0; j < s; j++) dots.append(h('i', { class: 'dotc' }));
+    groups.append(h('div', { class: 'group' }, h('span', { class: 'obj' }, st.e), dots));
+  }
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'story' }, st.t(g)), groups, below);
+
+  const eq = `${g} × ${s}`;
+  const alt = g === 2 ? `${s} − ${g}` : `${s} + ${s}`;
+  askChoice(below, { prompt: 'Which one tells this story?', options: shuffle([eq, `${g} + ${s}`, alt]), answer: eq, cls: 'eqs',
+    hint: () => api.guide(`There are ${g} groups, and ${s} ${st.each} in each group. That is ${g} groups of ${s}.`),
+    onDone: () => {
+      api.guide(`${g} groups of ${s}. How many ${st.each} in all?`);
+      let helper;
+      askChoice(below, { prompt: `${eq} = ?`, options: choices(total, g, s), answer: total, hint: () => helper.trigger(), onDone: () => {
+        below.append(factCard(g, s, `${g} × ${s} = ${total} ${st.each}. Skip count: ${skip(g, s)}.`));
+        api.guide(`Yes! ${total} ${st.each}.`);
+        learned(g, s); api.done();
+      } });
+      helper = helpButton(below, '👆 Help me count', d => countAlong([...groups.querySelectorAll('.dotc')], d, false));
+    } });
+}
+
+/* ---------- STOP 5: Rocket Launch (fact recall) ---------- */
+function playRocket(api) {
+  const r = run.round;
+  const tables = r < 4 ? [2, 5, 10] : [2, 3, 4, 5, 10];
+  const [a, b] = fresh(() => [pickOne(tables), rand(r < 4 ? 1 : 2, r < 4 ? 5 : 10)]); // b groups of a
+  const ans = a * b; let entry = '', tries = 0, finished = false;
+  api.guide(r === 0 ? `Answer 10 facts to fly the rocket to the stars! What is ${b} × ${a}?` : `What is ${b} × ${a}?`);
+  const alt = n => `${5 + n * 7.6}%`;
+  const rocket = h('span', { class: 'rocket', 'aria-hidden': 'true' }, '🚀');
+  rocket.style.bottom = alt(r);
+  const fuel = h('span', { class: 'fuel' }, `${r} / 10`);
+  const sky = h('div', { class: 'sky', id: 'sky', role: 'img', 'aria-label': `Rocket height ${r} of 10` }, fuel, rocket);
+  const entryEl = h('span', { class: 'entry empty' }, '?');
+  const q = h('div', { class: 'bigq', 'aria-live': 'polite' }, h('span', {}, `${b} × ${a} =`), entryEl);
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hint = h('div', { class: 'hintbox', hidden: true });
+  const keys = h('div', { class: 'keypad' });
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', '⌫', '0', 'Go'].forEach(k => keys.append(h('button', {
+    type: 'button', class: k === 'Go' ? 'ok' : k === '⌫' ? 'del' : '', 'aria-label': k === '⌫' ? 'Delete' : k === 'Go' ? 'Check answer' : k, onclick: () => press(k) }, k)));
+  api.stage.append(h('div', { class: 'rocketgame' }, sky, h('div', { class: 'quiz' }, q, keys, fb, hint)));
+
+  function show() { entryEl.textContent = entry || '?'; entryEl.classList.toggle('empty', !entry); }
+  function press(k) {
+    if (finished) return;
+    if (k === '⌫') entry = entry.slice(0, -1);
+    else if (k === 'Go') return submit();
+    else if (entry.length < 3) { entry += k; sfx.pop(); }
+    show();
+  }
+  function submit() {
+    if (!entry) return;
+    if (Number(entry) === ans) {
+      finished = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; entryEl.classList.add('right');
+      keys.querySelectorAll('button').forEach(x => x.disabled = true);
+      rocket.style.bottom = alt(r + 1); fuel.textContent = `${r + 1} / 10`;
+      api.guide(`${b} × ${a} = ${ans}. ${b} groups of ${a} make ${ans}.`);
+      learned(a, b); api.done();
+    } else {
+      sfx.oops(); run.mistakes++; tries++;
+      entryEl.classList.remove('shake'); void entryEl.offsetWidth; entryEl.classList.add('shake');
+      entry = ''; show(); fb.className = 'fb oops';
+      fb.textContent = tries === 1 ? 'Not quite. Here is a picture to help.' : tries === 2 ? `Count in ${a}s, one row at a time.` : `It is ${ans}. Type ${ans} to keep flying.`;
+      const rowsEl = h('div', { class: 'hintdots', 'aria-hidden': 'true' });
+      for (let i = 0; i < b; i++) { const rw = h('div', { class: 'hintrow' }); for (let j = 0; j < a; j++) rw.append(h('i')); rowsEl.append(rw); }
+      hint.replaceChildren(h('p', {}, `${b} × ${a} means ${b} groups of ${a}.`), rowsEl);
+      if (tries >= 2) hint.append(h('p', { class: 'skip' }, skip(b, a)));
+      hint.hidden = false;
+    }
+  }
+  const onKey = e => {
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('⌫');
+    else if (e.key === 'Enter' && !finished) { e.preventDefault(); press('Go'); }
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, name: 'Laddoo Boxes', idea: 'Equal groups', rounds: 5, icon: () => laddoo(true), play: playLaddoo },
+  { id: 2, name: 'Froggy Hops', idea: 'Skip counting', rounds: 5, icon: () => '🐸', play: playFrog },
+  { id: 3, name: 'Sunflower Garden', idea: 'Rows and columns', rounds: 5, icon: () => '🌻', play: playGarden },
+  { id: 4, name: 'Story Bazaar', idea: 'Real-life puzzles', rounds: 5, icon: () => '🛺', play: playStory },
+  { id: 5, name: 'Rocket Launch', idea: 'Quick facts', rounds: 10, icon: () => '🚀', play: playRocket },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, rounds) => { const t = rounds >= 10 ? [2, 5] : [1, 3]; return m <= t[0] ? 3 : m <= t[1] ? 2 : 1; };
+
+function startLevel(L) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0, used: new Set() };
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.idea}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+async function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.rounds);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  save(); updateTotal();
+  foot.replaceChildren();
+  if (L.id === 5) { const sk = $('sky'); if (sk) { sk.classList.add('launch'); sfx.whoosh(); await wait(1150); } }
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 5 ? 'The rocket reached the stars! You are a multiplication champion, Ayansh.'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, `Next stop ➜`));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to map'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win chunky' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFB627', '#E8553D', '#2A8F56', '#2F7FC1', '#FFFFFF'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+function totalStars() { return LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0); }
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+function starRow(n) { return h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★'))); }
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  $('stops').replaceChildren(...LEVELS.map((L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon()),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  }));
+  const cells = [h('span', { class: 'ch hd' }, '×')];
+  for (let c = 1; c <= 10; c++) cells.push(h('span', { class: 'ch hd' }, String(c)));
+  for (let r = 1; r <= 10; r++) {
+    cells.push(h('span', { class: 'ch hd' }, String(r)));
+    for (let c = 1; c <= 10; c++) { const got = factSet.has(r + 'x' + c); cells.push(h('span', { class: 'ch' + (got ? ' got' : ''), title: got ? `${r} × ${c} = ${r * c}` : 'Not found yet' }, got ? String(r * c) : '')); }
+  }
+  $('chart').replaceChildren(...cells);
+  $('chartCount').textContent = factSet.size === 0 ? 'No squares filled yet. Start at Stop 1!' : `${factSet.size} of 100 squares filled`;
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, facts: [], sound: P.sound }; factSet = new Set(); save(); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { facts: [...factSet] }) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
