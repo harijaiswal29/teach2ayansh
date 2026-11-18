@@ -36,3 +36,12 @@ Part 2: tables of 3, 4, 6 and zero
 8. **Seed Board** (pp. 41–44): tables of 3, 4 and 6 on a Pallanguzhi board.
 9. **Hopscotch Lane** (pp. 45–46): traffic lights, tables and insects solved with number-line jumps.
 10. **Zero Magic** (p. 47): any number × 0 = 0.
+
+Part 3: tens and ones, and word problems
+
+11. **Golu's Homework** (pp. 48–49): mark Golu's sums right or wrong and pick the fix (spot the error, zero rules).
+12. **Table Detective** (pp. 49–51): the eight facts, the × grid from Checkpoint 2, and the hiding-number riddle.
+13. **Jumps & Boxes** (pp. 49–51): tap where each jump lands, colour the right boxes, solve the flower-pot garden.
+14. **Tens & Ones** (pp. 52–53): vertical multiplication, bundling 10 ones into a ten.
+15. **RIDE Problems** (pp. 53–55): Read, Identify, Draw a bar model, Evaluate.
+16. **Final Checkpoint** (pp. 55–57): Riya's bar-model mistake, the toy boxes, and the milk calendar.

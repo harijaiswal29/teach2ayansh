@@ -276,6 +276,75 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
 .bigsent{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,44px);font-variant-numeric:tabular-nums}
 @keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
+/* part 3 pieces */
+.steppers{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.stepper{display:flex;align-items:center;gap:8px;background:var(--sky-soft);border:3px solid var(--ink);border-radius:999px;padding:5px 7px}
+.stepper .lab{font-weight:800;padding:0 4px 0 8px}
+.stepper button{width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);background:var(--board);font-size:24px;font-weight:800;line-height:1;cursor:pointer}
+.stepper button:disabled{opacity:.4;cursor:default}
+.stepper output{font-family:var(--display);font-size:28px;font-weight:800;min-width:1.4ch;text-align:center}
+.stop:nth-child(6) .stopicon{background:var(--lilac)}
+.linewrap{width:100%;overflow-x:auto}
+.pond .hitbox{fill:transparent;cursor:pointer}
+.pond .hitbox:hover{fill:rgba(47,111,208,.10)}
+.notebook{position:relative;width:min(100%,460px);background:repeating-linear-gradient(var(--board) 0 30px,var(--sky-soft) 30px 32px);border:3px solid var(--ink);border-left:10px solid var(--lantern);border-radius:10px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);line-height:32px;font-variant-numeric:tabular-nums}
+.notebook .eyebrow{line-height:1.4}
+.notebook .struck{text-decoration:line-through;text-decoration-color:var(--lantern);text-decoration-thickness:3px;color:var(--ink-soft)}
+.notebook .fixed{color:var(--teal);animation:pop .35s}
+.stamp{position:absolute;right:10px;top:-16px;font-size:28px;line-height:1.2;border:3px solid currentColor;border-radius:10px;padding:0 10px;background:var(--board);transform:rotate(-8deg);animation:pop .3s}
+.stamp.ok{color:var(--teal)}
+.stamp.no{color:var(--lantern)}
+.xgrid{border-collapse:collapse;margin:0 auto;font-variant-numeric:tabular-nums}
+.xgrid th,.xgrid td{border:2px solid var(--ink);width:56px;height:46px;text-align:center;font-weight:800;font-size:20px}
+.xgrid th{background:var(--gold-soft)}
+.xgrid td.cur{background:var(--sky-soft);animation:pulse 1s infinite}
+.xgrid td.done{background:var(--teal-soft)}
+.clues{background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 16px;font-weight:800;display:flex;flex-direction:column;gap:4px;width:min(100%,420px)}
+.clues h3{font-size:18px}
+.numstrip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:420px}
+.nbtn{width:54px;height:54px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);font-family:var(--display);font-weight:800;font-size:24px;cursor:pointer}
+.nbtn.found{background:var(--gold);animation:pop .35s}
+.nbtn:disabled{cursor:default}
+.nbtn.no{opacity:.35}
+.cboxes{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+.cbox{display:inline-grid;place-items:center;width:46px;height:46px;border:3px solid var(--ink);background:var(--board);font-family:var(--display);font-weight:800;font-size:20px;cursor:pointer;border-radius:4px}
+.cbox.on{background:var(--lantern);color:var(--on-color)}
+.cbox:disabled{cursor:default}
+.example{font-size:15px;color:var(--ink-soft);gap:4px}
+.example .cbox{width:30px;height:30px;font-size:14px;border-width:2px;cursor:default}
+.pots{display:grid;gap:4px;font-size:26px;line-height:1;background:var(--seed);border:3px solid var(--ink);border-radius:14px;padding:8px}
+.vt{border-collapse:collapse;font-variant-numeric:tabular-nums}
+.vt th,.vt td{border:2px solid var(--ink);min-width:58px;height:46px;text-align:center;font-family:var(--display);font-weight:800;font-size:26px;padding:0 6px}
+.vt th{font-family:var(--body);font-size:15px;background:var(--sky-soft)}
+.vt th.blank,.vt td.op,.vt td.lab{border:none;background:transparent}
+.vt td.op{min-width:22px;padding:0}
+.vt td.lab{font-family:var(--body);font-size:14px;font-weight:700;text-align:right;color:var(--ink-soft);min-width:0;max-width:140px;line-height:1.2}
+.vt td.cellv{background:var(--teal-soft);padding:0}
+.vcell{width:100%;min-height:42px;border:none;background:transparent;font:inherit;color:var(--ink)}
+.vcell.pick{cursor:pointer;background:var(--gold-soft);outline:3px dashed var(--sky);outline-offset:-5px}
+.mats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,420px)}
+.mat{border:3px solid var(--ink);border-radius:14px;background:var(--lilac);padding:8px;min-height:120px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.matlab{font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em}
+.rods{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.rod{width:14px;height:82px;border:2px solid var(--ink);border-radius:4px;background:repeating-linear-gradient(var(--cube-green) 0 6.2px,var(--ink) 6.2px 7.8px);animation:pop .35s}
+.odots{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:150px}
+.od{width:13px;height:13px;border-radius:50%;background:var(--cube-blue);border:1.5px solid var(--ink)}
+.ride{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.ride span{border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800;font-size:14px;background:var(--board);color:var(--ink-soft)}
+.ride span.now{background:var(--gold);color:var(--ink)}
+.ride span.done{background:var(--teal-soft);color:var(--ink)}
+.barmodel{display:flex;flex-direction:column;gap:4px;width:min(100%,440px)}
+.whole{height:38px;border:3px solid var(--ink);border-radius:6px;background:var(--gold-soft);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:22px}
+.bar{display:flex;border:3px solid var(--ink);border-radius:6px;background:var(--board);overflow:hidden}
+.bbox{flex:1;min-width:0;height:40px;border-right:2px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:20px;animation:pop .25s}
+.bbox:last-child{border-right:none}
+.toycat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toybox{border:3px solid var(--ink);border-radius:14px;background:var(--gold-soft);padding:6px 12px;display:flex;flex-direction:column;align-items:center;font-weight:800}
+.toybox .e{font-size:32px;line-height:1.15}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;width:100%;max-width:520px}
+.day{border:2px solid var(--ink);border-radius:10px;background:var(--board);display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;font-size:12px;font-weight:800;min-height:80px}
+.day .g{font-size:15px;line-height:1.15;text-align:center;word-break:break-all}
+
 /* win overlay + confetti */
 .overlay{position:fixed;inset:0;z-index:40;background:rgba(14,19,51,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
 .win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
@@ -323,7 +392,7 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
   <header class="topbar">
     <h1 class="brand">Multiplication Fair<small>Ayansh's Chapter 9 adventure</small></h1>
     <div class="tools">
-      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 30</span>
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 48</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
     </div>
   </header>
@@ -338,7 +407,7 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
         <div class="strings" id="strings" aria-label="4 strings with 5 lanterns on each"></div>
         <button class="btn primary" id="showHow" type="button">✨ Show me how</button>
         <p class="reveal" id="reveal" hidden>Count in groups: 5, 10, 15, 20. <b>4 × 5 = 20</b> lanterns!</p>
-        <p class="donebanner" id="allDone" hidden>🎉 The whole fair is lit up! You finished every stall.</p>
+        <p class="donebanner" id="allDone" hidden>🎉 The whole fair is lit up! You finished Chapter 9.</p>
       </div>
     </section>
 
@@ -346,6 +415,8 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
     <ol class="stops" id="stops1"></ol>
     <h2 class="section-title">Part 2 · Tables of 3, 4, 6 and zero</h2>
     <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Tens and ones, and word problems</h2>
+    <ol class="stops" id="stops3"></ol>
 
     <section class="chartcard card">
       <h2>Lantern chart</h2>
@@ -373,6 +444,16 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
           <li><b>Hopscotch Lane</b> (pages 45–46): the book's traffic-light, classroom-table and insect problems, solved with jumps on a number line.</li>
           <li><b>Zero Magic</b> (page 47): empty tables and empty plates show that any number × 0 = 0.</li>
         </ol>
+        <h3>Part 3 (pages 48–57)</h3>
+        <ol start="11">
+          <li><b>Golu's Homework</b> (pages 48–49): Ayansh is the teacher and marks Golu's sums right or wrong, then picks the correction. It includes the three “Spot the Error” sums from page 49 and the zero rules from page 48 (0 × any number = 0).</li>
+          <li><b>Table Detective</b> (pages 49–51): the eight facts from page 49, the × grid from Checkpoint 2, and the Table Detective riddle. The answers are 12 and 16.</li>
+          <li><b>Jumps &amp; Boxes</b> (pages 49–51): he taps where each jump lands to show 2 × 6 and 5 × 3, colours the right number of boxes, and solves the flower-pot garden (4 rows of 6).</li>
+          <li><b>Tens &amp; Ones</b> (pages 52–53): vertical multiplication. When the answer is 10 or more, he bundles 10 ones into a ten before writing the digits, so “24 ones = 2 tens 4 ones” is something he sees, not just reads.</li>
+          <li><b>RIDE Problems</b> (pages 53–55): Read, Identify, Draw a bar model, Evaluate, for the toy shop, flower vases, necklaces and rickshaws.</li>
+          <li><b>Final Checkpoint</b> (pages 55–57): Riya's bar-model mistake, the toy boxes of Arav, Sia and Kabir, and his own milk calendar.</li>
+        </ol>
+        <p>On page 49, question 4b (4 + 4 + 4 + 4 + 4 = 4 × 5) is marked as an error because the book always writes the number of groups first: five 4s is 5 × 4. The game explains it the same way.</p>
         <p>The game always writes the number of groups first (3 × 5 means 3 groups of 5), just like the book. On page 31 the text says each coach has 4 passengers, but the picture and the sum show 2. The game uses 2, so he isn't confused.</p>
         <h3>Do it for real</h3>
         <ul>
@@ -1148,6 +1229,435 @@ function playZero(api) {
   }
 }
 
+/* ---------- Part 3 shared pieces ---------- */
+function makeLine(end, onTap) {
+  const W = Math.max(600, end * 24), H = 180, x0 = 24, x1 = W - 24, base = 136, step = (x1 - x0) / end;
+  const X = i => x0 + i * step;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, class: 'pond', role: 'img', 'aria-label': `Number line from 0 to ${end}` });
+  svg.append(sv('rect', { class: 'water', x: 0, y: base - 14, width: W, height: 30, rx: 14 }));
+  svg.append(sv('line', { class: 'nl', x1: x0, y1: base, x2: x1, y2: base }));
+  const labels = [];
+  for (let i = 0; i <= end; i++) {
+    svg.append(sv('line', { class: 'tick', x1: X(i), y1: base - 7, x2: X(i), y2: base + 7 }));
+    const t = sv('text', { class: 'tk', x: X(i), y: base + 34, 'text-anchor': 'middle' }, i); labels.push(t); svg.append(t);
+  }
+  const marks = sv('g', {}); svg.append(marks);
+  for (let i = 1; i <= end; i++) {
+    const hb = sv('rect', { class: 'hitbox', x: X(i) - step / 2, y: 10, width: step, height: H - 10, 'data-n': i });
+    hb.addEventListener('click', () => onTap(i));
+    svg.append(hb);
+  }
+  if (end > 16) svg.style.minWidth = '560px';
+  return {
+    el: h('div', { class: 'linewrap' }, svg),
+    arc: (from, to, label) => {
+      const mid = (X(from) + X(to)) / 2;
+      marks.append(sv('path', { class: 'arc', d: `M ${X(from)} ${base - 4} Q ${mid} ${base - 112} ${X(to)} ${base - 4}` }));
+      marks.append(sv('text', { class: 'arclabel', x: mid, y: base - 64, 'text-anchor': 'middle' }, label));
+      labels[to] && labels[to].classList.add('hit');
+    },
+  };
+}
+function barModel(n, val, whole = '?') {
+  const w = h('div', { class: 'whole' }, whole);
+  const bar = h('div', { class: 'bar' });
+  const set = (k, v) => bar.replaceChildren(...Array.from({ length: k }, () => h('span', { class: 'bbox' }, v == null ? '' : String(v))));
+  set(n, val);
+  return { el: h('div', { class: 'barmodel', role: 'img', 'aria-label': 'Bar model' }, w, bar), set, whole: t => { w.textContent = t; } };
+}
+function vtable(a, b, labels) {
+  const mk = name => h('button', { class: 'vcell', type: 'button', disabled: true, 'aria-label': `${name} place of the answer` });
+  const tensB = mk('Tens'), onesB = mk('Ones');
+  const L = i => labels ? h('td', { class: 'lab' }, labels[i]) : null;
+  const el = h('table', { class: 'vt' },
+    h('thead', {}, h('tr', {}, labels ? h('th', { class: 'blank' }) : null, h('th', { class: 'blank' }), h('th', {}, 'Tens'), h('th', {}, 'Ones'))),
+    h('tbody', {},
+      h('tr', {}, L(0), h('td', { class: 'op' }), h('td', {}, a >= 10 ? Math.floor(a / 10) : ''), h('td', {}, a % 10)),
+      h('tr', {}, L(1), h('td', { class: 'op' }, '×'), h('td', {}, b >= 10 ? Math.floor(b / 10) : ''), h('td', {}, b % 10)),
+      h('tr', {}, L(2), h('td', { class: 'op' }), h('td', { class: 'cellv' }, tensB), h('td', { class: 'cellv' }, onesB))));
+  let handler = null;
+  [['tens', tensB], ['ones', onesB]].forEach(([k, btn]) => btn.addEventListener('click', () => handler && handler(k, btn)));
+  return {
+    el,
+    set: (k, d) => { (k === 'tens' ? tensB : onesB).textContent = d; },
+    setAll: p => { tensB.textContent = p >= 10 ? Math.floor(p / 10) : ''; onesB.textContent = p % 10; },
+    pick: fn => { handler = fn; [tensB, onesB].forEach(x => { x.disabled = false; x.classList.add('pick'); }); },
+    stop: () => { handler = null; [tensB, onesB].forEach(x => { x.disabled = true; x.classList.remove('pick'); }); },
+  };
+}
+
+/* ---------- STALL 11: Golu's Homework (spot the error, pages 48–49) ---------- */
+const HW = {
+  a: { show: '2 + 2 + 2 = 3 × 2 = 8', ok: false, fix: '2 + 2 + 2 = 3 × 2 = 6', others: ['2 + 2 + 2 = 2 × 2 = 8', '2 + 2 + 2 = 3 + 2 = 5'], why: '2 + 2 + 2 makes 6, not 8.' },
+  b: { show: '4 + 4 + 4 + 4 + 4 = 4 × 5 = 20', ok: false, fix: '4 + 4 + 4 + 4 + 4 = 5 × 4 = 20', others: ['4 + 4 + 4 + 4 + 4 = 4 × 4 = 16', '4 + 4 + 4 + 4 + 4 = 4 + 5 = 9'], why: 'There are 5 groups of 4. The first number tells how many groups, so it is 5 × 4.' },
+  c: { show: '5 × 5 = 5 × 5 × 5 × 5 × 5 = 25', ok: false, fix: '5 × 5 = 5 + 5 + 5 + 5 + 5 = 25', others: ['5 × 5 = 5 + 5 = 10', '5 × 5 = 5 × 5 × 5 = 25'], why: '5 × 5 means 5 groups of 5, so we add: 5 + 5 + 5 + 5 + 5.' },
+  zero: { show: '0 × 8 = 8', ok: false, fix: '0 × 8 = 0', others: ['0 × 8 = 80', '0 × 8 = 1'], why: '0 × any number = 0. Zero groups of 8 is nothing at all.' },
+  rights: [
+    { key: 'r1', show: '3 + 3 + 3 + 3 = 4 × 3 = 12', ok: true, why: '4 groups of 3 make 12.' },
+    { key: 'r2', show: '10 × 0 = 0', ok: true, why: 'Any number × 0 = 0.' },
+    { key: 'r3', show: '0 × 0 = 0', ok: true, why: '0 groups of 0 is still 0.' },
+    { key: 'r4', show: '6 + 6 = 2 × 6 = 12', ok: true, why: '2 groups of 6 make 12.' },
+  ],
+};
+function playHomework(api) {
+  const r = run.round;
+  const pickRight = () => { let it; do { it = pickOne(HW.rights); } while (run.used.has(it.key)); run.used.add(it.key); return it; };
+  const item = [() => HW.a, pickRight, () => HW.b, () => HW.c, () => (Math.random() < 0.5 ? HW.zero : pickRight())][r]();
+  const stamp = h('span', { class: 'stamp', hidden: true });
+  const line = h('div', {}, item.show);
+  const note = h('div', { class: 'notebook' }, h('span', { class: 'eyebrow' }, "Golu's homework"), line, stamp);
+  const below = h('div', { class: 'below' });
+  api.stage.append(note, below);
+  api.guide(r === 0 ? 'Golu did his homework, and you are the teacher! Is this sum right or wrong?' : 'Teacher Ayansh, is this one right or wrong?');
+  askChoice(below, { options: ['✔ Right', '✘ Wrong'], answer: item.ok ? '✔ Right' : '✘ Wrong', cls: 'words',
+    hint: () => api.guide('Check each part carefully. Count the groups, then add them up.'),
+    onDone: () => {
+      stamp.hidden = false;
+      if (item.ok) { stamp.textContent = '✔'; stamp.className = 'stamp ok'; api.guide(`Correct! ${item.why}`); return api.done(); }
+      stamp.textContent = '✘'; stamp.className = 'stamp no'; line.classList.add('struck');
+      api.guide('Good catch! What should Golu have written?');
+      askChoice(below, { prompt: 'Choose the correct one', options: shuffle([item.fix, ...item.others]), answer: item.fix, cls: 'words',
+        hint: () => api.guide(item.why),
+        onDone: () => { note.append(h('div', { class: 'fixed' }, item.fix)); api.guide(`Yes! ${item.why}`); api.done(); } });
+    } });
+}
+
+/* ---------- STALL 12: Table Detective (pages 49–51) ---------- */
+function playDetective(api) {
+  const r = run.round;
+  if (r === 0) {
+    const below = h('div', { class: 'below' });
+    api.stage.append(h('p', { class: 'q' }, 'Question 3 on page 49: complete the multiplication facts.'), below);
+    const facts = [[4, 3], [6, 4], [3, 6], [7, 3], [5, 4], [6, 6], [9, 4], [8, 3]];
+    return factSequence(api, below, facts.map(([a, b]) => ({ a, b })), () => {
+      below.append(h('div', { class: 'blanks' }, facts.map(([a, b]) => h('span', {}, `${a} × ${b} = ${a * b}`))));
+      api.guide('All 8 facts done!'); api.done();
+    });
+  }
+  if (r === 1 || r === 2) return xGrid(api, r === 1 ? [2, 3] : [4, 5], r === 2 ? [2, 3] : []);
+  return riddle(api);
+}
+function xGrid(api, active, pre) {
+  const cols = [3, 2, 5, 6], rows = [2, 3, 4, 5], cells = {};
+  const tbody = h('tbody', {}, rows.map(r => h('tr', {}, h('th', {}, String(r)), cols.map(c => {
+    const done = pre.includes(r);
+    const td = h('td', { class: done ? 'done' : '' }, done ? String(r * c) : '');
+    cells[r + 'x' + c] = td; return td;
+  }))));
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'q' }, 'Checkpoint 2: fill in the missing numbers.'),
+    h('div', { class: 'tablewrap' }, h('table', { class: 'xgrid' }, h('thead', {}, h('tr', {}, h('th', {}, '×'), cols.map(c => h('th', {}, String(c))))), tbody)), below);
+  const queue = [];
+  active.forEach(r => cols.forEach(c => queue.push([r, c])));
+  let i = 0;
+  const next = () => {
+    below.replaceChildren();
+    if (i >= queue.length) { api.guide(`Rows ${active.join(' and ')} are complete!`); return api.done(); }
+    const [r, c] = queue[i++], td = cells[r + 'x' + c];
+    td.classList.add('cur');
+    api.guide(`Row ${r}, column ${c}: multiply the row number by the column number. What is ${r} × ${c}?`);
+    askChoice(below, { prompt: `${r} × ${c} = ?`, options: choices(r * c, r, c), answer: r * c,
+      hint: () => api.guide(`${r} groups of ${c}: ${skip(r, c)}.`),
+      onDone: () => { td.textContent = r * c; td.classList.remove('cur'); td.classList.add('done'); learned(r, c); setTimeout(next, 500); } });
+  };
+  next();
+}
+function riddle(api) {
+  const clues = ['It is in the 2 times table.', 'It is also in the 4 times table.', 'It is less than 20.', 'It is greater than 10.'];
+  const card = h('div', { class: 'clues' }, h('h3', {}, '🔍 A number is hiding. Here are the clues:'), clues.map(c => h('span', {}, c)));
+  const strip = h('div', { class: 'numstrip' });
+  const below = h('div', { class: 'below' });
+  const found = new Set();
+  for (let n = 11; n <= 19; n++) {
+    const b = h('button', { class: 'nbtn', type: 'button', onclick: () => {
+      if (found.has(n) || found.size >= 2) return;
+      if (n % 4 === 0) {
+        found.add(n); b.classList.add('found'); sfx.good();
+        if (found.size === 1) api.guide(`Yes! ${n} fits every clue: it is in the 2 times table and the 4 times table. Can you find another answer?`);
+        else {
+          strip.querySelectorAll('button').forEach(x => x.disabled = true);
+          below.append(h('div', { class: 'fact' }, h('div', { class: 'eq' }, '12 and 16'), h('p', { class: 'cap' }, '2 × 6 = 12 and 4 × 3 = 12. 2 × 8 = 16 and 4 × 4 = 16. Both hide in the 2 and 4 times tables!')));
+          api.guide('Case closed, Detective Ayansh! The number could be 12 or 16.'); api.done();
+        }
+      } else {
+        sfx.oops(); run.mistakes++; b.classList.add('no'); b.disabled = true;
+        api.guide(n % 2 === 0 ? `${n} is in the 2 times table, but not in the 4 times table. Try another!` : `${n} is not in the 2 times table. Try another!`);
+      }
+    } }, String(n));
+    strip.append(b);
+  }
+  api.stage.append(card, strip, below);
+  api.guide('Table Detective! Read the clues, then tap a number between 10 and 20 that fits all of them.');
+}
+
+/* ---------- STALL 13: Jumps & Boxes (pages 49–51) ---------- */
+function playJumpsBoxes(api) {
+  const r = run.round;
+  if (r === 0) return jumpTask(api, 2, 6);
+  if (r === 1) return colourTask(api, 5, 2, true);
+  if (r === 2) return jumpTask(api, 5, 3);
+  if (r === 3) { const [g, s] = pickOne([[4, 3], [2, 10], [3, 6], [5, 4]]); return colourTask(api, g, s, false); }
+  return gardenTask(api);
+}
+function jumpTask(api, g, s, opts = {}) {
+  const total = g * s, end = total <= 15 ? 15 : Math.min(30, total + 1);
+  const below = h('div', { class: 'below' });
+  const sum = h('p', { class: 'sum', 'aria-live': 'polite' });
+  let pos = 0, n = 0;
+  const line = makeLine(end, i => {
+    if (n >= g) return;
+    if (i === pos + s) {
+      n++; line.arc(pos, i, `Jump ${n}`); pos = i; sfx.whoosh();
+      sum.textContent = Array(n).fill(s).join(' + ') + (n > 1 ? ` = ${n * s}` : '');
+      if (n < g) api.guide(`Jump ${n} lands on ${pos}. Now count ${s} more. Where does jump ${n + 1} land?`);
+      else if (opts.after) opts.after(below);
+      else {
+        api.guide(`${g} jumps of ${s}. So ${g} × ${s} = ?`);
+        askChoice(below, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, onDone: () => {
+          below.append(factCard(g, s, `${g} jumps of ${s} land on ${total}.`)); learned(g, s); api.done();
+        } });
+      }
+    } else {
+      sfx.oops(); run.mistakes++;
+      api.guide(`Count ${s} steps forward from ${pos}. Where does jump ${n + 1} land?`);
+    }
+  });
+  api.stage.append(h('p', { class: 'q' }, `Show ${g} × ${s} on the number line.`), line.el, sum, below);
+  api.guide(opts.intro || `Show ${g} × ${s}: start at 0 and make ${g} jumps of ${s}. Tap the number where jump 1 lands.`);
+}
+function colourTask(api, g, s, first) {
+  const n = 6, on = Array(n).fill(false);
+  let locked = false;
+  const boxes = Array.from({ length: n }, (_, i) => h('button', { class: 'cbox', type: 'button', 'aria-pressed': 'false', onclick: () => {
+    if (locked) return;
+    on[i] = !on[i]; boxes[i].classList.toggle('on', on[i]); boxes[i].setAttribute('aria-pressed', String(on[i])); sfx.pop();
+  } }, String(s)));
+  const tail = h('span', {}, '= ?');
+  const row = h('div', { class: 'cboxes' }, h('span', {}, `${g} × ${s} =`), boxes, tail);
+  const below = h('div', { class: 'below' });
+  const doneBtn = h('button', { class: 'btn go', type: 'button', onclick: () => {
+    const k = on.filter(Boolean).length;
+    if (k !== g) { sfx.oops(); run.mistakes++; shakeEl(row); api.guide(`You coloured ${k} ${k === 1 ? 'box' : 'boxes'}. ${g} × ${s} means ${g} groups of ${s}, so colour ${g} boxes.`); return; }
+    locked = true; doneBtn.remove(); boxes.forEach(b => b.disabled = true); sfx.good();
+    api.guide(`${g} boxes of ${s}. Now add them: ${rep(g, s)} = ?`);
+    askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(g * s, g, s), answer: g * s,
+      hint: () => api.guide(`Count on in ${s}s: ${skip(g, s)}.`),
+      onDone: () => { tail.textContent = `= ${rep(g, s)} = ${g * s}`; below.append(factCard(g, s)); learned(g, s); api.done(); } });
+  } }, '✔ Done colouring');
+  if (first) {
+    const ex = h('div', { class: 'cboxes example', 'aria-label': 'Example: 5 times 3' }, h('span', {}, 'Example: 5 × 3 ='),
+      Array.from({ length: 6 }, (_, i) => h('span', { class: 'cbox' + (i < 5 ? ' on' : '') }, '3')), h('span', {}, '= 3 + 3 + 3 + 3 + 3 = 15'));
+    api.stage.append(ex);
+  }
+  api.stage.append(row, doneBtn, below);
+  api.guide(first ? 'Look at the example: 5 × 3 means 5 groups of 3, so 5 boxes are coloured. Now colour the boxes you need for 5 × 2.' : `Colour the boxes you need to add for ${g} × ${s}.`);
+}
+function gardenTask(api) {
+  const R = 4, C = 6;
+  const pots = h('div', { class: 'pots', role: 'img', 'aria-label': `${R} rows of flower pots` }, Array.from({ length: R * C }, () => h('span', {}, '🪴')));
+  pots.style.gridTemplateColumns = `repeat(${C}, auto)`;
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'q' }, 'Think and solve: look at the garden.'), pots, below);
+  api.guide('a. How many rows of flower pots are there?');
+  askChoice(below, { prompt: 'How many rows?', options: opts3(R, [C, R + 1]), answer: R, hint: () => api.guide('A row goes across, left to right. Count the rows going down.'), onDone: () => {
+    api.guide('b. How many flower pots are in each row?');
+    askChoice(below, { prompt: 'How many pots in each row?', options: opts3(C, [R, C + 1]), answer: C, hint: () => api.guide('Count the pots in the top row.'), onDone: () => {
+      jumpTask(api, R, C, { intro: `c. The repeated addition is ${rep(R, C)}. e. Show your thinking: make ${R} jumps of ${C}. Tap where jump 1 lands.`, after: b2 => {
+        const right = `${R} × ${C} = ${R * C}`;
+        api.guide('d. Which is the multiplication sentence?');
+        askChoice(b2, { prompt: 'Which multiplication sentence?', options: shuffle([right, `${C} + ${R} = ${R + C}`, `${R} × ${C - 1} = ${R * (C - 1)}`]), answer: right, cls: 'words',
+          hint: () => api.guide(`${R} rows with ${C} in each row. The first number is how many groups.`),
+          onDone: () => { b2.append(factCard(R, C, `${R} rows of ${C} flower pots make ${R * C}.`)); learned(R, C); api.done(); } });
+      } });
+    } });
+  } });
+}
+
+/* ---------- STALL 14: Tens & Ones (vertical multiplication, pages 52–53) ---------- */
+function playVertical(api) {
+  const [a, b] = [[2, 3], [6, 4], [4, 5], [6, 3], [2, 4]][run.round];
+  const p = a * b, t = Math.floor(p / 10), o = p % 10;
+  const vt = vtable(a, b);
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'q' }, `Vertical format: ${a} × ${b}`), vt.el, below);
+  api.guide(`Step 1: ${a} × ${b} is written in vertical format, ones under ones. Step 2: multiply the ones.`);
+  askChoice(below, { prompt: `${a} ones × ${b} ones = ? ones`, options: choices(p, a, b), answer: p, hint: () => api.guide(`Count on: ${skip(a, b)}.`), onDone: () => {
+    if (p < 10) place('ones', o, finish); else regroup();
+  } });
+  function regroup() {
+    const rods = h('div', { class: 'rods' }), dots = h('div', { class: 'odots' }, Array.from({ length: p }, () => h('i', { class: 'od' })));
+    let ones = p, tens = 0;
+    const btn = h('button', { class: 'btn primary', type: 'button', onclick: () => {
+      if (ones < 10) return;
+      for (let i = 0; i < 10; i++) dots.lastChild.remove();
+      ones -= 10; tens++; rods.append(h('i', { class: 'rod' })); sfx.whoosh();
+      if (ones < 10) {
+        btn.disabled = true;
+        api.guide(`${p} ones = ${t} ${t === 1 ? 'ten' : 'tens'} and ${o} ones.`);
+        setTimeout(() => place('ones', o, () => place('tens', t, finish)), 900);
+      } else api.guide(`${ones} ones left. Can you make another ten?`);
+    } }, '🔗 Bundle 10 ones into 1 ten');
+    below.append(h('div', { class: 'mats' }, h('div', { class: 'mat' }, h('span', { class: 'matlab' }, 'Tens'), rods), h('div', { class: 'mat' }, h('span', { class: 'matlab' }, 'Ones'), dots)), btn);
+    api.guide(`Step 3: ${p} ones is more than 9, so we bundle 10 ones into 1 ten. Tap the button.`);
+  }
+  function place(where, digit, next) {
+    api.guide(where === 'ones' ? `Write ${digit} in the Ones place of the answer. Tap the Ones box.` : `Now write ${t} in the Tens place. Tap the Tens box.`);
+    vt.pick((k, btnEl) => {
+      if (k === where) { vt.set(k, digit); vt.stop(); sfx.pop(); next(); }
+      else { sfx.oops(); run.mistakes++; shakeEl(btnEl); api.guide(where === 'ones' ? `${digit} is ones. It goes in the Ones place, on the right.` : `${t} is tens. It goes in the Tens place, on the left.`); }
+    });
+  }
+  function finish() {
+    sfx.good();
+    below.append(factCard(a, b, p >= 10 ? `${p} ones = ${t} tens and ${o} ones, so ${a} × ${b} = ${p}.` : `${a} ones × ${b} ones = ${p} ones.`));
+    api.guide(`${a} × ${b} = ${p}. The answer stays the same; only the way we write it changes.`);
+    learned(a, b); api.done();
+  }
+}
+
+/* ---------- STALL 15: RIDE Problems (bar models, pages 53–55) ---------- */
+const RIDE = [
+  { g: 5, s: 6, text: 'In a toy shop, on one wall there are 5 shelves. There are 6 toys on each shelf. Find the total number of toys on that wall.', gq: 'How many shelves are there?', sq: 'How many toys are on each shelf?', box: 'shelf', boxes: 'shelves', labels: ['Number of shelves', 'Toys on each shelf', 'Total number of toys'], unit: 'toys' },
+  { g: 5, s: 8, text: 'Riya is decorating her home with flower vases. Each flower vase holds 8 flowers. She has 5 flower vases. How many flowers are there altogether?', gq: 'How many vases are there?', sq: 'How many flowers are in each vase?', box: 'vase', boxes: 'vases', labels: ['Number of vases', 'Flowers in each vase', 'Total number of flowers'], unit: 'flowers' },
+  { g: 4, s: 6, text: 'Priya has 4 necklaces. Each necklace has 6 beads. How many beads are there in all 4 necklaces?', gq: 'How many necklaces are there?', sq: 'How many beads are on each necklace?', box: 'necklace', boxes: 'necklaces', labels: ['Number of necklaces', 'Beads in each necklace', 'Total number of beads'], unit: 'beads' },
+  { g: 5, s: 3, text: 'A rickshaw has 3 wheels. 5 rickshaws are parked outside the school. How many wheels of the rickshaws are there in all?', gq: 'How many rickshaws are there?', sq: 'How many wheels does each rickshaw have?', box: 'rickshaw', boxes: 'rickshaws', labels: ['Number of rickshaws', 'Wheels on each rickshaw', 'Total number of wheels'], unit: 'wheels' },
+];
+function rideStrip() {
+  const names = ['R · Read', 'I · Identify', 'D · Draw', 'E · Evaluate'];
+  const chips = names.map(n => h('span', {}, n));
+  return { el: h('div', { class: 'ride', 'aria-hidden': 'true' }, chips), set: k => chips.forEach((c, i) => { c.className = i < k ? 'done' : i === k ? 'now' : ''; }) };
+}
+function barBuilder(api, parent, c, onDone) {
+  let n = 1;
+  const bm = barModel(1, null, '?');
+  const out = h('output', {}, '1');
+  const change = d => { const v = n + d; if (v < 1 || v > 9) return; n = v; out.textContent = n; bm.set(n, null); sfx.pop(); };
+  const minus = h('button', { type: 'button', 'aria-label': 'Fewer boxes', onclick: () => change(-1) }, '−');
+  const plus = h('button', { type: 'button', 'aria-label': 'More boxes', onclick: () => change(1) }, '+');
+  const area = h('div', { class: 'below' });
+  const doneBtn = h('button', { class: 'btn go', type: 'button', onclick: () => {
+    if (n !== c.g) { sfx.oops(); run.mistakes++; shakeEl(bm.el); api.guide(`You drew ${n} ${n === 1 ? 'box' : 'boxes'}. We need one box for each ${c.box}. How many ${c.boxes} are there?`); return; }
+    minus.disabled = plus.disabled = true; doneBtn.remove(); sfx.good();
+    api.guide(`${c.g} boxes for ${c.g} ${c.boxes}. What do we write inside each box?`);
+    askChoice(area, { prompt: 'What goes inside each box?', options: opts3(c.s, [c.g, c.g * c.s]), answer: c.s,
+      hint: () => api.guide(`Each ${c.box} has the same number. Read the story again.`),
+      onDone: () => { bm.set(n, c.s); onDone(bm, area); } });
+  } }, '✔ Done drawing');
+  parent.append(bm.el, h('div', { class: 'steppers' }, h('div', { class: 'stepper' }, h('span', { class: 'lab' }, 'Boxes'), minus, out, plus)), doneBtn, area);
+  api.guide(`D is for Draw a bar model. Make one box for each ${c.box}. Use + and −, then tap Done.`);
+}
+function playRide(api) {
+  const pr = RIDE[run.round], g = pr.g, s = pr.s, total = g * s;
+  const strip = rideStrip();
+  const work = h('div', { class: 'below' });
+  api.stage.append(strip.el, h('p', { class: 'story' }, pr.text), work);
+  strip.set(0);
+  api.guide(`R is for Read the problem carefully. ${pr.text}`);
+  const readBtn = h('button', { class: 'btn go', type: 'button', onclick: () => { readBtn.remove(); identify(); } }, '✔ I have read it');
+  work.append(readBtn);
+  function identify() {
+    strip.set(1);
+    api.guide(`I is for Identify what you know. ${pr.gq}`);
+    askChoice(work, { prompt: pr.gq, options: opts3(g, [s, g + 1]), answer: g, hint: () => api.guide('Read the story again and find the number of groups.'), onDone: () => {
+      api.guide(pr.sq);
+      askChoice(work, { prompt: pr.sq, options: opts3(s, [g, s + 1]), answer: s, hint: () => api.guide('Find how many are in each one.'), onDone: () => {
+        work.replaceChildren(); strip.set(2);
+        barBuilder(api, work, pr, evaluate);
+      } });
+    } });
+  }
+  function evaluate(bm, area) {
+    strip.set(3);
+    const vt = vtable(g, s, pr.labels);
+    area.append(vt.el);
+    api.guide(`E is for Evaluate: write the multiplication sentence and solve. ${g} × ${s} = ?`);
+    askChoice(area, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on in ${s}s: ${skip(g, s)}.`), onDone: () => {
+      vt.setAll(total); bm.whole(`? = ${total}`); strip.set(4);
+      area.append(factCard(g, s, `${total} ${pr.unit} in all.`));
+      api.guide(`Solved with RIDE! ${g} × ${s} = ${total} ${pr.unit}.`);
+      learned(g, s); api.done();
+    } });
+  }
+}
+
+/* ---------- STALL 16: Final Checkpoint (pages 55–57) ---------- */
+const TOYBOX = [{ name: 'teddy box', toys: 4, e: '🧸' }, { name: 'wagon box', toys: 5, e: '🚂' }, { name: 'star box', toys: 2, e: '⭐' }];
+const KIDS = [{ who: 'Arav', pron: 'he', n: 3, box: 0 }, { who: 'Sia', pron: 'she', n: 4, box: 2 }, { who: 'Kabir', pron: 'he', n: 2, box: 1 }];
+function playFinal(api) {
+  const r = run.round;
+  if (r === 0) return riyaTask(api);
+  if (r <= 3) return toyTask(api, KIDS[r - 1], r === 3);
+  return milkTask(api);
+}
+function riyaTask(api) {
+  const bm = barModel(5, 5, '?');
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'story' }, 'Riya solved this problem: “There are 5 bags. Each bag has 4 marbles.” She drew this bar model:'), bm.el, below);
+  api.guide('Spot the mistake! What mistake did Riya make?');
+  const right = 'She wrote the wrong number inside the boxes';
+  askChoice(below, { options: shuffle(['She drew the wrong number of boxes', right]), answer: right, cls: 'words',
+    hint: () => api.guide('Count the boxes: 5 bags, 5 boxes. That part is right. Now look inside the boxes.'),
+    onDone: () => {
+      api.guide('Fix it! What number should be inside each box?');
+      askChoice(below, { prompt: 'Each bag has…', options: opts3(4, [5, 20]), answer: 4, hint: () => api.guide('Read it again: each bag has 4 marbles.'), onDone: () => {
+        bm.set(5, 4);
+        api.guide('Now the bar model is right. 5 × 4 = ?');
+        askChoice(below, { prompt: '5 × 4 = ?', options: choices(20, 5, 4), answer: 20, onDone: () => {
+          bm.whole('? = 20'); below.append(factCard(5, 4, '5 bags with 4 marbles in each make 20 marbles.')); learned(5, 4); api.done();
+        } });
+      } });
+    } });
+}
+function toyTask(api, kid, askMost) {
+  const box = TOYBOX[kid.box], g = kid.n, s = box.toys, total = g * s;
+  const cat = h('div', { class: 'toycat' }, TOYBOX.map(b => h('div', { class: 'toybox' }, h('span', { class: 'e', 'aria-hidden': 'true' }, b.e), h('span', {}, b.name), h('span', { class: 'eyebrow' }, `${b.toys} toys`))));
+  const have = h('div', { class: 'toycat', 'aria-label': `${g} ${box.name}es` }, Array.from({ length: g }, () => h('div', { class: 'toybox' }, h('span', { class: 'e', 'aria-hidden': 'true' }, box.e), h('span', { class: 'eyebrow' }, `${s} toys`))));
+  const below = h('div', { class: 'below' });
+  const story = `${kid.who} has ${g} ${box.name}es. How many toys will ${kid.pron} have in all?`;
+  api.stage.append(h('p', { class: 'q' }, 'The toy boxes'), cat, h('p', { class: 'story' }, story), have, below);
+  api.guide(`${story} Which multiplication sentence tells this story?`);
+  const right = `${g} × ${s}`;
+  askChoice(below, { prompt: 'Which multiplication sentence?', options: shuffle([right, `${g} + ${s}`, `${s} × ${s}`]), answer: right, cls: 'eqs',
+    hint: () => api.guide(`${g} boxes with ${s} toys in each. The first number is how many groups.`),
+    onDone: () => {
+      const bm = barModel(g, s, '?'); const vt = vtable(g, s, ['Number of boxes', 'Toys in each box', 'Total toys']);
+      below.append(bm.el, vt.el);
+      api.guide(`Here is the bar model: ${g} boxes with ${s} in each. ${g} × ${s} = ?`);
+      askChoice(below, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on: ${skip(g, s)}.`), onDone: () => {
+        bm.whole(`? = ${total}`); vt.setAll(total); learned(g, s);
+        if (!askMost) { below.append(factCard(g, s, `${kid.who} will have ${total} toys.`)); return api.done(); }
+        const totals = KIDS.map(k => k.n * TOYBOX[k.box].toys);
+        const best = KIDS[totals.indexOf(Math.max(...totals))].who;
+        api.guide('d. Who has the most toys?');
+        askChoice(below, { prompt: 'Who has the most toys?', options: KIDS.map(k => k.who), answer: best, cls: 'words',
+          hint: () => api.guide(KIDS.map((k, i) => `${k.who} has ${totals[i]}`).join(', ') + '.'),
+          onDone: () => { below.append(h('div', { class: 'blanks' }, KIDS.map((k, i) => h('span', {}, `${k.who}: ${k.n} × ${TOYBOX[k.box].toys} = ${totals[i]}`)))); api.guide(`Yes! ${best} has the most toys.`); api.done(); } });
+      } });
+    } });
+}
+function milkTask(api) {
+  let n = 2, locked = false;
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const week = h('div', { class: 'week', role: 'img', 'aria-label': 'My milk record for one week' });
+  const draw = () => week.replaceChildren(...days.map(d => h('div', { class: 'day' }, h('span', {}, d), h('span', { class: 'g' }, '🥛'.repeat(n)))));
+  const out = h('output', {}, '2');
+  const change = d => { if (locked) return; const v = n + d; if (v < 1 || v > 4) return; n = v; out.textContent = n; draw(); sfx.pop(); };
+  const minus = h('button', { type: 'button', 'aria-label': 'Fewer glasses', onclick: () => change(-1) }, '−');
+  const plus = h('button', { type: 'button', 'aria-label': 'More glasses', onclick: () => change(1) }, '+');
+  const below = h('div', { class: 'below' });
+  const doneBtn = h('button', { class: 'btn go', type: 'button', onclick: () => {
+    locked = true; doneBtn.remove(); minus.disabled = plus.disabled = true;
+    api.guide(`If you drink ${n} ${n === 1 ? 'glass' : 'glasses'} every day for 7 days: ${rep(7, n)} = ?`);
+    askChoice(below, { prompt: `${rep(7, n)} = ?`, options: choices(7 * n, 7, n), answer: 7 * n, hint: () => api.guide(`Count on in ${n}s: ${skip(7, n)}.`), onDone: () => {
+      below.append(factCard(7, n, `I drank ${7 * n} glasses of milk in 7 days.`)); learned(7, n); api.done();
+    } });
+  } }, '✔ That is me');
+  api.stage.append(h('p', { class: 'note' }, 'Nutrition fact: milk is rich in calcium and protein, which help build strong bones, teeth and muscles. About 2 glasses a day, as part of a balanced diet, helps you grow.'),
+    h('div', { class: 'steppers' }, h('div', { class: 'stepper' }, h('span', { class: 'lab' }, 'Glasses each day'), minus, out, plus)), week, doneBtn, below);
+  draw();
+  api.guide('My milk record! How many glasses of milk do you drink each day? Set the number, then tap “That is me”.');
+}
+
 /* ---------- level engine ---------- */
 const LEVELS = [
   { id: 1, part: 1, name: 'Bakery Trays', idea: 'Equal groups', page: 'Book pages 28–29', rounds: 5, cut: [1, 3], icon: '🧁', play: playTrays },
@@ -1160,6 +1670,12 @@ const LEVELS = [
   { id: 8, part: 2, name: 'Seed Board', idea: 'Tables of 3, 4 and 6', page: 'Book pages 41–44', rounds: 3, cut: [2, 5], icon: '🐚', play: playSeeds },
   { id: 9, part: 2, name: 'Hopscotch Lane', idea: 'Jumps on a number line', page: 'Book pages 45–46', rounds: 5, cut: [1, 3], icon: '🚦', play: playHops },
   { id: 10, part: 2, name: 'Zero Magic', idea: 'Multiplying by 0', page: 'Book page 47', rounds: 5, cut: [1, 3], icon: '🪄', play: playZero },
+  { id: 11, part: 3, name: "Golu's Homework", idea: 'Spot the error', page: 'Book pages 48–49', rounds: 5, cut: [1, 3], icon: '📝', play: playHomework },
+  { id: 12, part: 3, name: 'Table Detective', idea: 'Facts and the × grid', page: 'Book pages 49–51', rounds: 4, cut: [3, 6], icon: '🔍', play: playDetective },
+  { id: 13, part: 3, name: 'Jumps & Boxes', idea: 'Number line and colouring', page: 'Book pages 49–51', rounds: 5, cut: [2, 5], icon: '🦘', play: playJumpsBoxes },
+  { id: 14, part: 3, name: 'Tens & Ones', idea: 'Vertical multiplication', page: 'Book pages 52–53', rounds: 5, cut: [1, 3], icon: '🔟', play: playVertical },
+  { id: 15, part: 3, name: 'RIDE Problems', idea: 'Word problems with bar models', page: 'Book pages 53–55', rounds: 4, cut: [2, 4], icon: '🧸', play: playRide },
+  { id: 16, part: 3, name: 'Final Checkpoint', idea: 'Checkpoint 3', page: 'Book pages 55–57', rounds: 5, cut: [2, 4], icon: '🥛', play: playFinal },
 ];
 let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
@@ -1204,7 +1720,8 @@ function finishLevel() {
   const next = LEVELS[L.id];
   const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
   const msg = L.id === 5 ? 'You passed the Part 1 checkpoint! Part 2 has the tables of 3, 4 and 6.'
-    : L.id === LEVELS.length ? 'Zero was telling the truth, and you found out! You have finished every stall at the fair, Ayansh.'
+    : L.id === 10 ? 'Zero was telling the truth, and you found out! Part 3 has tens and ones and word problems.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 9, Ayansh! The fair is lit up for you.'
     : `You finished ${L.name}.${next ? ` Next stall: ${next.name}.` : ''}`;
   const tip = st < 3 ? 'Play this stall again to win all 3 stars.' : 'No slips at all. Amazing!';
   const close = () => overlay.remove();
@@ -1250,6 +1767,7 @@ function renderMap() {
   };
   $('stops1').replaceChildren(...LEVELS.filter(L => L.part === 1).map(item));
   $('stops2').replaceChildren(...LEVELS.filter(L => L.part === 2).map(item));
+  $('stops3').replaceChildren(...LEVELS.filter(L => L.part === 3).map(item));
   const cells = [h('span', { class: 'ch hd' }, 'Groups →')];
   for (let c = 1; c <= 10; c++) cells.push(h('span', { class: 'ch hd' }, String(c)));
   CHART_TABLES.forEach(t => {
