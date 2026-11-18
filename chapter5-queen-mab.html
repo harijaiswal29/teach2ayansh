@@ -1,0 +1,1417 @@
+<title>Queen Mab's Dreamland</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;800&display=swap">
+<style>
+/* Layout: one centred column under a starry night sky, where Queen Mab flies; white storybook cards hold the play. Follows Chapter 5 of Ayansh's English book, page by page. One deliberate night look (no light/dark switch), every colour set explicitly. */
+:root{
+  --night:#1F1A4D; --night-2:#2E2873; --star:rgba(255,238,184,.75); --star-2:rgba(190,178,255,.5);
+  --board:#FFFFFF; --ink:#221C4F; --ink-soft:#5C5786; --shadow:#0C0A2A;
+  --moon:#FFCF4A; --moon-soft:#FFF3C9;
+  --meadow:#1C8A5F; --meadow-soft:#D3F2E3;
+  --ember:#D24E2A; --ember-soft:#FFE1D6;
+  --sky:#2F62D0; --sky-soft:#DCE6FB;
+  --rose:#C93C76; --rose-soft:#FDE1EC;
+  --lilac:#EEE9FC; --lilac-2:#7B5CD6;
+  --locked:#DCDAEE; --locked-ink:#8F8BB3; --faded:#C5C2DE;
+  --on-night:#FFFFFF; --on-night-soft:#CBC5F4; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --read:"Andika","Trebuchet MS",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background-color:var(--night);color:var(--ink)}
+body{
+  font-family:var(--read);font-size:18px;line-height:1.45;
+  background-image:radial-gradient(circle,var(--star) 1.3px,transparent 2.4px),radial-gradient(circle,var(--star-2) 1px,transparent 2px);
+  background-size:53px 61px,37px 41px;background-position:0 0,19px 23px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--moon);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-night)}
+.brand{font-size:clamp(28px,6vw,38px);letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+.brand .moonmark{font-size:.9em}
+.brand small{display:block;font-family:var(--read);font-size:12px;font-weight:700;color:var(--on-night-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--moon);border:3px solid var(--ink);border-radius:999px;padding:2px 14px;box-shadow:0 3px 0 var(--shadow);font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-family:var(--display);font-weight:800;font-size:18px;border:3px solid var(--ink);border-radius:999px;padding:6px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--moon)}
+.btn.go{background:var(--meadow);color:var(--on-color)}
+.btn.big{font-size:22px;padding:8px 30px;min-height:58px}
+.btn.small{font-size:16px;min-height:40px;padding:2px 14px}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--lilac);border:3px solid var(--ink);display:grid;place-items:center;font-size:38px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:30px}
+
+/* hero: the chapter-opener letters */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.mailbox{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;background:var(--night);border:3px solid var(--ink);border-radius:16px;padding:14px 12px}
+.env{position:relative;aspect-ratio:4/3;max-width:100%;border:3px solid var(--ink);border-radius:10px;background:var(--moon-soft);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:4px 4px 6px;box-shadow:0 4px 0 var(--shadow);transition:transform .15s}
+.env::before{content:"";position:absolute;left:0;right:0;top:0;height:55%;background:linear-gradient(to bottom right,transparent 49%,var(--ink) 49% 51%,transparent 51%) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49%,var(--ink) 49% 51%,transparent 51%) right/50% 100% no-repeat;opacity:.35}
+.env:nth-child(1){transform:rotate(-4deg);background:var(--rose-soft)}
+.env:nth-child(2){transform:rotate(3deg);background:var(--sky-soft)}
+.env:nth-child(3){transform:rotate(-2deg);background:var(--moon-soft)}
+.env:nth-child(4){transform:rotate(4deg);background:var(--lilac)}
+.env:hover{transform:translateY(-3px) rotate(0)}
+.env.open{outline:3px solid var(--moon);outline-offset:3px}
+.env .stamp{font-size:clamp(20px,6vw,30px);line-height:1;position:relative}
+.env .lab{font-family:var(--display);font-weight:800;font-size:clamp(11px,3vw,15px);line-height:1.1;text-align:center}
+.letter{background:var(--moon-soft);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:6px;animation:pop .4s}
+.letter h3{font-size:22px}
+.letter .ask2{color:var(--ink-soft);font-weight:700}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--moon);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:700}
+
+/* map */
+.section-title{font-size:24px;margin-bottom:-6px;color:var(--on-night)}
+.section-title small{display:block;font-family:var(--read);font-size:14px;font-weight:700;color:var(--on-night-soft);margin-top:2px}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--moon);opacity:.45}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:var(--locked);border-color:var(--locked-ink)}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:38px;line-height:1;background:var(--lilac)}
+.stop:nth-child(4n+1) .stopicon{background:var(--moon-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--sky-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--rose-soft)}
+.stop:nth-child(4n) .stopicon{background:var(--meadow-soft)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-family:var(--read);font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:700;color:var(--lilac-2)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--faded)}
+.stars span.on{color:var(--moon);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:-6px;top:-14px;background:var(--rose);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+
+/* firefly jar */
+.jarcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.jarcard h2{font-size:24px}
+.jarcard h3{font-size:17px;color:var(--ink-soft)}
+.jar-words{display:flex;flex-wrap:wrap;gap:8px}
+.fly{border:2px dashed var(--faded);border-radius:999px;padding:2px 12px;font-weight:700;font-size:15px;color:var(--locked-ink);background:var(--board)}
+.fly.lit{border:2px solid var(--ink);color:var(--ink);background:var(--moon);box-shadow:0 0 10px rgba(255,207,74,.9)}
+.fly.lit.pair{background:var(--lilac)}
+.jarcount{font-weight:700}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch;font-size:16px}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-night)}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-night-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-night);background:transparent}
+.dots i.done{background:var(--meadow)}
+.dots i.now{background:var(--moon);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:700;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--moon);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:700;font-size:20px;text-align:center;margin-bottom:10px;text-wrap:balance}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:24px;min-width:96px;min-height:64px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer}
+.choice.words{font-family:var(--read);font-weight:700;font-size:19px;min-height:58px;max-width:320px;line-height:1.25}
+.choice.marks{font-size:44px;min-width:110px;line-height:1}
+.choice.marks small{display:block;font-family:var(--read);font-size:13px;font-weight:700}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--meadow);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--ember-soft);animation:shake .4s}
+.fb{min-height:1.5em;font-weight:700;font-size:19px;text-align:center;text-wrap:balance}
+.fb.good{color:var(--meadow)}
+.fb.oops{color:var(--ember)}
+.bigword{font-family:var(--display);font-weight:800;font-size:clamp(40px,11vw,60px);line-height:1;background:var(--moon-soft);border:3px solid var(--ink);border-radius:18px;padding:8px 26px 2px;animation:pop .35s}
+
+/* poem card */
+.poem{width:100%;max-width:560px;background:linear-gradient(var(--lilac),var(--board) 120px);border:3px solid var(--ink);border-radius:18px;padding:14px 18px 16px;display:flex;flex-direction:column;gap:12px}
+.poemhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.poemhead h3{font-size:24px}
+.verses{display:flex;flex-direction:column;gap:14px}
+.verse{display:flex;flex-direction:column;gap:2px;padding-left:12px;border-left:4px solid var(--faded)}
+.vnum{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.line{font-size:clamp(19px,4.6vw,22px);line-height:1.45;border-radius:8px;padding:0 6px;margin-left:-6px;transition:background .2s}
+.line.reading{background:var(--moon)}
+.gw{font:inherit;background:none;border:none;padding:0 2px;margin:0;cursor:pointer;color:var(--lilac-2);font-weight:700;text-decoration:underline dotted 3px;text-underline-offset:4px;border-radius:6px}
+.gw::after{content:"✨";font-size:.6em;vertical-align:super}
+.gw.seen{color:var(--ink);text-decoration-style:solid;background:var(--moon-soft)}
+.gw.seen::after{content:""}
+.meaning{background:var(--moon-soft);border:3px solid var(--ink);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;animation:pop .3s}
+.mword{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--read);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac-2);color:var(--on-color);border-radius:999px;padding:1px 10px}
+.mmean{font-weight:700;font-size:19px}
+.mex{color:var(--ink-soft);font-weight:700;font-size:17px}
+.credit{font-size:14px;color:var(--ink-soft);font-weight:700;text-align:right}
+
+/* rhyme stars */
+.starfield{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:8px}
+.wstar{font-family:var(--display);font-weight:800;font-size:24px;min-width:110px;min-height:64px;padding:4px 16px 0;border:3px solid var(--ink);border-radius:999px;background:var(--night-2);color:var(--on-night);box-shadow:0 5px 0 var(--shadow);cursor:pointer;animation:bob 2.2s ease-in-out infinite}
+.wstar::before{content:"★ ";color:var(--moon)}
+.wstar:nth-child(2){animation-delay:.4s}.wstar:nth-child(3){animation-delay:.8s}.wstar:nth-child(4){animation-delay:1.2s}
+.wstar:disabled{opacity:.35;cursor:default;animation:none}
+.wstar.right{background:var(--moon);color:var(--ink);opacity:1;animation:pop .35s}
+.wstar.right::before{color:var(--ink)}
+.wstar.wrong{animation:shake .4s}
+.couplet{background:var(--lilac);border:3px solid var(--ink);border-radius:14px;padding:10px 16px;font-size:clamp(18px,4.4vw,21px);animation:pop .35s;max-width:100%}
+.couplet p{line-height:1.5}
+.couplet .dim{color:var(--ink-soft);font-size:.85em}
+mark{background:var(--moon);color:var(--ink);border-radius:6px;padding:0 4px;font-weight:700}
+
+/* wand scene */
+.scene{position:relative;width:min(100%,420px);height:210px;border:3px solid var(--ink);border-radius:18px;overflow:hidden;background:linear-gradient(var(--night-2),var(--night));background-image:radial-gradient(circle,var(--star) 1.2px,transparent 2px),linear-gradient(var(--night-2),var(--night));background-size:31px 29px,100% 100%}
+.scene span{position:absolute;line-height:1}
+.smoon{top:12px;right:16px;font-size:34px}
+.sfairy{top:22px;left:calc(50% - 26px);font-size:52px;animation:bob 1.8s ease-in-out infinite}
+.sbed{bottom:8px;left:calc(50% - 44px);font-size:82px}
+.skid{bottom:52px;left:calc(50% - 16px);font-size:34px}
+.trail{top:94px;left:46%;font-size:30px;opacity:0}
+.trail.goleft{animation:goleft 1s ease-in-out forwards}
+.trail.goright{animation:goright 1s ease-in-out forwards}
+.dreamb{top:72px;right:10px;font-size:22px;background:var(--board);border:3px solid var(--ink);border-radius:999px;padding:6px 10px;animation:pop .4s}
+.scene.bad .dreamb{background:var(--ember-soft)}
+.scene .dir{bottom:8px;left:10px;font-family:var(--display);font-weight:800;font-size:15px;color:var(--on-night-soft)}
+.scene .dir.r{left:auto;right:10px}
+
+/* sorter */
+.sortcard{width:min(100%,360px);min-height:150px;border:3px solid var(--ink);border-radius:18px;background:var(--moon-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;text-align:center;box-shadow:0 5px 0 var(--ink);animation:drop .35s ease-out}
+.sortcard .se{font-size:54px;line-height:1.1}
+.sortcard .st{font-weight:700;font-size:21px;line-height:1.25}
+.sortcard.fly{animation:flyaway .5s ease-in forwards}
+.jars{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.jar{font-family:var(--display);font-weight:800;font-size:20px;min-height:64px;min-width:150px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;box-shadow:0 5px 0 var(--ink);cursor:pointer}
+.jar:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.jar.good{background:var(--meadow-soft)}
+.jar.bad{background:var(--ember-soft)}
+.jar.real{background:var(--sky-soft)}
+.jar.fancy{background:var(--lilac)}
+.count{font-weight:700;color:var(--ink-soft)}
+.chart2{width:100%;max-width:560px;display:grid;grid-template-columns:1fr 1fr;border:3px solid var(--ink);border-radius:14px;overflow:hidden}
+.chart2 h3{font-size:17px;padding:8px 10px;border-bottom:2px solid var(--ink)}
+.chart2 .ccol{display:flex;flex-direction:column;min-width:0}
+.chart2 .ccol:first-child{border-right:2px solid var(--ink)}
+.chart2 .ccol:first-child h3{background:var(--meadow-soft)}
+.chart2 .ccol:last-child h3{background:var(--ember-soft)}
+.chart2 ul{list-style:none;margin:0;padding:6px 10px 10px;display:flex;flex-direction:column;gap:4px;min-height:60px;font-size:16px;font-weight:700}
+.chart2 li{animation:pop .35s;border-bottom:2px dashed var(--faded);padding-bottom:3px}
+
+/* dream cards */
+.dcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:560px}
+.dcard{position:relative;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px 30px;min-height:130px;text-align:center}
+.dcard .de{font-size:clamp(30px,8vw,42px);line-height:1.1}
+.dcard .dt{font-weight:700;font-size:clamp(14px,3.6vw,16px);line-height:1.2}
+.dcard .tick{position:absolute;bottom:6px;right:8px;width:24px;height:24px;border:3px solid var(--ink);border-radius:6px;background:var(--board);display:grid;place-items:center;font-size:16px;font-weight:800;line-height:1}
+.dcard[aria-pressed="true"]{background:var(--moon-soft);border-color:var(--sky)}
+.dcard[aria-pressed="true"] .tick{background:var(--sky);color:var(--on-color)}
+.dcard[aria-pressed="true"] .tick::after{content:"✔"}
+.dcard:disabled{cursor:default}
+.dcard.yes{background:var(--meadow-soft)}
+.dcard.yes .tick{background:var(--meadow);color:var(--on-color)}
+.dcard.no{opacity:.4}
+.dcards.words .dcard{min-height:100px}
+.dcards.words .dt{font-family:var(--display);font-weight:800;font-size:22px}
+
+/* ladder */
+.ladwrap{display:flex;gap:18px;width:100%;max-width:620px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ladder{display:flex;flex-direction:column-reverse;gap:10px;width:min(100%,300px);padding:6px 16px;border-left:8px solid var(--ink);border-right:8px solid var(--ink);border-radius:6px;background:repeating-linear-gradient(transparent 0 26px,rgba(34,28,79,.07) 26px 28px)}
+.rung{display:flex;align-items:center;gap:10px;min-height:56px;border:3px dashed var(--faded);border-radius:12px;background:var(--board);padding:4px 10px;font-weight:700;font-size:17px;line-height:1.2}
+.rung .rnum{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;background:var(--lilac)}
+.rung.next{border-color:var(--sky);background:var(--sky-soft);animation:pulse 1.2s infinite}
+.rung.filled{border-style:solid;border-color:var(--ink);background:var(--moon-soft);animation:pop .3s}
+.rung.filled .rnum{background:var(--meadow);color:var(--on-color)}
+.lopts{display:flex;flex-direction:column;gap:10px;width:min(100%,280px)}
+.lopt{min-height:54px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);font-weight:700;font-size:17px;line-height:1.2;padding:6px 12px;cursor:pointer;text-align:left}
+.lopt.used{visibility:hidden}
+.ladlabel{font-weight:700;color:var(--ink-soft);text-align:center}
+
+/* pronouns + builders */
+.sent{font-size:clamp(22px,5.4vw,28px);font-weight:700;text-align:center;line-height:1.4;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 18px;max-width:100%;animation:pop .3s}
+.sent .noun{background:var(--moon);border-radius:8px;padding:0 6px}
+.sent .pron{background:var(--meadow);color:var(--on-color);border-radius:8px;padding:0 6px;animation:pop .35s}
+.ctx{font-weight:700;text-align:center;max-width:46ch}
+.built{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:62px;align-items:center;width:100%}
+.bslot{min-width:56px;height:54px;border:3px dashed var(--faded);border-radius:12px;display:grid;place-items:center;padding:0 10px;font-size:22px;font-weight:700;background:var(--board)}
+.bslot.next{border-color:var(--sky);background:var(--sky-soft)}
+.bslot.filled{border-style:solid;border-color:var(--ink);background:var(--moon-soft);animation:pop .3s}
+.built.done .bslot{background:var(--meadow-soft)}
+.tiles{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.tile{font-family:var(--read);font-weight:700;font-size:22px;min-width:56px;min-height:54px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--moon);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.tile.punct{font-size:34px;line-height:1;background:var(--lilac)}
+.tile:disabled{opacity:.2;cursor:default}
+.pic{font-size:clamp(54px,15vw,80px);line-height:1;background:var(--sky-soft);border:3px solid var(--ink);border-radius:18px;padding:10px 22px}
+
+/* royal match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;width:100%;max-width:560px}
+.mcol{display:flex;flex-direction:column;gap:10px;min-width:0}
+.mcol h3{font-size:17px;text-align:center;border-radius:999px;padding:2px 8px}
+.mcol:first-child h3{background:var(--sky-soft);color:var(--sky)}
+.mcol:last-child h3{background:var(--rose-soft);color:var(--rose)}
+.mbtn{min-height:60px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);font-weight:700;font-size:clamp(16px,4vw,20px);cursor:pointer;padding:4px 8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.mbtn .me{font-size:1.4em;line-height:1}
+.mbtn.sel{background:var(--sky-soft);border-color:var(--sky);transform:translateY(-2px)}
+.mbtn.m0{background:var(--meadow-soft)}.mbtn.m1{background:var(--rose-soft)}.mbtn.m2{background:var(--lilac)}.mbtn.m3{background:var(--moon-soft)}
+.mbtn.done{cursor:default;box-shadow:0 2px 0 var(--ink)}
+.mbtn.done::after{content:"✔";color:var(--meadow)}
+.ballroom{font-size:clamp(28px,7vw,40px);letter-spacing:6px;text-align:center}
+
+/* guestbook + switch */
+.gbook{width:100%;max-width:560px;background:var(--moon-soft);border:3px solid var(--ink);border-radius:8px 18px 18px 8px;border-left:12px solid var(--lilac-2);padding:14px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 5px 0 var(--ink)}
+.gtitle{font-family:var(--display);font-weight:800;font-size:22px;text-align:center}
+.entry{font-size:clamp(18px,4.4vw,20px);line-height:1.6}
+.blank{display:inline-block;min-width:96px;text-align:center;border-bottom:3px solid var(--ink);font-weight:700;color:var(--ink-soft);padding:0 6px;margin:0 2px}
+.blank.next{background:var(--sky-soft);border-radius:8px 8px 0 0;animation:pulse 1.2s infinite;color:var(--sky)}
+.blank.filled{color:var(--ink);background:var(--meadow-soft);border-radius:8px 8px 0 0;animation:pop .3s}
+.bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:560px}
+.chip{font-weight:700;font-size:20px;min-height:52px;padding:2px 16px;border:3px solid var(--ink);border-radius:999px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.chip.used{background:var(--meadow-soft)}
+.cluebox{font-weight:700;font-size:16px;color:var(--ink-soft);text-align:center;max-width:46ch}
+.from,.to{width:100%;max-width:560px;border:3px solid var(--ink);border-radius:16px;padding:10px 16px;display:flex;flex-direction:column;gap:4px}
+.from{background:var(--sky-soft)}
+.to{background:var(--rose-soft)}
+.fromtext,.tosent{font-size:clamp(19px,4.8vw,23px);font-weight:700;line-height:1.6}
+
+/* question marks */
+.endsent{font-size:clamp(22px,5.4vw,28px);font-weight:700;text-align:center;line-height:1.4;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}
+.endbox{display:inline-grid;place-items:center;width:46px;height:50px;border:3px dashed var(--sky);border-radius:10px;background:var(--sky-soft);font-family:var(--display);font-size:36px;font-weight:800;line-height:1}
+.endbox.filled{border-style:solid;border-color:var(--ink);background:var(--meadow-soft);animation:pop .3s}
+.rules{background:var(--moon-soft);border:3px solid var(--ink);border-radius:14px;padding:8px 14px;font-weight:700;font-size:16px;display:flex;flex-direction:column;gap:2px;max-width:420px}
+.capsrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.cw{font-family:var(--read);font-weight:700;font-size:26px;min-height:58px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.cw.fixed{background:var(--meadow);color:var(--on-color);animation:pop .35s;opacity:1}
+.cw:disabled{cursor:default}
+
+/* teddy */
+.thennow{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:560px}
+.tn{border:3px solid var(--ink);border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;text-align:center}
+.tn:first-child{background:var(--moon-soft)}
+.tn:last-child{background:var(--sky-soft)}
+.tn .tnp{font-size:clamp(28px,8vw,40px);line-height:1.2}
+.tn h3{font-size:20px}
+.tn p{font-weight:700;font-size:16px}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(12,10,42,.65);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:34px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:var(--faded);display:inline-block}
+.bigstars span.on{color:var(--moon);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;font-style:normal;font-size:20px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes drop{0%{transform:translateY(-20px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes flyaway{to{transform:translateY(40px) scale(.4);opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,98,208,.6)}50%{box-shadow:0 0 0 6px rgba(47,98,208,0)}}
+@keyframes goleft{0%{left:80%;opacity:1}100%{left:8%;opacity:1}}
+@keyframes goright{0%{left:8%;opacity:1}100%{left:80%;opacity:1}}
+@keyframes fall{to{transform:translateY(110vh) rotate(400deg)}}
+
+@media (max-width:480px){
+  body{font-size:17px}
+  .stage{padding:16px 12px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .mascot{width:54px;height:54px;font-size:30px}
+  .mascot.sm{width:44px;height:44px;font-size:24px}
+  .say{width:46px;height:46px}
+  .dcards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .poem{padding:12px 12px 14px}
+  .jar{min-width:130px;font-size:18px}
+  .mailbox{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand"><span class="moonmark" aria-hidden="true">🌙</span><span>Queen Mab's Dreamland<small>Ayansh's English · Chapter 5</small></span></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 36</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🧚</div>
+      <div class="hello-text">
+        <h2>Hello Ayansh! A fairy left letters in the mailbox.</h2>
+        <p>If you could open <b>one letter tonight</b>, which one would you choose?</p>
+        <div class="mailbox" id="mailbox"></div>
+        <div class="letter" id="letter" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🌟 You finished all of Chapter 5! Queen Mab says: sweet dreams, Ayansh.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · The poem<small>Book pages 7–8</small></h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Answer the questions<small>Book pages 9–10</small></h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Words and sentences<small>Book pages 11 and 13–16</small></h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Real life<small>Book pages 11–12</small></h2>
+    <ol class="stops" id="stops4"></ol>
+
+    <section class="jarcard card">
+      <h2>Firefly jar</h2>
+      <p class="note">Every new word you learn lights up a firefly.</p>
+      <h3>Poem words (tap them in Moonlight Reading)</h3>
+      <div class="jar-words" id="jarWords"></div>
+      <h3>Royal pairs (match them at the Royal Ball)</h3>
+      <div class="jar-words" id="jarPairs"></div>
+      <p class="jarcount" id="jarCount"></p>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <h3>How each stop follows the book</h3>
+        <ol>
+          <li><b>Moonlight Reading</b> (pages 7–8): the whole poem, a few verses at a time. “Read to me” reads it aloud and lights up each line. The four book words (hover, dales, dainty, horrid) and ten more hard words can be tapped for a meaning and a real-life example. One simple question follows each part.</li>
+          <li><b>Rhyme Stars</b> (page 8): every verse rhymes on lines 2 and 4 (brown/down, bed/head, fish/wish…). He catches the rhyming word and then sees the two lines together.</li>
+          <li><b>Magic Wand</b> (page 9, question a): why she waves her wand, which way she waves it for a good child (right to left) and a bad child (left to right), and what she looks like.</li>
+          <li><b>Two Dream Worlds</b> (page 9, question b): he sorts 15 things from the poem into the pleasant and the horrid dream, and the chart from the book fills in.</li>
+          <li><b>Dropped Dream Cards</b> (pages 9–10, question c): tick only the cards that are really in the poem. Round 1 uses the six cards from the book.</li>
+          <li><b>Real or Make-believe</b> (page 10, question d): to explain “imaginative”, he first sorts things into real and make-believe. Then he answers the book question. Talking birds and the fairy fish fountain are both accepted, because both are make-believe.</li>
+          <li><b>Dream Ladder</b> (page 10, question e): put the events in order, climbing from the bottom rung, like the ladder in the book.</li>
+          <li><b>Pronoun Pals</b> (page 11, question f): swap a naming word for he, she, it or they, then build the book's example sentences with she, it and they.</li>
+          <li><b>Royal Ball</b> (pages 13–14): match masculine and feminine pairs. It uses every pair from both pages, plus lion/lioness and tiger/tigress from the poem.</li>
+          <li><b>Royal Guestbook</b> (page 15): fill in the guestbook from the word bank. Each line has a clue word (“his” or “her”), so he learns to look for it. Then he changes whole sentences from masculine to feminine.</li>
+          <li><b>Question Quest</b> (page 16): full stop or question mark, capital letters (including “I”), and building a question about each of the three pictures.</li>
+          <li><b>Sleepy Teddy</b> (pages 11–12): the Real Route bedtime habits, a bedtime routine to put in order, and the Heritage Route “Then and Now”.</li>
+        </ol>
+        <h3>Notes on the answers</h3>
+        <ul>
+          <li>Question e: the ladder in the book is read from the bottom up, so the order is: the child falls asleep, Queen Mab comes from the moon, she waves her wand, the child dreams. If he says Queen Mab arrives first, that is a sensible reading too. Talk about it.</li>
+          <li>Question d has no single answer in the book. Ask him <i>why</i> he picked his image. That “why” is the real point of the question.</li>
+          <li>The poem calls the child “it”, which is old-fashioned English. In Pronoun Pals, “it” is used only for things and animals.</li>
+          <li>Verse 7 is scary (ogres with knives). The game keeps it short and reminds him that it is only a dream.</li>
+          <li>Question f also asks him to write his own sentences. After Pronoun Pals, ask him to say one sentence each with she, it and they, then write them in the book.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Read the poem at bedtime. Let him be Queen Mab with a pencil “wand”: right to left for good dreams, left to right for horrid ones.</li>
+          <li>At a farm or the zoo, play “find the pair”: hen and rooster, cow and bull, lion and lioness.</li>
+          <li>At dinner, each person asks one question. Everyone listens for the question word at the start (what, where, can, why).</li>
+          <li>Glow-worms are fireflies. Thousands light up in the Sahyadri hills of Maharashtra just before the monsoon, which makes a lovely real-life link to the poem.</li>
+        </ul>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Dream map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🧚</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const $ = id => document.getElementById(id);
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+
+/* ---------- the poem (Thomas Hood, public domain) ---------- */
+const POEM = [
+  ['A little fairy comes at night,', 'Her eyes are blue, her hair is brown;', 'With silver spots upon her wings,', 'And from the moon she flutters down.'],
+  ['She has a little silver wand,', 'And when a good child goes to bed,', 'She waves her wand from right to left,', 'And makes a circle round its head.'],
+  ['And then it dreams of pleasant things,', 'Of fountains filled with fairy fish,', 'And trees that bear delicious fruit,', 'And bow their branches at a wish;'],
+  ['Of arbors filled with dainty scents', 'From lovely flowers that never fade;', 'Bright flies that glitter in the sun,', 'And glow-worms shining in the shade;'],
+  ['And talking birds with gifted tongues,', 'For singing songs and telling tales,', 'And pretty dwarfs to show the way', 'Through fairy hills and fairy dales.'],
+  ['But when a bad child goes to bed,', 'From left to right she weaves her rings,', 'And then it dreams all through the night', 'Of only ugly horrid things!'],
+  ['Then lions come with glaring eyes,', 'And tigers growl, a dreadful noise,', 'And ogres draw their cruel knives', 'To shed the blood of girls and boys.'],
+  ['Then stormy waves rush on to drown,', 'Or raging flames come scorching round,', 'Fierce dragons hover in the air,', 'And serpents crawl along the ground.'],
+  ['Then wicked children wake and weep,', 'And wish the long black gloom away;', 'But good ones love the dark, and find', 'The night as pleasant as the day.'],
+];
+const GLOSS = {
+  flutters: { m: 'moves its wings quickly and lightly', ex: 'A butterfly flutters from flower to flower.' },
+  wand: { m: 'a thin magic stick', ex: 'A magician taps his hat with a wand.' },
+  arbors: { m: 'shady garden shelters covered with climbing plants', ex: 'Like a garden gate with flowers growing all over it.' },
+  dainty: { m: 'small, pretty, and delicate', ex: 'A tiny teacup for a doll is dainty.', book: true },
+  scents: { m: 'nice smells', ex: 'Mogra flowers have a sweet scent.' },
+  'glow-worms': { m: 'small insects whose bodies shine at night', ex: 'Fireflies are glow-worms. They light up the hills of Maharashtra before the monsoon.' },
+  dales: { m: 'valleys', ex: 'The low green land between hills, like the valleys you see on the drive to Lonavala.', book: true },
+  horrid: { m: 'very unpleasant or frightening', ex: 'A bad dream about a monster is horrid.', book: true },
+  glaring: { m: 'staring in an angry way', ex: 'A cat glaring at a dog with big round eyes.' },
+  ogres: { m: 'big, scary giants in fairy tales', ex: 'Like the giant in Jack and the Beanstalk.' },
+  hover: { m: 'stay floating in one place', ex: 'A hummingbird or a helicopter can hover in the air.', book: true },
+  serpents: { m: 'snakes', ex: 'Kaa in The Jungle Book is a serpent.' },
+  weep: { m: 'cry', ex: 'A baby may weep when it is hungry.' },
+  gloom: { m: 'darkness that feels sad', ex: 'A dark, rainy evening with all the lights off is full of gloom.' },
+};
+const GKEYS = Object.keys(GLOSS);
+const GRE = new RegExp('\\b(' + [...GKEYS].sort((a, b) => b.length - a.length).join('|') + ')\\b', 'gi');
+
+/* ---------- other data ---------- */
+const LETTERS = [
+  { e: '💗', t: 'Friendship', dream: 'You and your best friend build a treehouse on a cloud, with a slide all the way down to the playground.' },
+  { e: '🎈', t: 'Adventure', dream: 'You float over the Sahyadri hills in a hot-air balloon and wave at the old forts below.' },
+  { e: '🍭', t: 'Candy World', dream: 'The river is mango milkshake, the rocks are laddoos, and the trees grow lollipops.' },
+  { e: '🚀', t: 'Space Journey', dream: 'Your rocket lands on the moon, and a little fairy with silver wings waves hello.' },
+];
+const READ = [
+  { st: [0, 1], guide: 'This is the poem “Queen Mab” by Thomas Hood. Tap “Read to me” and follow the lines. Tap a sparkly word to find out what it means.', q: 'Where does the little fairy come from?', opts: ['the moon', 'the sea', 'a tall tree'], a: 'the moon', hint: 'Find the line that ends with “flutters down”.', after: 'Yes! She flutters down from the moon, like a leaf floating down from a tree.' },
+  { st: [2, 3], guide: 'When a good child sleeps, the dreams are lovely. Let’s read verses 3 and 4.', q: 'What swims in the fountains?', opts: ['fairy fish', 'ducks', 'frogs'], a: 'fairy fish', hint: 'Read the line about the fountains.', after: 'Fairy fish! Fish that are also fairies. Imagine that!' },
+  { st: [4], guide: 'Verse 5 has birds and dwarfs. Read it with me.', q: 'What do the talking birds do?', opts: ['sing songs and tell tales', 'eat all the fruit', 'sleep all day'], a: 'sing songs and tell tales', hint: 'Read the second line: “For singing songs and…”', after: 'Right! They sing songs and tell tales. A tale is a story.' },
+  { st: [5, 6, 7], guide: 'Now the bad child’s dreams. These verses are a bit scary, but don’t worry. It is only a dream!', q: 'Which of these comes in a horrid dream?', opts: ['lions with glaring eyes', 'a birthday cake', 'a rainbow'], a: 'lions with glaring eyes', hint: 'Look at the first line of verse 7.', after: 'Yes. Lions with glaring eyes. Glaring means staring in an angry way.' },
+  { st: [8], guide: 'The last verse. Who loves the dark?', q: 'How do good children find the night?', opts: ['as pleasant as the day', 'very scary', 'too long'], a: 'as pleasant as the day', hint: 'Read the very last line of the poem.', after: 'Yes! Good children find the night as pleasant as the day, because their dreams are happy.' },
+];
+const RHYMES = [
+  { s: 0, w: 'brown', r: 'down' }, { s: 1, w: 'bed', r: 'head' }, { s: 2, w: 'fish', r: 'wish' },
+  { s: 3, w: 'fade', r: 'shade' }, { s: 4, w: 'tales', r: 'dales' }, { s: 5, w: 'rings', r: 'things' },
+  { s: 6, w: 'noise', r: 'boys' }, { s: 7, w: 'round', r: 'ground' }, { s: 8, w: 'away', r: 'day' },
+];
+const DISTRACT = ['moon', 'wings', 'wand', 'fruit', 'sun', 'night', 'eyes', 'air', 'dark', 'left', 'birds', 'fairy', 'trees', 'song', 'child'];
+const DREAMS = [
+  { e: '⛲🐟', t: 'fountains filled with fairy fish', k: true },
+  { e: '🌳🍎', t: 'trees that bear delicious fruit', k: true },
+  { e: '🌸🌿', t: 'arbors filled with dainty scents', k: true },
+  { e: '🌷', t: 'lovely flowers that never fade', k: true },
+  { e: '✨☀️', t: 'bright flies that glitter in the sun', k: true },
+  { e: '🐛✨', t: 'glow-worms shining in the shade', k: true },
+  { e: '🐦🎶', t: 'talking birds singing songs', k: true },
+  { e: '🍄🧭', t: 'pretty dwarfs showing the way', k: true },
+  { e: '🦁', t: 'lions with glaring eyes', k: false },
+  { e: '🐯', t: 'tigers that growl', k: false },
+  { e: '👹', t: 'ogres with cruel knives', k: false },
+  { e: '🌊', t: 'stormy waves', k: false },
+  { e: '🔥', t: 'raging flames', k: false },
+  { e: '🐉', t: 'fierce dragons in the air', k: false },
+  { e: '🐍', t: 'serpents crawling on the ground', k: false },
+];
+const CARD_ROUNDS = [
+  [{ e: '🏴‍☠️⛵', t: 'pirate ships that sail the seas', ok: false }, { e: '⛲🐟', t: 'fountain with fairy fish', ok: true }, { e: '🐉', t: 'fierce dragons in the air', ok: true },
+   { e: '🦄', t: 'unicorns that bring magic', ok: false }, { e: '🌳🍎', t: 'trees that bear delicious fruit', ok: true }, { e: '🧜‍♀️', t: 'mermaids that sing sweet songs', ok: false }],
+  [{ e: '🌸🌿', t: 'arbors filled with dainty scents', ok: true }, { e: '🚗☁️', t: 'flying cars in the clouds', ok: false }, { e: '🌊', t: 'stormy waves that drown', ok: true },
+   { e: '🍫', t: 'a river of chocolate', ok: false }, { e: '✨🐛', t: 'bright flies and glow-worms', ok: true }, { e: '🐦🎶', t: 'talking birds telling tales', ok: true }],
+  [{ e: '🦁', t: 'lions with glaring eyes', ok: true }, { e: '🤖', t: 'a robot best friend', ok: false }, { e: '🐍', t: 'serpents crawling along the ground', ok: true },
+   { e: '🍄🧭', t: 'pretty dwarfs who show the way', ok: true }, { e: '🚀', t: 'a rocket to Mars', ok: false }, { e: '⛄', t: 'snowmen that dance', ok: false }],
+];
+const REAL = [
+  [{ e: '🐛✨', t: 'glow-worms shining in the shade', k: true, why: 'Real! Fireflies really glow. Thousands light up in the Sahyadri hills just before the monsoon.' },
+   { e: '🐦🎶', t: 'talking birds telling tales', k: false, why: 'Make-believe! A parrot can copy a few words, but no bird can tell a story.' },
+   { e: '🌳🥭', t: 'trees that bear delicious fruit', k: true, why: 'Real! Think of a mango tree in summer.' },
+   { e: '⛲🐟', t: 'fountains filled with fairy fish', k: false, why: 'Make-believe! Real fish live in ponds, but there are no fairy fish.' },
+   { e: '🦁', t: 'lions with glaring eyes', k: true, why: 'Real! Lions live in the Gir forest in Gujarat.' }],
+  [{ e: '🐉', t: 'fierce dragons in the air', k: false, why: 'Make-believe! Dragons live only in stories.' },
+   { e: '🌊', t: 'stormy waves', k: true, why: 'Real! In the monsoon, big waves crash on the beach.' },
+   { e: '👹', t: 'ogres with cruel knives', k: false, why: 'Make-believe! Ogres are giants from fairy tales.' },
+   { e: '🧚🌙', t: 'a fairy flying down from the moon', k: false, why: 'Make-believe! Fairies come from our imagination.' },
+   { e: '🌹', t: 'flowers with sweet scents', k: true, why: 'Real! Roses and mogra smell sweet.' }],
+];
+const LADDERS = [
+  { title: 'Queen Mab’s dream ladder (page 10)', steps: ['The child falls asleep.', 'Queen Mab comes from the moon.', 'She waves her wand.', 'The child dreams.'] },
+  { title: 'A good child’s night', steps: ['A good child goes to bed.', 'She waves her wand from right to left.', 'She makes a circle round its head.', 'It dreams of pleasant things.'] },
+  { title: 'A bad child’s night', steps: ['A bad child goes to bed.', 'She weaves her rings from left to right.', 'It dreams of horrid things.', 'It wakes up and weeps.'] },
+];
+const PRON = [
+  { n: 'Queen Mab', r: 'has a silver wand.', a: 'She' },
+  { n: 'The wand', r: 'sparkles in the dark.', a: 'It' },
+  { n: 'The lions', r: 'growl at night.', a: 'They' },
+  { n: 'The moon', r: 'shines on the castle.', a: 'It' },
+  { n: 'Ayansh', r: 'reads a story before bed.', a: 'He' },
+  { n: 'The fairy fish', r: 'swim in the fountain.', a: 'They' },
+  { n: 'Mummy', r: 'switches off the light.', a: 'She' },
+  { n: 'The dragon', r: 'flies over the hills.', a: 'It' },
+  { n: 'The talking birds', r: 'sing sweet songs.', a: 'They' },
+  { n: 'The princess', r: 'waves from the window.', a: 'She' },
+  { n: 'Papa and Ayansh', r: 'look at the stars.', a: 'They' },
+  { n: 'The glow-worm', r: 'shines in the shade.', a: 'It' },
+];
+const BUILDS = [
+  [{ ctx: 'Queen Mab visits a sleeping child. Build a sentence that starts with “She”.', answer: ['She', 'sprinkled', 'fairy dust', 'on', 'the child', '.'], extra: ['?'] },
+   { ctx: 'Now her silver wand. Build a sentence about the wand that starts with “It”.', answer: ['It', 'glowed', 'like', 'a little star', '.'], extra: ['?'] }],
+  [{ ctx: 'Queen Mab and the child go on a dream trip together. Use “They”.', answer: ['They', 'flew', 'through', 'a magical dream', '.'], extra: ['?'] }],
+];
+// [masculine, feminine, emoji m, emoji f]
+const ROYAL = [
+  [['king', 'queen', '👑', '👑'], ['prince', 'princess', '🤴', '👸'], ['steward', 'stewardess', '🍽️', '🍽️'], ['uncle', 'aunt', '👨', '👩']],
+  [['stallion', 'mare', '🐎', '🐴'], ['boar', 'sow', '🐗', '🐖'], ['ram', 'ewe', '🐏', '🐑'], ['peacock', 'peahen', '🦚', '🦚']],
+  [['gander', 'goose', '🪿', '🪿'], ['stag', 'doe', '🦌', '🦌'], ['chairman', 'chairwoman', '👨‍💼', '👩‍💼'], ['nephew', 'niece', '👦', '👧']],
+  [['husband', 'wife', '🤵', '👰'], ['grandfather', 'grandmother', '👴', '👵'], ['lion', 'lioness', '🦁', '🦁'], ['tiger', 'tigress', '🐯', '🐯']],
+];
+const ALL_PAIRS = ROYAL.flat();
+// [before, accepted answers, after]
+const GUEST = [
+  { bank: ['Prince', 'Princess', 'peacock', 'peahen', 'King', 'Queen'], lines: [
+    ['The ', ['Queen', 'Princess'], ' wore her crown and enjoyed visiting the castle.'],
+    ['The ', ['Prince', 'King'], ' and his little sister loved the royal garden.'],
+    ['The ', ['peahen'], ' fluffed her brown feathers and watched a play in the theatre.'],
+    ['The ', ['peacock'], ' spread his tail and performed on the castle stage.']] },
+  { bank: ['King', 'Queen', 'Prince', 'Princess', 'ram', 'ewe', 'stallion', 'mare'], lines: [
+    ['The ', ['King', 'Prince'], ' sat on his golden throne.'],
+    ['The ', ['Princess', 'Queen'], ' danced in her pink gown.'],
+    ['The ', ['ewe'], ' brought her little lamb to the party.'],
+    ['The ', ['stallion'], ' galloped in with his long mane flying.']] },
+];
+const SWITCH = [
+  [{ from: 'The king and the prince waved to the crowd.', parts: ['The ', { a: 'queen', o: ['queen', 'king', 'peahen'] }, ' and the ', { a: 'princess', o: ['princess', 'prince', 'aunt'] }, ' waved to the crowd.'] },
+   { from: 'My uncle rides a stallion.', parts: ['My ', { a: 'aunt', o: ['aunt', 'uncle', 'niece'] }, ' rides a ', { a: 'mare', o: ['mare', 'stallion', 'doe'] }, '.'] }],
+  [{ from: 'Grandfather told his nephew a bedtime story.', parts: [{ a: 'Grandmother', o: ['Grandmother', 'Grandfather', 'Queen'] }, ' told ', { a: 'her', o: ['her', 'his', 'its'] }, ' ', { a: 'niece', o: ['niece', 'nephew', 'aunt'] }, ' a bedtime story.'] },
+   { from: 'The ram and the gander slept in the barn.', parts: ['The ', { a: 'ewe', o: ['ewe', 'ram', 'sow'] }, ' and the ', { a: 'goose', o: ['goose', 'gander', 'mare'] }, ' slept in the barn.'] }],
+];
+const ENDS = [['Can parrots talk', '?'], ['The volcano is very hot', '.'], ['What can you see in the sky', '?'], ['I love my teddy bear', '.'], ['Where does Queen Mab live', '?'], ['Do you like bedtime stories', '?'], ['The stars are shining', '.']];
+const CAPS = [['where', 'is', 'the', 'parrot?'], ['can', 'i', 'see', 'the', 'moon?'], ['is', 'the', 'volcano', 'hot?']];
+const QBUILD = [
+  { pic: '🦜🌳', ctx: 'Picture a: a parrot on a branch. Build a question about it.', answer: ['Can', 'the', 'parrot', 'talk', '?'], extra: ['.'] },
+  { pic: '🌋', ctx: 'Picture b: a volcano with smoke coming out. Build a question about it.', answer: ['Why', 'is', 'the', 'volcano', 'smoking', '?'], extra: ['.'] },
+  { pic: '🧒🔭✨', ctx: 'Picture c: a boy with a telescope. Pretend you are the boy. Build his question.', answer: ['What', 'can', 'I', 'see', 'in the sky', '?'], extra: ['i', '.'] },
+];
+const HABITS = [
+  { e: '🕘', t: 'Go to bed on time', k: true, why: 'Yes! Your body rests and grows while you sleep.' },
+  { e: '📖', t: 'Read a story before sleeping', k: true, why: 'Yes! Stories help us relax.' },
+  { e: '📱', t: 'Watch videos in bed till late', k: false, why: 'Right. A bright screen tells your brain it is still daytime.' },
+  { e: '🎵', t: 'Listen to calm music', k: true, why: 'Yes! Soft music makes us feel sleepy.' },
+  { e: '🍫', t: 'Eat chocolate after brushing', k: false, why: 'Right. Brush last, so your teeth stay clean all night.' },
+  { e: '👨‍👩‍👦', t: 'Talk with your family', k: true, why: 'Yes! Sharing your day makes you feel safe and happy.' },
+  { e: '🤸', t: 'Jump on the bed at bedtime', k: false, why: 'Right. Jumping wakes your body up.' },
+];
+const ROUTINE = ['Eat dinner.', 'Brush your teeth.', 'Get into bed with a story book.', 'Switch off the light.', 'Fall asleep and dream.'];
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-queen-mab-v1';
+let P = { stars: {}, unlocked: 1, words: [], pairs: [], sound: true };
+let wordSet = new Set(), pairSet = new Set();
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  if (saved && typeof saved === 'object') P = { stars: saved.stars || {}, unlocked: saved.unlocked || 1, words: Array.isArray(saved.words) ? saved.words : [], pairs: Array.isArray(saved.pairs) ? saved.pairs : [], sound: saved.sound !== false };
+  wordSet = new Set(P.words); pairSet = new Set(P.pairs);
+}
+function save() { P.words = [...wordSet]; P.pairs = [...pairSet]; try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tick: i => tone(523 * Math.pow(2, Math.min(i, 24) / 24), 0.1, 'triangle'),
+  good: () => { tone(784, 0.12, 'sine', 0); tone(988, 0.12, 'sine', 0.1); tone(1319, 0.25, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  whoosh: () => { tone(900, 0.5, 'sine', 0, 0.08, 1800); tone(1400, 0.4, 'triangle', 0.1, 0.05, 2400); },
+  win: () => [659, 784, 988, 1319, 988, 1319].forEach((f, i) => tone(f, 0.2, 'triangle', i * 0.12, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+let voice = null;
+function pickVoice() {
+  try {
+    const vs = speechSynthesis.getVoices();
+    voice = vs.find(v => /en-IN/i.test(v.lang)) || vs.find(v => /en-GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+  } catch (e) {}
+}
+if (canSpeak) { pickVoice(); try { speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {} }
+function utter(text, rate = 0.9) {
+  const u = new SpeechSynthesisUtterance(text.replace(/[“”]/g, '').replace(/ \?/g, '?'));
+  u.rate = rate; u.pitch = 1.1; u.lang = voice ? voice.lang : 'en-IN'; if (voice) u.voice = voice;
+  return u;
+}
+let readToken = 0;
+function say(text) {
+  readToken++;
+  document.querySelectorAll('.line.reading').forEach(e => e.classList.remove('reading'));
+  try { if (!canSpeak || !P.sound) return; speechSynthesis.cancel(); speechSynthesis.speak(utter(text)); } catch (e) {}
+}
+function stopVoice() { readToken++; document.querySelectorAll('.line.reading').forEach(e => e.classList.remove('reading')); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} }
+// read poem lines one by one, lighting up the current line
+function readLines(els, onEnd) {
+  if (!canSpeak) return;
+  stopVoice();
+  const tok = readToken; let i = 0;
+  const next = () => {
+    if (tok !== readToken) return;
+    els.forEach(e => e.classList.remove('reading'));
+    if (i >= els.length) { onEnd && onEnd(); return; }
+    const el = els[i++]; el.classList.add('reading');
+    const u = utter(el.textContent, 0.8);
+    let fired = false; const fin = () => { if (fired) return; fired = true; setTimeout(next, 220); };
+    u.onend = fin; u.onerror = fin;
+    try { speechSynthesis.speak(u); } catch (e) { fin(); }
+  };
+  next();
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+
+/* ---------- shared pieces ---------- */
+function later(fn, ms) { const t = setTimeout(fn, reduce ? Math.min(ms, 400) : ms); cleanups.push(() => clearTimeout(t)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+function oops(fb, msg) { run.mistakes++; sfx.oops(); fb.className = 'fb oops'; fb.textContent = msg; }
+function good(fb, msg) { sfx.good(); fb.className = 'fb good'; fb.textContent = msg || praise(); }
+
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', labels }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const ok = Array.isArray(answer) ? answer.includes(opt) : opt === answer;
+    const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
+      if (over) return;
+      if (ok) { over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true); good(fb); onDone && onDone(opt); }
+      else { b.classList.add('wrong'); b.disabled = true; oops(fb, pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.'])); hint && hint(opt); }
+    } }, labels ? labels(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb); parent.append(wrap);
+  return wrap;
+}
+// a run of questions, one after another
+function askSeq(api, parent, qs, onAll) {
+  let i = 0;
+  const next = () => {
+    parent.replaceChildren();
+    if (i >= qs.length) return onAll();
+    const q = qs[i++];
+    if (q.guide) api.guide(q.guide);
+    if (q.show) parent.append(q.show());
+    askChoice(parent, { prompt: q.q, options: q.keep ? q.opts : shuffle([...q.opts]), answer: q.a, cls: q.cls || 'words',
+      hint: () => q.hint && api.guide(q.hint),
+      onDone: () => { if (q.after) api.guide(q.after); if (q.sayAfter !== false && q.after) say(q.after); later(next, q.wait || 1400); } });
+  };
+  next();
+}
+function lineEl(text, onWord) {
+  const p = h('p', { class: 'line' });
+  let last = 0;
+  text.replace(GRE, (m, w, idx) => {
+    p.append(text.slice(last, idx));
+    const key = w.toLowerCase();
+    const b = h('button', { type: 'button', class: 'gw' + (wordSet.has(key) ? ' seen' : ''), 'aria-label': `${m}: what does it mean?` }, m);
+    b.addEventListener('click', () => onWord(key, b));
+    p.append(b); last = idx + m.length; return m;
+  });
+  p.append(text.slice(last));
+  return p;
+}
+function poemCard(stanzas) {
+  const meaning = h('div', { class: 'meaning', 'aria-live': 'polite', hidden: true });
+  const lines = [];
+  const onWord = (key, b) => {
+    const g = GLOSS[key]; wordSet.add(key); save(); sfx.pop();
+    document.querySelectorAll('.gw').forEach(x => { if (x.textContent.toLowerCase() === key) x.classList.add('seen'); });
+    meaning.hidden = false;
+    meaning.replaceChildren(
+      h('div', { class: 'mword' }, key, g.book ? h('span', { class: 'tag' }, 'In your book') : null),
+      h('p', { class: 'mmean' }, cap(g.m) + '.'),
+      h('p', { class: 'mex' }, '🌟 ' + g.ex));
+    say(`${key}. It means ${g.m}. ${g.ex}`);
+  };
+  const verses = h('div', { class: 'verses' }, stanzas.map(si => {
+    const ls = POEM[si].map(t => lineEl(t, onWord)); lines.push(...ls);
+    return h('div', { class: 'verse' }, h('span', { class: 'vnum' }, `Verse ${si + 1}`), ls);
+  }));
+  const first = stanzas[0] + 1, last = stanzas[stanzas.length - 1] + 1;
+  let reading = false;
+  const readBtn = h('button', { type: 'button', class: 'btn small primary' }, '▶ Read to me');
+  const setReading = on => { reading = on; readBtn.textContent = on ? '■ Stop' : '▶ Read to me'; };
+  readBtn.addEventListener('click', () => {
+    if (reading) { stopVoice(); setReading(false); return; }
+    setReading(true); readLines(lines, () => setReading(false));
+  });
+  cleanups.push(() => stopVoice());
+  return h('div', { class: 'poem' },
+    h('div', { class: 'poemhead' }, h('h3', {}, first === last ? `Verse ${first}` : `Verses ${first}–${last}`), canSpeak ? readBtn : null),
+    verses, meaning,
+    last === 9 ? h('p', { class: 'credit' }, 'by Thomas Hood') : null);
+}
+function sorter(api, parent, items, jars, { onPlace, onAll, hint, why }) {
+  let i = 0, cur = null, busy = false;
+  const count = h('p', { class: 'count' });
+  let cardBox = h('div', { class: 'sortcard', 'aria-live': 'polite' });
+  const row = h('div', { class: 'jars' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const show = () => {
+    if (i >= items.length) { count.remove(); cardBox.remove(); row.remove(); return onAll(); }
+    cur = items[i++]; busy = false;
+    count.textContent = `${i} of ${items.length}`;
+    const card = h('div', { class: 'sortcard', 'aria-live': 'polite' }, h('span', { class: 'se', 'aria-hidden': 'true' }, cur.e), h('span', { class: 'st' }, cur.t));
+    cardBox.replaceWith(card); cardBox = card;
+  };
+  jars.forEach(j => {
+    const b = h('button', { type: 'button', class: 'jar ' + j.cls }, j.label);
+    b.addEventListener('click', () => {
+      if (busy || !cur) return;
+      if (j.k === cur.k) {
+        busy = true;
+        const msg = why ? why(cur) : praise();
+        good(fb, msg); if (why) say(msg);
+        onPlace && onPlace(cur);
+        cardBox.classList.add('fly');
+        later(show, why ? 2600 : 900);
+      } else { oops(fb, 'Not that one. Think again!'); shakeEl(cardBox); hint && api.guide(hint(cur)); }
+    });
+    row.append(b);
+  });
+  parent.append(count, cardBox, row, fb);
+  show();
+}
+function tickCards(api, parent, cards, { onDone, hint, words = false }) {
+  const grid = h('div', { class: 'dcards' + (words ? ' words' : '') });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let over = false;
+  const els = shuffle([...cards]).map(c => {
+    const b = h('button', { type: 'button', class: 'dcard', 'aria-pressed': 'false' },
+      h('span', { class: 'de', 'aria-hidden': 'true' }, c.e), h('span', { class: 'dt' }, c.t), h('span', { class: 'tick', 'aria-hidden': 'true' }));
+    b.addEventListener('click', () => { if (over) return; b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); sfx.pop(); });
+    grid.append(b); return { c, b };
+  });
+  const on = x => x.b.getAttribute('aria-pressed') === 'true';
+  const check = h('button', { type: 'button', class: 'btn go big' }, '✔ Check my ticks');
+  check.addEventListener('click', () => {
+    const wrongOn = els.filter(x => on(x) && !x.c.ok), missing = els.filter(x => !on(x) && x.c.ok);
+    if (!wrongOn.length && !missing.length) {
+      over = true; check.remove();
+      els.forEach(x => { x.b.disabled = true; x.b.classList.add(x.c.ok ? 'yes' : 'no'); });
+      good(fb); onDone(); return;
+    }
+    const parts = [];
+    if (wrongOn.length) parts.push(wrongOn.length === 1 ? 'One tick was wrong, so I took it off.' : `${wrongOn.length} ticks were wrong, so I took them off.`);
+    if (missing.length) parts.push(missing.length === 1 ? 'One more card needs a tick. Look again!' : `${missing.length} more cards need a tick. Look again!`);
+    oops(fb, parts.join(' '));
+    wrongOn.forEach(x => { x.b.setAttribute('aria-pressed', 'false'); shakeEl(x.b); });
+    hint && api.guide(hint);
+  });
+  parent.append(grid, check, fb);
+}
+function ladder(api, parent, steps, { onDone, hint }) {
+  const rungs = steps.map((_, i) => h('div', { class: 'rung' }, h('span', { class: 'rnum' }, String(i + 1)), h('span', { class: 'rtext' })));
+  const opts = h('div', { class: 'lopts' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let pos = 0;
+  rungs[0].classList.add('next');
+  shuffle([...steps]).forEach(s => {
+    const b = h('button', { type: 'button', class: 'lopt' }, s);
+    b.addEventListener('click', () => {
+      if (b.disabled || pos >= steps.length) return;
+      if (s === steps[pos]) {
+        b.disabled = true; b.classList.add('used');
+        rungs[pos].classList.remove('next'); rungs[pos].classList.add('filled'); rungs[pos].querySelector('.rtext').textContent = s;
+        sfx.tick(pos * 4); pos++; fb.textContent = '';
+        if (pos < steps.length) rungs[pos].classList.add('next');
+        else { opts.remove(); good(fb); say(steps.join(' ')); onDone(); }
+      } else { oops(fb, pos === 0 ? 'Is that the very first thing? Try again.' : 'What happens next? Try again.'); shakeEl(b); hint && api.guide(hint(pos)); }
+    });
+    opts.append(b);
+  });
+  parent.append(h('p', { class: 'ladlabel' }, 'Start at the bottom rung and climb up ⬆️'), h('div', { class: 'ladwrap' }, h('div', { class: 'ladder' }, rungs), opts), fb);
+}
+function matchPairs(api, parent, pairs, onAll) {
+  const L = shuffle(pairs.map((p, i) => ({ p, i }))), R = shuffle(pairs.map((p, i) => ({ p, i })));
+  let selL = null, selR = null, done = 0;
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const mk = (side, x) => {
+    const b = h('button', { type: 'button', class: 'mbtn' }, h('span', { class: 'me', 'aria-hidden': 'true' }, side === 'm' ? x.p[2] : x.p[3]), h('span', {}, side === 'm' ? x.p[0] : x.p[1]));
+    b.addEventListener('click', () => tap(side, x, b)); return b;
+  };
+  function tap(side, x, b) {
+    if (b.classList.contains('done')) return;
+    sfx.pop();
+    if (side === 'm') { selL && selL.b.classList.remove('sel'); selL = { x, b }; } else { selR && selR.b.classList.remove('sel'); selR = { x, b }; }
+    b.classList.add('sel');
+    if (!selL || !selR) return;
+    if (selL.x.i === selR.x.i) {
+      const c = 'm' + (done % 4), p = selL.x.p;
+      [selL.b, selR.b].forEach(e => { e.classList.remove('sel'); e.classList.add('done', c); e.disabled = true; });
+      pairSet.add(p[0]); save(); good(fb, `${cap(p[0])} and ${p[1]}!`); say(`${p[0]}, ${p[1]}`);
+      done++; selL = selR = null;
+      if (done === pairs.length) later(onAll, 900);
+    } else {
+      oops(fb, `${cap(selL.x.p[0])} and ${selR.x.p[1]} are not a pair. Try again!`);
+      shakeEl(selL.b); shakeEl(selR.b); selL.b.classList.remove('sel'); selR.b.classList.remove('sel'); selL = selR = null;
+      api.guide('A pair is the male and the female of the same kind, like king and queen, or ram and ewe.');
+    }
+  }
+  parent.append(h('div', { class: 'match' },
+    h('div', { class: 'mcol' }, h('h3', {}, 'Masculine (male)'), L.map(x => mk('m', x))),
+    h('div', { class: 'mcol' }, h('h3', {}, 'Feminine (female)'), R.map(x => mk('f', x)))), fb);
+}
+const buildHint = ans => (pos, t) => t === 'i' ? 'When you talk about yourself, “I” is always a capital letter.'
+  : pos === 0 ? 'A sentence starts with a capital letter. Which word has one?'
+  : pos === ans.length - 1 ? (ans[pos] === '?' ? 'An asking sentence ends with a question mark ?' : 'A telling sentence ends with a full stop .')
+  : `Read it out loud: “${ans.slice(0, pos).join(' ')}…” Which word comes next?`;
+function builder(api, parent, { answer, extra = [], onDone }) {
+  const slots = answer.map(() => h('span', { class: 'bslot' }));
+  const line = h('div', { class: 'built', 'aria-live': 'polite' }, slots);
+  const tiles = h('div', { class: 'tiles' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hint = buildHint(answer);
+  let pos = 0; slots[0].classList.add('next');
+  shuffle([...answer, ...extra]).forEach(t => {
+    const b = h('button', { type: 'button', class: 'tile' + (/^[.?]$/.test(t) ? ' punct' : '') }, t);
+    b.addEventListener('click', () => {
+      if (b.disabled || pos >= answer.length) return;
+      if (t === answer[pos]) {
+        b.disabled = true; slots[pos].textContent = t; slots[pos].classList.remove('next'); slots[pos].classList.add('filled');
+        sfx.tick(pos * 3); pos++; fb.textContent = '';
+        if (pos < answer.length) slots[pos].classList.add('next');
+        else { tiles.remove(); line.classList.add('done'); good(fb); say(answer.join(' ')); onDone(); }
+      } else { oops(fb, 'Not that one yet.'); shakeEl(b); api.guide(hint(pos, t)); }
+    });
+    tiles.append(b);
+  });
+  parent.append(line, tiles, fb);
+}
+function chart2(titles) {
+  const lists = [h('ul'), h('ul')];
+  const el = h('div', { class: 'chart2' }, titles.map((t, i) => h('div', { class: 'ccol' }, h('h3', {}, t), lists[i])));
+  return { el, add: it => lists[it.k ? 0 : 1].append(h('li', {}, `${it.e} ${it.t}`)) };
+}
+
+/* ---------- stop 1: Moonlight Reading ---------- */
+function playReading(api) {
+  const R = READ[run.round];
+  api.guide(R.guide);
+  api.stage.append(poemCard(R.st));
+  const below = h('div', { class: 'below' }); api.stage.append(below);
+  askChoice(below, { prompt: R.q, options: shuffle([...R.opts]), answer: R.a,
+    hint: () => api.guide('Look back at the poem. ' + R.hint),
+    onDone: () => { api.guide(R.after); api.done(); } });
+}
+
+/* ---------- stop 2: Rhyme Stars ---------- */
+function markWord(line, word) {
+  const i = line.toLowerCase().lastIndexOf(word);
+  if (i < 0) return [line];
+  return [line.slice(0, i), h('mark', {}, line.slice(i, i + word.length)), line.slice(i + word.length)];
+}
+function starPick(parent, opts, ans, onRight, onWrong) {
+  const field = h('div', { class: 'starfield' }); const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let over = false; const btns = [];
+  opts.forEach(o => {
+    const b = h('button', { type: 'button', class: 'wstar' }, o);
+    b.addEventListener('click', () => {
+      if (over) return;
+      if (o === ans) { over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true); good(fb); onRight(); }
+      else { b.classList.add('wrong'); b.disabled = true; oops(fb, 'That one doesn’t rhyme. Try again!'); onWrong(); }
+    });
+    btns.push(b); field.append(b);
+  });
+  parent.append(field, fb);
+}
+function playRhymes(api) {
+  const r = run.round, box = h('div', { class: 'below' }); api.stage.append(box);
+  if (r <= 2) {
+    const pairs = RHYMES.slice(r * 3, r * 3 + 3); let i = 0;
+    const next = () => {
+      box.replaceChildren();
+      if (i >= pairs.length) { api.guide('Three rhymes caught! Rhyming words make a poem sound like a song.'); return api.done(); }
+      const p = pairs[i++];
+      api.guide(`Which word rhymes with “${p.w}”? Rhyming words end with the same sound, like cat and hat.`);
+      box.append(h('p', { class: 'q' }, `Rhyme ${i} of 3: catch the star that rhymes with`), h('p', { class: 'bigword' }, p.w));
+      const opts = shuffle([p.r, ...shuffle(DISTRACT.filter(d => d !== p.w)).slice(0, 3)]);
+      starPick(box, opts, p.r, () => {
+        say(`${p.w}, ${p.r}`);
+        box.append(h('div', { class: 'couplet' },
+          h('p', { class: 'dim' }, `From verse ${p.s + 1}:`),
+          h('p', {}, markWord(POEM[p.s][1], p.w)), h('p', {}, markWord(POEM[p.s][3], p.r))));
+        later(next, 2600);
+      }, () => api.guide(`Say it out loud: “${p.w}”. Which star ends with the same sound?`));
+    };
+    next();
+  } else if (r === 3) {
+    api.guide('Tick ALL the words that rhyme with “night”. There is more than one!');
+    box.append(h('p', { class: 'bigword' }, 'night'));
+    tickCards(api, box, [
+      { e: '💡', t: 'light', ok: true }, { e: '☀️', t: 'bright', ok: true }, { e: '🪁', t: 'kite', ok: true },
+      { e: '⬜', t: 'white', ok: true }, { e: '🌙', t: 'moon', ok: false }, { e: '⭐', t: 'star', ok: false }], {
+      words: true, hint: 'Say each word after “night”: night… light? night… moon? Do they end the same way?',
+      onDone: () => { api.guide('Night, light, bright, kite, white. They all end with “-ight” or “-ite” and sound the same!'); api.done(); } });
+  } else {
+    askSeq(api, box, [
+      { guide: 'Odd one out! Three words rhyme. Which one does NOT rhyme?', q: 'bed · head · red · moon', opts: ['bed', 'head', 'red', 'moon'], keep: true, a: 'moon', hint: 'Bed, head, red all end in “-ed”.', after: 'Yes! Moon does not rhyme with bed.' },
+      { q: 'fish · wish · dish · cat', opts: ['fish', 'wish', 'dish', 'cat'], keep: true, a: 'cat', hint: 'Fish, wish, dish all end in “-ish”.', after: 'Yes! Cat is the odd one out.' },
+      { q: 'day · play · sun · way', opts: ['day', 'play', 'sun', 'way'], keep: true, a: 'sun', hint: 'Day, play, way all end in “-ay”.', after: 'Yes! Sun does not rhyme with day.' },
+    ], () => api.done());
+  }
+}
+
+/* ---------- stop 3: Magic Wand ---------- */
+function scene(good) {
+  const trail = h('span', { class: 'trail', 'aria-hidden': 'true' }, '✨');
+  const dream = h('span', { class: 'dreamb', hidden: true }, good ? '⛲🐟🍎🐦' : '🦁🐉🔥🐍');
+  const el = h('div', { class: 'scene' + (good ? '' : ' bad'), role: 'img', 'aria-label': 'Queen Mab above a sleeping child' },
+    h('span', { class: 'smoon', 'aria-hidden': 'true' }, '🌙'), h('span', { class: 'sfairy', 'aria-hidden': 'true' }, '🧚'),
+    trail, h('span', { class: 'sbed', 'aria-hidden': 'true' }, '🛏️'), h('span', { class: 'skid', 'aria-hidden': 'true' }, '😴'), dream,
+    h('span', { class: 'dir' }, 'LEFT'), h('span', { class: 'dir r' }, 'RIGHT'));
+  return { el, play: () => { trail.classList.add(good ? 'goleft' : 'goright'); sfx.whoosh(); later(() => { dream.hidden = false; }, 1100); } };
+}
+function playWand(api) {
+  const r = run.round, box = h('div', { class: 'below' }); api.stage.append(box);
+  if (r === 0) {
+    askSeq(api, box, [{ guide: 'Question a from your book. Think about what happens after she waves her wand.', q: 'Why does Queen Mab wave her wand?', opts: ['to wake children up', 'to make birds sing', 'to make children dream', 'to light the moon'], keep: true, a: 'to make children dream', hint: 'Read it again: she waves her wand, “And then it dreams of pleasant things.”', after: 'Yes! Her magic wand gives children dreams.' }], () => api.done());
+    return;
+  }
+  if (r === 1 || r === 2) {
+    const good1 = r === 1, sc = scene(good1), ans = good1 ? 'from right to left ⬅️' : 'from left to right ➡️';
+    api.guide(good1 ? 'A good child goes to bed. Which way does Queen Mab wave her wand?' : 'Now a bad child goes to bed. Which way does she weave her rings this time?');
+    box.append(sc.el);
+    askChoice(box, { prompt: good1 ? 'For a good child, she waves her wand…' : 'For a bad child, she weaves her rings…', options: ['from right to left ⬅️', 'from left to right ➡️'], answer: ans,
+      hint: () => api.guide(good1 ? 'The poem says: “She waves her wand from right to left.” Tip: hold up your left hand. Your thumb and first finger make an L for Left!' : 'The poem says: “From left to right she weaves her rings.” It is the opposite way!'),
+      onDone: () => { sc.play(); api.guide(good1 ? 'Right to left, and a circle round its head. Now the child dreams of fountains, fruit and singing birds!' : 'Left to right. Uh-oh! Now the child dreams of lions, dragons and flames. Horrid!'); api.done(); } });
+    return;
+  }
+  askSeq(api, box, [
+    { guide: 'What does Queen Mab look like? Fill in the missing words from the poem.', q: 'Her eyes are ______.', opts: ['blue', 'green', 'black'], a: 'blue', hint: 'Verse 1: “Her eyes are blue, her hair is brown.”', after: 'Blue eyes!', wait: 900 },
+    { q: 'Her hair is ______.', opts: ['brown', 'golden', 'red'], a: 'brown', hint: 'Verse 1: “Her eyes are blue, her hair is brown.”', after: 'Brown hair!', wait: 900 },
+    { q: 'She has silver spots upon her ______.', opts: ['wings', 'shoes', 'hat'], a: 'wings', hint: 'Verse 1: “With silver spots upon her wings.”', after: 'Silver spots on her wings!', wait: 900 },
+    { q: 'She has a little silver ______.', opts: ['wand', 'bell', 'crown'], a: 'wand', hint: 'Verse 2: “She has a little silver wand.”', after: 'You know Queen Mab very well now!' },
+  ], () => api.done());
+}
+
+/* ---------- stop 4: Two Dream Worlds ---------- */
+function playDreams(api) {
+  const items = run.items.slice(run.round * 5, run.round * 5 + 5);
+  api.guide(run.round === 0 ? 'Queen Mab makes two dream worlds. Is this from the pleasant dream or the horrid dream?' : 'More dreams to sort! Pleasant or horrid?');
+  const box = h('div', { class: 'below' });
+  api.stage.append(box, run.chart.el);
+  sorter(api, box, items, [{ k: true, label: '🌈 Pleasant dream', cls: 'good' }, { k: false, label: '🌩️ Horrid dream', cls: 'bad' }], {
+    onPlace: it => { run.chart.add(it); say(it.t); },
+    hint: it => `Is “${it.t}” nice or scary? Pleasant means nice. Horrid means very unpleasant or frightening.`,
+    onAll: () => { api.guide(run.round === 2 ? 'The chart is complete! Copy two from each side into your book.' : 'Look at the chart filling up!'); api.done(); } });
+}
+
+/* ---------- stop 5: Dropped Dream Cards ---------- */
+function playCards(api) {
+  api.guide(run.round === 0 ? 'Oh no! Queen Mab dropped her dream cards. Tick only the cards that are in the poem.' : 'More dropped cards! Tick only the ones from the poem.');
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  tickCards(api, box, CARD_ROUNDS[run.round], { hint: 'Think: is this thing in the poem, or is it from a different story? Pirates, unicorns and mermaids are not in this poem.',
+    onDone: () => { api.guide('All the right cards are back in Queen Mab’s bag!'); api.done(); } });
+}
+
+/* ---------- stop 6: Real or Make-believe ---------- */
+function playReal(api) {
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  if (run.round < 2) {
+    api.guide(run.round === 0 ? 'Some things in the poem are real. Some are make-believe, which means they happen only in our imagination. Real or make-believe?' : 'Real, or make-believe?');
+    sorter(api, box, REAL[run.round], [{ k: true, label: '🌍 Real', cls: 'real' }, { k: false, label: '✨ Make-believe', cls: 'fancy' }], {
+      why: it => it.why, hint: it => `Could you really see “${it.t}” in the world, or only in a story?`,
+      onAll: () => { api.guide('When we picture things that are not real, we are using our imagination. Something “imaginative” is full of imagination!'); api.done(); } });
+    return;
+  }
+  askSeq(api, box, [{ guide: 'Question d from your book. “Imaginative” means it comes from imagination, not from real life.', q: 'Which image from the poem is the most imaginative?', opts: ['talking birds', 'delicious fruit trees', 'fairy fish fountain', 'glow-worms shining'], keep: true, a: ['talking birds', 'fairy fish fountain'],
+    hint: 'Fruit trees and glow-worms are real. Pick one that could only happen in a dream!', after: 'Yes! That one is make-believe, so it is very imaginative. Now tell a grown-up why you picked it.', wait: 600 }], () => api.done());
+}
+
+/* ---------- stop 7: Dream Ladder ---------- */
+function playLadder(api) {
+  const Lr = LADDERS[run.round];
+  api.guide(run.round === 0 ? 'Question e: number the events on Queen Mab’s dream ladder. What happens first?' : `${Lr.title}. Put it in order, from the bottom up.`);
+  const box = h('div', { class: 'below' }, h('h3', {}, Lr.title)); api.stage.append(box);
+  ladder(api, box, Lr.steps, { hint: pos => pos === 0 ? 'Think about bedtime. What does the child do first?' : `After “${Lr.steps[pos - 1]}”, what happens next?`,
+    onDone: () => { api.guide('You climbed the whole ladder!'); api.done(); } });
+}
+
+/* ---------- stop 8: Pronoun Pals ---------- */
+function playPronouns(api) {
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  if (run.round < 3) {
+    const items = run.items.slice(run.round * 3, run.round * 3 + 3); let i = 0;
+    const next = () => {
+      box.replaceChildren();
+      if (i >= items.length) { api.guide('He for a boy, she for a girl, it for one thing or animal, they for more than one.'); return api.done(); }
+      const it = items[i++];
+      api.guide(i === 1 && run.round === 0 ? 'Instead of saying a name again and again, we can use a small word like he, she, it or they. Which word can take the place of the yellow words?' : 'Which small word can take the place of the yellow words?');
+      const noun = h('span', { class: 'noun' }, it.n);
+      box.append(h('p', { class: 'sent' }, noun, ' ' + it.r));
+      askChoice(box, { prompt: `Sentence ${i} of 3`, options: ['He', 'She', 'It', 'They'], answer: it.a, cls: '',
+        hint: () => api.guide(/ and |s$/.test(it.n) && it.a === 'They' ? 'Is it one, or more than one?' : it.a === 'It' ? 'Is it a person? If it is one thing or animal, we use “it”.' : 'Is it a boy or a girl?'),
+        onDone: () => { noun.replaceWith(h('span', { class: 'pron' }, it.a)); say(`${it.a} ${it.r}`); later(next, 1600); } });
+    };
+    next();
+    return;
+  }
+  const builds = BUILDS[run.round - 3]; let i = 0;
+  const next = () => {
+    box.replaceChildren();
+    if (i >= builds.length) { api.guide(run.round === 4 ? 'Now say your own sentence with “she”, one with “it”, and one with “they”. Then write them in your book!' : 'Great sentences!'); return api.done(); }
+    const b = builds[i++];
+    api.guide(b.ctx);
+    box.append(h('p', { class: 'ctx' }, b.ctx));
+    builder(api, box, { answer: b.answer, extra: b.extra, onDone: () => later(next, 1800) });
+  };
+  next();
+}
+
+/* ---------- stop 9: Royal Ball ---------- */
+function playRoyal(api) {
+  api.guide(run.round === 0 ? 'The palace guests are at the Royal Ball, but everyone has lost their partner! Tap a masculine word, then its feminine partner.' : run.round === 3 ? 'The lions and tigers from the poem came to the ball too!' : 'More guests are looking for their partners.');
+  const box = h('div', { class: 'below' }, h('p', { class: 'ballroom', 'aria-hidden': 'true' }, '🏰🎶💃🕺'));
+  api.stage.append(box);
+  matchPairs(api, box, ROYAL[run.round], () => { api.guide('Everyone found a partner. Let the music play!'); api.done(); });
+}
+
+/* ---------- stop 10: Royal Guestbook ---------- */
+function guestbook(api, parent, G, onAll) {
+  let pos = 0; const blanks = [];
+  const entries = G.lines.map((ln, i) => { const bl = h('span', { class: 'blank' }, '?'); blanks.push(bl); return h('p', { class: 'entry' }, h('b', {}, `${i + 1}. `), ln[0], bl, ln[2]); });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const bank = h('div', { class: 'bank' });
+  blanks[0].classList.add('next');
+  G.bank.forEach(w => {
+    const b = h('button', { type: 'button', class: 'chip' }, w);
+    b.addEventListener('click', () => {
+      if (pos >= G.lines.length) return;
+      if (G.lines[pos][1].includes(w)) {
+        blanks[pos].textContent = w; blanks[pos].classList.remove('next'); blanks[pos].classList.add('filled'); b.classList.add('used'); good(fb);
+        pos++;
+        if (pos < G.lines.length) blanks[pos].classList.add('next');
+        else { bank.remove(); clue.remove(); say(entries.map(e => e.textContent.replace(/^\d+\.\s*/, '')).join(' ')); onAll(); }
+      } else { oops(fb, 'Look for the clue word in the sentence.'); shakeEl(b); api.guide('“her” tells us it is a girl or a female animal. “his” tells us it is a boy or a male animal.'); }
+    });
+    bank.append(b);
+  });
+  const clue = h('p', { class: 'cluebox' }, 'Tap a word for the glowing blank. Clue words: her = feminine, his = masculine.');
+  parent.append(h('div', { class: 'gbook' }, h('div', { class: 'gtitle' }, '🏰 Royal Guestbook'), entries), clue, bank, fb);
+}
+function switchIt(api, parent, S, onAll) {
+  const slots = []; const sent = h('p', { class: 'tosent' });
+  S.parts.forEach(p => { if (typeof p === 'string') sent.append(p); else { const s = h('span', { class: 'blank' }, '?'); slots.push({ s, p }); sent.append(s); } });
+  parent.append(h('div', { class: 'from' }, h('span', { class: 'eyebrow' }, 'Masculine sentence'), h('p', { class: 'fromtext' }, S.from)),
+    h('div', { class: 'to' }, h('span', { class: 'eyebrow' }, 'Make it feminine'), sent));
+  const ask = h('div', { class: 'below' }); parent.append(ask);
+  let i = 0;
+  const next = () => {
+    ask.replaceChildren(); slots.forEach(x => x.s.classList.remove('next'));
+    if (i >= slots.length) { say(sent.textContent); return onAll(); }
+    const x = slots[i]; x.s.classList.add('next');
+    askChoice(ask, { prompt: 'Which word goes in the glowing blank?', options: shuffle([...x.p.o]), answer: x.p.a,
+      hint: () => api.guide(`What is the feminine word for “${x.p.o[1]}”?`),
+      onDone: () => { x.s.textContent = x.p.a; x.s.classList.remove('next'); x.s.classList.add('filled'); i++; later(next, 800); } });
+  };
+  next();
+}
+function playGuestbook(api) {
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  if (run.round < 2) {
+    api.guide(run.round === 0 ? 'Special guests visited the castle today! Fill in the guestbook. Each sentence has a clue word: his or her.' : 'A new guestbook page. Look for the clue words!');
+    guestbook(api, box, GUEST[run.round], () => { api.guide('The guestbook is complete! Read it out loud.'); api.done(); });
+    return;
+  }
+  const list = SWITCH[run.round - 2]; let i = 0;
+  const next = () => {
+    box.replaceChildren();
+    if (i >= list.length) { api.guide('You changed every masculine word into its feminine partner!'); return api.done(); }
+    api.guide('Switch it! Change each masculine word to its feminine partner.');
+    switchIt(api, box, list[i++], () => later(next, 2000));
+  };
+  next();
+}
+
+/* ---------- stop 11: Question Quest ---------- */
+function playQuestions(api) {
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  const rules = () => h('div', { class: 'rules' }, h('span', {}, '✔ Begin with a capital letter.'), h('span', {}, '✔ End a question with a question mark ?'), h('span', {}, '✔ Use “I” when you talk about yourself.'));
+  if (run.round === 0) {
+    const items = run.ends.slice(0, 4); let i = 0;
+    const next = () => {
+      box.replaceChildren();
+      if (i >= items.length) { api.guide('An asking sentence gets a question mark. A telling sentence gets a full stop.'); return api.done(); }
+      const [s, end] = items[i++];
+      api.guide('Is this sentence asking something, or telling something? Pick the mark that goes at the end.');
+      const eb = h('span', { class: 'endbox' }, '');
+      box.append(h('p', { class: 'endsent' }, s, eb));
+      askChoice(box, { prompt: `Sentence ${i} of 4`, options: ['.', '?'], answer: end, cls: 'marks', labels: o => [o, h('small', {}, o === '?' ? 'question mark' : 'full stop')],
+        hint: () => api.guide(end === '?' ? 'It starts with an asking word like can, what, where or do. It is a question!' : 'It just tells us something. It is not asking.'),
+        onDone: () => { eb.textContent = end; eb.classList.add('filled'); say(s + end); later(next, 1300); } });
+    };
+    next();
+    return;
+  }
+  if (run.round === 1) {
+    let i = 0;
+    const next = () => {
+      box.replaceChildren(rules());
+      if (i >= CAPS.length) { api.guide('Every question now starts with a capital letter!'); return api.done(); }
+      const words = CAPS[i++];
+      api.guide('Fix it! Tap each word that needs a capital letter.');
+      const need = new Set(words.map((w, k) => (k === 0 || w === 'i') ? k : -1).filter(k => k >= 0));
+      let left = need.size;
+      const row = h('div', { class: 'capsrow' }); const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+      const btns = words.map((w, k) => {
+        const b = h('button', { type: 'button', class: 'cw' }, w);
+        b.addEventListener('click', () => {
+          if (b.disabled) return;
+          if (need.has(k)) {
+            b.textContent = w.toUpperCase().charAt(0) + w.slice(1); b.disabled = true; b.classList.add('fixed'); left--;
+            if (!left) { btns.forEach(x => x.disabled = true); good(fb); say(btns.map(x => x.textContent).join(' ')); later(next, 1600); }
+            else good(fb, 'Fixed one! Is there another?');
+          } else { oops(fb, 'That word is fine as it is.'); shakeEl(b); api.guide('Only the first word needs a capital, and “I” when you talk about yourself.'); }
+        });
+        row.append(b); return b;
+      });
+      box.append(row, fb);
+    };
+    next();
+    return;
+  }
+  const Q = QBUILD[run.round - 2];
+  api.guide(Q.ctx);
+  box.append(h('div', { class: 'pic', role: 'img', 'aria-label': Q.ctx }, Q.pic), h('p', { class: 'ctx' }, Q.ctx));
+  builder(api, box, { answer: Q.answer, extra: Q.extra, onDone: () => { api.guide('A capital letter at the start, and a question mark at the end. Now make up one more question about this picture and say it out loud!'); api.done(); } });
+}
+
+/* ---------- stop 12: Sleepy Teddy ---------- */
+function playTeddy(api) {
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  if (run.round === 0) {
+    api.guide('Good sleep keeps us healthy and ready to learn. Help Teddy! Does this help him sleep, or keep him awake?');
+    sorter(api, box, run.items, [{ k: true, label: '😴 Helps me sleep', cls: 'good' }, { k: false, label: '😵 Keeps me awake', cls: 'bad' }], {
+      why: it => it.why, hint: it => `Would “${it.t.toLowerCase()}” make you calm and sleepy?`,
+      onAll: () => { api.guide('Teddy knows the healthy bedtime habits now!'); api.done(); } });
+    return;
+  }
+  if (run.round === 1) {
+    api.guide('Teddy’s bedtime routine is all mixed up! Put it in order, from the bottom up.');
+    box.append(h('h3', {}, '🧸 Teddy’s bedtime ladder'));
+    ladder(api, box, ROUTINE, { hint: pos => pos === 0 ? 'What do we do before brushing our teeth?' : `After “${ROUTINE[pos - 1]}”, what comes next?`, onDone: () => { api.guide('Sweet dreams, Teddy!'); api.done(); } });
+    return;
+  }
+  const tn = () => h('div', { class: 'thennow' },
+    h('div', { class: 'tn' }, h('h3', {}, 'Then'), h('span', { class: 'tnp', 'aria-hidden': 'true' }, '🪔👵📖'), h('p', {}, 'Long ago, families shared bedtime stories together.')),
+    h('div', { class: 'tn' }, h('h3', {}, 'Now'), h('span', { class: 'tnp', 'aria-hidden': 'true' }, '📚🎧📱'), h('p', {}, 'Today, children enjoy stories in many ways.')));
+  askSeq(api, box, [
+    { guide: 'Bedtime stories, then and now. Look at the two pictures.', show: tn, q: 'Long ago, how did families share bedtime stories?', opts: ['Grandparents told stories by lamp light', 'They watched cartoons', 'They used tablets'], a: 'Grandparents told stories by lamp light', hint: 'Long ago there were no tablets or TVs!', after: 'Yes! Families sat together and grandparents told stories.' },
+    { show: tn, q: 'What stays the same, then and now?', opts: ['the magic of imagination', 'the oil lamps', 'the tablets'], a: 'the magic of imagination', hint: 'Lamps and tablets changed. What is the same in every story?', after: 'Stories may change, but the magic of imagination stays the same!' },
+  ], () => api.done());
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Moonlight Reading', idea: 'Read the poem', page: 'Book pages 7–8', rounds: 5, cut: [1, 2], icon: '📖', play: playReading },
+  { id: 2, part: 1, name: 'Rhyme Stars', idea: 'Rhyming words', page: 'Book page 8', rounds: 5, cut: [1, 3], icon: '⭐', play: playRhymes },
+  { id: 3, part: 2, name: 'Magic Wand', idea: 'Question a', page: 'Book page 9', rounds: 4, cut: [1, 2], icon: '🪄', play: playWand },
+  { id: 4, part: 2, name: 'Two Dream Worlds', idea: 'Question b', page: 'Book page 9', rounds: 3, cut: [1, 3], icon: '🌈', play: playDreams, prep: r => { r.items = shuffle([...DREAMS]); r.chart = chart2(['🌈 Pleasant Dream World', '🌩️ Horrid Dream World']); } },
+  { id: 5, part: 2, name: 'Dropped Dream Cards', idea: 'Question c', page: 'Book pages 9–10', rounds: 3, cut: [1, 2], icon: '🃏', play: playCards },
+  { id: 6, part: 2, name: 'Real or Make-believe', idea: 'Question d', page: 'Book page 10', rounds: 3, cut: [1, 3], icon: '🦄', play: playReal },
+  { id: 7, part: 2, name: 'Dream Ladder', idea: 'Question e', page: 'Book page 10', rounds: 3, cut: [1, 3], icon: '🪜', play: playLadder },
+  { id: 8, part: 3, name: 'Pronoun Pals', idea: 'he, she, it, they', page: 'Book page 11', rounds: 5, cut: [2, 4], icon: '🧚', play: playPronouns, prep: r => { r.items = shuffle([...PRON]); } },
+  { id: 9, part: 3, name: 'Royal Ball', idea: 'Masculine and feminine', page: 'Book pages 13–14', rounds: 4, cut: [1, 3], icon: '👑', play: playRoyal },
+  { id: 10, part: 3, name: 'Royal Guestbook', idea: 'Masculine and feminine', page: 'Book page 15', rounds: 4, cut: [1, 3], icon: '📜', play: playGuestbook },
+  { id: 11, part: 3, name: 'Question Quest', idea: 'Punctuation', page: 'Book page 16', rounds: 5, cut: [2, 4], icon: '❓', play: playQuestions, prep: r => { r.ends = shuffle([...ENDS]); } },
+  { id: 12, part: 4, name: 'Sleepy Teddy', idea: 'Healthy bedtime habits', page: 'Book pages 11–12', rounds: 3, cut: [1, 2], icon: '🧸', play: playTeddy, prep: r => { r.items = shuffle([...HABITS]); } },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function startLevel(L) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  L.prep && L.prep(run);
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups(); stopVoice();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  save(); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 2 ? 'You read the whole poem and caught its rhymes! Next, answer Queen Mab’s questions.'
+    : L.id === 7 ? 'You answered every question from the book! Part 3 has he, she, it, they, kings and queens, and question marks.'
+    : L.id === LEVELS.length ? 'You finished all of Chapter 5, Ayansh! Sweet dreams!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  say(`${title} ${msg}`);
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the map'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const bits = ['⭐', '✨', '🌙', '💫', '⭐'];
+  for (let i = 0; i < 40; i++) {
+    const p = h('i', {}, bits[i % bits.length]);
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.8 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3800);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  [1, 2, 3, 4].forEach(p => $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item)));
+  $('jarWords').replaceChildren(...GKEYS.map(k => h('span', { class: 'fly' + (wordSet.has(k) ? ' lit' : ''), title: wordSet.has(k) ? GLOSS[k].m : 'Not found yet' }, wordSet.has(k) ? k : '?'.repeat(Math.min(k.length, 6)))));
+  $('jarPairs').replaceChildren(...ALL_PAIRS.map(p => h('span', { class: 'fly pair' + (pairSet.has(p[0]) ? ' lit' : '') }, pairSet.has(p[0]) ? `${p[0]} · ${p[1]}` : '? · ?')));
+  const lit = GKEYS.filter(k => wordSet.has(k)).length + ALL_PAIRS.filter(p => pairSet.has(p[0])).length, all = GKEYS.length + ALL_PAIRS.length;
+  $('jarCount').textContent = lit === 0 ? 'The jar is dark. Start at Stop 1 to catch your first firefly!' : `${lit} of ${all} fireflies glowing`;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); stopVoice(); run = null;
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: the chapter-opener letters */
+LETTERS.forEach(L => {
+  const b = h('button', { type: 'button', class: 'env', 'aria-label': `Open the ${L.t} letter` }, h('span', { class: 'stamp', 'aria-hidden': 'true' }, L.e), h('span', { class: 'lab' }, L.t));
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.env').forEach(x => x.classList.remove('open')); b.classList.add('open');
+    const letter = $('letter'); letter.hidden = false;
+    letter.replaceChildren(h('h3', {}, `${L.e} Your ${L.t} dream`), h('p', {}, L.dream), h('p', { class: 'ask2' }, 'Tell a grown-up: why did you pick this letter?'));
+    sfx.whoosh(); say(`${L.t}! ${L.dream} Why did you pick this letter?`);
+  });
+  $('mailbox').append(b);
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; if (!P.sound) stopVoice(); save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, words: [], pairs: [], sound: P.sound }; wordSet = new Set(); pairSet = new Set(); save(); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { words: [...wordSet], pairs: [...pairSet] }) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>

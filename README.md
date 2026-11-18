@@ -45,3 +45,35 @@ Part 3: tens and ones, and word problems
 14. **Tens & Ones** (pp. 52–53): vertical multiplication, bundling 10 ones into a ten.
 15. **RIDE Problems** (pp. 53–55): Read, Identify, Draw a bar model, Evaluate.
 16. **Final Checkpoint** (pp. 55–57): Riya's bar-model mistake, the toy boxes, and the milk calendar.
+
+## Queen Mab's Dreamland (Chapter 5 of the school English book)
+
+Open `chapter5-queen-mab.html`, or play it at https://claude.ai/artifact/NTj1V2AoaGYx2JbZh2yp7U.
+It follows the chapter page by page, set at night under Queen Mab's moon. The poem and every
+instruction can be read aloud (🔊), so he can play before he reads everything fluently.
+
+Part 1: the poem (pp. 7–8)
+
+1. **Moonlight Reading**: the poem a few verses at a time, read aloud line by line. Tap a hard word (hover, dales, dainty, horrid…) for its meaning and a real-life example.
+2. **Rhyme Stars**: catch the rhyming word from each verse (brown/down, bed/head…), then odd-one-out.
+
+Part 2: answer the questions (pp. 9–10)
+
+3. **Magic Wand** (q. a): why she waves her wand, and which way for a good or bad child.
+4. **Two Dream Worlds** (q. b): sort the poem's things into the pleasant and horrid dream chart.
+5. **Dropped Dream Cards** (q. c): tick only the cards that are in the poem.
+6. **Real or Make-believe** (q. d): what "imaginative" means, then the book question.
+7. **Dream Ladder** (q. e): put the events in order, climbing from the bottom rung.
+
+Part 3: words and sentences (pp. 11, 13–16)
+
+8. **Pronoun Pals** (q. f): he, she, it, they; build the book's example sentences.
+9. **Royal Ball** (pp. 13–14): match masculine and feminine pairs.
+10. **Royal Guestbook** (p. 15): fill the guestbook using the clue words his/her, then switch sentences to feminine.
+11. **Question Quest** (p. 16): full stop or question mark, capital letters and "I", build a question for each picture.
+
+Part 4: real life (pp. 11–12)
+
+12. **Sleepy Teddy**: healthy bedtime habits, a bedtime routine, and bedtime stories then and now.
+
+New words and royal pairs light up a "firefly jar" on the map. The "For grown-ups" section explains how each stop maps to the book and notes the questions with more than one sensible answer.
