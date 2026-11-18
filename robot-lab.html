@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Robot Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&family=Space+Mono:wght@700&display=swap">
+<style>
+/* Layout: one centred column on blueprint graph paper, like a robot workshop's drawing board; white lab cards hold the play. Follows the Robots chapter of Ayansh's ICT book (pages 8–15), station by station. Single deliberate look, so colours are set explicitly. */
+:root{
+  --lab:#163B5C; --lab-2:#1F4E78; --gridline:rgba(255,255,255,.07); --gridline-2:rgba(255,255,255,.13);
+  --board:#FFFFFF; --ink:#16233A; --ink-soft:#56627A; --shadow:#0A2034; --off:#DCE3EC; --off-ink:#8B97AA;
+  --orange:#FF7A2F; --orange-soft:#FFE4D3;
+  --cyan:#1FAFC2; --cyan-soft:#D2F2F6;
+  --green:#2E9E5E; --green-soft:#D8F1E1;
+  --yellow:#FFC93C; --yellow-soft:#FFF3CF;
+  --red:#D9443B; --red-soft:#FADBD8;
+  --violet:#7457CF; --violet-soft:#E7E0FA;
+  --screen:#18294A; --on-lab:#FFFFFF; --on-lab-soft:#B7CEE4; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Space Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background-color:var(--lab);color:var(--ink)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;
+  background-image:
+    linear-gradient(var(--gridline-2) 1px,transparent 1px),linear-gradient(90deg,var(--gridline-2) 1px,transparent 1px),
+    linear-gradient(var(--gridline) 1px,transparent 1px),linear-gradient(90deg,var(--gridline) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button,input{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-lab)}
+.brand{font-size:clamp(28px,6vw,38px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--on-lab-soft);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--yellow);border:3px solid var(--ink);border-radius:999px;padding:2px 14px;box-shadow:0 3px 0 var(--shadow);font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--yellow)}
+.btn.go{background:var(--green);color:var(--on-color)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+
+.bot{display:inline-block;line-height:0}
+.bot svg{width:100%;height:auto;display:block}
+.mascot{flex:none;width:70px;height:70px;border-radius:50%;background:var(--cyan-soft);border:3px solid var(--ink);display:grid;place-items:center;overflow:hidden}
+.mascot .bot{width:52px;margin-top:6px}
+.mascot.sm{width:56px;height:56px}
+.mascot.sm .bot{width:42px}
+
+/* hero: the comic from page 8 */
+.hello{padding:20px;display:flex;flex-direction:column;gap:14px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.comic{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:end;background:var(--yellow-soft);border:3px solid var(--ink);border-radius:16px;padding:14px}
+.who{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:800;font-size:14px;color:var(--ink-soft);transition:transform .2s}
+.who .face{width:72px;height:72px;border-radius:50%;border:3px solid var(--ink);background:var(--board);display:grid;place-items:center;font-size:44px;line-height:1;overflow:hidden}
+.who .face .bot{width:54px;margin-top:8px}
+.who.talking{transform:translateY(-4px)}
+.who.talking .face{background:var(--yellow)}
+.line{position:relative;align-self:center;background:var(--board);border:3px solid var(--ink);border-radius:18px;padding:10px 14px;font-family:var(--display);font-weight:800;font-size:clamp(18px,4.4vw,22px);line-height:1.25;min-height:64px;display:flex;align-items:center}
+.comicbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.comicbar .note{margin-left:auto}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--yellow);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stations */
+.section-title{font-size:24px;margin-bottom:-6px;color:var(--on-lab);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.section-title span{font-family:var(--mono);font-size:13px;color:var(--on-lab-soft);letter-spacing:.06em;text-transform:uppercase}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dashed var(--cyan);opacity:.55}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:var(--off);border-color:var(--off-ink)}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1}
+.stop:nth-child(4n+1) .stopicon{background:var(--cyan-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--orange-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--green-soft)}
+.stop:nth-child(4n+4) .stopicon{background:var(--violet-soft)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--orange)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:#C3CBD8}
+.stars span.on{color:var(--yellow);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:-6px;top:-14px;background:var(--orange);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+
+/* my robot on the map */
+.mybot{padding:18px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.mybot .bot{width:110px}
+.mybot-text{flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px}
+.mybot h2{font-size:24px}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--cyan-soft);border:2px solid var(--ink);border-radius:8px;padding:0 8px;width:max-content}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-lab)}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-lab-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-lab);background:transparent}
+.dots i.done{background:var(--green)}
+.dots i.now{background:var(--yellow);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--yellow);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.q{font-family:var(--display);font-weight:800;font-size:clamp(20px,4.6vw,24px);text-align:center}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;width:100%}
+.choices.stack{flex-direction:column;align-items:stretch;max-width:520px}
+.choice{min-height:60px;min-width:120px;padding:8px 18px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:19px;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-align:left;line-height:1.25;transition:transform .08s}
+.choices.stack .choice{justify-content:flex-start}
+.choice .ic{font-size:30px;line-height:1;flex:none}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.choice:disabled{cursor:default}
+.choice.right{background:var(--green);color:var(--on-color)}
+.choice.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);opacity:.75;text-decoration:line-through}
+.fb{min-height:1.4em;font-weight:800;font-size:18px;text-align:center;max-width:56ch}
+.fb.good{color:var(--green)}
+.fb.oops{color:var(--red)}
+.shake{animation:shake .4s}
+
+/* picture card (robot or not, places) */
+.thing{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--cyan-soft);border:3px solid var(--ink);border-radius:20px;padding:16px 22px;max-width:100%}
+.thing .pic{font-size:84px;line-height:1;min-height:96px;display:grid;place-items:center}
+.thing .pic .art{width:150px}
+.thing .pic .art svg{width:100%;height:auto;display:block}
+.thing h3{font-size:26px}
+.thing p{color:var(--ink-soft);font-weight:700;text-align:center}
+.checklist{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.check{display:flex;align-items:center;gap:6px;border:3px solid var(--ink);border-radius:12px;padding:4px 12px;font-weight:800;background:var(--board)}
+.check.yes{background:var(--green-soft)}
+.check.no{background:var(--red-soft)}
+.rule{font-family:var(--mono);font-size:14px;background:var(--yellow-soft);border:2px dashed var(--ink);border-radius:12px;padding:6px 12px;text-align:center}
+
+/* build bolt */
+.workbench{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;width:100%}
+.workbench .bot{width:170px}
+.compare{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;background:var(--yellow-soft);border:3px solid var(--ink);border-radius:16px;padding:12px 14px;max-width:520px;width:100%}
+.compare .side{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;font-weight:800}
+.compare .side b{font-size:40px;line-height:1.1}
+.compare .eq{font-family:var(--display);font-weight:800;font-size:28px}
+.compare p.full{grid-column:1/-1;text-align:center;color:var(--ink-soft);font-weight:700}
+.dance{animation:dance .9s ease-in-out 2}
+.blink{animation:blink 1s step-end infinite}
+
+/* book answer line */
+.bookq{width:100%;max-width:560px;display:flex;flex-direction:column;gap:6px}
+.bookq .tag{background:var(--violet-soft)}
+.answerline{font-family:var(--display);font-weight:800;font-size:22px;border-bottom:3px dotted var(--ink-soft);min-height:38px;padding:0 4px}
+.answerline em{font-style:normal;color:var(--green)}
+
+/* matching */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;width:100%;max-width:560px}
+.match .col{display:flex;flex-direction:column;gap:10px}
+.mitem{min-height:58px;padding:8px 12px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px;text-align:left;line-height:1.2}
+.mitem .ic{font-size:26px;flex:none}
+.mitem.sel{background:var(--yellow);transform:translateY(-2px)}
+.mitem.done{cursor:default;box-shadow:none}
+.mitem.c0{background:var(--cyan-soft)}.mitem.c1{background:var(--orange-soft)}.mitem.c2{background:var(--green-soft)}.mitem.c3{background:var(--violet-soft)}
+.mitem .num{margin-left:auto;font-family:var(--mono);font-size:14px;border:2px solid var(--ink);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;flex:none;background:var(--board)}
+
+/* sorting into boxes */
+.tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%}
+.titem{max-width:300px;min-height:58px;padding:8px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:17px;display:flex;align-items:center;gap:10px;text-align:left;line-height:1.2}
+.titem .ic{font-size:30px;flex:none}
+.titem.sel{background:var(--yellow);transform:translateY(-3px)}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.bins.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.bin{min-height:104px;border:3px dashed var(--ink);border-radius:16px;background:var(--off);padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;text-align:center}
+.bin.ready{border-style:solid;background:var(--yellow-soft)}
+.bin .bh{font-family:var(--display);font-weight:800;font-size:18px;line-height:1.1}
+.bin .bic{font-size:32px;line-height:1}
+.bin .got{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;font-size:24px;line-height:1}
+.bin:nth-child(6n+1){background:var(--green-soft)}.bin:nth-child(6n+2){background:var(--cyan-soft)}.bin:nth-child(6n+3){background:var(--yellow-soft)}
+.bin:nth-child(6n+4){background:var(--orange-soft)}.bin:nth-child(6n+5){background:var(--off)}.bin:nth-child(6n+6){background:var(--violet-soft)}
+.bin.ready{outline:4px solid var(--orange);outline-offset:-1px}
+
+/* air patrol */
+.scene{position:relative;width:100%;max-width:520px;height:200px;border:3px solid var(--ink);border-radius:18px;overflow:hidden;background:linear-gradient(#9ED8F5,#DDF2FB)}
+.scene.haze{background:linear-gradient(#B7A894,#D8CDBB)}
+.scene .ground{position:absolute;left:0;right:0;bottom:0;height:72px;display:flex;align-items:flex-end;justify-content:center;gap:4px;font-size:56px;line-height:1;padding-bottom:6px}
+.scene .label{position:absolute;left:10px;top:10px;background:var(--board);border:2px solid var(--ink);border-radius:10px;padding:2px 10px;font-weight:800;font-size:15px}
+.scene .drone{position:absolute;top:42px;left:-120px;width:110px;transition:left 1.6s ease-in-out}
+.scene .drone.there{left:calc(50% - 55px)}
+.scene .drone svg{width:100%;height:auto;display:block}
+.scene .beam{position:absolute;top:84px;left:calc(50% - 30px);width:60px;height:60px;background:linear-gradient(rgba(31,175,194,.55),rgba(31,175,194,0));clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:0;transition:opacity .4s}
+.scene .beam.on{opacity:1}
+.meters{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;background:var(--screen);color:var(--on-lab);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;width:100%;max-width:520px;font-family:var(--mono);font-size:15px}
+.meters .bar{display:flex;gap:4px}
+.meters .bar i{flex:1;height:16px;border-radius:4px;background:#33456A}
+.meters .bar i.on{background:var(--yellow)}
+.meters .bar.bad i.on{background:var(--orange)}
+.aqi{grid-column:1/-1;display:flex;align-items:center;gap:12px;border-top:2px dashed #4A5E86;padding-top:8px}
+.aqi b{font-size:28px;font-variant-numeric:tabular-nums}
+.aqi .aqichip{font-family:var(--body);font-weight:800;border-radius:999px;padding:0 12px;color:var(--ink)}
+.aqiscale{display:flex;width:100%;max-width:520px;border:3px solid var(--ink);border-radius:12px;overflow:hidden;font-weight:800;font-size:14px;text-align:center}
+.aqiscale span{flex:1;padding:4px}
+
+/* robot doctor */
+.patient{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
+.patient .art{width:180px}
+.patient .art svg{width:100%;height:auto;display:block}
+.clue{font-size:56px;line-height:1;background:var(--board);border:3px solid var(--ink);border-radius:50%;width:84px;height:84px;display:grid;place-items:center}
+.clue.blink{animation:blink 1s step-end infinite}
+.zoom{animation:zoom 1.6s ease-in-out}
+
+/* designer */
+.dstep{width:100%;display:flex;flex-direction:column;gap:10px;align-items:center}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.swatch{width:54px;height:54px;border-radius:50%;border:3px solid var(--ink);cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.swatch.sel{outline:4px solid var(--orange);outline-offset:2px}
+.choice.sel{background:var(--yellow)}
+.namebox{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+.namebox input{min-height:52px;border:3px solid var(--ink);border-radius:14px;padding:6px 12px;font-weight:800;font-size:20px;width:min(260px,100%);text-transform:uppercase}
+.botcard{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;background:var(--cyan-soft);border:3px solid var(--ink);border-radius:20px;padding:16px;max-width:560px}
+.botcard .bot{width:140px}
+.botcard .txt{flex:1;min-width:200px;display:flex;flex-direction:column;gap:6px}
+.botcard h3{font-size:28px}
+.preview{width:120px}
+
+/* ordering */
+.slots{display:flex;flex-direction:column;gap:8px;width:100%;max-width:520px;counter-reset:s}
+.slotrow{display:flex;align-items:center;gap:10px;min-height:56px;border:3px dashed var(--off-ink);border-radius:14px;padding:6px 10px;background:var(--off)}
+.slotrow .n{font-family:var(--mono);font-weight:700;width:30px;height:30px;border-radius:50%;background:var(--board);border:2px solid var(--ink);display:grid;place-items:center;flex:none}
+.slotrow.filled{border-style:solid;border-color:var(--ink);background:var(--green-soft);font-weight:800}
+.slotrow .ic{font-size:26px}
+.cycle{position:relative;width:min(100%,340px);aspect-ratio:1;max-width:100%}
+.cycle .ring{position:absolute;inset:16%;border:5px dashed var(--cyan);border-radius:50%}
+.cycle .hub{position:absolute;inset:38%;display:grid;place-items:center}
+.cycle .hub .bot{width:100%}
+.cycle .node{position:absolute;width:30%;transform:translate(-50%,-50%);background:var(--board);border:3px solid var(--ink);border-radius:12px;padding:4px;font-size:12px;font-weight:800;text-align:center;line-height:1.15}
+.cycle .node b{display:block;font-size:20px}
+
+/* code bolt */
+.coderow{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;width:100%;align-items:flex-start}
+.grid{position:relative;width:min(100%,330px);aspect-ratio:1;max-width:100%;border:3px solid var(--ink);border-radius:14px;background:var(--off);display:grid;overflow:hidden}
+.cell{border:1px solid #C3CDDA;display:grid;place-items:center;font-size:clamp(24px,7vw,36px);line-height:1}
+.cell.wall{background:#B9C4D3}
+.cell.goal{background:var(--yellow-soft)}
+.cell.start{background:var(--cyan-soft)}
+.cell.trail{background:var(--green-soft)}
+.walker{position:absolute;display:grid;place-items:center;transition:left .32s ease-in-out,top .32s ease-in-out;pointer-events:none}
+.walker .bot{width:72%}
+.walker.bonk{animation:shake .4s}
+.panel{display:flex;flex-direction:column;gap:12px;width:min(100%,330px)}
+.pads{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,64px);gap:8px;justify-content:center}
+.pad{border:3px solid var(--ink);border-radius:16px;background:var(--cyan-soft);box-shadow:0 4px 0 var(--ink);font-size:30px;cursor:pointer;display:grid;place-items:center}
+.pad:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.pad.up{grid-column:2;grid-row:1}.pad.left{grid-column:1;grid-row:2}.pad.down{grid-column:2;grid-row:2}.pad.right{grid-column:3;grid-row:2}
+.program{display:flex;flex-wrap:wrap;gap:6px;min-height:58px;align-content:flex-start;background:var(--screen);border:3px solid var(--ink);border-radius:14px;padding:8px}
+.program .empty{color:var(--on-lab-soft);font-family:var(--mono);font-size:13px;align-self:center;padding:0 4px}
+.chip{width:40px;height:40px;border-radius:10px;border:2px solid var(--on-lab);background:#2D4470;color:var(--on-lab);font-size:22px;display:grid;place-items:center;cursor:pointer;line-height:1}
+.chip.now{background:var(--yellow);color:var(--ink);border-color:var(--ink)}
+.chip.bug{background:var(--orange)}
+.runbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.legend{font-family:var(--mono);font-size:13px;color:var(--ink-soft);text-align:center}
+
+/* win overlay */
+.overlay{position:fixed;inset:0;background:rgba(10,32,52,.7);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));z-index:20}
+.win{padding:24px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center}
+.win h2{font-size:30px}
+.bigstars{font-size:52px;letter-spacing:4px;line-height:1}
+.bigstars span{color:#C3CBD8}
+.bigstars span.on{color:var(--yellow);-webkit-text-stroke:2px var(--ink)}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes dance{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg) translateY(-6px)}75%{transform:rotate(8deg) translateY(-6px)}}
+@keyframes blink{50%{opacity:.25}}
+@keyframes zoom{0%{transform:translateX(0)}40%{transform:translateX(60px)}70%{transform:translateX(-50px)}100%{transform:translateX(0)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+@media (max-width:520px){
+  .stopbtn{grid-template-columns:58px 1fr auto;gap:10px}
+  .stopicon{width:58px;height:58px;font-size:32px}
+  .stopname{font-size:20px}
+  .stops::before{display:none}
+  .comic{grid-template-columns:1fr 1fr;align-items:center}
+  .comic .line{grid-column:1/-1;grid-row:1}
+  .who .face{width:58px;height:58px;font-size:36px}
+  .bins{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .match{gap:10px}
+  .mitem{font-size:15px;padding:6px 8px}
+  .say{width:46px;height:46px}
+  .compare .side b{font-size:32px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Robot Lab<small>Ayansh's ICT · Robots chapter</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 30</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <h2>Welcome to the Robot Lab, Ayansh!</h2>
+      <p>Meet <b>Bolt</b>, the lab robot. Tap <b>Next</b> to read your chat with Bolt, just like the comic on page 8.</p>
+      <div class="comic">
+        <div class="who" id="whoA"><span class="face" aria-hidden="true">🧒</span>Ayansh</div>
+        <p class="line" id="comicLine" aria-live="polite"></p>
+        <div class="who" id="whoB"><span class="face" id="comicBolt" aria-hidden="true"></span>Bolt</div>
+      </div>
+      <div class="comicbar">
+        <button class="btn primary" id="comicNext" type="button">Next ➜</button>
+        <span class="note" id="comicCount"></span>
+      </div>
+      <p class="donebanner" id="allDone" hidden>🎉 You finished the whole Robots chapter! You are a real robot engineer now.</p>
+    </section>
+
+    <h2 class="section-title">Part 1 · What is a robot? <span>pages 8–11</span></h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Robots at work <span>pages 12–14</span></h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Robots follow instructions <span>page 15</span></h2>
+    <ol class="stops" id="stops3"></ol>
+
+    <section class="mybot card" id="mybot" hidden></section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>Each station follows the Robots chapter of the ICT book, pages 8 to 15. Tap 🔊 on any question to have it read aloud. Progress is saved in this browser only.</p>
+        <h3>Part 1: What is a robot? (pages 8–11)</h3>
+        <ol>
+          <li><b>Robot or Not?</b> (pages 8–9): a robot has a computer brain, can move, and has sensors. He checks a robot vacuum, a laptop, a teddy, a Mars rover, a factory arm and a puppy. The laptop is the comic's point: a computer has a brain but can't walk. The puppy shows the book's “big difference”: a robot doesn't think by itself.</li>
+          <li><b>Build Bolt</b> (page 9): he fits the computer brain, sensors, motor and wheels, and battery. Each part is compared to his body: brain, eyes/ears/skin, legs, and food for energy.</li>
+          <li><b>Checkpoint 1</b> (pages 10–11): questions 1a–1e word for word, then the parts-to-jobs matching from question 2.</li>
+          <li><b>Air Patrol</b> (page 11, EcoRoute): a drone with air sensors checks smoke, dust and the AQI over a park, a busy road, a factory and a hill fort.</li>
+        </ol>
+        <h3>Part 2: Robots at work (pages 12–14)</h3>
+        <ol start="5">
+          <li><b>Robot Jobs</b> (pages 12–13, and the TechTrek matching game on page 14): he sorts robots into farm, hospital, fun, rescue, factory and space.</li>
+          <li><b>Robot Doctor</b> (page 14, question 3): why did the robot vacuum stop? A flat battery, a sock in the wheel, a dusty sensor, or no instruction yet.</li>
+          <li><b>Robots or People?</b> (page 13, Checkpoint 2 question 1, and RealRoute on page 14): which jobs suit robots and which suit people, and why space robots matter.</li>
+          <li><b>My School Robot</b> (page 14, question 2, and Wonder Junction): he picks a school problem and designs a robot to fix it. There are no wrong answers. His robot appears on the map afterwards.</li>
+        </ol>
+        <h3>Part 3: Robots follow instructions (page 15)</h3>
+        <ol start="9">
+          <li><b>Step by Step</b>: a program is like a recipe. He puts making toast and getting ready for school in order, then the five steps from the book's robot diagram.</li>
+          <li><b>Code Bolt</b> (Commands and sequencing, and TrailTreasure): he gives arrow commands to steer Bolt round the classroom, then fixes a program with a bug.</li>
+        </ol>
+        <h3>Checkpoint 1 answers</h3>
+        <p>1a smart machine · 1b instructions · 1c computer · 1d help humans · 1e humans. Question 2: computer brain → follows instructions; sensors → acts like eyes or ears; battery → gives power; wheels → helps robot move.</p>
+        <h3>Do it for real</h3>
+        <ul>
+          <li><b>Human robot:</b> you are the robot. Ayansh writes arrow cards (↑ ↓ ← →) on paper to steer you from the sofa to the fridge. Follow them exactly, even if he makes a mistake, and let him find the bug.</li>
+          <li><b>Robot hunt at home:</b> washing machine, ceiling fan, TV remote, a robot toy. For each, ask the three questions from station 1: computer brain? moves? sensors?</li>
+          <li><b>TechTrek mission (page 11):</b> after station 8, open MS Paint and draw the robot he designed. Ask him to tell you its mission.</li>
+          <li><b>EcoRoute (page 11):</b> check today's AQI for Pune on your phone together. Is it a green, yellow or red day?</li>
+          <li><b>Wonder Junction (page 13):</b> at dinner, ask “What do you think robots will be able to do next?” and “What can people do better than robots?”</li>
+        </ul>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stations</button>
+          <button class="btn small" id="reset" type="button">Start over</button>
+        </div>
+        <p class="note" id="resetAsk" hidden>Tap “Start over” again to clear all stars.</p>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Lab map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" id="guideBolt" aria-hidden="true"></div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'html') el.innerHTML = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+
+/* ---------- drawings (static markup, no user text) ---------- */
+const C = { ink: '#16233A', white: '#FFFFFF', cyan: '#1FAFC2', glow: '#7DF3FF', screen: '#18294A', grey: '#8B97AA', soft: '#D2F2F6', orange: '#FF7A2F', green: '#2E9E5E', red: '#D9443B', yellow: '#FFC93C' };
+const ALL = { brain: 1, sensors: 1, wheels: 1, battery: 1 };
+function boltSVG(p = ALL, on = true, opts = {}) {
+  const body = opts.color || C.white, move = opts.move || 'wheels';
+  const sens = opts.sensors || (p.sensors ? ['eyes', 'ears'] : []);
+  const dash = `fill="none" stroke="${C.grey}" stroke-width="2.5" stroke-dasharray="5 4"`;
+  const eyes = sens.includes('eyes')
+    ? `<path d="M44 47 q6 -10 12 0 M64 47 q6 -10 12 0" stroke="${C.glow}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    : `<path d="M44 44 h12 M64 44 h12" stroke="#5B6B86" stroke-width="4" stroke-linecap="round"/>`;
+  const ears = sens.includes('ears')
+    ? `<circle cx="21" cy="43" r="7" fill="${C.cyan}" stroke="${C.ink}" stroke-width="3"/><circle cx="99" cy="43" r="7" fill="${C.cyan}" stroke="${C.ink}" stroke-width="3"/>`
+    : (opts.color ? '' : `<circle cx="21" cy="43" r="7" ${dash}/><circle cx="99" cy="43" r="7" ${dash}/>`);
+  const nose = sens.includes('nose') ? `<circle cx="60" cy="54" r="3.5" fill="${C.orange}"/>` : '';
+  const hands = sens.includes('touch') ? `<circle cx="22" cy="114" r="6" fill="${C.yellow}" stroke="${C.ink}" stroke-width="3"/><circle cx="98" cy="114" r="6" fill="${C.yellow}" stroke="${C.ink}" stroke-width="3"/>` : '';
+  const brain = p.brain
+    ? `<circle cx="60" cy="92" r="12" fill="${C.soft}" stroke="${C.cyan}" stroke-width="3"/><rect x="54" y="86" width="12" height="12" rx="2" fill="${C.cyan}"/><path d="M60 80v6M60 98v6M48 92h6M66 92h6" stroke="${C.cyan}" stroke-width="2"/>`
+    : `<circle cx="60" cy="92" r="12" ${dash}/>`;
+  const batt = p.battery
+    ? `<rect x="44" y="108" width="30" height="9" rx="2.5" fill="${C.white}" stroke="${C.ink}" stroke-width="2.5"/><rect x="74" y="110.5" width="3" height="4" fill="${C.ink}"/><rect x="47" y="110.5" width="${on ? 24 : 6}" height="4" fill="${on ? C.green : C.red}"/>`
+    : `<rect x="44" y="108" width="32" height="9" rx="2.5" ${dash}/>`;
+  let base;
+  if (move === 'legs') base = `<rect x="40" y="122" width="12" height="16" rx="4" fill="${body}" stroke="${C.ink}" stroke-width="3"/><rect x="68" y="122" width="12" height="16" rx="4" fill="${body}" stroke="${C.ink}" stroke-width="3"/><rect x="34" y="136" width="22" height="8" rx="4" fill="${C.ink}"/><rect x="64" y="136" width="22" height="8" rx="4" fill="${C.ink}"/>`;
+  else if (move === 'fly') base = `<path d="M60 122v8M30 130h60" stroke="${C.ink}" stroke-width="3"/><ellipse cx="30" cy="131" rx="16" ry="4" fill="${C.soft}" stroke="${C.ink}" stroke-width="2.5"/><ellipse cx="90" cy="131" rx="16" ry="4" fill="${C.soft}" stroke="${C.ink}" stroke-width="2.5"/><circle cx="60" cy="140" r="5" fill="${C.ink}"/>`;
+  else base = p.wheels
+    ? `<circle cx="44" cy="134" r="10" fill="${C.ink}"/><circle cx="44" cy="134" r="4" fill="${C.grey}"/><circle cx="76" cy="134" r="10" fill="${C.ink}"/><circle cx="76" cy="134" r="4" fill="${C.grey}"/>`
+    : `<circle cx="44" cy="134" r="10" ${dash}/><circle cx="76" cy="134" r="10" ${dash}/>`;
+  const ant = on ? C.orange : C.grey;
+  return `<svg viewBox="0 0 120 148" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <line x1="60" y1="18" x2="60" y2="7" stroke="${C.ink}" stroke-width="3"/><circle cx="60" cy="7" r="5" fill="${ant}" stroke="${C.ink}" stroke-width="2.5"${on ? ' class="blink"' : ''}/>
+    ${ears}
+    <rect x="26" y="18" width="68" height="50" rx="18" fill="${body}" stroke="${C.ink}" stroke-width="3"/>
+    <rect x="34" y="27" width="52" height="32" rx="12" fill="${C.screen}"/>${eyes}${nose}
+    <rect x="52" y="67" width="16" height="7" fill="${C.grey}" stroke="${C.ink}" stroke-width="2"/>
+    <rect x="16" y="78" width="12" height="32" rx="6" fill="${body}" stroke="${C.ink}" stroke-width="3"/><rect x="92" y="78" width="12" height="32" rx="6" fill="${body}" stroke="${C.ink}" stroke-width="3"/>${hands}
+    <rect x="30" y="74" width="60" height="50" rx="16" fill="${body}" stroke="${C.ink}" stroke-width="3"/>
+    ${brain}${batt}${base}
+  </svg>`;
+}
+const bolt = (p, on, opts) => h('span', { class: 'bot', html: boltSVG(p, on, opts) });
+
+function vacuumSVG(state = 'ok') {
+  const light = state === 'battery' ? C.red : state === 'ok' ? C.green : C.yellow;
+  const sensor = state === 'dust' ? `<circle cx="64" cy="25" r="6" fill="#9C8F7A"/><circle cx="72" cy="23" r="7" fill="#B4A890"/><circle cx="78" cy="27" r="5" fill="#9C8F7A"/>` : `<circle cx="70" cy="26" r="4" fill="${C.glow}"/>`;
+  const sock = state === 'sock' ? `<path d="M26 52 q10 -6 22 0 l6 12 q-6 8 -14 4 l-4 -8 q-8 2 -10 -8z" fill="#F28DB2" stroke="${C.ink}" stroke-width="2.5"/>` : '';
+  return `<svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="70" cy="72" rx="58" ry="5" fill="#C9D2DE"/>
+    <circle cx="38" cy="62" r="9" fill="${C.ink}"/><circle cx="102" cy="62" r="9" fill="${C.ink}"/>
+    <rect x="12" y="30" width="116" height="30" rx="15" fill="#EEF2F7" stroke="${C.ink}" stroke-width="3"/>
+    <rect x="12" y="40" width="116" height="6" fill="#5B6B86"/>
+    <rect x="56" y="18" width="28" height="14" rx="7" fill="${C.screen}" stroke="${C.ink}" stroke-width="2.5"/>${sensor}
+    <circle cx="112" cy="51" r="4.5" fill="${light}" stroke="${C.ink}" stroke-width="1.5"/>
+    <path d="M14 58 l-6 8 M20 60 l-3 8" stroke="${C.ink}" stroke-width="2.5" stroke-linecap="round"/>${sock}
+  </svg>`;
+}
+function roverSVG() {
+  return `<svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="0" y="88" width="140" height="12" fill="#D9774A"/>
+    <path d="M36 66 l-6 14 M70 66 v14 M104 66 l6 14" stroke="${C.ink}" stroke-width="4"/>
+    <circle cx="30" cy="84" r="10" fill="${C.ink}"/><circle cx="70" cy="84" r="10" fill="${C.ink}"/><circle cx="110" cy="84" r="10" fill="${C.ink}"/>
+    <rect x="24" y="34" width="92" height="9" fill="#2F5DA8" stroke="${C.ink}" stroke-width="2.5"/>
+    <rect x="30" y="43" width="80" height="24" rx="5" fill="#EDE6D8" stroke="${C.ink}" stroke-width="3"/>
+    <line x1="98" y1="34" x2="98" y2="14" stroke="${C.ink}" stroke-width="3.5"/>
+    <rect x="86" y="4" width="26" height="12" rx="3" fill="${C.white}" stroke="${C.ink}" stroke-width="2.5"/><circle cx="104" cy="10" r="3.5" fill="${C.cyan}"/>
+  </svg>`;
+}
+function droneSVG() {
+  return `<svg viewBox="0 0 120 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M24 18 L48 30 M96 18 L72 30" stroke="${C.ink}" stroke-width="4"/>
+    <ellipse cx="22" cy="14" rx="18" ry="4" fill="${C.soft}" stroke="${C.ink}" stroke-width="2.5"/><ellipse cx="98" cy="14" rx="18" ry="4" fill="${C.soft}" stroke="${C.ink}" stroke-width="2.5"/>
+    <rect x="44" y="24" width="32" height="18" rx="7" fill="${C.white}" stroke="${C.ink}" stroke-width="3"/>
+    <rect x="54" y="42" width="12" height="10" rx="3" fill="${C.screen}" stroke="${C.ink}" stroke-width="2"/><circle cx="60" cy="47" r="2.5" fill="${C.glow}"/>
+    <circle cx="70" cy="30" r="2.5" fill="${C.green}"/>
+  </svg>`;
+}
+const art = svg => h('span', { class: 'art', html: svg });
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-robot-lab-v1';
+let P = { stars: {}, unlocked: 1, sound: true, myRobot: null };
+function load() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (saved && typeof saved === 'object') P = { stars: saved.stars || {}, unlocked: saved.unlocked || 1, sound: saved.sound !== false, myRobot: saved.myRobot || null };
+}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  step: i => tone(330 + (i % 6) * 60, 0.08, 'square', 0, 0.05),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  bonk: () => tone(160, 0.25, 'sawtooth', 0, 0.08, 90),
+  beep: () => { tone(988, 0.07, 'square', 0, 0.05); tone(1319, 0.09, 'square', 0.09, 0.05); },
+  power: () => tone(180, 0.7, 'sawtooth', 0, 0.06, 900),
+  whoosh: () => tone(200, 0.5, 'triangle', 0, 0.1, 700),
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, robot) {
+  try {
+    if (!canSpeak || !P.sound) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[↑⬆]/g, ' up ').replace(/[↓⬇]/g, ' down ').replace(/[←⬅]/g, ' left ').replace(/[→➡]/g, ' right ').replace(/AQI/g, 'A Q I'));
+    u.rate = robot ? 0.95 : 0.9; u.pitch = robot ? 0.7 : 1.15; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!', 'Beep boop, correct!']);
+
+/* ---------- shared widgets ---------- */
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+function miss() { run.mistakes++; sfx.oops(); }
+
+// options: [{t, ic, ok, why}]
+function choose(parent, { prompt, options, onRight, stack, wrongHint }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' + (stack ? ' stack' : '') });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice', onclick: () => {
+      if (over) return;
+      if (opt.ok) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise() + (opt.why ? ' ' + opt.why : ''); fb.className = 'fb good';
+        onRight && onRight(opt);
+      } else {
+        b.classList.add('wrong'); b.disabled = true; miss();
+        fb.textContent = opt.why || pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
+        wrongHint && wrongHint(opt);
+      }
+    } }, opt.ic ? h('span', { class: 'ic', 'aria-hidden': 'true' }, opt.ic) : null, h('span', {}, opt.t));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb); parent.append(wrap);
+  return { wrap, fb };
+}
+
+// steps in the right order: [{ic, t}]
+function orderGame(parent, steps, { onDone, oops }) {
+  const slots = h('div', { class: 'slots' });
+  const rows = steps.map((_, i) => { const r = h('div', { class: 'slotrow' }, h('span', { class: 'n' }, String(i + 1)), h('span', { class: 'note' }, i === 0 ? 'What comes first?' : '')); slots.append(r); return r; });
+  const tray = h('div', { class: 'tray' });
+  let order = steps.map((s, i) => i);
+  do shuffle(order); while (order.every((v, i) => v === i));
+  let next = 0;
+  order.forEach(i => {
+    const s = steps[i];
+    const b = h('button', { type: 'button', class: 'titem', onclick: () => {
+      if (i === next) {
+        sfx.pop(); b.remove();
+        rows[next].replaceChildren(h('span', { class: 'n' }, String(next + 1)), h('span', { class: 'ic', 'aria-hidden': 'true' }, s.ic), h('span', {}, s.t));
+        rows[next].classList.add('filled');
+        next++;
+        if (next < steps.length) rows[next].lastChild.textContent = 'What comes next?';
+        if (next === steps.length) { sfx.good(); onDone && onDone(); }
+      } else {
+        miss(); shakeEl(b); api.guide(oops ? oops(i, next) : 'Hmm, not yet. What has to happen before that?');
+      }
+    } }, h('span', { class: 'ic', 'aria-hidden': 'true' }, s.ic), h('span', {}, s.t));
+    tray.append(b);
+  });
+  parent.append(slots, tray);
+}
+
+// pairs: [{a:{ic,t}, b:{ic,t}}]
+function matchGame(parent, pairs, onDone) {
+  const grid = h('div', { class: 'match' });
+  const L = h('div', { class: 'col' }), R = h('div', { class: 'col' });
+  let sel = null, made = 0;
+  const lefts = pairs.map((p, i) => {
+    const b = h('button', { type: 'button', class: 'mitem', onclick: () => {
+      if (b.classList.contains('done')) return;
+      lefts.forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = i; sfx.pop();
+    } }, h('span', { class: 'ic', 'aria-hidden': 'true' }, p.a.ic), h('span', {}, p.a.t));
+    L.append(b); return b;
+  });
+  shuffle(pairs.map((_, i) => i)).forEach(i => {
+    const p = pairs[i];
+    const b = h('button', { type: 'button', class: 'mitem', onclick: () => {
+      if (b.classList.contains('done')) return;
+      if (sel === null) { api.guide('First tap a robot part on the left, then tap what it does.'); shakeEl(L); return; }
+      if (sel === i) {
+        const cls = 'c' + (made % 4);
+        [lefts[i], b].forEach(x => { x.classList.remove('sel'); x.classList.add('done', cls); x.append(h('span', { class: 'num' }, String(made + 1))); });
+        sel = null; made++; sfx.good();
+        api.guide(`${praise()} ${p.a.t}: ${p.b.t.toLowerCase()}.`);
+        if (made === pairs.length) onDone && onDone();
+      } else { miss(); shakeEl(b); api.guide(`Not quite. Think: what does the ${pairs[sel].a.t.toLowerCase()} do?`); }
+    } }, h('span', {}, p.b.t));
+    R.append(b);
+  });
+  grid.append(L, R); parent.append(grid);
+}
+
+// items: [{ic,t,bin,why}], bins: [{id,ic,t}]
+function sortGame(parent, items, bins, onDone) {
+  const tray = h('div', { class: 'tray' });
+  const box = h('div', { class: 'bins' + (bins.length === 2 ? ' two' : '') });
+  let sel = null, left = items.length;
+  const binEls = {};
+  const btns = items.map(it => {
+    const b = h('button', { type: 'button', class: 'titem', onclick: () => {
+      btns.forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sel = it; sfx.pop();
+      Object.values(binEls).forEach(x => x.classList.add('ready'));
+      api.guide(`Where does this go? “${it.t}”`);
+    } }, h('span', { class: 'ic', 'aria-hidden': 'true' }, it.ic), h('span', {}, it.t));
+    b._item = it; tray.append(b); return b;
+  });
+  bins.forEach(bn => {
+    const got = h('div', { class: 'got' });
+    const el = h('button', { type: 'button', class: 'bin', onclick: () => {
+      if (!sel) { api.guide('First tap a card, then tap the box it belongs in.'); shakeEl(tray); return; }
+      const btn = btns.find(x => x._item === sel);
+      if (sel.bin === bn.id) {
+        sfx.good(); got.append(h('span', { title: sel.t }, sel.ic)); btn.remove();
+        api.guide(`${praise()} ${sel.why || ''}`.trim());
+        sel = null; left--;
+        Object.values(binEls).forEach(x => x.classList.remove('ready'));
+        if (left === 0) onDone && onDone();
+      } else { miss(); shakeEl(el); api.guide(`Hmm, not the ${bn.t.toLowerCase()} box. Read the card again: “${sel.t}”`); }
+    } }, h('span', { class: 'bic', 'aria-hidden': 'true' }, bn.ic), h('span', { class: 'bh' }, bn.t), got);
+    binEls[bn.id] = el; box.append(el);
+  });
+  parent.append(tray, box);
+}
+
+/* ============ STATION 1: Robot or Not? ============ */
+const THINGS = [
+  { name: 'Robot vacuum', pic: () => art(vacuumSVG()), line: 'It cleans the floor all by itself.', robot: true, c: [1, 1, 1], why: 'It has a computer brain, wheels to move, and sensors to find walls. It follows its program to clean.' },
+  { name: 'Laptop', pic: () => '💻', line: 'It has a computer inside.', robot: false, c: [1, 0, 1], why: 'Remember the comic: a computer has a brain, but it can’t walk! It cannot move around by itself.' },
+  { name: 'Factory robot arm', pic: () => '🦾', line: 'It picks up heavy car parts.', robot: true, c: [1, 1, 1], why: 'It follows instructions to pick up parts and put them together, again and again.' },
+  { name: 'Teddy bear', pic: () => '🧸', line: 'Soft and cuddly.', robot: false, c: [0, 0, 0], why: 'A teddy has no computer brain, no motors and no sensors. It is a toy, not a robot.' },
+  { name: 'Mars rover', pic: () => art(roverSVG()), line: 'It drives on the planet Mars.', robot: true, c: [1, 1, 1], why: 'It drives on its wheels, takes pictures with its sensors and follows instructions sent from Earth.' },
+  { name: 'Puppy', pic: () => '🐶', line: 'It runs, sniffs and wags its tail.', robot: false, c: [0, 1, 1], why: 'A puppy is alive! It has a real brain and thinks by itself. A robot does not think by itself. It follows instructions from humans.' },
+];
+const CHECKS = ['🧠 Computer brain', '⚙️ Can move', '👀 Has sensors'];
+function playRobotOrNot(api) {
+  const t = THINGS[run.round];
+  api.guide(run.round === 0 ? `A robot is a smart machine that helps humans. Is this a robot? ${t.name}!` : `Is this a robot? ${t.name}!`);
+  const pic = t.pic();
+  api.stage.append(h('div', { class: 'thing' }, h('div', { class: 'pic', 'aria-hidden': 'true' }, pic), h('h3', {}, t.name), h('p', {}, t.line)));
+  const reveal = h('div', { class: 'ask', hidden: true });
+  choose(api.stage, {
+    options: [{ t: 'Robot', ic: '🤖', ok: t.robot, why: t.robot ? '' : 'Look closely. Does it have a computer brain, motors and sensors?' },
+              { t: 'Not a robot', ic: '🙅', ok: !t.robot, why: t.robot ? 'Look again! Can it think with a computer brain, move, and sense things?' : '' }],
+    onRight: () => {
+      reveal.hidden = false;
+      api.guide(t.why);
+      api.done();
+    },
+  });
+  reveal.append(
+    h('div', { class: 'checklist' }, CHECKS.map((c, i) => h('span', { class: 'check ' + (t.c[i] ? 'yes' : 'no') }, c, ' ', t.c[i] ? '✔' : '✘'))),
+    h('p', { class: 'rule' }, 'Robot = computer brain + moves + sensors'));
+  api.stage.append(reveal);
+}
+
+/* ============ STATION 2: Build Bolt ============ */
+const PARTS = [
+  { key: 'brain', ask: 'Bolt doesn’t know what to do! He needs a part that follows instructions called code. Which part?', you: '🧠', youT: 'Your brain', it: 'Computer brain', icon: '💡', note: 'You think with your brain. Bolt’s computer brain follows code that humans write.' },
+  { key: 'sensors', ask: 'Bolt can’t see the wall or hear you! Which part helps him see, hear and feel?', you: '👀👂✋', youT: 'Your eyes, ears and skin', it: 'Sensors', icon: '📡', note: 'Sensors help a robot see, hear or feel what is around it.' },
+  { key: 'wheels', ask: 'Bolt wants to move around the room. Which part makes him move?', you: '🦵', youT: 'Your legs and muscles', it: 'Motor and wheels', icon: '⚙️', note: 'Motors turn the wheels or arms so the robot can move.' },
+  { key: 'battery', ask: 'Bolt is so tired. He has no energy! Which part gives him power?', you: '🍛', youT: 'Food gives you energy', it: 'Battery', icon: '🔋', note: 'Electricity from a battery gives a robot energy, just like food gives us energy.' },
+];
+const PART_OPTS = [{ key: 'brain', t: 'Computer brain', ic: '💡' }, { key: 'sensors', t: 'Sensors', ic: '📡' }, { key: 'wheels', t: 'Motor and wheels', ic: '⚙️' }, { key: 'battery', t: 'Battery', ic: '🔋' }];
+function playBuild(api) {
+  if (run.round === 0) run.parts = {};
+  const bench = h('div', { class: 'workbench' });
+  const holder = h('div', {});
+  const draw = (on = false) => holder.replaceChildren(bolt(run.parts, on));
+  draw();
+  bench.append(holder);
+  api.stage.append(bench);
+  if (run.round < 4) {
+    const part = PARTS[run.round];
+    api.guide(part.ask);
+    choose(api.stage, {
+      options: PART_OPTS.map(o => ({ t: o.t, ic: o.ic, ok: o.key === part.key, why: run.parts[o.key] ? 'Bolt already has that part! Which part is still missing?' : undefined })),
+      onRight: () => {
+        run.parts[part.key] = 1; draw(false); sfx.beep();
+        api.guide(`${part.it} fitted! ${part.note}`);
+        api.stage.append(h('div', { class: 'compare' },
+          h('div', { class: 'side' }, h('b', { 'aria-hidden': 'true' }, part.you), part.youT),
+          h('span', { class: 'eq', 'aria-hidden': 'true' }, '↔'),
+          h('div', { class: 'side' }, h('b', { 'aria-hidden': 'true' }, part.icon), `Bolt’s ${part.it.toLowerCase()}`),
+          h('p', { class: 'full' }, part.note)));
+        api.done();
+      },
+    });
+  } else {
+    api.guide('All the parts are in! Press the power button.');
+    const btn = h('button', { class: 'btn go big', type: 'button', onclick: async () => {
+      btn.remove(); sfx.power(); draw(true);
+      const b = holder.firstChild; if (!reduce) b.classList.add('dance');
+      say('Beep boop! Hello Ayansh! I am Bolt!', true);
+      await wait(2600);
+      api.guide('Bolt is awake! Now a tricky one: does Bolt think by himself?');
+      choose(api.stage, {
+        prompt: 'Who tells Bolt what to do?', stack: true,
+        options: shuffle([
+          { t: 'Bolt thinks all by himself', ic: '💭', ok: false, why: 'That’s the big difference! A robot does NOT think by itself.' },
+          { t: 'Humans give Bolt instructions', ic: '🧑‍💻', ok: true, why: 'A robot follows instructions given by humans.' },
+          { t: 'Bolt’s wheels decide', ic: '🛞', ok: false, why: 'Wheels only help Bolt move. They can’t decide anything!' },
+        ]),
+        onRight: () => api.done(),
+      });
+    } }, '⏻ Power on');
+    api.stage.append(btn);
+  }
+}
+
+/* ============ STATION 3: Checkpoint 1 ============ */
+const CP1 = [
+  { l: 'a', q: 'A robot is a', o: ['toy', 'smart machine', 'animal'], a: 1 },
+  { l: 'b', q: 'A robot works using', o: ['magic', 'feelings', 'instructions'], a: 2 },
+  { l: 'c', q: 'Which part of a robot works like a brain?', o: ['computer', 'wheels', 'battery'], a: 0 },
+  { l: 'd', q: 'Robots are made to', o: ['fight humans', 'help humans', 'only cook food'], a: 1 },
+  { l: 'e', q: 'Robots follow instructions given by', o: ['other robots', 'animals', 'humans'], a: 2 },
+];
+function playCheckpoint1(api) {
+  if (run.round < 5) {
+    const c = CP1[run.round];
+    api.guide(`Question 1${c.l}. ${c.q} …?`);
+    const ans = h('p', { class: 'answerline', 'aria-label': 'Answer' });
+    api.stage.append(h('div', { class: 'bookq' }, h('span', { class: 'tag' }, `Choose and write · 1${c.l}`), h('p', { class: 'q', style: 'text-align:left' }, c.q + ' …'), h('p', { class: 'note' }, 'Answer:'), ans));
+    choose(api.stage, {
+      options: c.o.map((t, i) => ({ t: `${i + 1}) ${t}`, ok: i === c.a })),
+      onRight: () => { ans.replaceChildren(h('em', {}, c.o[c.a])); api.done(); },
+    });
+  } else {
+    api.guide('Question 2. Match the robot parts to what they do. Tap a part, then tap its job.');
+    api.stage.append(h('div', { class: 'bookq' }, h('span', { class: 'tag' }, 'Match · 2')));
+    matchGame(api.stage, [
+      { a: { ic: '💡', t: 'Computer brain' }, b: { t: 'Follows instructions' } },
+      { a: { ic: '📡', t: 'Sensors' }, b: { t: 'Acts like eyes or ears' } },
+      { a: { ic: '🔋', t: 'Battery' }, b: { t: 'Gives power' } },
+      { a: { ic: '🛞', t: 'Wheels' }, b: { t: 'Helps robot move' } },
+    ], () => { api.guide('All matched! You passed Checkpoint 1.'); api.done(); });
+  }
+}
+
+/* ============ STATION 4: Air Patrol ============ */
+const PLACES = [
+  { name: 'City park', ground: ['🌳', '🌷', '🌳', '🦋', '🌳'], smoke: 1, dust: 1, aqi: 38, clean: true, why: 'Trees help keep the air clean. Low smoke, low dust, low AQI.' },
+  { name: 'Busy road in a traffic jam', ground: ['🚗', '🚌', '🛺', '🚚', '🚗'], smoke: 4, dust: 4, aqi: 190, clean: false, why: 'Lots of cars, buses and trucks make smoke and dust. The AQI number is high.' },
+  { name: 'Factory chimney', ground: ['🏭', '💨', '🏭', '💨'], smoke: 5, dust: 3, aqi: 260, clean: false, why: 'The chimney puts smoke and harmful gases into the air. That’s polluted!' },
+  { name: 'Hill fort near Pune', ground: ['⛰️', '🌲', '🏰', '🌲', '⛰️'], smoke: 1, dust: 0, aqi: 30, clean: true, why: 'Up on the hill there are no cars or factories. The air is fresh!' },
+];
+const AQI_BANDS = [{ max: 50, t: 'Good', col: '#7DDB8B' }, { max: 100, t: 'OK', col: '#FFE070' }, { max: 999, t: 'Unhealthy', col: '#FF9A6B' }];
+const band = n => AQI_BANDS.find(b => n <= b.max);
+function playAir(api) {
+  if (run.round < 4) {
+    const pl = PLACES[run.round];
+    api.guide(run.round === 0
+      ? 'Air Quality Monitoring Robots help scientists measure the AQI, the Air Quality Index. Send the drone to check the air!'
+      : `Next stop: ${pl.name}. Send the drone!`);
+    const drone = h('div', { class: 'drone', html: droneSVG() });
+    const beam = h('div', { class: 'beam' });
+    const scene = h('div', { class: 'scene' + (pl.clean ? '' : ' haze') }, h('span', { class: 'label' }, pl.name), drone, beam, h('div', { class: 'ground', 'aria-hidden': 'true' }, pl.ground.map(g => h('span', {}, g))));
+    api.stage.append(scene, h('div', { class: 'aqiscale', 'aria-label': 'AQI scale' }, AQI_BANDS.map((b, i) => h('span', { style: `background:${b.col}` }, ['0–50 Good 😊', '51–100 OK 🙂', '101+ Unhealthy 😷'][i]))));
+    const go = h('button', { class: 'btn go big', type: 'button', onclick: async () => {
+      go.remove(); sfx.whoosh(); drone.classList.add('there');
+      await wait(1700); beam.classList.add('on'); sfx.beep(); await wait(600);
+      const bar = (n, bad) => h('span', { class: 'bar' + (bad ? ' bad' : '') }, Array.from({ length: 5 }, (_, i) => h('i', { class: i < n ? 'on' : '' })));
+      const b = band(pl.aqi);
+      api.stage.append(h('div', { class: 'meters', role: 'img', 'aria-label': `Smoke ${pl.smoke} of 5, dust ${pl.dust} of 5, AQI ${pl.aqi}` },
+        h('span', {}, 'SMOKE'), bar(pl.smoke, pl.smoke > 2),
+        h('span', {}, 'DUST'), bar(pl.dust, pl.dust > 2),
+        h('div', { class: 'aqi' }, h('span', {}, 'AQI'), h('b', {}, String(pl.aqi)), h('span', { class: 'aqichip', style: `background:${b.col}` }, b.t))));
+      api.guide(`The drone’s sensors say the AQI is ${pl.aqi}. Is the air clean or polluted?`);
+      choose(api.stage, {
+        options: [{ t: 'Clean air', ic: '😊', ok: pl.clean }, { t: 'Polluted air', ic: '😷', ok: !pl.clean }],
+        wrongHint: () => api.guide('Look at the AQI number. A small number means clean air. A big number means polluted air.'),
+        onRight: () => { api.guide(pl.why); api.done(); },
+      });
+    } }, '🚁 Send the drone');
+    api.stage.append(go);
+  } else {
+    api.guide('Smoke is coming out of a very tall chimney. Which robot can check the air way up high?');
+    choose(api.stage, {
+      stack: true,
+      options: shuffle([
+        { t: 'A flying drone', ic: '🚁', ok: true, why: 'Air robots can move on the ground or fly in the air. A drone can fly right up to the smoke.' },
+        { t: 'A ground robot on wheels', ic: '🚙', ok: false, why: 'A ground robot is great on the road, but it can’t reach the top of a tall chimney.' },
+        { t: 'A robot vacuum', ic: '🧹', ok: false, why: 'A robot vacuum cleans floors. It can’t fly or check smoke.' },
+      ]),
+      onRight: () => { api.stage.append(h('p', { class: 'rule' }, 'Air robots use sensors to find smoke, dust and harmful gases.')); api.done(); },
+    });
+  }
+}
+
+/* ============ STATION 5: Robot Jobs ============ */
+const JOB_BINS = [{ id: 'farm', ic: '🌾', t: 'Farm' }, { id: 'hosp', ic: '🏥', t: 'Hospital' }, { id: 'fun', ic: '🎡', t: 'Fun' }, { id: 'rescue', ic: '🚨', t: 'Rescue' }, { id: 'factory', ic: '🏭', t: 'Factory' }, { id: 'space', ic: '🚀', t: 'Space' }];
+const JOBS = [
+  [{ ic: '🍅', t: 'I pick tomatoes when they are ripe', bin: 'farm', why: 'Farm robots plant seeds, water plants and pick fruits and vegetables.' },
+   { ic: '💊', t: 'I carry medicine to patients’ rooms', bin: 'hosp', why: 'Hospital robots help doctors and nurses take care of sick people.' },
+   { ic: '🐕', t: 'I’m a robot puppy that plays fetch', bin: 'fun', why: 'Entertainment robots are made for fun, like robot pets and toys.' },
+   { ic: '🔦', t: 'I find people trapped after an earthquake', bin: 'rescue', why: 'Rescue robots find people who are lost or trapped.' },
+   { ic: '🚗', t: 'I paint car doors all day long', bin: 'factory', why: 'Factory robots do the same job over and over, very quickly.' },
+   { ic: '🪐', t: 'I take pictures of rocks on Mars', bin: 'space', why: 'Space rovers study rocks and send information to scientists on Earth.' }],
+  [{ ic: '💧', t: 'I water the plants in the field', bin: 'farm', why: 'Watering crops helps farmers do their work faster.' },
+   { ic: '🩺', t: 'I help doctors do surgery safely', bin: 'hosp', why: 'Some hospital robots are tools that help doctors perform surgery.' },
+   { ic: '🦖', t: 'I’m a dinosaur that roars in a theme park', bin: 'fun', why: 'Animatronics in theme parks are entertainment robots.' },
+   { ic: '🕳️', t: 'I crawl into tiny spaces too dangerous for people', bin: 'rescue', why: 'Rescue robots go where it is too small or dangerous for people.' },
+   { ic: '🔩', t: 'I screw bolts into new computers', bin: 'factory', why: 'Factory robots help build cars, computers and toys.' },
+   { ic: '🌑', t: 'I explore a planet with no air to breathe', bin: 'space', why: 'Robots can go where there is no air for humans to breathe.' }],
+];
+function playJobs(api) {
+  if (run.round === 0) {
+    const a = shuffle(JOBS[0].slice()), b = shuffle(JOBS[1].slice());
+    run.jobs = [a.slice(0, 2).concat(b.slice(0, 2)), a.slice(2, 4).concat(b.slice(2, 4)), a.slice(4).concat(b.slice(4))].map(shuffle);
+  }
+  api.guide(run.round === 0 ? 'Different robots do different jobs! Tap a robot card, then tap the place where it works.' : 'More robots need their jobs! Tap a card, then its box.');
+  sortGame(api.stage, run.jobs[run.round], JOB_BINS, () => { api.guide('Every robot found its job!'); api.done(); });
+}
+
+/* ============ STATION 6: Robot Doctor ============ */
+const FIXES = [{ id: 'battery', ic: '🔌', t: 'Charge the battery' }, { id: 'sock', ic: '🧦', t: 'Pull out the stuck sock' }, { id: 'dust', ic: '🧽', t: 'Wipe the dusty sensor' }, { id: 'start', ic: '▶️', t: 'Press start to give it an instruction' }];
+const CASES = [
+  { id: 'battery', clue: '🪫', blink: true, text: 'Zoomy’s light is red and blinking. The battery sign is empty!', part: 'Battery: it gives the robot power, like food gives us energy.' },
+  { id: 'sock', clue: '🧦', text: 'Zoomy hums, but it can’t roll. Something is wrapped around its wheel!', part: 'Motor and wheels: they help the robot move.' },
+  { id: 'dust', clue: '🌫️', text: 'Zoomy keeps stopping and saying “Wall! Wall!”, but there is no wall. Its sensor eye is covered in dust.', part: 'Sensors: they are the robot’s eyes. Dirty sensors can’t see properly.' },
+  { id: 'start', clue: '❓', text: 'The battery is full, the wheels are clean and the sensor is clean. But nobody pressed start today!', part: 'Computer brain: a robot only works when it gets instructions from humans.' },
+];
+function playDoctor(api) {
+  if (run.round === 0) run.cases = shuffle(CASES.slice());
+  const cs = run.cases[run.round];
+  api.guide(`${run.round === 0 ? 'Zoomy the robot vacuum stopped suddenly! You are the robot doctor. ' : 'Zoomy stopped again! '}${cs.text}`);
+  const pic = art(vacuumSVG(cs.id === 'battery' ? 'battery' : cs.id === 'sock' ? 'sock' : cs.id === 'dust' ? 'dust' : 'idle'));
+  api.stage.append(h('div', { class: 'patient' }, pic, h('span', { class: 'clue' + (cs.blink ? ' blink' : ''), 'aria-hidden': 'true' }, cs.clue)));
+  api.stage.append(h('p', { class: 'q' }, cs.text));
+  choose(api.stage, {
+    prompt: 'How will you fix Zoomy?', stack: true,
+    options: FIXES.map(f => ({ t: f.t, ic: f.ic, ok: f.id === cs.id })),
+    wrongHint: () => api.guide(`Look at the clue again. ${cs.text}`),
+    onRight: () => {
+      pic.innerHTML = vacuumSVG('ok'); if (!reduce) pic.classList.add('zoom'); sfx.beep();
+      api.guide(`Zoomy is cleaning again! The problem was the ${cs.part.split(':')[0].toLowerCase()}.`);
+      api.stage.append(h('p', { class: 'rule' }, cs.part));
+      api.done();
+    },
+  });
+}
+
+/* ============ STATION 7: Robots or People? ============ */
+const WHO = [
+  { ic: '🏋️', t: 'Lifting heavy car parts all day', bin: 'robot', why: 'Robots are strong and never get tired.' },
+  { ic: '🪐', t: 'Going to Mars, where there is no air', bin: 'robot', why: 'Robots don’t need air, food or sleep.' },
+  { ic: '🔁', t: 'Doing the same job 1000 times', bin: 'robot', why: 'Robots are good at doing the same job over and over again.' },
+  { ic: '🔥', t: 'Going into a smoky, broken building', bin: 'robot', why: 'Rescue robots can go where it is dangerous for people.' },
+  { ic: '🤗', t: 'Hugging a friend who is sad', bin: 'people', why: 'People have feelings and can care for each other.' },
+  { ic: '📖', t: 'Making up a brand-new story', bin: 'people', why: 'People have their own new ideas. Robots only follow instructions.' },
+  { ic: '🎨', t: 'Painting a picture of how you feel', bin: 'people', why: 'Only people have feelings to paint!' },
+  { ic: '😂', t: 'Making your little cousin laugh', bin: 'people', why: 'People understand jokes and fun in a way robots can’t.' },
+];
+function playWho(api) {
+  if (run.round === 0) {
+    const r = shuffle(WHO.filter(w => w.bin === 'robot')), p = shuffle(WHO.filter(w => w.bin === 'people'));
+    run.who = [shuffle(r.slice(0, 2).concat(p.slice(0, 2))), shuffle(r.slice(2).concat(p.slice(2)))];
+  }
+  if (run.round < 2) {
+    api.guide(run.round === 0 ? 'Who does this job better: a robot or a person? Tap a card, then tap a box.' : 'A few more! Robot or person?');
+    sortGame(api.stage, run.who[run.round], [{ id: 'robot', ic: '🤖', t: 'Robots do it better' }, { id: 'people', ic: '🧒', t: 'People do it better' }], () => { api.guide('Robots and people are good at different things. That’s why we work together!'); api.done(); });
+  } else {
+    api.guide('Checkpoint 2, question 1. If humans can go to space, why are space robots still important?');
+    api.stage.append(h('div', { class: 'thing' }, h('div', { class: 'pic', 'aria-hidden': 'true' }, art(roverSVG())), h('h3', {}, 'Why send robots to space?')));
+    choose(api.stage, {
+      stack: true,
+      options: shuffle([
+        { t: 'There is no air on other planets, and it can be unsafe for people', ic: '🌑', ok: true, why: 'Robots don’t need air or food. They can stay for years, take pictures and send information back to Earth.' },
+        { t: 'Robots like going on holidays', ic: '🏖️', ok: false, why: 'Ha! Robots don’t have feelings. Think about what is missing on Mars.' },
+        { t: 'Astronauts are busy watching TV', ic: '📺', ok: false, why: 'No! Think about what people need to stay alive that Mars doesn’t have.' },
+      ]),
+      onRight: () => api.done(),
+    });
+  }
+}
+
+/* ============ STATION 8: My School Robot ============ */
+const PROBLEMS = [
+  { id: 'bags', ic: '🎒', t: 'Heavy school bags', job: 'carries heavy school bags up the stairs' },
+  { id: 'mess', ic: '🧻', t: 'Messy classroom', job: 'picks up paper and tidies the classroom' },
+  { id: 'books', ic: '📚', t: 'Library books in the wrong place', job: 'puts library books back on the right shelf' },
+  { id: 'plants', ic: '🪴', t: 'Thirsty school plants', job: 'waters the school plants every morning' },
+  { id: 'air', ic: '😷', t: 'Dusty, smoky air', job: 'checks the air in the playground and warns everyone on bad days' },
+];
+const MOVES = [{ id: 'wheels', ic: '🛞', t: 'Rolls on wheels' }, { id: 'legs', ic: '🦿', t: 'Walks on legs' }, { id: 'fly', ic: '🚁', t: 'Flies like a drone' }];
+const SENSORS = [{ id: 'eyes', ic: '👀', t: 'Camera eyes' }, { id: 'ears', ic: '👂', t: 'Microphone ears' }, { id: 'touch', ic: '✋', t: 'Touch sensors' }, { id: 'nose', ic: '👃', t: 'Air sensor nose' }];
+const COLOURS = ['#FFFFFF', '#FF9E6B', '#7FD6E2', '#9FE0A8', '#FFE070', '#C3B3F5'];
+const NAMES = ['ROBO-HELPER', 'BOLT JR', 'SUPER BOT', 'AYANSH-BOT'];
+function robotCard(r) {
+  const prob = PROBLEMS.find(p => p.id === r.problem) || PROBLEMS[0];
+  const mv = MOVES.find(m => m.id === r.move) || MOVES[0];
+  const sens = SENSORS.filter(s => r.sensors.includes(s.id)).map(s => s.t.toLowerCase());
+  return h('div', { class: 'botcard' }, bolt(ALL, true, { color: r.color, move: r.move, sensors: r.sensors }),
+    h('div', { class: 'txt' }, h('span', { class: 'tag' }, 'My school robot'), h('h3', {}, r.name),
+      h('p', {}, `${r.name} ${prob.job}.`),
+      h('p', { class: 'note' }, `It ${mv.t.toLowerCase()}${sens.length ? ` and senses things with ${sens.join(', ').replace(/, ([^,]*)$/, ' and $1')}` : ''}. Its computer brain follows the instructions you give it.`)));
+}
+function playDesign(api) {
+  const r = { problem: null, move: 'wheels', sensors: ['eyes'], color: COLOURS[2], name: '' };
+  const prev = h('div', { class: 'preview' });
+  const redraw = () => prev.replaceChildren(bolt(ALL, true, { color: r.color, move: r.move, sensors: r.sensors }));
+  const pickRow = (list, key, multi) => {
+    const row = h('div', { class: 'choices' });
+    list.forEach(o => {
+      const b = h('button', { type: 'button', class: 'choice' + ((multi ? r[key].includes(o.id) : r[key] === o.id) ? ' sel' : ''), 'aria-pressed': String(multi ? r[key].includes(o.id) : r[key] === o.id), onclick: () => {
+        sfx.pop();
+        if (multi) { r[key] = r[key].includes(o.id) ? r[key].filter(x => x !== o.id) : r[key].concat(o.id); }
+        else r[key] = o.id;
+        [...row.children].forEach((x, i) => { const on = multi ? r[key].includes(list[i].id) : r[key] === list[i].id; x.classList.toggle('sel', on); x.setAttribute('aria-pressed', String(on)); });
+        redraw();
+      } }, h('span', { class: 'ic', 'aria-hidden': 'true' }, o.ic), h('span', {}, o.t));
+      row.append(b);
+    });
+    return row;
+  };
+  const steps = [
+    () => { api.guide('If you could design a robot for your school, what problem would it solve? Pick one.');
+      const row = h('div', { class: 'choices stack' });
+      PROBLEMS.forEach(p => row.append(h('button', { type: 'button', class: 'choice', onclick: () => { r.problem = p.id; sfx.good(); next(); } }, h('span', { class: 'ic', 'aria-hidden': 'true' }, p.ic), h('span', {}, p.t))));
+      return [h('p', { class: 'q' }, 'Step 1: What problem will it solve?'), row]; },
+    () => { api.guide('How will your robot move? Its motors can turn wheels, legs or propellers.');
+      return [h('p', { class: 'q' }, 'Step 2: How does it move?'), prev, pickRow(MOVES, 'move'), h('button', { class: 'btn primary', type: 'button', onclick: next }, 'Next ➜')]; },
+    () => { api.guide('Which sensors does it need? You can pick more than one.');
+      return [h('p', { class: 'q' }, 'Step 3: Pick its sensors'), prev, pickRow(SENSORS, 'sensors', true), h('button', { class: 'btn primary', type: 'button', onclick: next }, 'Next ➜')]; },
+    () => { api.guide('Pick a colour, and give your robot a name!');
+      const sw = h('div', { class: 'swatches' });
+      COLOURS.forEach(c => sw.append(h('button', { type: 'button', class: 'swatch' + (r.color === c ? ' sel' : ''), style: `background:${c}`, 'aria-label': 'Colour', onclick: e => { r.color = c; sfx.pop(); [...sw.children].forEach(x => x.classList.remove('sel')); e.currentTarget.classList.add('sel'); redraw(); } })));
+      const input = h('input', { id: 'robotName', type: 'text', maxlength: '14', placeholder: 'Type a name', autocomplete: 'off', 'aria-label': 'Robot name' });
+      const quick = h('div', { class: 'choices' }, NAMES.map(n => h('button', { type: 'button', class: 'choice', onclick: () => { input.value = n; sfx.pop(); } }, n)));
+      const done = h('button', { class: 'btn go big', type: 'button', onclick: () => {
+        r.name = (input.value || '').trim().toUpperCase().slice(0, 14) || 'ROBO-HELPER';
+        P.myRobot = { ...r }; save(); next();
+      } }, '🔧 Build my robot!');
+      return [h('p', { class: 'q' }, 'Step 4: Colour and name'), prev, sw, h('div', { class: 'namebox' }, input), quick, done]; },
+    () => { sfx.power(); api.guide(`Meet ${r.name}! Now tell Mummy or Papa how your robot will help. Then draw it in MS Paint, like the TechTrek mission!`);
+      api.done();
+      return [robotCard(r)]; },
+  ];
+  let i = 0;
+  function next() {
+    api.stage.replaceChildren(h('div', { class: 'dstep' }, steps[i++]()));
+  }
+  redraw(); next();
+}
+
+/* ============ STATION 9: Step by Step ============ */
+const ORDERS = [
+  { title: 'Make toast (a recipe!)', intro: 'A program is like a recipe. It tells you what to do, step by step. Put the toast recipe in order.',
+    steps: [{ ic: '🍞', t: 'Put bread in the toaster' }, { ic: '👇', t: 'Push the lever down' }, { ic: '⏲️', t: 'Wait for the ding' }, { ic: '🫳', t: 'Take out the toast' }, { ic: '🍓', t: 'Spread jam on it' }],
+    oops: 'Silly! You can’t do that yet. Think about what comes first in the kitchen.' },
+  { title: 'Get ready for the school bus', intro: 'Order matters! What happens if you put your shoes on before your socks? Put these in order.',
+    steps: [{ ic: '🧦', t: 'Put on socks' }, { ic: '👟', t: 'Put on shoes' }, { ic: '🎀', t: 'Tie the laces' }, { ic: '🚌', t: 'Walk to the school bus' }],
+    oops: 'Imagine doing that first! Socks over shoes would look funny. Try again.' },
+  { title: 'How a robot follows instructions', intro: 'Now the robot steps from your book, page 15. Put them in order, starting with the person.',
+    steps: [{ ic: '🧑‍💻', t: 'A person writes instructions on a computer' }, { ic: '💾', t: 'The instructions are put into the robot’s brain' }, { ic: '📡', t: 'The robot’s sensors collect information about what is around it' }, { ic: '💡', t: 'The robot’s brain reads the instructions' }, { ic: '⚙️', t: 'The robot’s motors and parts move to complete the task' }],
+    oops: 'Hmm. Remember, a robot can’t do anything until a person writes the instructions.' },
+];
+function playOrder(api) {
+  const o = ORDERS[run.round];
+  api.guide(o.intro);
+  api.stage.append(h('p', { class: 'q' }, o.title));
+  orderGame(api.stage, o.steps, {
+    oops: () => o.oops,
+    onDone: () => {
+      if (run.round === 2) {
+        api.guide('That’s how robots work! The steps go round and round, like a circle.');
+        const cyc = h('div', { class: 'cycle', role: 'img', 'aria-label': 'The five steps in a circle' }, h('div', { class: 'ring' }), h('div', { class: 'hub' }, bolt()));
+        o.steps.forEach((s, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; const n = h('div', { class: 'node' }, h('b', { 'aria-hidden': 'true' }, s.ic), String(i + 1)); n.style.left = (50 + 38 * Math.cos(a)) + '%'; n.style.top = (50 + 38 * Math.sin(a)) + '%'; cyc.append(n); });
+        api.stage.append(cyc);
+      } else api.guide(`${praise()} That’s the right order. Robots need clear steps in the right order too. This is called sequencing.`);
+      api.done();
+    },
+  });
+}
+
+/* ============ STATION 10: Code Bolt ============ */
+const DIRS = { U: { dx: 0, dy: -1, ic: '⬆️', w: 'up' }, D: { dx: 0, dy: 1, ic: '⬇️', w: 'down' }, L: { dx: -1, dy: 0, ic: '⬅️', w: 'left' }, R: { dx: 1, dy: 0, ic: '➡️', w: 'right' } };
+const MAZES = [
+  { task: 'Take the book back to the library shelf.', goal: '📚', start: [0, 2], end: [3, 2], walls: [] },
+  { task: 'Bring the lunchbox to Ayansh’s desk.', goal: '🍱', start: [0, 4], end: [3, 1], walls: [[1, 3], [2, 3], [3, 3]], deco: '🪑' },
+  { task: 'Water the plant. Go around the bookshelf!', goal: '🪴', start: [0, 4], end: [4, 4], walls: [[2, 4], [2, 3]], deco: '🗄️' },
+  { task: 'Bolt’s battery is low. Take him to the charger!', goal: '🔌', start: [2, 4], end: [2, 0], walls: [[1, 2], [2, 2], [3, 2], [2, 1]], deco: '🧱' },
+  { task: 'Oh no! This program has a bug. Bolt should reach the star. Tap the wrong arrow to change it, then run.', goal: '⭐', start: [0, 0], end: [3, 3], walls: [[0, 2], [1, 2]], deco: '🪴', bug: ['R', 'R', 'R', 'D', 'U', 'D'] },
+];
+const SIZE = 5;
+function playCode(api) {
+  const m = MAZES[run.round];
+  api.guide(run.round === 0
+    ? `You are the programmer! Bolt is like a video game character: he does exactly what you command. ${m.task} Tap the arrows to write the program, then press Run.`
+    : m.task);
+  const wallSet = new Set(m.walls.map(w => w.join(',')));
+  const grid = h('div', { class: 'grid', role: 'img', 'aria-label': `Grid with Bolt and the ${m.goal}` });
+  grid.style.gridTemplateColumns = `repeat(${SIZE},1fr)`; grid.style.gridTemplateRows = `repeat(${SIZE},1fr)`;
+  const cells = [];
+  for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+    const k = x + ',' + y;
+    const isGoal = x === m.end[0] && y === m.end[1], isStart = x === m.start[0] && y === m.start[1];
+    const c = h('div', { class: 'cell' + (wallSet.has(k) ? ' wall' : isGoal ? ' goal' : isStart ? ' start' : '') }, wallSet.has(k) ? (m.deco || '🧱') : isGoal ? m.goal : '');
+    cells.push(c); grid.append(c);
+  }
+  const walker = h('div', { class: 'walker' }, bolt());
+  const place = (x, y) => { walker.style.left = (x * 100 / SIZE) + '%'; walker.style.top = (y * 100 / SIZE) + '%'; };
+  walker.style.width = walker.style.height = (100 / SIZE) + '%';
+  place(...m.start); grid.append(walker);
+
+  let prog = m.bug ? m.bug.slice() : [];
+  let running = false, solved = false;
+  const progEl = h('div', { class: 'program', 'aria-label': 'Program' });
+  const drawProg = (now = -1) => {
+    progEl.replaceChildren(...(prog.length ? prog.map((d, i) => h('button', { type: 'button', class: 'chip' + (i === now ? ' now' : ''), 'aria-label': `Step ${i + 1}: ${DIRS[d].w}${m.bug ? ', tap to change' : ', tap to remove'}`, onclick: () => {
+      if (running || solved) return;
+      sfx.pop();
+      if (m.bug) { const order = ['U', 'R', 'D', 'L']; prog[i] = order[(order.indexOf(d) + 1) % 4]; }
+      else prog.splice(i, 1);
+      drawProg();
+    } }, DIRS[d].ic)) : [h('span', { class: 'empty' }, 'Your program goes here')]));
+  };
+  drawProg();
+  const pads = h('div', { class: 'pads', hidden: !!m.bug }, ['U', 'L', 'D', 'R'].map(d => h('button', { type: 'button', class: 'pad ' + DIRS[d].w, 'aria-label': `Add: go ${DIRS[d].w}`, onclick: () => {
+    if (running || solved) return;
+    if (prog.length >= 14) { api.guide('That’s a long program! Press Run to try it.'); return; }
+    prog.push(d); sfx.step(prog.length); drawProg();
+  } }, DIRS[d].ic)));
+  const runBtn = h('button', { class: 'btn go', type: 'button', onclick: () => execute() }, '▶ Run');
+  const undo = h('button', { class: 'btn small', type: 'button', hidden: !!m.bug, onclick: () => { if (running || solved) return; prog.pop(); drawProg(); } }, '↩ Undo');
+  const clear = h('button', { class: 'btn small', type: 'button', hidden: !!m.bug, onclick: () => { if (running || solved) return; prog = []; drawProg(); } }, '🗑 Clear');
+  const panel = h('div', { class: 'panel' }, pads, h('p', { class: 'legend' }, m.bug ? 'Tap an arrow to change it' : 'Tap an arrow in the program to remove it'), progEl, h('div', { class: 'runbar' }, undo, clear, runBtn));
+  api.stage.append(h('div', { class: 'coderow' }, grid, panel));
+
+  const reset = () => { cells.forEach(c => c.classList.remove('trail')); place(...m.start); };
+  async function execute() {
+    if (running || solved) return;
+    if (!prog.length) { api.guide('Bolt is waiting. Robots can’t do anything without instructions! Tap some arrows first.'); shakeEl(progEl); return; }
+    running = true; runBtn.disabled = true;
+    reset(); await wait(250);
+    let [x, y] = m.start;
+    for (let i = 0; i < prog.length; i++) {
+      drawProg(i);
+      const d = DIRS[prog[i]], nx = x + d.dx, ny = y + d.dy;
+      if (nx < 0 || ny < 0 || nx >= SIZE || ny >= SIZE || wallSet.has(nx + ',' + ny)) {
+        sfx.bonk(); walker.classList.remove('bonk'); void walker.offsetWidth; walker.classList.add('bonk');
+        run.mistakes++;
+        api.guide(`Bonk! Step ${i + 1} sent Bolt ${d.w} into ${nx < 0 || ny < 0 || nx >= SIZE || ny >= SIZE ? 'the edge of the room' : 'something in the way'}. Robots do exactly what you say. Fix that step and run again.`);
+        await wait(1100); reset(); drawProg(); running = false; runBtn.disabled = false; return;
+      }
+      x = nx; y = ny; cells[y * SIZE + x].classList.add('trail'); place(x, y); sfx.step(i);
+      await wait(380);
+    }
+    drawProg();
+    if (x === m.end[0] && y === m.end[1]) {
+      solved = true; sfx.good();
+      api.guide(`${praise()} Bolt followed your ${prog.length} commands in the right sequence and reached the ${m.goal}!`);
+      api.done();
+    } else {
+      run.mistakes++; sfx.oops();
+      api.guide('Bolt finished the program but stopped in the wrong place. Change the steps and try again!');
+      await wait(900); reset(); running = false; runBtn.disabled = false;
+    }
+  }
+}
+
+/* ---------- level runner ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Robot or Not?', idea: 'A smart machine', page: 'Book pages 8–9', rounds: 6, cut: [0, 2], icon: '🤖', play: playRobotOrNot },
+  { id: 2, part: 1, name: 'Build Bolt', idea: 'Three important parts', page: 'Book page 9', rounds: 5, cut: [0, 2], icon: '🔧', play: playBuild },
+  { id: 3, part: 1, name: 'Checkpoint 1', idea: 'Choose, write and match', page: 'Book pages 10–11', rounds: 6, cut: [1, 3], icon: '✅', play: playCheckpoint1 },
+  { id: 4, part: 1, name: 'Air Patrol', idea: 'Robots that check the air', page: 'Book page 11 · EcoRoute', rounds: 5, cut: [0, 2], icon: '🚁', play: playAir },
+  { id: 5, part: 2, name: 'Robot Jobs', idea: 'Different robots, different jobs', page: 'Book pages 12–14', rounds: 3, cut: [1, 3], icon: '🏭', play: playJobs },
+  { id: 6, part: 2, name: 'Robot Doctor', idea: 'Why did it stop?', page: 'Book page 14 · question 3', rounds: 4, cut: [0, 2], icon: '🩺', play: playDoctor },
+  { id: 7, part: 2, name: 'Robots or People?', idea: 'Who does it better?', page: 'Book pages 13–14', rounds: 3, cut: [1, 3], icon: '🤝', play: playWho },
+  { id: 8, part: 2, name: 'My School Robot', idea: 'Design your own robot', page: 'Book page 14 · question 2', rounds: 1, cut: [99, 99], icon: '✏️', play: playDesign },
+  { id: 9, part: 3, name: 'Step by Step', idea: 'Programs are like recipes', page: 'Book page 15', rounds: 3, cut: [1, 3], icon: '📋', play: playOrder },
+  { id: 10, part: 3, name: 'Code Bolt', idea: 'Commands and sequencing', page: 'Book page 15', rounds: 5, cut: [2, 5], icon: '🕹️', play: playCode },
+];
+let run = null, guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; say(t); },
+  done: roundDone,
+};
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function startLevel(L) {
+  run = { lvl: L, round: 0, mistakes: 0 };
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Station ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  save(); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 4 ? 'You finished Part 1! You know what a robot is and how it works. Part 2 shows robots at work.'
+    : L.id === 8 ? 'What a cool robot! Part 3 is about giving robots instructions.'
+    : L.id === LEVELS.length ? 'You finished the whole Robots chapter, Ayansh! You can now program a robot.'
+    : `You finished ${L.name}.${next ? ` Next station: ${next.name}.` : ''}`;
+  const tip = L.id === 8 ? 'Every robot design is a good one!' : st < 3 ? 'Play this station again to win all 3 stars.' : 'No slips at all. Amazing!';
+  say(`${title} ${msg}`);
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next station ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the lab'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC93C', '#FF7A2F', '#1FAFC2', '#2E9E5E', '#FFFFFF'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Station ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Station ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  [1, 2, 3].forEach(p => $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item)));
+  const mb = $('mybot');
+  if (P.myRobot && P.myRobot.name) {
+    mb.hidden = false;
+    const card = robotCard(P.myRobot);
+    mb.replaceChildren(h('div', { class: 'mybot-text' }, h('h2', {}, 'Your robot invention'), h('p', { class: 'note' }, 'Draw it in MS Paint and share its mission with your class!')), card);
+  } else mb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  if (canSpeak) try { speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* ---------- comic (page 8) ---------- */
+const COMIC = [
+  ['a', 'Hi Robot! Looks like you have a computer inside you!'],
+  ['b', 'I do! That’s my brain!'],
+  ['a', 'But computers can’t walk…'],
+  ['b', 'That’s what makes me special! I have wheels!'],
+  ['a', 'Can you see me?'],
+  ['b', 'Yes! I have sensors. They’re like my eyes!'],
+  ['a', 'Wow! So you are a moving, thinking helper!'],
+  ['b', 'Exactly! That’s what a robot is!'],
+];
+let comicAt = 0;
+function showComic(speak) {
+  const [who, text] = COMIC[comicAt];
+  $('comicLine').textContent = text;
+  $('whoA').classList.toggle('talking', who === 'a');
+  $('whoB').classList.toggle('talking', who === 'b');
+  $('comicCount').textContent = `${comicAt + 1} of ${COMIC.length}`;
+  $('comicNext').textContent = comicAt === COMIC.length - 1 ? '↺ Read again' : 'Next ➜';
+  if (speak) { say(text, who === 'b'); if (who === 'b') sfx.beep(); }
+}
+
+/* ---------- wiring ---------- */
+$('back').addEventListener('click', showMap);
+$('say').addEventListener('click', () => { const was = P.sound; P.sound = true; say(guideText); P.sound = was; });
+$('comicNext').addEventListener('click', () => { comicAt = (comicAt + 1) % COMIC.length; showComic(true); });
+function syncSound() { $('sound').textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; $('sound').setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; if (!P.sound && canSpeak) try { speechSynthesis.cancel(); } catch (e) {} save(); syncSound(); });
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(); renderMap(); });
+let resetArmed = false;
+$('reset').addEventListener('click', () => {
+  if (!resetArmed) { resetArmed = true; $('resetAsk').hidden = false; setTimeout(() => { resetArmed = false; $('resetAsk').hidden = true; }, 5000); return; }
+  resetArmed = false; $('resetAsk').hidden = true;
+  P = { stars: {}, unlocked: 1, sound: P.sound, myRobot: null }; save(); renderMap();
+});
+
+load();
+$('comicBolt').append(bolt());
+$('guideBolt').append(bolt());
+syncSound(); showComic(false); renderMap();
+})();
+</script>
+</body>
+</html>

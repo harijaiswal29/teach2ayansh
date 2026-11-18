@@ -45,3 +45,26 @@ Part 3: tens and ones, and word problems
 14. **Tens & Ones** (pp. 52–53): vertical multiplication, bundling 10 ones into a ten.
 15. **RIDE Problems** (pp. 53–55): Read, Identify, Draw a bar model, Evaluate.
 16. **Final Checkpoint** (pp. 55–57): Riya's bar-model mistake, the toy boxes, and the milk calendar.
+
+## Robot Lab (ICT book, Robots chapter)
+
+Open `robot-lab.html`. It follows the Robots chapter (pages 8–15) station by station, with Bolt the lab robot as guide. Every instruction is read aloud (turn off with "Sound on").
+
+Part 1: What is a robot? (pages 8–11)
+
+1. **Robot or Not?** (pp. 8–9): computer brain + moves + sensors = robot. A laptop has a brain but can't walk; a puppy thinks by itself.
+2. **Build Bolt** (p. 9): fit the computer brain, sensors, motor and wheels, and battery, each compared to his own body.
+3. **Checkpoint 1** (pp. 10–11): questions 1a–1e and the parts-to-jobs matching.
+4. **Air Patrol** (p. 11, EcoRoute): a drone's sensors measure smoke, dust and AQI.
+
+Part 2: Robots at work (pages 12–14)
+
+5. **Robot Jobs** (pp. 12–14): sort robots into farm, hospital, fun, rescue, factory and space.
+6. **Robot Doctor** (p. 14, Q3): why did the robot vacuum stop?
+7. **Robots or People?** (pp. 13–14): who does each job better, and why space robots matter.
+8. **My School Robot** (p. 14, Q2): design a robot for school; it then appears on the map.
+
+Part 3: Robots follow instructions (page 15)
+
+9. **Step by Step**: programs are like recipes; put toast, getting ready and the book's robot cycle in order.
+10. **Code Bolt**: arrow commands to steer Bolt round a classroom grid, then fix a buggy program.
