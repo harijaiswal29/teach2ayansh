@@ -19,10 +19,20 @@ There's a "For grown-ups" section at the bottom of the map with tips and offline
 
 ## Multiplication Fair (Chapter 9 of the school maths book)
 
-Open `chapter9-fair.html`. It follows the chapter page by page, set at the school fair:
+Open `chapter9-fair.html`. It follows the chapter page by page, set at the school fair.
+
+Part 1: tables of 2, 5 and 10
 
 1. **Bakery Trays** (pp. 28–29): spot equal and unequal groups, fix them, then use repeated addition.
 2. **Block Towers** (pp. 29–30): towers of 2, 5 and 10; the record table fills in as he guesses each total.
 3. **Toy Train** (pp. 31, 35): build the sentence groups × in each group = product.
 4. **Lantern Lights** (pp. 32–36): light the tables of 2, 5 and 10, find the patterns, use the "put a zero" trick for tens.
 5. **Prize Booth** (pp. 36–37): checkpoint matching, drawing beads, and filling a table row.
+
+Part 2: tables of 3, 4, 6 and zero
+
+6. **Art Club** (p. 38): paint pots and crayons; same trays, 10 in each instead of 5, so the product doubles.
+7. **Straw Grid** (pp. 39–41): straws and clay; each straw across adds 3, 4 or 6 meeting points.
+8. **Seed Board** (pp. 41–44): tables of 3, 4 and 6 on a Pallanguzhi board.
+9. **Hopscotch Lane** (pp. 45–46): traffic lights, tables and insects solved with number-line jumps.
+10. **Zero Magic** (p. 47): any number × 0 = 0.

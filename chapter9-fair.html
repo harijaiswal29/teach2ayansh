@@ -21,6 +21,7 @@
   --lilac:#ECE9F8; --sky-soft:#DDE8FA; --sky:#2F6FD0;
   --cube-red:#E04848; --cube-blue:#3B6FD6; --cube-green:#2E9A55;
   --on-night:#FFFFFF; --on-night-soft:#C9CEF0; --on-color:#FFFFFF;
+  --water:#BEE5F4; --straw:#8E5CC9; --clay:#F59BC0; --wood:#8A5A3B; --wood-dark:#5E3B24; --seed:#FFF3D6; --tabletop:#C68B59;
   --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
   --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
@@ -240,6 +241,41 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
 .rowtable th{background:var(--gold-soft);font-size:14px}
 .gap{color:var(--lantern)}
 
+/* part 2 pieces */
+.gdot{width:12px;height:12px;border-radius:50%;background:var(--ink);display:block}
+.straws{width:100%;max-width:330px;height:auto;display:block}
+.straws .v{fill:var(--straw);stroke:var(--ink);stroke-width:1.5}
+.straws .vs{fill:rgba(255,255,255,.45)}
+.straws .hz{fill:var(--lantern);stroke:var(--ink);stroke-width:1.5;transform-box:fill-box;transform-origin:left center;animation:growx .35s ease-out}
+.straws .clay{fill:var(--clay);stroke:var(--ink);stroke-width:1.5}
+.lamps.pits{background:var(--wood);border:3px solid var(--ink);border-radius:18px;padding:8px}
+.lamps.pits .lamp{border-radius:50%;background:var(--wood-dark);color:var(--seed);border-color:var(--ink)}
+.lamps.pits .lamp.lit{background:radial-gradient(circle at 34% 34%,var(--seed) 0 16%,transparent 18%),radial-gradient(circle at 66% 62%,var(--seed) 0 14%,transparent 16%),var(--gold);color:var(--ink);box-shadow:none}
+.pond{width:100%;max-width:660px;height:auto;display:block}
+.pond .water{fill:var(--water)}
+.pond .nl{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.pond .tick{stroke:var(--ink);stroke-width:2}
+.pond .tk{font-family:var(--body);font-size:16px;font-weight:700;fill:var(--ink-soft)}
+.pond .tk.hit{font-size:21px;font-weight:800;fill:var(--ink)}
+.pond .arc{fill:none;stroke:var(--sky);stroke-width:3;stroke-dasharray:7 6}
+.pond .arclabel{font-family:var(--display);font-size:17px;font-weight:800;fill:var(--sky)}
+.pond .hopper{font-size:38px}
+.hoprow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+.hopcount{font-weight:800;color:var(--ink-soft)}
+.sum{font-family:var(--display);font-size:clamp(20px,5.5vw,28px);font-weight:800;min-height:1.3em;text-align:center;font-variant-numeric:tabular-nums}
+.tables-pic{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:flex-end}
+.dtable{display:flex;flex-direction:column;align-items:center}
+.dtable .top{width:104px;min-height:28px;background:var(--tabletop);border:3px solid var(--ink);border-radius:8px;display:flex;gap:4px;justify-content:center;align-items:center;padding:4px}
+.dtable.wide .top{width:min(240px,80vw)}
+.dtable .legs{width:80%;height:34px;border-left:6px solid var(--ink);border-right:6px solid var(--ink)}
+.plate{width:28px;height:12px;border-radius:50%;background:var(--board);border:2px solid var(--ink)}
+.wizard{display:flex;gap:10px;align-items:center;font-weight:800;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:8px 14px;max-width:440px}
+.wizard .w{font-size:40px;line-height:1}
+.zeroboxes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:420px}
+.zbox{width:56px;height:50px;border:3px dashed var(--ink);border-radius:10px;display:grid;place-items:center;color:var(--ink-soft);font-weight:800;animation:pop .3s}
+.bigsent{font-family:var(--display);font-weight:800;font-size:clamp(30px,8vw,44px);font-variant-numeric:tabular-nums}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
 /* win overlay + confetti */
 .overlay{position:fixed;inset:0;z-index:40;background:rgba(14,19,51,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
 .win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
@@ -287,7 +323,7 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
   <header class="topbar">
     <h1 class="brand">Multiplication Fair<small>Ayansh's Chapter 9 adventure</small></h1>
     <div class="tools">
-      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 15</span>
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 30</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
     </div>
   </header>
@@ -302,17 +338,19 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
         <div class="strings" id="strings" aria-label="4 strings with 5 lanterns on each"></div>
         <button class="btn primary" id="showHow" type="button">✨ Show me how</button>
         <p class="reveal" id="reveal" hidden>Count in groups: 5, 10, 15, 20. <b>4 × 5 = 20</b> lanterns!</p>
-        <p class="donebanner" id="allDone" hidden>🎉 The whole fair is lit up! You finished Chapter 9.</p>
+        <p class="donebanner" id="allDone" hidden>🎉 The whole fair is lit up! You finished every stall.</p>
       </div>
     </section>
 
-    <h2 class="section-title">Fair stalls</h2>
-    <ol class="stops" id="stops"></ol>
+    <h2 class="section-title">Part 1 · Tables of 2, 5 and 10</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Tables of 3, 4, 6 and zero</h2>
+    <ol class="stops" id="stops2"></ol>
 
     <section class="chartcard card">
       <h2>Lantern chart</h2>
-      <p class="note">These are the tables of 2, 5 and 10 from your book. Every fact you get right lights a lantern.</p>
-      <div class="chart" id="chart" role="img" aria-label="Tables of 2, 5 and 10 from 1 to 10 groups"></div>
+      <p class="note">These are the tables from your book. Every fact you get right lights a lantern.</p>
+      <div class="chart" id="chart" role="img" aria-label="Tables of 2, 3, 4, 5, 6 and 10 from 1 to 10 groups"></div>
       <p class="chartcount" id="chartCount"></p>
     </section>
 
@@ -327,10 +365,19 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
           <li><b>Lantern Lights</b> (pages 32–36): he lights the tables of 2, 5 and 10 in order, spots the pattern in the last digits, and learns the “count the groups, then put a zero” trick for tens.</li>
           <li><b>Prize Booth</b> (pages 36–37): the checkpoint. Matching repeated addition to multiplication sentences, drawing groups of beads, and filling a table row.</li>
         </ol>
+        <h3>Part 2 (pages 38–47)</h3>
+        <ol start="6">
+          <li><b>Art Club</b> (page 38): trays of paint pots, then trays of crayons. Same number of trays, but 10 in each instead of 5, so the product doubles (question c). Ends with the five facts from question 3.</li>
+          <li><b>Straw Grid</b> (pages 39–41): the straws-and-clay activity. Each straw across adds 3, 4 or 6 new meeting points, and the record table fills in.</li>
+          <li><b>Seed Board</b> (pages 41–44): he drops seeds for the tables of 3, 4 and 6 on a Pallanguzhi board, the South Indian counting game on page 41. Each round ends with a pattern question.</li>
+          <li><b>Hopscotch Lane</b> (pages 45–46): the book's traffic-light, classroom-table and insect problems, solved with jumps on a number line.</li>
+          <li><b>Zero Magic</b> (page 47): empty tables and empty plates show that any number × 0 = 0.</li>
+        </ol>
         <p>The game always writes the number of groups first (3 × 5 means 3 groups of 5), just like the book. On page 31 the text says each coach has 4 passengers, but the picture and the sum show 2. The game uses 2, so he isn't confused.</p>
         <h3>Do it for real</h3>
         <ul>
           <li>If you have Jodo blocks or Lego, build the towers alongside Stall 2 and say the totals out loud.</li>
+          <li>For Stall 7, a few straws (or ice-cream sticks) and a lump of play-dough make the meeting-points activity easy at the dining table.</li>
           <li>Page 37 asks him to find equal groups around him. At home: shoes in pairs, an egg tray, chairs at the dining table, a strip of tablets. Ask him to say the sentence: “3 groups of 2 make 6, 3 × 2 = 6.”</li>
         </ul>
         <p>For practice beyond this chapter (arrays, number lines and quick facts), there is also <a href="https://claude.ai/artifact/EuLXVMa2tcWxXTUTzumUAc" target="_blank" rel="noopener">Times Quest</a>.</p>
@@ -382,10 +429,13 @@ function h(tag, props, ...kids) {
   for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
   return el;
 }
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, text) { const el = document.createElementNS(SVGNS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text != null) el.textContent = text; return el; }
 
 /* ---------- progress ---------- */
 const KEY = 'ayansh-multiplication-fair-v1';
 const TABLES = [2, 5, 10];
+const CHART_TABLES = [2, 3, 4, 5, 6, 10];
 let P = { stars: {}, unlocked: 1, facts: [], sound: true };
 let factSet = new Set();
 function load(data) {
@@ -394,12 +444,15 @@ function load(data) {
   if (!saved && data && data.P) saved = data.P;
   if (saved && typeof saved === 'object') P = { stars: saved.stars || {}, unlocked: saved.unlocked || 1, facts: Array.isArray(saved.facts) ? saved.facts : [], sound: saved.sound !== false };
   factSet = new Set(P.facts);
+  // stalls added later unlock for anyone who already finished the stall before them
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
 }
 function save() { P.facts = [...factSet]; try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} }
 // key "table:groups" — e.g. 3 groups of 5 lights the 5-table lantern under 3
 function learned(groups, each) {
-  if (TABLES.includes(each) && groups >= 1 && groups <= 10) factSet.add(each + ':' + groups);
-  if (TABLES.includes(groups) && each >= 1 && each <= 10) factSet.add(groups + ':' + each);
+  if (CHART_TABLES.includes(each) && groups >= 1 && groups <= 10) factSet.add(each + ':' + groups);
+  if (CHART_TABLES.includes(groups) && each >= 1 && each <= 10) factSet.add(groups + ':' + each);
   save();
 }
 
@@ -486,9 +539,25 @@ function fresh(gen) {
 }
 function itemsEl(item, s) {
   if (item === 'stick') return h('div', { class: 'bundle', 'aria-hidden': 'true' }, Array.from({ length: s }, () => h('i', { class: 'stick' })));
-  const el = h('div', { class: 'items', 'aria-hidden': 'true' }, Array.from({ length: s }, () => h('span', {}, item)));
-  el.style.gridTemplateColumns = `repeat(${Math.min(s, 5)}, auto)`;
+  const small = item === 'dot' || item === 'paint';
+  const one = i => item === 'dot' ? h('i', { class: 'gdot' }) : item === 'paint' ? h('i', { class: 'bead' }) : h('span', {}, Array.isArray(item) ? item[i % item.length] : item);
+  const el = h('div', { class: 'items', 'aria-hidden': 'true' }, Array.from({ length: s }, (_, i) => one(i)));
+  el.style.gridTemplateColumns = `repeat(${Math.min(s, item === 'dot' ? 3 : 5)}, auto)`;
+  if (small) el.style.gap = '4px';
   return el;
+}
+function factSequence(api, below, facts, onAll) {
+  let i = 0;
+  const next = () => {
+    below.replaceChildren();
+    if (i >= facts.length) return onAll();
+    const f = facts[i++], ans = f.a * f.b;
+    api.guide(`Fact ${i} of ${facts.length}: what is ${f.a} × ${f.b}?`);
+    askChoice(below, { prompt: `${f.a} × ${f.b} = ?`, options: f.opts || choices(ans, f.a, f.b), answer: ans,
+      hint: () => api.guide(f.hint || `${f.a} groups of ${f.b}. Count on: ${skip(f.a, f.b)}.`),
+      onDone: () => { learned(f.a, f.b); setTimeout(next, 700); } });
+  };
+  next();
 }
 
 /* ---------- STALL 1: Bakery Trays (equal groups, repeated addition) ---------- */
@@ -548,8 +617,25 @@ function playTrays(api) {
 /* ---------- STALL 2: Block Towers (towers of 2, 5, 10 + record table) ---------- */
 function playTowers(api) {
   const n = TABLES[run.round], color = ['red', 'blue', 'green'][run.round];
-  api.guide(`Let's make towers of ${n} blocks. Tap “Add a tower”, then count all the blocks.`);
   const yard = h('div', { class: 'yard', 'aria-label': `Towers of ${n}` });
+  growTable(api, { n, visual: yard,
+    intro: `Let's make towers of ${n} blocks. Tap “Add a tower”, then count all the blocks.`,
+    addLabel: `➕ Add a tower of ${n}`, head: 'Number of towers', one: 'tower', many: 'towers', thing: 'blocks',
+    firstQ: 'How many blocks are in one tower?', moreQ: `You added one more tower of ${n}. How many blocks now?`,
+    firstHint: 'Count the blocks in the tower from bottom to top.',
+    think: 'How does the total change each time you add an equal group?',
+    thinkOpts: [`It goes up by ${n}`, 'It goes up by 1', 'It stays the same'],
+    cap: `Each new tower adds ${n} more. Adding one more equal group each time builds the table of ${n}!`,
+    add: async k => {
+      const tower = h('div', { class: 'tower' });
+      yard.append(h('div', { class: 'tower' }, tower, h('span', { class: 'towerlabel' }, `Tower ${k}`)));
+      for (let i = 0; i < n; i++) { tower.prepend(h('i', { class: 'cube ' + color })); sfx.tick(i); await wait(n === 10 ? 70 : 140); }
+    } });
+}
+/* shared by Block Towers and Straw Grid: add one equal group at a time and fill the record table */
+function growTable(api, c) {
+  const n = c.n;
+  api.guide(c.intro);
   const rows = [];
   const tbody = h('tbody', {});
   for (let k = 1; k <= 5; k++) {
@@ -557,43 +643,40 @@ function playTowers(api) {
     const tr = h('tr', {}, cells); rows.push({ tr, cells }); tbody.append(tr);
   }
   const table = h('div', { class: 'tablewrap' }, h('table', { class: 'rec' },
-    h('thead', {}, h('tr', {}, h('th', {}, 'Number of towers'), h('th', {}, 'Repeated addition'), h('th', {}, 'Multiplication sentence'), h('th', {}, 'Total'))), tbody));
-  const addBtn = h('button', { class: 'btn primary', type: 'button' }, `➕ Add a tower of ${n}`);
+    h('thead', {}, h('tr', {}, h('th', {}, c.head), h('th', {}, 'Repeated addition'), h('th', {}, 'Multiplication sentence'), h('th', {}, 'Total'))), tbody));
+  const addBtn = h('button', { class: 'btn primary', type: 'button' }, c.addLabel);
   const below = h('div', { class: 'below' });
-  api.stage.append(yard, addBtn, below, table);
+  api.stage.append(c.visual, addBtn, below, table);
   let k = 0, busy = false;
   addBtn.addEventListener('click', async () => {
     if (busy || k >= 5) return;
     busy = true; addBtn.disabled = true; k++;
-    const tower = h('div', { class: 'tower' }); const lbl = h('span', { class: 'towerlabel' }, `Tower ${k}`);
-    yard.append(h('div', { class: 'tower' }, tower, lbl));
-    for (let i = 0; i < n; i++) { tower.prepend(h('i', { class: 'cube ' + color })); sfx.tick(i); await wait(n === 10 ? 70 : 140); }
+    await c.add(k);
     const total = k * n, prev = total - n;
     below.replaceChildren();
-    api.guide(k === 1 ? 'How many blocks are in one tower?' : `You added one more tower of ${n}. How many blocks now?`);
+    api.guide(k === 1 ? c.firstQ : c.moreQ);
     askChoice(below, {
       prompt: k > 1 ? `${prev} + ${n} = ?` : null,
       options: k === 1 ? opts3(n, [n + 1, n - 1, n + 2]) : opts3(total, [prev + 1, total + n, total - 1]),
       answer: total,
-      hint: () => api.guide(k === 1 ? 'Count the blocks in the tower from bottom to top.' : `Count on ${n} more from ${prev}.`),
+      hint: () => api.guide(k === 1 ? c.firstHint : `Count on ${n} more from ${prev}.`),
       onDone: () => {
         const row = rows[k - 1];
         row.cells[1].textContent = rep(k, n); row.cells[2].textContent = `${k} × ${n} = ${total}`; row.cells[3].textContent = total;
         row.tr.classList.add('new');
         learned(k, n);
-        if (k < 5) { api.guide(`${k} ${k === 1 ? 'tower' : 'towers'} of ${n} = ${total} blocks. Add another tower!`); addBtn.disabled = false; busy = false; }
+        if (k < 5) { api.guide(`${k} ${k === 1 ? c.one : c.many}: ${total} ${c.thing}. Add another ${c.one}!`); addBtn.disabled = false; busy = false; }
         else { addBtn.remove(); think(); }
       } });
   });
   function think() {
     below.replaceChildren();
-    api.guide('How does the total change each time you add an equal group?');
-    askChoice(below, { options: shuffle([`It goes up by ${n}`, 'It goes up by 1', 'It stays the same']), answer: `It goes up by ${n}`, cls: 'words',
+    api.guide(c.think);
+    askChoice(below, { options: shuffle(c.thinkOpts.slice()), answer: c.thinkOpts[0], cls: 'words',
       hint: () => api.guide(`Look at the Total column: ${skip(5, n)}. How much is added each time?`),
       onDone: () => {
-        below.append(h('div', { class: 'fact' }, h('div', { class: 'rep' }, skip(5, n) + ' …'),
-          h('p', { class: 'cap' }, `Each new tower adds ${n} more. Adding one more equal group each time builds the table of ${n}!`)));
-        api.guide(`Yes! Every tower adds ${n}. That is how the table of ${n} is made.`);
+        below.append(h('div', { class: 'fact' }, h('div', { class: 'rep' }, skip(5, n) + ' …'), h('p', { class: 'cap' }, c.cap)));
+        api.guide(`Yes! Each time adds ${n}. That is how the table of ${n} is made.`);
         api.done();
       } });
   }
@@ -609,13 +692,16 @@ const SCENES = [
   { key: 'candies', g: [2, 3], s: 10, grp: 'Jar', groups: 'jars', each: 'candies', item: '🍬', text: (g, s) => `There are ${g} jars with ${s} candies in each jar.` },
   { key: 'lanterns', g: [2, 4], s: 5, grp: 'String', groups: 'strings', each: 'lanterns', item: '🏮', text: (g, s) => `There are ${g} strings with ${s} lanterns on each string.` },
 ];
-function playTrain(api) {
+function playTrain(api, forced, after) {
   const r = run.round;
-  let sc;
-  if (r === 0) sc = SCENES[0];
-  else { do { sc = pickOne(SCENES); } while (run.used.has(sc.key)); }
-  run.used.add(sc.key);
-  let g; do { g = rand(sc.g[0], sc.g[1]); } while (g === sc.s);
+  let sc, g;
+  if (forced) { sc = forced; g = forced.fixedG; }
+  else {
+    if (r === 0) sc = SCENES[0];
+    else { do { sc = pickOne(SCENES); } while (run.used.has(sc.key)); }
+    run.used.add(sc.key);
+    do { g = rand(sc.g[0], sc.g[1]); } while (g === sc.s);
+  }
   const s = sc.s, total = g * s;
   const cards = h('div', { class: 'gcards' });
   if (sc.key === 'train') cards.append(h('span', { class: 'engine', 'aria-hidden': 'true' }, '🚂'));
@@ -652,6 +738,7 @@ function playTrain(api) {
     tiles.remove(); sfx.good(); learned(g, s);
     below.append(factCard(g, s, `Read it: “${g} times ${s} is ${total}.” The answer, ${total}, is called the product.`));
     api.guide(`${g} × ${s} = ${total}. ${g} times ${s} is ${total}!`);
+    if (after) return after(below);
     const vocab = {
       1: { q: 'What does the × sign mean?', o: ['times', 'plus', 'take away'], a: 'times' },
       2: { q: `In ${g} × ${s} = ${total}, what is ${total} called?`, o: ['the product', 'the group', 'the sign'], a: 'the product' },
@@ -671,10 +758,12 @@ function playLanterns(api) {
   if (r <= 2) return lightTable(api, TABLES[r]);
   return zeroTrick(api, r === 3 ? 'stick' : '🍬');
 }
-function lightTable(api, n) {
+function lightTable(api, n, pits) {
   const max = n * 10;
-  api.guide(`Light the lanterns in the table of ${n}! Count in ${n}s: tap ${n}, then ${2 * n}, and keep going up to ${max}.`);
-  const grid = h('div', { class: 'lamps' + (max <= 20 ? ' small' : '') });
+  api.guide(pits
+    ? `${run.round === 0 ? 'In Pallanguzhi, an old game from South India, players count seeds in equal groups. ' : ''}Drop seeds in the table of ${n}! Count in ${n}s: tap ${n}, then ${2 * n}, and keep going up to ${max}.`
+    : `Light the lanterns in the table of ${n}! Count in ${n}s: tap ${n}, then ${2 * n}, and keep going up to ${max}.`);
+  const grid = h('div', { class: 'lamps' + (max <= 20 ? ' small' : '') + (pits ? ' pits' : '') });
   const seq = h('p', { class: 'seq', 'aria-live': 'polite' }, ' ');
   const below = h('div', { class: 'below' });
   const lamps = [];
@@ -704,9 +793,12 @@ function lightTable(api, n) {
       2: { o: ['0, 2, 4, 6 or 8', '1, 3, 5, 7 or 9', 'only 5'], cap: 'Numbers in the table of 2 always end in 0, 2, 4, 6 or 8.' },
       5: { o: ['0 or 5', 'only 0', '1 or 6'], cap: 'Numbers in the table of 5 always end in 0 or 5.' },
       10: { o: ['always 0', 'always 5', '0 or 5'], cap: 'Numbers in the table of 10 always end in 0. And every one of them is in the table of 5 too!' },
+      3: { ask: 'The table of 3 is done! If we add one more group of 3, what comes after 30?', prompt: '30 + 3 = ?', o: ['33', '31', '40'], cap: 'Each new group adds 3: 24, 27, 30, 33…' },
+      4: { o: ['0, 2, 4, 6 or 8', '1, 3, 5, 7 or 9', 'only 4'], cap: 'Numbers in the table of 4 always end in 0, 2, 4, 6 or 8.' },
+      6: { ask: '3 groups of 3 make 9. Each 6 is two 3s. So what do 3 groups of 6 make?', prompt: '3 × 6 = ?', o: ['18', '12', '9'], cap: 'The table of 6 is double the table of 3: 3 × 3 = 9, so 3 × 6 = 18.' },
     }[n];
-    api.guide('All lit! Look at the last digit of each lit number. What do they end in?');
-    askChoice(below, { prompt: 'The numbers end in…', options: shuffle(Q.o.slice()), answer: Q.o[0], cls: 'words',
+    api.guide(Q.ask || (pits ? 'All the seeds are in!' : 'All lit!') + ' Look at the last digit of each number. What do they end in?');
+    askChoice(below, { prompt: Q.prompt || 'The numbers end in…', options: shuffle(Q.o.slice()), answer: Q.o[0], cls: 'words',
       hint: () => api.guide(`Read the last digits: ${skip(5, n)}…`),
       onDone: () => {
         below.append(h('div', { class: 'fact' }, h('div', { class: 'rep' }, `Table of ${n}`), h('p', { class: 'cap' }, Q.cap)));
@@ -828,13 +920,246 @@ function tableRow(api) {
     } });
 }
 
+/* ---------- STALL 6: Art Club (page 38) ---------- */
+const ART = {
+  paint: { key: 'paint', grp: 'Tray', groups: 'trays', each: 'paint pots', item: 'paint', s: 5, text: (g, s) => `The art club teacher needs help! There are ${g} trays with ${s} paint pots on each tray.` },
+  crayon: { key: 'crayon', grp: 'Tray', groups: 'trays', each: 'crayons', item: '🖍️', s: 10, text: (g, s) => `Now the crayons. There are ${g} trays with ${s} crayons on each tray.` },
+};
+function playArt(api) {
+  const r = run.round;
+  if (!run.artG) run.artG = rand(3, 5);
+  const g = run.artG;
+  if (r === 0) return playTrain(api, Object.assign({}, ART.paint, { fixedG: g }), below => {
+    below.append(h('div', { class: 'blanks' }, h('span', {}, `${g} groups of 5 = ${g * 5}`), h('span', {}, `${g} × 5 = ${g * 5}`)));
+    api.done();
+  });
+  if (r === 1) return playTrain(api, Object.assign({}, ART.crayon, { fixedG: g }), below => {
+    const right = 'Each tray has more crayons';
+    api.guide(`Paint pots: ${g} × 5 = ${g * 5}. Crayons: ${g} × 10 = ${g * 10}. Both have ${g} trays. Why is the crayon answer bigger?`);
+    askChoice(below, { prompt: 'Why is the crayon product bigger?', options: shuffle([right, 'There are more crayon trays', 'Nothing is different']), answer: right, cls: 'words',
+      hint: () => api.guide(`Both have ${g} trays. Look inside one tray: 5 paint pots, but 10 crayons.`),
+      onDone: () => {
+        below.append(h('div', { class: 'fact' },
+          h('div', { class: 'rep' }, `${g} × 5 = ${g * 5}`), h('div', { class: 'rep' }, `${g} × 10 = ${g * 10}`),
+          h('p', { class: 'cap' }, `The same number of groups, but 10 in each instead of 5. So the product is double: ${g * 5} becomes ${g * 10}.`)));
+        api.guide('Yes! More in each group makes a bigger product.');
+        api.done();
+      } });
+  });
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'q' }, 'Question 3 on page 38: write the multiplication facts.'), below);
+  const facts = [[2, 2], [2, 5], [4, 10], [5, 5], [3, 2]];
+  factSequence(api, below, facts.map(([a, b]) => ({ a, b })), () => {
+    below.append(h('div', { class: 'blanks' }, facts.map(([a, b]) => h('span', {}, `${a} × ${b} = ${a * b}`))));
+    api.guide('All five facts done. Super!');
+    api.done();
+  });
+}
+
+/* ---------- STALL 7: Straw Grid (pages 39–41) ---------- */
+function playStraws(api) {
+  const n = [3, 4, 6][run.round];
+  const W = 80 + (n - 1) * 44, H = 262;
+  const X = i => 40 + i * 44, Y = k => 44 + (k - 1) * 44;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, class: 'straws', role: 'img', 'aria-label': `${n} straws standing up` });
+  for (let i = 0; i < n; i++) {
+    svg.append(sv('rect', { class: 'v', x: X(i) - 6, y: 8, width: 12, height: H - 16, rx: 6 }));
+    for (let y = 22; y < H - 20; y += 22) svg.append(sv('rect', { class: 'vs', x: X(i) - 5, y, width: 10, height: 6 }));
+  }
+  const layer = sv('g', {}); svg.append(layer);
+  growTable(api, { n, visual: h('div', { class: 'below' }, svg),
+    intro: run.round === 0
+      ? `Here are ${n} straws standing up. Add a straw across them. Clay goes where the straws meet. Tap “Add a straw across”.`
+      : `This time ${n} straws are standing up. Add straws across and count the meeting points.`,
+    addLabel: '➕ Add a straw across', head: 'Number of horizontal straws', one: 'straw across', many: 'straws across', thing: 'meeting points',
+    firstQ: 'How many meeting points are there?', moreQ: 'One more straw across! How many meeting points now?',
+    firstHint: 'Count the pink clay balls.',
+    think: 'How many new meeting points are added each time you add one straw across?',
+    thinkOpts: [`${n} new points`, '1 new point', `${n + 1} new points`],
+    cap: `${n} straws stand up, so every straw across adds ${n} new meeting points. That builds the table of ${n}!`,
+    add: async k => {
+      layer.append(sv('rect', { class: 'hz', x: 12, y: Y(k) - 5, width: W - 24, height: 10, rx: 5 }));
+      sfx.whoosh(); await wait(380);
+      for (let i = 0; i < n; i++) {
+        const c = sv('circle', { class: 'clay', cx: X(i), cy: Y(k), r: 9 });
+        layer.append(c); sfx.tick(i); await wait(150);
+      }
+    } });
+}
+
+/* ---------- STALL 8: Seed Board (pages 41–44) ---------- */
+function playSeeds(api) { return lightTable(api, [3, 4, 6][run.round], true); }
+
+/* ---------- STALL 9: Hopscotch Lane (pages 45–46, number line) ---------- */
+const HOPS = [
+  { grp: 'Light', s: 3, g: [4, 4], item: ['🔴', '🟡', '🟢'], each: 'bulbs', text: g => `A traffic light has bulbs of 3 colours. There are ${g} traffic lights on a road. How many bulbs are there?` },
+  { grp: 'Table', s: 4, g: [5, 5], item: 'dot', each: 'legs', text: g => `A table has 4 legs. There are ${g} tables in a classroom. How many table legs are there?` },
+  { grp: 'Insect', s: 6, g: [3, 3], item: 'dot', each: 'legs', text: g => `An insect has 6 legs. There are ${g} insects on a leaf. How many legs can you count?` },
+  { grp: 'Stool', s: 3, g: [3, 6], item: 'dot', each: 'legs', text: g => `A stool has 3 legs. How many legs do ${g} stools have?` },
+  { grp: 'Pack', s: 6, g: [2, 3], item: '🧃', each: 'juice boxes', text: g => `A pack has 6 juice boxes. How many juice boxes are in ${g} packs?` },
+  { grp: 'Dog', s: 4, g: [2, 4], item: 'dot', each: 'legs', text: g => `A dog has 4 legs. How many legs do ${g} dogs have?` },
+];
+function playHops(api) {
+  const r = run.round;
+  let st;
+  if (r < 3) st = HOPS[r];
+  else { do { st = pickOne(HOPS.slice(3)); } while (run.used.has(st.grp)); }
+  run.used.add(st.grp);
+  const g = rand(st.g[0], st.g[1]), s = st.s, total = g * s;
+  const end = Math.max(12, Math.min(24, total + 2));
+  const W = 600, H = 190, x0 = 24, x1 = W - 24, base = 146;
+  const X = i => x0 + i * (x1 - x0) / end;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, class: 'pond', role: 'img', 'aria-label': `Number line from 0 to ${end}` });
+  svg.append(sv('rect', { class: 'water', x: 0, y: base - 14, width: W, height: 30, rx: 14 }));
+  svg.append(sv('line', { class: 'nl', x1: x0, y1: base, x2: x1, y2: base }));
+  const labels = [];
+  for (let i = 0; i <= end; i++) {
+    svg.append(sv('line', { class: 'tick', x1: X(i), y1: base - 7, x2: X(i), y2: base + 7 }));
+    const t = sv('text', { class: 'tk', x: X(i), y: base + 34, 'text-anchor': 'middle' }, i); labels.push(t); svg.append(t);
+  }
+  const marks = sv('g', {}); svg.append(marks);
+  const hopper = sv('text', { class: 'hopper', x: X(0), y: base - 6, 'text-anchor': 'middle' }, '🐇');
+  svg.append(hopper);
+  let pos = 0, done = 0, busy = false;
+
+  const cards = h('div', { class: 'gcards' });
+  for (let i = 0; i < g; i++) cards.append(h('div', { class: 'gcard' }, h('span', { class: 'lid' }, `${st.grp} ${i + 1}`), itemsEl(st.item, s)));
+  const sum = h('p', { class: 'sum', 'aria-live': 'polite' });
+  const counter = h('span', { class: 'hopcount' }, `Jump 0 of ${g}`);
+  const jumpBtn = h('button', { class: 'btn primary big', type: 'button' }, 'Jump! 🐇');
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('p', { class: 'q' }, st.text(g)), cards, svg, sum, h('div', { class: 'hoprow' }, jumpBtn, counter), below);
+  api.guide(`${st.text(g)} Let's use the number line. Start at 0 and make ${g} jumps of ${s}.`);
+
+  function jumpOnce() {
+    return new Promise(res => {
+      const from = pos, to = pos + s, t0 = performance.now(), dur = reduce ? 1 : 480;
+      sfx.whoosh();
+      const step = t => {
+        const k = Math.min(1, (t - t0) / dur);
+        hopper.setAttribute('x', X(from) + (X(to) - X(from)) * k);
+        hopper.setAttribute('y', base - 6 - Math.sin(Math.PI * k) * 72);
+        if (k < 1) return requestAnimationFrame(step);
+        pos = to; done++;
+        const mid = (X(from) + X(to)) / 2;
+        marks.append(sv('path', { class: 'arc', d: `M ${X(from)} ${base - 4} Q ${mid} ${base - 112} ${X(to)} ${base - 4}` }));
+        marks.append(sv('text', { class: 'arclabel', x: mid, y: base - 64, 'text-anchor': 'middle' }, `Jump ${done}`));
+        labels[to] && labels[to].classList.add('hit');
+        counter.textContent = `Jump ${done} of ${g}`;
+        sum.textContent = Array(done).fill(s).join(' + ') + (done > 1 ? ` = ${done * s}` : '');
+        res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  jumpBtn.addEventListener('click', async () => {
+    if (busy || done >= g) return;
+    busy = true; await jumpOnce(); busy = false;
+    if (done < g) return;
+    jumpBtn.disabled = true;
+    api.guide(`${g} jumps of ${s}. Where did the rabbit land? ${rep(g, s)} = ?`);
+    askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(total, g, s), answer: total,
+      hint: () => api.guide('Look where the rabbit stopped on the number line.'),
+      onDone: () => {
+        const right = `${g} × ${s} = ${total}`;
+        api.guide('Which multiplication sentence tells this story?');
+        askChoice(below, { prompt: 'Which multiplication sentence?', options: shuffle([right, `${g} + ${s} = ${g + s}`, `${g} × ${s + 1} = ${g * (s + 1)}`]), answer: right, cls: 'words',
+          hint: () => api.guide(`There are ${g} groups with ${s} ${st.each} in each. The first number is how many groups.`),
+          onDone: () => {
+            below.append(factCard(g, s, `${g} jumps of ${s} land on ${total}. That is ${total} ${st.each}.`));
+            api.guide(`Yes! ${g} × ${s} = ${total} ${st.each}.`);
+            learned(g, s); api.done();
+          } });
+      } });
+  });
+}
+
+/* ---------- STALL 10: Zero Magic (page 47) ---------- */
+function dtable(plates, wide) {
+  const top = h('div', { class: 'top' }, Array.from({ length: plates }, () => h('i', { class: 'plate' })));
+  return h('div', { class: 'dtable' + (wide ? ' wide' : '') }, top, h('div', { class: 'legs' }));
+}
+function playZero(api) {
+  const r = run.round;
+  const below = h('div', { class: 'below' });
+  const wizard = h('div', { class: 'wizard' }, h('span', { class: 'w', 'aria-hidden': 'true' }, '🧙'),
+    h('span', {}, r === 0 ? 'Zero the wizard says: “Watch me! I can make every multiplication answer disappear!” Is Zero telling the truth?' : 'Zero the wizard is back with more magic!'));
+  if (r === 0) {
+    api.stage.append(wizard, h('div', { class: 'tables-pic', role: 'img', 'aria-label': '3 empty tables' }, [0, 0, 0].map(() => dtable(0))), below);
+    api.guide('Picture A: there are 3 tables. How many plates are on each table?');
+    askChoice(below, { options: opts3(0, [1, 3, 2]), answer: 0, hint: () => api.guide('Look closely. The tables are empty!'), onDone: () => {
+      api.guide('3 tables with 0 plates on each. So 3 × 0 = ?');
+      askChoice(below, { prompt: '3 × 0 = ?', options: shuffle([0, 3, 30]), answer: 0, hint: () => api.guide('Add the plates: 0 + 0 + 0.'), onDone: () => {
+        below.append(factCard(3, 0, '3 groups of 0 make 0. There are no plates at all!'));
+        api.guide('Yes! 3 × 0 = 0.'); api.done();
+      } });
+    } });
+  } else if (r === 1) {
+    api.stage.append(wizard, h('div', { class: 'tables-pic', role: 'img', 'aria-label': 'One table with 5 empty plates' }, dtable(5, true)), below);
+    api.guide('Picture B: 1 table with 5 plates. How many cookies are on each plate?');
+    askChoice(below, { options: opts3(0, [1, 5, 2]), answer: 0, hint: () => api.guide('Look at the plates. Are there any cookies?'), onDone: () => {
+      api.guide('5 plates with 0 cookies on each. So 5 × 0 = ?');
+      askChoice(below, { prompt: '5 × 0 = ?', options: shuffle([0, 5, 50]), answer: 0, hint: () => api.guide('Add the cookies: 0 + 0 + 0 + 0 + 0.'), onDone: () => {
+        below.append(factCard(5, 0, '5 plates with 0 cookies on each make 0 cookies.'));
+        api.guide('Yes! 5 × 0 = 0. No cookies at all!'); api.done();
+      } });
+    } });
+  } else if (r === 2) {
+    let g = 1, asked = false;
+    const boxes = h('div', { class: 'zeroboxes', 'aria-hidden': 'true' });
+    const sent = h('p', { class: 'bigsent', 'aria-live': 'polite' });
+    const draw = () => { boxes.replaceChildren(...Array.from({ length: g }, () => h('span', { class: 'zbox' }, '0'))); sent.textContent = `${g} × 0 = 0`; };
+    const add = h('button', { class: 'btn primary', type: 'button', onclick: () => {
+      if (g >= 9) return; g++; draw(); sfx.pop();
+      if (g >= 9) add.disabled = true;
+      if (g >= 6 && !asked) { asked = true; ask(); }
+    } }, '➕ Add a group of 0');
+    api.stage.append(wizard, boxes, sent, add, below);
+    api.guide('Can you beat the wizard? Each box is a group with 0 inside. Add groups until you have 6. Does the answer grow?');
+    draw();
+    function ask() {
+      api.guide('The answer never grows! So what is 10 × 0?');
+      askChoice(below, { prompt: '10 × 0 = ?', options: shuffle([0, 10, 100]), answer: 0, hint: () => api.guide('Any number of groups with 0 in each is still 0.'), onDone: () => {
+        below.append(h('div', { class: 'fact' }, h('div', { class: 'eq' }, '10 × 0 = 0'), h('p', { class: 'cap' }, 'However many groups you make, if each group has 0, the total is 0.')));
+        api.guide('Yes! 10 × 0 = 0.'); api.done();
+      } });
+    }
+  } else if (r === 3) {
+    api.stage.append(wizard, below);
+    const a = rand(4, 9), b = rand(2, 9), c = rand(11, 20);
+    factSequence(api, below, [
+      { a, b: 0, opts: opts3(0, [a, a + 1]), hint: `${a} groups with 0 in each. That is 0!` },
+      { a: 0, b, opts: opts3(0, [b, b + 1]), hint: '0 groups means nothing to count. That is 0!' },
+      { a: c, b: 0, opts: opts3(0, [c, c * 10]), hint: 'Even a big number of groups with 0 in each is 0.' },
+    ], () => {
+      below.append(h('div', { class: 'blanks' }, h('span', {}, `${a} × 0 = 0`), h('span', {}, `0 × ${b} = 0`), h('span', {}, `${c} × 0 = 0`)));
+      api.guide('Zero wins every time!'); api.done();
+    });
+  } else {
+    api.stage.append(wizard, below);
+    const right = 'It is always 0';
+    api.guide('Think and share: what is the result of multiplication by 0?');
+    askChoice(below, { prompt: 'Any number × 0 = ?', options: shuffle([right, 'It is the same number', 'It is always 1']), answer: right, cls: 'words',
+      hint: () => api.guide('Remember the empty tables and the empty plates.'),
+      onDone: () => {
+        below.append(h('div', { class: 'fact' }, h('div', { class: 'eq' }, 'any number × 0 = 0'), h('p', { class: 'cap' }, 'Zero was telling the truth! Multiplying by 0 always makes 0.')));
+        api.guide('Yes! Zero was telling the truth.'); api.done();
+      } });
+  }
+}
+
 /* ---------- level engine ---------- */
 const LEVELS = [
-  { id: 1, name: 'Bakery Trays', idea: 'Equal groups', page: 'Book pages 28–29', rounds: 5, cut: [1, 3], icon: '🧁', play: playTrays },
-  { id: 2, name: 'Block Towers', idea: 'Repeated addition', page: 'Book pages 29–30', rounds: 3, cut: [2, 5], icon: '🧱', play: playTowers },
-  { id: 3, name: 'Toy Train', idea: 'Multiplication sentences', page: 'Book pages 31 and 35', rounds: 5, cut: [1, 3], icon: '🚂', play: playTrain },
-  { id: 4, name: 'Lantern Lights', idea: 'Tables of 2, 5 and 10', page: 'Book pages 32–36', rounds: 5, cut: [2, 5], icon: '🏮', play: playLanterns },
-  { id: 5, name: 'Prize Booth', idea: 'Checkpoint', page: 'Book pages 36–37', rounds: 5, cut: [1, 3], icon: '🏆', play: playPrize },
+  { id: 1, part: 1, name: 'Bakery Trays', idea: 'Equal groups', page: 'Book pages 28–29', rounds: 5, cut: [1, 3], icon: '🧁', play: playTrays },
+  { id: 2, part: 1, name: 'Block Towers', idea: 'Repeated addition', page: 'Book pages 29–30', rounds: 3, cut: [2, 5], icon: '🧱', play: playTowers },
+  { id: 3, part: 1, name: 'Toy Train', idea: 'Multiplication sentences', page: 'Book pages 31 and 35', rounds: 5, cut: [1, 3], icon: '🚂', play: api => playTrain(api) },
+  { id: 4, part: 1, name: 'Lantern Lights', idea: 'Tables of 2, 5 and 10', page: 'Book pages 32–36', rounds: 5, cut: [2, 5], icon: '🏮', play: playLanterns },
+  { id: 5, part: 1, name: 'Prize Booth', idea: 'Checkpoint', page: 'Book pages 36–37', rounds: 5, cut: [1, 3], icon: '🏆', play: playPrize },
+  { id: 6, part: 2, name: 'Art Club', idea: 'Groups of and ×', page: 'Book page 38', rounds: 3, cut: [2, 4], icon: '🎨', play: playArt },
+  { id: 7, part: 2, name: 'Straw Grid', idea: 'Groups of 3, 4 and 6', page: 'Book pages 39–41', rounds: 3, cut: [2, 5], icon: '🥤', play: playStraws },
+  { id: 8, part: 2, name: 'Seed Board', idea: 'Tables of 3, 4 and 6', page: 'Book pages 41–44', rounds: 3, cut: [2, 5], icon: '🐚', play: playSeeds },
+  { id: 9, part: 2, name: 'Hopscotch Lane', idea: 'Jumps on a number line', page: 'Book pages 45–46', rounds: 5, cut: [1, 3], icon: '🚦', play: playHops },
+  { id: 10, part: 2, name: 'Zero Magic', idea: 'Multiplying by 0', page: 'Book page 47', rounds: 5, cut: [1, 3], icon: '🪄', play: playZero },
 ];
 let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
@@ -878,7 +1203,8 @@ function finishLevel() {
   sfx.win(); confetti();
   const next = LEVELS[L.id];
   const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
-  const msg = L.id === 5 ? 'You passed the checkpoint! You finished Chapter 9, Ayansh.'
+  const msg = L.id === 5 ? 'You passed the Part 1 checkpoint! Part 2 has the tables of 3, 4 and 6.'
+    : L.id === LEVELS.length ? 'Zero was telling the truth, and you found out! You have finished every stall at the fair, Ayansh.'
     : `You finished ${L.name}.${next ? ` Next stall: ${next.name}.` : ''}`;
   const tip = st < 3 ? 'Play this stall again to win all 3 stars.' : 'No slips at all. Amazing!';
   const close = () => overlay.remove();
@@ -913,7 +1239,7 @@ function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVEL
 const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
 function renderMap() {
   const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
-  $('stops').replaceChildren(...LEVELS.map((L, i) => {
+  const item = (L, i) => {
     const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
     return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
       h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Stall ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
@@ -921,16 +1247,18 @@ function renderMap() {
         h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stall ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
         locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
       L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
-  }));
+  };
+  $('stops1').replaceChildren(...LEVELS.filter(L => L.part === 1).map(item));
+  $('stops2').replaceChildren(...LEVELS.filter(L => L.part === 2).map(item));
   const cells = [h('span', { class: 'ch hd' }, 'Groups →')];
   for (let c = 1; c <= 10; c++) cells.push(h('span', { class: 'ch hd' }, String(c)));
-  TABLES.forEach(t => {
+  CHART_TABLES.forEach(t => {
     cells.push(h('span', { class: 'ch rowhd' }, `Table of ${t}`));
     for (let c = 1; c <= 10; c++) { const got = factSet.has(t + ':' + c); cells.push(h('span', { class: 'ch' + (got ? ' got' : ''), title: got ? `${c} × ${t} = ${c * t}` : 'Not lit yet' }, got ? String(c * t) : '')); }
   });
   $('chart').replaceChildren(...cells);
-  const lit = [...factSet].filter(k => /^(2|5|10):([1-9]|10)$/.test(k)).length;
-  $('chartCount').textContent = lit === 0 ? 'No lanterns lit yet. Start at Stall 1!' : `${lit} of 30 lanterns lit`;
+  const lit = [...factSet].filter(k => /^(2|3|4|5|6|10):([1-9]|10)$/.test(k)).length;
+  $('chartCount').textContent = lit === 0 ? 'No lanterns lit yet. Start at Stall 1!' : `${lit} of 60 lanterns lit`;
   $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
   updateTotal();
 }
