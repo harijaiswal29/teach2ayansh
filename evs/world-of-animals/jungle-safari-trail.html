@@ -1,0 +1,2371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Jungle Safari Trail</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column on a jungle trail, from pale leaf green down to deep forest green; white cards hold the play. Follows EVS Chapter 5, "The Amazing World of Animals" (pages 22–38), page by page. Tiger orange and leaf green are the accents. A single-look game page (light only), like the other chapter games. */
+:root{
+  --sky1:#EAF7DD; --sky2:#C6E6A8; --sky3:#8CC77A; --sky4:#3F8F55; --night:#1C3A28;
+  --board:#FFFFFF; --paper:#F7FBF2; --ink:#1F2B24; --ink-soft:#56665B; --shadow:#11261A;
+  --gold:#FFC93D; --gold-soft:#FFF3CC;
+  --red:#E5484D; --orange:#F28C28; --yellow:#F7C623; --green:#2E9E5B; --blue:#2F6FD0; --indigo:#4B3FB5; --violet:#8B5BC8; --brown:#8B5A2B;
+  --red-soft:#FFE1E1; --green-soft:#D6F2E1; --blue-soft:#DDE9FB; --violet-soft:#EEE6FA; --orange-soft:#FFE8D2; --sand-soft:#F8EBCB;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC; --muted:#C9D3CC;
+  --on-dark:#FFFFFF; --on-dark-soft:#D9EEDC; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--night)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);margin:0;
+  background-color:var(--night);
+  background-image:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 20%,var(--sky3) 46%,var(--sky4) 74%,var(--night) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a tiger-stripe band */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:26px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:repeating-linear-gradient(115deg,var(--orange) 0 18px,var(--ink) 18px 26px)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--sky4);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.herorow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.colourline{font-family:var(--display);font-weight:800;font-size:22px;min-height:1.4em}
+.herorow .colourline{flex:1;min-width:150px}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--green-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E3E9F1;border-color:#93A0B5}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(4n+1) .stopicon{background:var(--red-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--blue-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--green-soft)}
+.stop:nth-child(4n) .stopicon{background:var(--violet-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--blue)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--red);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--green);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--paper);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:68ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--blue);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--green)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice.pic{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--body);font-size:15px;min-width:92px;padding:6px 10px}
+.choice.pic .pe{font-size:40px;line-height:1.1}
+.choice.chunk{font-family:var(--display);font-size:24px;min-width:84px;letter-spacing:1px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(22px,6vw,32px);line-height:1.15}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--blue-soft);border:3px dashed var(--blue);border-radius:16px;padding:10px 14px;font-weight:700;max-width:540px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:16px;text-align:center;max-width:44ch}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.story{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:18px;max-width:560px;line-height:1.5}
+
+/* learn card: the idea first, before any question */
+.learn{width:100%;max-width:580px;background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;animation:pop .4s}
+.learn h3{font-size:22px;display:flex;gap:8px;align-items:center}
+.learn h3::before{content:"💡"}
+.learn p{font-weight:700}
+.learn .ex{display:flex;flex-wrap:wrap;gap:8px}
+.exchip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800}
+.exchip.a{background:var(--blue-soft)}.exchip.b{background:var(--green-soft)}.exchip.c{background:var(--violet-soft)}
+.hl{background:var(--gold);border-radius:6px;padding:0 3px;font-weight:800}
+.hl2{color:var(--red);font-weight:800;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+
+/* poem and story reader */
+.poem{width:100%;max-width:560px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.ptitle{font-size:26px;text-align:center;margin-bottom:6px}
+.pby{text-align:right;font-style:italic;font-weight:700;color:var(--ink-soft);margin-top:6px}
+.pline{display:flex;flex-wrap:wrap;align-items:center;gap:0 .3em;text-align:left;width:100%;border:none;background:none;border-radius:10px;padding:5px 10px 5px 34px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.35;cursor:pointer;position:relative}
+.pline::before{content:"🔈";position:absolute;left:6px;top:7px;font-size:16px;opacity:.5}
+.pline:hover{background:var(--blue-soft)}
+.pline.now{background:var(--gold);box-shadow:0 0 0 3px var(--ink)}
+.pline.heard::before{content:"✓";color:var(--good);opacity:1;font-weight:800}
+.pgap{height:12px}
+mark.gl{background:none;color:var(--indigo);font-weight:800;text-decoration:underline dotted 3px;text-underline-offset:4px}
+.readbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.glossrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.glossbtn{font-weight:800;border:3px solid var(--indigo);color:var(--indigo);background:var(--board);border-radius:999px;padding:4px 14px;min-height:42px;cursor:pointer}
+.glossbtn.seen{background:var(--violet-soft)}
+.echo{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.echoline{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,32px);line-height:1.2;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;width:100%}
+.echocount{font-weight:800;color:var(--ink-soft)}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%;max-width:600px}
+.flip{min-height:118px;border:3px solid var(--ink);border-radius:16px;background:var(--violet-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.flip .fw{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1}
+.flip .fe{font-size:30px;line-height:1}
+.flip .fm{font-weight:700;font-size:15px;line-height:1.25}
+.flip.open{background:var(--board);animation:pop .35s}
+
+/* sorting */
+.sorter{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.sortnow{min-height:96px;display:grid;place-items:center;margin-bottom:6px}
+.sortcard{display:flex;align-items:center;gap:12px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:10px 20px;box-shadow:0 4px 0 var(--ink);max-width:520px}
+.sortcard .se{font-size:46px;line-height:1}
+.sortcard .st{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,30px);line-height:1.15}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;margin-top:10px}
+.bin{border:3px solid var(--ink);border-radius:16px;background:var(--paper);min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+.binhead{font-family:var(--display);font-weight:800;font-size:18px;padding:4px 10px;background:var(--bc,var(--blue-soft));border-bottom:3px solid var(--ink);display:flex;gap:6px;align-items:center}
+.binlist{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:1px 10px;font-weight:800;font-size:15px}
+
+/* tap the words */
+.tapbox{width:100%;max-width:600px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tapline{display:flex;flex-wrap:wrap;gap:4px 2px;line-height:1.2}
+.w{font-weight:800;font-size:clamp(18px,4.4vw,22px);border:2px solid transparent;background:none;border-radius:10px;padding:4px 6px;cursor:pointer;min-height:44px}
+.w:hover{border-color:var(--muted)}
+.w.hit{background:var(--good);color:var(--on-color);border-color:var(--ink);animation:pop .3s}
+.w.miss{background:var(--oops-soft);animation:shake .4s}
+.w.show{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.counter{font-weight:800;color:var(--ink-soft)}
+.wordgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;width:100%;max-width:560px}
+.wordgrid .w{border:3px solid var(--ink);background:var(--board);box-shadow:0 4px 0 var(--ink);font-size:21px}
+
+/* letter tiles and sentence building */
+.slots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end;min-height:66px}
+.slots .given{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:2px;padding:0 4px}
+.slot{width:48px;height:58px;border-bottom:4px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:38px;line-height:1}
+.slot.fill{color:var(--blue);animation:pop .3s}
+.slots.right .slot{color:var(--good)}
+.ltray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:520px}
+.ltile{width:60px;height:62px;font-family:var(--display);font-weight:800;font-size:32px;border:3px solid var(--ink);border-radius:14px;background:var(--gold-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.ltile:disabled{opacity:.25;cursor:default}
+.ltile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.cluepic{font-size:56px;line-height:1}
+.sline{min-height:64px;width:100%;max-width:600px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px;border:3px dashed var(--ink-soft);border-radius:16px;background:var(--paper)}
+.sline.right{border-style:solid;border-color:var(--good);background:var(--green-soft)}
+.sline .ph{color:var(--ink-soft);font-weight:700}
+.wput{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);line-height:1.2}
+.stray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px}
+.wtile{font-family:var(--display);font-weight:800;font-size:clamp(19px,4.8vw,24px);min-height:52px;min-width:52px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.wtile.used{visibility:hidden}
+.wtile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+
+/* word search */
+.ws{display:grid;grid-template-columns:repeat(var(--c),minmax(0,46px));gap:3px;padding:8px;background:var(--paper);border:3px solid var(--ink);border-radius:14px;max-width:100%}
+.wsc{aspect-ratio:1;min-width:0;font-family:var(--display);font-weight:800;font-size:clamp(17px,4.6vw,24px);border:2px solid var(--muted);border-radius:8px;background:var(--board);cursor:pointer;padding:0}
+.wsc.sel{background:var(--gold);border-color:var(--ink)}
+.wsc.got{background:var(--green-soft);border-color:var(--good);color:var(--good)}
+.wsc.look{box-shadow:0 0 0 3px var(--red)}
+.wslist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wsw{font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 12px;background:var(--board)}
+.wsw.got{background:var(--good);color:var(--on-color);text-decoration:line-through}
+
+/* scenes, pictures and tables */
+.scene{width:100%;max-width:560px;border:3px solid var(--ink);border-radius:18px;padding:12px;background:linear-gradient(180deg,#CFEAFF 0%,#EAF6FF 55%,#BFE3A8 56%,#9ED38A 100%);display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;align-items:flex-end;font-size:40px;line-height:1.1;position:relative;overflow:hidden}
+.scene .small{font-size:26px}
+.ctrls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toggle{font-weight:800;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);min-height:56px;padding:4px 16px;cursor:pointer;font-size:18px}
+.toggle[aria-pressed="true"]{background:var(--gold)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:14px}
+.swatch i{width:40px;height:28px;border-radius:8px;border:2px solid var(--ink)}
+.swatch:disabled{opacity:.3;cursor:default}
+.tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px;background:#E9C98F;border:3px solid var(--ink);border-radius:22px;padding:12px}
+.trayitem{display:flex;flex-direction:column;align-items:center;gap:2px;background:#F6E2B8;border:3px solid var(--ink);border-radius:14px;padding:6px;font-size:40px;line-height:1.1;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.trayitem small{font-size:14px;font-weight:800}
+.trayitem:disabled{opacity:.35;cursor:default}
+.tbl{border-collapse:collapse;width:100%;max-width:520px;background:var(--board);border:3px solid var(--ink);font-weight:800}
+.tbl th,.tbl td{border:2px solid var(--ink);padding:6px 10px;text-align:left}
+.tbl th{background:var(--blue-soft);font-family:var(--display);font-size:18px}
+.tbl td.blank{color:var(--ink-soft)}
+.tbl td.now{background:var(--gold-soft);box-shadow:inset 0 0 0 3px var(--gold)}
+.tbl td.fresh{color:var(--good);animation:pop .35s}
+.poster{width:min(300px,100%);background:repeating-conic-gradient(from 0deg at 50% 100%,#F28C28 0 10deg,#F7B35C 10deg 20deg);border:3px solid var(--ink);border-radius:16px;padding:12px;text-align:center;color:#1E2A44;display:flex;flex-direction:column;gap:6px}
+.poster .ph1{font-family:var(--display);font-weight:800;font-size:44px;color:#C62C2C;-webkit-text-stroke:1px var(--ink);line-height:1}
+.poster .row{background:#123B5C;color:#FFF;font-family:var(--display);font-weight:800;font-size:20px;border-radius:8px;padding:2px 8px}
+.poster .feat{background:#FFF3CC;border-radius:8px;padding:4px 8px;font-weight:800;font-size:14px;line-height:1.3}
+.basket{font-size:42px;line-height:1.15;background:#F3E2C4;border:3px solid var(--ink);border-radius:22px 22px 40px 40px;padding:10px 16px;display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;max-width:360px}
+.bag{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bagbox{min-width:220px;min-height:90px;border:3px solid var(--ink);border-radius:26px 26px 18px 18px;background:#5DA9E9;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:10px;font-size:38px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;width:100%;max-width:560px}
+.shelfitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:6px;font-size:36px;line-height:1.1}
+.shelfitem small{font-size:14px;font-weight:800}
+.shelfitem.in{background:var(--green-soft);opacity:.6}
+.shelfitem.no{background:var(--oops-soft);animation:shake .4s}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;max-width:560px}
+.list{background:#FFFDF2;border:3px solid var(--ink);border-radius:8px;padding:10px 14px;min-height:150px;box-shadow:3px 3px 0 var(--shadow)}
+.list h3{font-size:19px;border-bottom:2px solid var(--muted);padding-bottom:4px;margin-bottom:6px}
+.list ol{margin:0;padding-left:22px;font-weight:800}
+.twins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;max-width:600px}
+.twin{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px;cursor:pointer}
+.twin .te{font-size:40px;line-height:1}
+.twin .tw{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:1px}
+.twin.heard{background:var(--green-soft)}
+.tcard{display:flex;flex-direction:column;gap:2px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px 10px;cursor:pointer;text-align:left}
+.tcard b{font-family:var(--display);font-size:28px;color:var(--indigo);letter-spacing:2px}
+.tcard span{font-weight:700;font-size:15px}
+.tcard.heard{background:var(--violet-soft)}
+.mywriting{width:100%;max-width:560px;background:#FFFDF2;border:3px solid var(--ink);border-radius:12px;padding:14px 18px;background-image:repeating-linear-gradient(180deg,transparent 0 34px,#BFD8F2 34px 36px);display:flex;flex-direction:column;gap:6px}
+.mywriting h3{font-size:22px;color:var(--violet)}
+.mywriting p{font-family:var(--display);font-weight:600;font-size:21px;line-height:1.5}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(20,32,56,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D5DDE8;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--violet);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .choice.pic{min-width:78px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .ltile{width:50px;height:54px;font-size:28px}
+  .slot{width:38px;height:50px;font-size:32px}
+  .slots .given{font-size:32px}
+  .scene{font-size:32px}
+  .wsc{border-width:1.5px}
+  .ws{gap:2px;padding:5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+.scene{flex-direction:column;align-items:stretch}
+.srow{display:flex;justify-content:space-around;align-items:flex-end;flex-wrap:wrap;gap:4px 8px;width:100%;position:relative}
+.srow.sky{min-height:56px}
+.trayitem.done{background:var(--green-soft)}
+
+/* ---------- EVS chapter pieces ---------- */
+.blank{display:inline-block;min-width:4.6em;border-bottom:3px solid var(--ink);text-align:center;color:var(--ink-soft);margin:0 .2em}
+.blank.filled{color:var(--good);border-bottom-color:var(--good)}
+.story.exam{background:#FFFDF2;font-size:clamp(18px,4.4vw,21px)}
+.fixline{background:var(--green-soft);border:3px solid var(--good);border-radius:14px;padding:8px 14px;font-weight:700;max-width:560px;text-align:center}
+.choice.tf{min-width:130px;font-family:var(--display);font-size:24px}
+.match{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:10px;width:100%;max-width:640px}
+.mcol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.mhead{font-family:var(--display);font-weight:800;text-align:center;background:var(--ink);color:var(--on-dark);border-radius:999px;padding:2px 8px;font-size:16px}
+.mcard{display:flex;gap:8px;align-items:center;text-align:left;min-height:58px;padding:6px 10px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);font-weight:800;font-size:16px;line-height:1.25;cursor:pointer}
+.mcard.b{background:var(--paper);font-weight:700}
+.mcard.sel{background:var(--gold)}
+.mcard.done{background:var(--green-soft);border-color:var(--good);box-shadow:0 2px 0 var(--good);cursor:default}
+.mcard .me{font-size:28px;line-height:1;flex:none}
+.mnum{flex:none;width:26px;height:26px;border-radius:50%;background:var(--good);color:var(--on-color);display:grid;place-items:center;font-size:14px;font-weight:800}
+.wrongpic{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:18px;padding:12px 18px;font-weight:800;text-align:center;width:min(100%,360px)}
+.wrongpic .big{font-size:68px;line-height:1.1}
+.wrongpic.dry{background:linear-gradient(180deg,#FFF2CF 0 40%,#D9A95B 40%)}
+.wrongpic.beach{background:linear-gradient(180deg,#BFE6FF 0 50%,#F6D79B 50%)}
+.wrongpic.sea{background:linear-gradient(180deg,#BFE6FF 0 30%,#3A86C8 30%);color:var(--on-color)}
+.scene.hot{background:linear-gradient(180deg,#FFE7A3 0%,#FFC36B 55%,#E8B36A 56%,#D99A4E 100%)}
+.scene.snow{background:linear-gradient(180deg,#DCEBFA 0%,#F4F8FC 55%,#FFFFFF 56%,#EEF3F8 100%)}
+.scene.night{background:linear-gradient(180deg,#1B2A4A 0%,#33457A 70%,#2B5A3A 71%,#1F4A2E 100%);color:var(--on-dark)}
+.hidepair{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:460px}
+.hidebox{height:130px;border:3px solid var(--ink);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:56px;line-height:1}
+.hidebox small{font-size:15px;font-weight:800;margin-top:6px}
+.hidebox.forest{background:#3E8E4E;color:var(--on-color)}
+.hidebox.snowy{background:#F7FBFF}
+.chamstage{width:100%;max-width:440px;min-height:170px;border:3px solid var(--ink);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:background-color .4s;padding:8px}
+.chamstage .on{font-weight:800;background:rgba(255,255,255,.85);border-radius:999px;padding:0 12px;font-size:15px}
+.cham{width:min(200px,60vw);height:auto;display:block}
+.cham .skin{transition:fill .5s}
+.cham .tail{transition:stroke .5s}
+.herocham{display:flex;flex-direction:column;align-items:center;gap:6px}
+.herocham .chamstage{min-height:140px;max-width:300px}
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;width:100%;max-width:600px}
+.paircard{border:3px solid var(--ink);border-radius:16px;background:var(--paper);padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-weight:700;text-align:center}
+.paircard .row2{display:flex;justify-content:space-around;align-items:flex-end;gap:8px}
+.paircard .who{display:flex;flex-direction:column;align-items:center;font-size:14px;font-weight:800;line-height:1.2}
+.paircard .who span{font-size:42px;line-height:1.1}
+.tagok{color:var(--good)}.tagbad{color:var(--oops)}
+.journey{position:relative;width:100%;max-width:440px;height:280px;border:3px solid var(--ink);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#E8F4FF 0 42%,#FFE6A8 58% 100%)}
+.journey .zone{position:absolute;left:0;right:0;padding:8px 12px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.journey .zone.top{top:0}.journey .zone.bot{bottom:0}
+.journey .zone b{font-family:var(--display);font-size:20px}
+.flyer{position:absolute;left:12%;top:58px;font-size:48px;line-height:1;transition:transform 2.4s ease-in-out}
+.flyer.go{transform:translate(min(46vw,190px),140px)}
+.puffwrap{display:flex;align-items:center;justify-content:center;gap:30px;min-height:150px;width:100%;max-width:440px;border:3px solid var(--ink);border-radius:18px;background:linear-gradient(180deg,#9ED3F5,#2F7FC1);overflow:hidden}
+.puff{font-size:56px;display:inline-block;transition:transform .7s}
+.puff.big{transform:scale(1.9)}
+.shark{font-size:52px;display:inline-block;transition:transform 1.4s ease-in}
+.shark.away{transform:translateX(320px) scaleX(-1)}
+.plate{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-content:center;padding:18px;border:4px solid var(--ink);border-radius:50%;width:220px;height:220px;background:#FFFFFF;box-shadow:0 5px 0 var(--ink)}
+.grain{width:30px;height:16px;border-radius:50%;background:#F7F0DA;border:2px solid #A8946A;cursor:pointer;padding:0}
+.grain.gone{visibility:hidden}
+.swatch.picked:disabled{opacity:1;background:var(--gold)}
+.toolrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.mycreature{width:100%;max-width:440px;background:#FFFDF2;border:3px dashed var(--brown);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;font-weight:700}
+.mycreature h3{font-size:22px;color:var(--brown)}
+.mycreature .big{font-size:56px;line-height:1;text-align:center}
+.dressrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.kidcard{font-size:52px;line-height:1;text-align:center}
+.skill{flex-direction:row;align-items:flex-start}
+.skill .m{display:block;font-weight:700;font-size:13px;color:var(--ink-soft);margin-top:2px}
+.skills{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.revq{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+@media (max-width:480px){
+  .match{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:6px}
+  .mcard{font-size:14px;padding:5px 7px;min-height:52px}
+  .mcard .me{font-size:22px}
+  .choice.tf{min-width:110px}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Jungle Safari Trail<small>Ayansh's EVS · Chapter 5 · The Amazing World of Animals</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 54</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🦎</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Chamki the chameleon.</h2>
+        <p>I have a secret trick that keeps me safe in the jungle. <b>Can you spot me?</b></p>
+        <div class="herocham">
+          <div class="chamstage" id="heroStage" style="background-color:#F8EBCB"><span id="heroCham"></span><span class="on" id="heroOn">I'm sitting on the sand</span></div>
+        </div>
+        <button class="btn primary" id="showHow" type="button">🦎 Watch me hide</button>
+        <p class="reveal" id="reveal" hidden>I change my colour to match what I sit on, so hungry animals can't see me. That is an <b>adaptation</b>: a special feature that helps an animal survive in its home.</p>
+        <p class="note">Ride the Jungle Safari Trail stop by stop, in the same order as your EVS book: animal homes, body tricks, teeth and beaks, clever behaviours, and how we humans adapt too. Every stop teaches first, then asks exam-style questions.</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You finished the whole Jungle Safari Trail! You know EVS Chapter 5 inside out.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Homes, body and colour</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Teeth and beaks</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Clever behaviours</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Humans adapt too</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Grand Review · Exam practice</h2>
+    <ol class="stops finale" id="stops5"></ol>
+
+    <section class="skillcard card">
+      <h2>My exam word badges</h2>
+      <p class="note">These are the key words of the chapter. Each badge lights up, with its meaning, when you learn the word in a stop. Read them out loud before a test!</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body" id="grownups">
+        <p>This follows EVS Chapter 5, “The Amazing World of Animals”, in Ayansh's book (pages 22–38), in the same order as the book. Because EVS was hard for him last term, every idea starts with a “💡” card that explains it with an everyday example (a sweater on a hot day, hide-and-seek, kitchen tools for beaks, a hill-station trip for migration) before any question. Then he practises it in the same question types the exam uses: fill in the blanks, true or false (with the corrected sentence), match the following, one-word answers, Who am I?, spellings of the key words, and short answers built word by word. Teaching is read aloud by default (switch it off at the top). The last round of each stop is an <b>on your own</b> round: no clue until his second try. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Homes, body and colour (pages 22–28)</h3>
+        <ol>
+          <li><b>Something Looks Wrong!</b> (pages 22–24): the goldfish on dry land, the polar bear on the beach and the monkey in water, moved back home. Habitat = the natural home where an animal finds food, water, air and shelter. Sorting animals into forest, water, hot desert and icy cold.</li>
+          <li><b>The Sweater Puzzle</b> (pages 24–25): the Wonder Junction sweater question, what adaptations are, and the three kinds (body, food, behaviour).</li>
+          <li><b>Body Adaptations</b> (page 25): giraffe's long neck, owl's big sharp eyes, woodpecker's strong head, with “what if…?” thinking.</li>
+          <li><b>Hide and Seek: Camouflage</b> (page 26): the white rabbit, Chamki changes colour, Arctic fox, stick insect, chameleon, tiger.</li>
+          <li><b>Copycats: Mimicry</b> (page 27, Trail Treasure): Viceroy and Monarch butterflies, Milk snake and Coral snake; camouflage or mimicry?</li>
+          <li><b>Checkpoint 1</b> (pages 27–28): the book's tick-the-answer questions on the giraffe, owl and leaf-tailed gecko, word for word.</li>
+        </ol>
+        <h3>Part 2 · Teeth and beaks (pages 29–33)</h3>
+        <ol start="7">
+          <li><b>Teeth Tell the Tale</b> (page 29): herbivores, carnivores, omnivores and insectivores with the book's examples, and a word trick for each name.</li>
+          <li><b>Beak Buffet</b> (pages 30–31): the five beak shapes, each compared to a kitchen tool; feed the birds; the Beak Test Challenge from page 32; the snake Detour and the cave painters Heritage Route.</li>
+          <li><b>Checkpoint 2</b> (pages 32–33): lion with flat teeth, hummingbird with a sparrow's beak (answers built as full sentences), and the five Who Am I? riddles.</li>
+        </ol>
+        <h3>Part 3 · Clever behaviours (pages 33–35)</h3>
+        <ol start="10">
+          <li><b>Migration</b> (page 33): behavioural adaptations, the Siberian crane's journey to India, whales.</li>
+          <li><b>Hibernation</b> (page 34): bears in dens, frogs in mud; migrate or hibernate?</li>
+          <li><b>Protection Behaviours</b> (page 34): skunk and pufferfish.</li>
+          <li><b>Checkpoint 3</b> (pages 34–35): the five true/false statements, the two questions, and the Creative Hunt (make your own animal).</li>
+        </ol>
+        <h3>Part 4 · Humans adapt too (pages 35–38)</h3>
+        <ol start="14">
+          <li><b>Humans Adapt Too</b> (pages 35–36): sweat, skin, teeth, nose and eyelashes; food in cold and hot places; cooking with tools and fire.</li>
+          <li><b>Roshni's Seasons</b> (pages 37–38): clothes, houses, water and rest; Roshni in summer, winter and the rainy season (retold in my own words).</li>
+          <li><b>Checkpoint 4</b> (page 37): the five fill-in-the-blanks and Roshni's two questions.</li>
+          <li><b>Caring for Animals</b> (page 38, Eco Route): cutting trees, waste in water, roads and cities, and what helps.</li>
+          <li><b>Grand Review · Exam practice</b>: 12 questions in exam style, three from each part, new each time, and a Chapter 5 Animal Expert certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Likely exam questions (with answers)</h3>
+        <ol class="revq">
+          <li>What is a habitat? The natural home of an animal, where it finds food, water, air and shelter.</li>
+          <li>What are adaptations? Special features that help animals survive in their habitat. Three types: body, food and behaviour.</li>
+          <li>What is camouflage? Using body colour to hide in the surroundings, like the Arctic fox in snow or the stick insect that looks like a twig.</li>
+          <li>What is mimicry? Looking like another (dangerous) animal to stay safe, like the Viceroy butterfly and the Monarch.</li>
+          <li>Herbivores (cow, elephant): flat teeth. Carnivores (lion, tiger): sharp teeth. Omnivores (bear, pig): sharp and flat teeth. Insectivores (anteater, frog): long tongues.</li>
+          <li>Beaks: short, hard (sparrow, pigeon, seeds); strong, curved (eagle, vulture, meat); broad, flat (duck, swan, food from water); long, thin (hummingbird, honey eater, nectar); long, sharp (kingfisher, pelican, fish).</li>
+          <li>Migration: moving to another place for food or warm weather (Siberian crane comes to India in winter; whales swim to warm seas to give birth). Hibernation: a long sleep in cold weather to save energy (bears in dens, frogs in mud).</li>
+          <li>Skunk sprays a bad smell; pufferfish blows up to look big and dangerous.</li>
+          <li>Humans: sweat cools us, skin protects from sunlight, nose and eyelashes keep dust out. Animals are born with their adaptations; humans use thinking and actions to adapt.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Page 31 says the kingfisher and pelican have long, sharp beaks “to filter food from water”. That looks like a slip (it repeats the duck line), and the book's own page 33 riddle says “a long, sharp beak… to catch fish from water”, so the game teaches “to catch fish”.</li>
+          <li>Page 37 question 1b has two blanks (“People in hot places eat ___ and ___ food”), but page 36 only says “juicy food”. The game asks for “juicy”. Please check the second word with his teacher (it may be “light” or “cool”).</li>
+          <li>Extras not in the book: the camel and penguin in the habitat sort, the kitchen-tool comparisons for beaks, the cat that puffs up its fur, and the “make your own animal” choices. The kitchen tools are only memory aids; the exam answers use the book's words.</li>
+          <li>Open questions (Which animal would you choose to be? the Beak Test prediction, the Creative Hunt) accept any answer.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Try the Beak Test Challenge (page 32) with real tweezers and a few rice grains.</li>
+          <li>Real Route (page 26): watch a crow, pigeon or squirrel near home for five minutes. What does it eat? How does it stay safe?</li>
+          <li>Before the test, ask him the “likely exam questions” above and let him answer in full sentences.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Safari Trail</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🦎</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const steps = [1, 2, 10, 5];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+
+const KEY = 'ayansh-jungle-safari-trail-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, queue) {
+  try {
+    if (!canSpeak) return;
+    if (!queue) speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ' to ').replace(/=/g, ' equals ').replace(/…/g, ' and so on');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false, wrongs = 0;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own choices
+function freeChoice(parent, { prompt, options, onPick }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' }); let over = false;
+  options.forEach(opt => row.append(h('button', { type: 'button', class: 'choice words', 'data-ok': '1', onclick: e => { if (over) return; over = true; const me = e.currentTarget; row.querySelectorAll('button').forEach(x => { if (x !== me) x.disabled = true; }); me.classList.add('right'); sfx.good(); onPick(opt); } }, opt)));
+  wrap.append(row); parent.append(wrap);
+}
+// several asks one after the other
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (q.before) holder.append(q.before);
+    if (q.onShow) q.onShow();
+    askChoice(holder, { ...q, onDone: () => {
+      q.onDone && q.onDone(holder);
+      if (q.hold) { const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.remove(); hush(); next(); } }, i >= list.length ? 'Go on ➜' : 'Next question ➜'); holder.append(go); scrollIn(go); }
+      else setTimeout(next, 1100);
+    } });
+  };
+  next();
+}
+const hintP = t => h('p', { class: 'hintcap' }, t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollIn = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+const srctag = t => h('span', { class: 'srctag' }, t);
+
+/* ---------- speaking helpers ---------- */
+const speakClean = t => String(t).replace(/[“”"]/g, '').replace(/_{2,}/g, ' blank ').replace(/…/g, '. ').replace(/→/g, ' becomes ').replace(/✓/g, '');
+function hush() { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} }
+// speak one line and call done when it ends (with a timer in case the browser never says it ended)
+function speakLine(text, done, rate = 0.85) {
+  let fin = false, t = null;
+  const end = () => { if (fin) return; fin = true; clearTimeout(t); done && done(); };
+  if (!canSpeak || !voiceOn) { t = setTimeout(end, 80); return () => { fin = true; clearTimeout(t); }; }
+  try {
+    const u = new SpeechSynthesisUtterance(speakClean(text));
+    u.lang = 'en-IN'; u.rate = rate; u.pitch = 1.05; u.onend = end; u.onerror = end;
+    speechSynthesis.speak(u);
+  } catch (e) { end(); }
+  t = setTimeout(end, 1600 + String(text).split(/\s+/).length * 620);
+  return () => { fin = true; clearTimeout(t); };
+}
+function sayNow(text) { if (!voiceOn || !canSpeak) return; hush(); setTimeout(() => say(speakClean(text)), 60); }
+
+/* ---------- small builders ---------- */
+const below = () => { const b = h('div', { class: 'below' }); api.stage.append(b); return b; };
+function chain(list, step, onAll) { let i = 0; const next = () => { if (i >= list.length) return onAll && onAll(); const it = list[i++]; step(it, next, i - 1); }; next(); }
+const picOpt = map => o => [h('span', { class: 'pe', 'aria-hidden': 'true' }, map[o] || ''), o];
+function learnCard(title, body, ex) {
+  return h('div', { class: 'learn' }, h('h3', {}, title),
+    [].concat(body).map(b => typeof b === 'string' ? h('p', {}, b) : b),
+    ex ? h('div', { class: 'ex' }, ex.map(x => typeof x === 'string' ? h('span', { class: 'exchip' }, x) : x)) : null);
+}
+const textOf = x => typeof x === 'string' ? x : (x && x.textContent) || '';
+// a "💡" idea card, read aloud, with a button to go on
+function teach(parent, { title, body, ex, read, btn = 'Got it! ➜' }, then) {
+  const card = learnCard(title, body, ex);
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.remove(); hush(); then(); } }, btn);
+  parent.append(card, go);
+  api.guide(read || [title].concat([].concat(body).map(textOf)).join(' '));
+  bubble.textContent = `💡 ${title}: listen, read the card, then tap “Got it!”`;
+  return card;
+}
+function hiWord(word, part) { // a word with one part highlighted
+  const i = word.indexOf(part);
+  return i < 0 ? word : [word.slice(0, i), h('span', { class: 'hl2' }, part), word.slice(i + part.length)];
+}
+
+/* ---------- sorting things into boxes ---------- */
+function sortGame(parent, { bins, items, ask, onDone }) {
+  const wrap = h('div', { class: 'sorter' });
+  const now = h('div', { class: 'sortnow' });
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const lists = {};
+  const binsEl = h('div', { class: 'bins' }, bins.map(b => { const l = h('div', { class: 'binlist' }); lists[b.k] = l; return h('div', { class: 'bin', style: `--bc:${b.c || 'var(--blue-soft)'}` }, h('div', { class: 'binhead' }, h('span', { 'aria-hidden': 'true' }, b.e || ''), b.label), l); }));
+  let i = 0, wrongs = 0, busy = false;
+  const show = () => {
+    hintBox.replaceChildren(); fb.textContent = ''; fb.className = 'fb';
+    if (i >= items.length) { now.replaceChildren(fact('All sorted! ✓')); row.replaceChildren(); return onDone && onDone(); }
+    const it = items[i]; wrongs = 0;
+    now.replaceChildren(h('div', { class: 'sortcard pop' }, it.e ? h('span', { class: 'se', 'aria-hidden': 'true' }, it.e) : null, h('span', { class: 'st' }, it.t)));
+    api.guide(ask ? ask(it) : it.t);
+    row.replaceChildren(...bins.map(b => h('button', { type: 'button', class: 'choice words', 'data-ok': b.k === it.bin ? '1' : null, onclick: e => pick(b, e.currentTarget) }, (b.e ? b.e + ' ' : '') + b.label)));
+  };
+  const pick = (b, el) => {
+    if (busy) return;
+    const it = items[i];
+    if (b.k === it.bin) {
+      busy = true; el.classList.add('right'); [...row.children].forEach(x => x.disabled = true); sfx.good();
+      fb.textContent = it.ok || praise(); fb.className = 'fb good';
+      if (it.ok) sayNow(it.ok);
+      lists[b.k].append(h('span', { class: 'chip pop' }, (it.e ? it.e + ' ' : '') + (it.short || it.t)));
+      setTimeout(() => { busy = false; i++; show(); }, it.ok ? 2600 : 900);
+    } else {
+      el.classList.add('wrong'); el.disabled = true; sfx.oops(); run.mistakes++; wrongs++;
+      fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) { fb.textContent = oopsLine(); if (it.why) { hintBox.replaceChildren(hintP(it.why)); speakGuide(it.why); } }
+      else fb.textContent = 'Not quite. Have a think and try again!';
+    }
+  };
+  wrap.append(now, row, fb, hintBox, binsEl); parent.append(wrap); show();
+}
+
+/* ---------- tap the right words ---------- */
+function tapWords(parent, { lines, targets, grid, onDone, hint, after }) {
+  const T = new Set(targets.map(x => x.toLowerCase()));
+  const clean = w => w.replace(/[^A-Za-z'’-]/g, '').replace(/’/g, "'").toLowerCase();
+  const box = h('div', { class: grid ? 'wordgrid' : 'tapbox' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let need = 0, got = 0, wrongs = 0, over = false;
+  const counter = h('p', { class: 'counter' });
+  const btn = w => {
+    const c = clean(w), ok = T.has(c); if (ok) need++;
+    const b = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+      if (over || b.classList.contains('hit')) return;
+      if (ok) {
+        b.classList.add('hit'); sfx.tap(got); got++; counter.textContent = `Found ${got} of ${need}`;
+        after && after(c, b);
+        if (got >= need) { over = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+      } else {
+        shakeEl(b); b.classList.add('miss'); setTimeout(() => b.classList.remove('miss'), 600);
+        sfx.oops(); run.mistakes++; wrongs++;
+        fb.textContent = `“${w.replace(/[^A-Za-z'’ -]/g, '')}” is not one of them. Try another word.`; fb.className = 'fb oops';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(c); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, w);
+    return b;
+  };
+  if (grid) lines.forEach(w => box.append(btn(w)));
+  else lines.forEach(ln => { const row = h('p', { class: 'tapline' }); ln.split(' ').forEach(w => row.append(btn(w))); box.append(row); });
+  counter.textContent = `Found 0 of ${need}`;
+  parent.append(box, counter, fb, hintBox);
+}
+
+/* ---------- the poem / story reader ---------- */
+function glossify(line, gloss) {
+  if (!gloss) return line;
+  return line.split(' ').map((w, i) => { const c = w.replace(/[^A-Za-z]/g, '').toLowerCase(); return [i ? ' ' : '', gloss[c] ? h('mark', { class: 'gl' }, w) : w]; }).flat();
+}
+function reader(parent, { lines, title, by, gloss, breaks = [], onDone, rate }) {
+  const box = h('div', { class: 'poem' });
+  if (title) box.append(h('h3', { class: 'ptitle' }, title));
+  const heard = new Set(); let stop = null, finished = false;
+  let self = null;
+  const finish = () => { if (finished) return; finished = true; if (self) { self.disabled = true; self.textContent = '✓ All read'; } onDone && onDone(); };
+  const mark = i => { heard.add(i); els[i].classList.add('heard'); if (heard.size === lines.length) finish(); };
+  function halt() { if (stop) stop(); stop = null; hush(); els.forEach(e => e.classList.remove('now')); }
+  function play(i, chainOn) {
+    els.forEach((e, j) => e.classList.toggle('now', j === i));
+    stop = speakLine(lines[i], () => { els[i].classList.remove('now'); mark(i); if (chainOn && i + 1 < lines.length) setTimeout(() => { if (box.isConnected) play(i + 1, true); }, 300); }, rate);
+  }
+  const els = lines.map((ln, i) => {
+    const b = h('button', { type: 'button', class: 'pline', 'aria-label': 'Hear this line: ' + ln, onclick: () => { halt(); setTimeout(() => play(i, false), 80); } }, glossify(ln, gloss));
+    box.append(b); if (breaks.includes(i)) box.append(h('div', { class: 'pgap' }));
+    return b;
+  });
+  if (by) box.append(h('p', { class: 'pby' }, by));
+  const playAll = h('button', { class: 'btn primary', type: 'button', onclick: () => { halt(); setTimeout(() => play(0, true), 80); } }, '▶ Read it to me');
+  self = h('button', { class: 'btn', type: 'button', onclick: () => { halt(); lines.forEach((_, i) => mark(i)); } }, '📖 I read it myself');
+  api.cleanup(halt);
+  parent.append(box, h('div', { class: 'readbtns' }, canSpeak && voiceOn ? playAll : null, self));
+}
+// he reads each line out loud himself
+function echoRead(parent, { lines, onDone, what = 'the whole poem' }) {
+  let i = 0; const box = h('div', { class: 'echo' }); parent.append(box);
+  const show = () => {
+    if (i >= lines.length) { box.replaceChildren(fact('🎤 Super reading!', `You read ${what} aloud by yourself.`)); return onDone && onDone(); }
+    const ln = lines[i];
+    const hear = h('button', { class: 'btn', type: 'button', onclick: () => sayNow(ln) }, '🔊 Hear it first');
+    const said = h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); sfx.good(); i++; show(); } }, '🎤 I said it!');
+    box.replaceChildren(h('p', { class: 'echocount' }, `Line ${i + 1} of ${lines.length}`), h('p', { class: 'echoline' }, ln), h('div', { class: 'readbtns' }, canSpeak ? hear : null, said));
+  };
+  show();
+}
+
+/* ---------- letter tiles: spell a word ---------- */
+function spellTiles(parent, { word, prefix = '', letters, pic, prompt, onDone, hint }) {
+  const need = word.slice(prefix.length).split('');
+  const wrap = h('div', { class: 'ask', 'data-word': word.slice(prefix.length) });
+  if (pic) wrap.append(h('div', { class: 'cluepic', 'aria-hidden': 'true' }, pic));
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'slots', 'aria-live': 'polite' }, prefix ? h('span', { class: 'given' }, prefix) : null, need.map(() => h('span', { class: 'slot' }, '')));
+  const slots = [...show.querySelectorAll('.slot')];
+  const tray = h('div', { class: 'ltray', role: 'group', 'aria-label': 'Letters' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  letters.forEach(L => {
+    const b = h('button', { type: 'button', class: 'ltile', 'aria-label': 'Letter ' + L, onclick: () => {
+      if (over || b.disabled) return;
+      if (L.toLowerCase() === need[n]) {
+        slots[n].textContent = L.toLowerCase(); slots[n].classList.add('fill'); b.disabled = true; sfx.tap(n); n++;
+        if (n >= need.length) { over = true; show.classList.add('right'); sfx.good(); fb.textContent = `${praise()} ${word}!`; fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(word); onDone && onDone(); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not that letter. Have a think and try again!';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(n); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, L.toUpperCase());
+    tray.append(b);
+  });
+  wrap.append(show, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word tiles: build a sentence ---------- */
+const joinWords = tiles => tiles.join(' ').replace(/ ([.,!?])/g, '$1');
+function buildSentence(parent, { tiles, decoys = [], decoyWhy, onDone, prompt }) {
+  const wrap = h('div', { class: 'ask', 'data-tiles': JSON.stringify(tiles) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const line = h('div', { class: 'sline', 'aria-live': 'polite' }, h('span', { class: 'ph' }, 'Tap the words in order…'));
+  const tray = h('div', { class: 'stray' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  const all = shuffle([...tiles.map(t => ({ t, real: true })), ...decoys.map(t => ({ t, real: false }))]);
+  all.forEach(o => {
+    const b = h('button', { type: 'button', class: 'wtile', onclick: () => {
+      if (over || b.disabled) return;
+      if (o.t === tiles[n]) {
+        if (n === 0) line.replaceChildren();
+        line.append(h('span', { class: 'wput pop' }, o.t)); b.disabled = true; b.classList.add('used'); sfx.tap(n); n++;
+        if (n >= tiles.length) { over = true; line.classList.add('right'); sfx.good(); const s = joinWords(tiles); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(s); onDone && onDone(s); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = !o.real && decoyWhy ? decoyWhy : n === 0 ? 'A sentence starts with a capital letter. Which word comes first?' : o.t === '.' ? 'The full stop comes at the very end.' : 'Not that word yet. Read what you have and think what comes next.';
+        if (!run.solo || wrongs >= 2) { const x = `Next word: “${tiles[n]}”`; hintBox.replaceChildren(hintP(x)); }
+      }
+    } }, o.t);
+    tray.append(b);
+  });
+  wrap.append(line, tray, fb, hintBox); parent.append(wrap);
+}
+
+
+/* =================================================================
+   EVS HELPERS: exam-style question builders
+   ================================================================= */
+const ANIMAL = {
+  Giraffe: '🦒', Owl: '🦉', Woodpecker: '🐦🪵', Tiger: '🐅', Lion: '🦁', Cow: '🐄', Elephant: '🐘', Bear: '🐻', Pig: '🐖',
+  Anteater: '🐜👅', Frog: '🐸', Sparrow: '🐦', Pigeon: '🕊️', Eagle: '🦅', Vulture: '🦅', Duck: '🦆', Swan: '🦢', Hummingbird: '🐦🌺',
+  'Honey eater': '🐦🍯', Kingfisher: '🐦🐟', Pelican: '🦢🐟', Chameleon: '🦎', 'Arctic fox': '🦊', 'Stick insect': '🪵🦗', Rabbit: '🐇',
+  Monkey: '🐒', Fish: '🐟', 'Polar bear': '🐻‍❄️', Camel: '🐫', Penguin: '🐧', Whale: '🐋', Skunk: '🦨', Pufferfish: '🐡',
+  'Siberian crane': '🕊️', Goat: '🐐', Horse: '🐎', 'Milk snake': '🐍', 'Coral snake': '🐍', 'Viceroy butterfly': '🦋', 'Monarch butterfly': '🦋',
+  Gecko: '🦎', Turtle: '🐢', Squirrel: '🐿️',
+};
+const splitBlank = s => { const [a, b = ''] = s.split('___'); return [a, h('span', { class: 'blank' }, '______'), b]; };
+// fill in the blank
+const blankQ = (s, answer, others, hint) => ({
+  guide: 'Fill in the blank. ' + s,
+  before: h('p', { class: 'story exam' }, splitBlank(s)),
+  prompt: 'Which word fills the blank?', options: shuffle([answer, ...others]), answer,
+  hint: () => hintP(hint),
+  onDone: holder => { const x = holder.querySelector('.blank'); if (x) { x.textContent = answer; x.classList.add('filled'); } },
+});
+// true or false; a false one shows the corrected sentence (as exams ask)
+const tfQ = (s, t, fix, hint) => ({
+  guide: 'True or false? ' + s,
+  before: h('p', { class: 'story exam' }, s),
+  prompt: 'True or False?', options: ['True', 'False'], answer: t ? 'True' : 'False', cls: 'tf',
+  hint: () => hintP(hint || (t ? 'Read it again slowly. Does it match what we learnt?' : 'One part of this sentence is wrong. Which part?')),
+  hold: !t && !!fix,
+  onDone: holder => { if (!t && fix) { holder.append(h('p', { class: 'fixline' }, '✏️ Correct sentence: ', h('b', {}, fix))); sayNow('False. The correct sentence is: ' + fix); } },
+});
+// one-word / short answer pick
+const pickQ = (q, answer, others, hint, map) => ({ guide: q, prompt: q, options: shuffle([answer, ...others]), answer, cls: map ? 'pic' : 'words', render: map ? picOpt(map) : undefined, hint: () => hintP(hint) });
+// Who am I? riddle with animal pictures
+const whoQ = (clue, answer, others, hint) => ({ guide: 'Who am I? ' + clue, before: h('p', { class: 'story exam' }, '🕵️ ', clue), prompt: 'Who am I?', options: shuffle([answer, ...others]), answer, cls: 'pic', render: picOpt(ANIMAL), hint: () => hintP(hint) });
+// a question shown with a little card above it
+const withCard = (card, q) => Object.assign({}, q, { before: card });
+
+// exam "Match the following": tap a word in Column A, then its partner in Column B
+function matchGame(parent, { pairs, onDone, aHead = 'Column A', bHead = 'Column B', hint }) {
+  const wrap = h('div', { class: 'match' });
+  const colA = h('div', { class: 'mcol' }, h('p', { class: 'mhead' }, aHead));
+  const colB = h('div', { class: 'mcol' }, h('p', { class: 'mhead' }, bHead));
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Tap a word in Column A, then tap its match in Column B.');
+  const hintBox = h('div', { class: 'below' });
+  let sel = null, got = 0, wrongs = 0;
+  const aBtns = pairs.map((p, i) => h('button', { type: 'button', class: 'mcard', 'data-i': String(i), onclick: e => pickA(i, e.currentTarget) }, p[2] ? h('span', { class: 'me', 'aria-hidden': 'true' }, p[2]) : null, h('span', {}, p[0])));
+  const bBtns = [];
+  shuffle(pairs.map((_, i) => i)).forEach(i => { const b = h('button', { type: 'button', class: 'mcard b', 'data-i': String(i), onclick: e => pickB(i, e.currentTarget) }, h('span', {}, pairs[i][1])); bBtns[i] = b; colB.append(b); });
+  aBtns.forEach(b => colA.append(b));
+  function pickA(i, b) {
+    if (b.classList.contains('done')) return;
+    aBtns.forEach(x => x.classList.remove('sel')); sel = i; b.classList.add('sel'); sfx.pop();
+    fb.className = 'fb'; fb.textContent = `Now find the match for “${pairs[i][0]}” in Column B.`;
+  }
+  function pickB(i, b) {
+    if (b.classList.contains('done')) return;
+    if (sel === null) { fb.className = 'fb'; fb.textContent = 'First tap a word in Column A.'; shakeEl(colA); return; }
+    if (i === sel) {
+      const n = ++got;
+      [aBtns[i], b].forEach(x => { x.classList.remove('sel'); x.classList.add('done'); x.prepend(h('span', { class: 'mnum' }, String(n))); });
+      sfx.good(); fb.className = 'fb good'; fb.textContent = `${pairs[i][0]} → ${pairs[i][1]}`; sayNow(`${pairs[i][0]}: ${pairs[i][1]}`);
+      sel = null; wrongs = 0; hintBox.replaceChildren();
+      if (got === pairs.length) { fb.textContent = 'All matched! ' + praise(); onDone && onDone(); }
+    } else {
+      shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) {
+        fb.textContent = `Not that one. Read “${pairs[sel][0]}” again.`;
+        const x = hint ? hint(sel) : null; if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); }
+      } else fb.textContent = 'Not quite. Have a think and try again!';
+    }
+  }
+  wrap.append(colA, colB); parent.append(wrap, fb, hintBox);
+}
+// flip cards that teach one fact each
+function flipCards(parent, cards, onAll) {
+  const opened = new Set();
+  parent.append(h('div', { class: 'flips' }, cards.map((c, i) => {
+    const x = h('button', { type: 'button', class: 'flip', onclick: () => {
+      if (x.classList.contains('open')) { sayNow(c.say || `${c.w}. ${c.m}`); return; }
+      x.classList.add('open'); x.replaceChildren(h('span', { class: 'fe', 'aria-hidden': 'true' }, c.e), h('span', { class: 'fw' }, c.w), h('span', { class: 'fm' }, c.m));
+      sfx.pop(); sayNow(c.say || `${c.w}. ${c.m}`); opened.add(i);
+      if (opened.size === cards.length) setTimeout(onAll, 700);
+    } }, h('span', { class: 'fe', 'aria-hidden': 'true' }, c.e), h('span', { class: 'fw' }, c.w), h('span', { class: 'fm' }, 'Tap to see'));
+    return x;
+  })));
+}
+// spell a key word from memory (exam spellings); a peek shows it for a moment
+function spellWord(parent, { word, pic, meaning, onDone }) {
+  const extra = shuffle('bcdfghklmnprstuwy'.split('').filter(c => !word.includes(c))).slice(0, 3);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  box.append(h('p', { class: 'q' }, `Spell the word that means: ${meaning}`));
+  const peek = h('button', { class: 'btn small', type: 'button', onclick: () => { peek.textContent = word.toUpperCase(); sayNow(word); setTimeout(() => { peek.textContent = '👀 Peek at the word'; }, 1800); } }, '👀 Peek at the word');
+  const hear = h('button', { class: 'btn small', type: 'button', onclick: () => sayNow(word.split('').join(', ') + '. ' + word) }, '🔊 Hear the word');
+  box.append(h('div', { class: 'readbtns' }, canSpeak ? hear : null, peek));
+  api.guide(`Spell the word ${word}. It means: ${meaning}`);
+  spellTiles(box, { word, letters: shuffle([...word.split(''), ...extra]), pic, onDone: () => { skill(word === 'adaptation' ? 'adaptation' : word); onDone && onDone(); }, hint: n => `Next letter: ${word[n].toUpperCase()}. Say it slowly: ${word}.` });
+}
+// a picture scene in a coloured box
+function sc(cls, sky, ground, label) {
+  return h('div', { class: 'scene ' + (cls || ''), role: 'img', 'aria-label': label || 'A picture' },
+    h('div', { class: 'srow sky' }, sky.map(x => typeof x === 'string' ? h('span', {}, x) : x)),
+    h('div', { class: 'srow' }, ground.map(x => typeof x === 'string' ? h('span', {}, x) : x)));
+}
+// build a full-sentence answer word by word (short answers in the exam)
+function writeIt(parent, words, onDone, prompt = '✍️ Write it like the exam: tap the words in order.') {
+  const box = h('div', { class: 'below' }); parent.append(box);
+  api.guide('Now write the answer as a full sentence. Tap the words in order.');
+  buildSentence(box, { tiles: words, prompt, onDone: () => { skill('writer'); onDone && onDone(); } });
+}
+// Chamki the chameleon, drawn so its colour can change
+function chamSvg(fill = '#3D7DD8') {
+  return `<svg viewBox="0 0 200 120" class="cham" role="img" aria-label="Chamki the chameleon">
+  <path class="tail" d="M40 72 C 14 74 8 96 22 106 C 36 114 48 100 40 92 C 34 86 26 92 30 98" fill="none" stroke="${fill}" stroke-width="10" stroke-linecap="round"/>
+  <line x1="70" y1="78" x2="62" y2="104" stroke="#1F2B24" stroke-width="7" stroke-linecap="round"/>
+  <line x1="118" y1="78" x2="126" y2="104" stroke="#1F2B24" stroke-width="7" stroke-linecap="round"/>
+  <ellipse class="skin" cx="94" cy="62" rx="56" ry="26" fill="${fill}" stroke="#1F2B24" stroke-width="4"/>
+  <path class="skin" d="M138 44 L 188 62 L 138 80 Z" fill="${fill}" stroke="#1F2B24" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M60 46 Q 94 30 132 46" fill="none" stroke="#1F2B24" stroke-width="3" stroke-dasharray="6 6" opacity=".5"/>
+  <circle cx="156" cy="57" r="10" fill="#FFFFFF" stroke="#1F2B24" stroke-width="3"/>
+  <circle cx="159" cy="57" r="4.5" fill="#1F2B24"/>
+  <path d="M170 70 Q 178 72 184 68" fill="none" stroke="#1F2B24" stroke-width="3" stroke-linecap="round"/>
+</svg>`;
+}
+function paintCham(holder, fill) { holder.querySelectorAll('.skin').forEach(p => p.setAttribute('fill', fill)); const t = holder.querySelector('.tail'); if (t) t.setAttribute('stroke', fill); }
+
+/* =================================================================
+   PART 1 · HOMES, BODY AND COLOUR (pages 22–28)
+   ================================================================= */
+const HOMES = { 'Water': '🌊', 'Forest': '🌳', 'Icy cold place': '❄️', 'Hot desert': '🏜️' };
+
+/* Stop 1 · pages 22–24 */
+function playHomes(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    const WRONG = [
+      { a: 'goldfish', e: '🐠', where: 'on dry, cracked ground', cls: 'dry', home: 'Water', why: 'A fish breathes in water. On dry land it cannot breathe, so it must go back into the water.' },
+      { a: 'polar bear', e: '🐻‍❄️', where: 'on a hot, sunny beach', cls: 'beach', home: 'Icy cold place', why: 'A polar bear has thick fur for the icy cold. On a hot beach it feels far too hot.' },
+      { a: 'monkey', e: '🐒', where: 'in deep water', cls: 'sea', home: 'Forest', why: 'A monkey climbs trees and eats fruit and leaves. It is not made for deep water. Its home is the forest.' },
+    ];
+    chain(WRONG, (w, next) => {
+      b.replaceChildren(srctag('Pages 22–23 · Something looks wrong!'));
+      const box = h('div', { class: 'below' }); b.append(box);
+      box.append(h('div', { class: 'wrongpic ' + w.cls, role: 'img', 'aria-label': `A ${w.a} ${w.where}` }, h('span', { class: 'big', 'aria-hidden': 'true' }, w.e), h('span', {}, `A ${w.a} ${w.where}`)));
+      api.guide(`Something looks wrong! Here is a ${w.a} ${w.where}. Is it comfortable?`);
+      askChoice(box, { prompt: `Is the ${w.a} comfortable here?`, options: ['Yes, it is happy', 'No, it is in the wrong place'], answer: 'No, it is in the wrong place', hint: () => hintP(w.why), onDone: () => {
+        api.guide(`Where should the ${w.a} live?`);
+        const q = h('div', { class: 'below' }); box.append(q); scrollIn(q);
+        askChoice(q, { prompt: `Where should the ${w.a} live?`, options: Object.keys(HOMES), answer: w.home, cls: 'pic', render: picOpt(HOMES), hint: () => hintP(w.why), onDone: () => {
+          const card = info(w.e, 'That’s better!', w.why); q.append(card); scrollIn(card); api.guide(w.why);
+          q.append(h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); next(); } }, 'Next animal ➜'));
+        } });
+      } });
+    }, () => {
+      b.replaceChildren(srctag('Pages 22–23'), fact('Every animal has its own home! 🏡', 'Out of its home, an animal is not comfortable. It may not even survive.'));
+      api.guide('Every animal has its own home. Out of its home, an animal is not comfortable. It may not even survive.');
+      api.done();
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 24 · How do animals live and survive?'));
+    teach(b, { title: 'Habitat', body: ['Animals live in different places: forests, water, hot deserts and icy cold regions.', 'A habitat is the natural home of an animal. It is a place where an animal finds food, water, air and shelter.', 'Think of your own home. It gives you food 🍛, water 🚰, fresh air 💨 and a safe roof 🏠. The forest does the same for a tiger, so the forest is the tiger’s habitat.'], ex: ['🍛 food', '💧 water', '💨 air', '🏠 shelter'] }, () => {
+      skill('habitat');
+      api.guide('Tap the four things that every habitat gives an animal.');
+      const t = h('div', { class: 'below' }); b.append(t); scrollIn(t);
+      tapWords(t, { lines: shuffle(['food', 'water', 'air', 'shelter', 'toys', 'television', 'money', 'homework']), grid: true, targets: ['food', 'water', 'air', 'shelter'], hint: () => 'What do YOU need at home to stay alive? Something to eat, something to drink, something to breathe, and a safe place.', onDone: () => {
+        api.guide('What does shelter mean?');
+        askChoice(t, { prompt: 'What does “shelter” mean?', options: shuffle(['A safe place to stay and hide', 'Something to eat', 'A kind of water']), answer: 'A safe place to stay and hide', hint: () => hintP('Your house keeps you safe from rain and hot sun. That is your shelter.'), onDone: api.done });
+      } });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 24 · Whose home is it?'));
+    api.guide('Every animal has a habitat. Put each animal in its home.');
+    sortGame(b, {
+      bins: [{ k: 'forest', label: 'Forest', e: '🌳', c: 'var(--green-soft)' }, { k: 'water', label: 'Water', e: '🌊', c: 'var(--blue-soft)' }, { k: 'desert', label: 'Hot desert', e: '🏜️', c: 'var(--sand-soft)' }, { k: 'ice', label: 'Icy cold', e: '❄️', c: '#EEF5FD' }],
+      items: shuffle([
+        { t: 'Tiger', e: '🐅', bin: 'forest', why: 'Tigers live in forests with tall grass, where they can hunt.' },
+        { t: 'Monkey', e: '🐒', bin: 'forest', why: 'Monkeys climb trees. Trees grow in forests.' },
+        { t: 'Fish', e: '🐟', bin: 'water', why: 'Fish breathe and swim in water.' },
+        { t: 'Whale', e: '🐋', bin: 'water', why: 'Whales live in the sea.' },
+        { t: 'Camel', e: '🐫', bin: 'desert', why: 'Camels walk on hot sand and can go a long time without water.' },
+        { t: 'Polar bear', e: '🐻‍❄️', bin: 'ice', why: 'Polar bears have thick fur for icy cold places.' },
+        { t: 'Penguin', e: '🐧', bin: 'ice', why: 'Penguins live where it is icy cold.' },
+        { t: 'Owl', e: '🦉', bin: 'forest', why: 'Owls live in trees in forests.' },
+      ]),
+      ask: it => `Where does the ${it.t.toLowerCase()} live?`, onDone: api.done,
+    });
+  } else {
+    b.append(srctag('Page 24 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('A habitat is the natural ___ of an animal.', 'home', ['food', 'colour'], 'A habitat is where an animal lives, like your house is where you live.'),
+      blankQ('In its habitat, an animal finds food, water, air and ___.', 'shelter', ['toys', 'clothes'], 'The safe place to stay and hide is called…'),
+      pickQ('Which is the habitat of a fish?', 'Water', ['Forest', 'Hot desert'], 'Where does a fish swim and breathe?', HOMES),
+    ], () => spellWord(b, { word: 'habitat', pic: '🏡', meaning: 'the natural home of an animal', onDone: api.done }));
+  }
+}
+
+/* Stop 2 · pages 24–25 */
+function playAdapt(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 24 · Wonder Junction'), sc('hot', ['☀️'], ['🌵', h('span', { style: 'font-size:56px' }, '🥵'), '🧶', '🌵'], 'A boy in a red woollen sweater on a very hot day'));
+    api.guide('Imagine wearing a woollen sweater on a very hot day. How would you feel?');
+    askChoice(b, { prompt: 'A woollen sweater on a very hot day. How would you feel?', options: shuffle(['Too hot and sweaty 🥵', 'Nice and cool 😎', 'Freezing cold 🥶']), answer: 'Too hot and sweaty 🥵', hint: () => hintP('Woollen sweaters keep us warm. Is that good on a hot day?'), onDone: () => {
+      const c = info('🧥', 'You can take it off!', 'We can take off a sweater when it is hot. But animals cannot change clothes like us. So how do they survive?');
+      b.append(c); scrollIn(c);
+      api.guide('You can take it off. But animals cannot change clothes like us! So how do they survive?');
+      askChoice(b, { prompt: 'Can a polar bear take off its thick fur coat on a hot day?', options: ['No, it cannot', 'Yes, it can'], answer: 'No, it cannot', hint: () => hintP('Fur grows on the bear’s body. It is not clothes.'), onDone: api.done });
+    } });
+  } else if (r === 1) {
+    b.append(srctag('Page 25 · Adaptations'));
+    teach(b, { title: 'Adaptations', body: ['Animals have special features that help them survive in their habitat. These are called adaptations.', 'Adaptations help animals stay safe, survive in different weathers and live comfortably.', 'Example: a polar bear’s thick fur is like a warm sweater it never takes off. It is perfect for the icy cold. That fur is an adaptation.', 'Remember: a habitat is a place where animals live, and adaptations help them live there.'] }, () => {
+      skill('adaptation');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      askSeq(api, q, [
+        pickQ('What are adaptations?', 'Special features that help animals survive in their habitat', ['The food animals eat', 'Clothes that animals wear', 'The names of animals'], 'Think of the polar bear’s thick fur. What does it do for the bear?'),
+        blankQ('A habitat is a place where animals live and ___ help them live there.', 'adaptations', ['clothes', 'humans'], 'Special features that help animals live are called…'),
+      ], api.done);
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 25 · Three types of adaptations'));
+    teach(b, { title: 'Three types of adaptations', body: [
+      h('p', {}, '🦒 ', h('b', {}, 'Body adaptations'), ': special body parts and colour (a giraffe’s long neck).'),
+      h('p', {}, '🦊 ', h('b', {}, 'Food adaptations'), ': special teeth and beaks to eat their food (a fox’s sharp teeth).'),
+      h('p', {}, '🐻 ', h('b', {}, 'Behaviour adaptations'), ': special ways animals act (a bear sleeping in its cave all winter).'),
+      'You have them too: your hands help you hold (body), your teeth chew chapati (food), and you open an umbrella when it rains (behaviour).'],
+      read: 'There are three types of adaptations. Body adaptations: special body parts and colour, like a giraffe’s long neck. Food adaptations: special teeth and beaks to eat their food. Behaviour adaptations: special ways animals act, like a bear sleeping in its cave all winter.' }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      const T = { Body: '🦒', Food: '🦊', Behaviour: '🐻' };
+      askSeq(api, q, [
+        pickQ('How many main types of adaptations are there?', '3', ['2', '5'], 'Body, food and behaviour. Count them.'),
+        pickQ('A giraffe’s long neck is a… adaptation', 'Body', ['Food', 'Behaviour'], 'The neck is a part of its body.', T),
+        pickQ('Special teeth and beaks are… adaptations', 'Food', ['Body', 'Behaviour'], 'Teeth and beaks help animals eat.', T),
+        pickQ('A bear sleeping in its cave all winter is a… adaptation', 'Behaviour', ['Body', 'Food'], 'Sleeping is something the bear DOES. That is how it behaves.', T),
+      ], api.done);
+    });
+  } else {
+    b.append(srctag('Pages 24–25 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('Special features that help animals survive in their habitat are called ___.', 'adaptations', ['habitats', 'shelters'], 'The polar bear’s fur is one of these.'),
+      tfQ('Animals can change their clothes like us when the weather changes.', false, 'Animals cannot change clothes like us. Their adaptations help them survive.'),
+      pickQ('Which is NOT a type of adaptation?', 'Clothes adaptation', ['Body adaptation', 'Food adaptation', 'Behaviour adaptation'], 'The three types are body, food and behaviour.'),
+    ], () => spellWord(b, { word: 'adaptation', pic: '🦒', meaning: 'a special feature that helps an animal survive', onDone: api.done }));
+  }
+}
+
+/* Stop 3 · page 25 */
+const BODY = [
+  { a: 'Giraffe', e: '🦒', part: 'Long neck', job: 'helps it reach the leaves on tall trees', whatif: 'It would not be able to eat leaves from tall trees.', wrongs: ['It would run faster.', 'It would hide better in the bushes.'], q: 'What if the giraffe had a short neck?' },
+  { a: 'Owl', e: '🦉', part: 'Big, sharp eyes', job: 'help it see at night', whatif: 'It would have trouble hunting at night.', wrongs: ['It would sleep better at night.', 'It would fly higher.'], q: 'What if the owl had small eyes?' },
+  { a: 'Woodpecker', e: '🐦🪵', part: 'Strong head', job: 'helps it peck wood to find food', whatif: 'It could not peck wood to find its food.', wrongs: ['It would sing better.', 'It would swim in water.'], q: 'What if the woodpecker had a weak head?' },
+];
+function playBody(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 25 · Body adaptations'));
+    teach(b, { title: 'Body adaptations', body: ['Body adaptations are special physical features that help animals live in their surroundings. These include special body parts and colour.', 'Think of a goalkeeper’s big gloves 🧤: they are made for catching. In the same way, each animal’s body part is made for its job.'] }, () => {
+      skill('body');
+      api.guide('Tap each card to see a body adaptation from your book.');
+      flipCards(b, BODY.map(x => ({ e: x.e, w: `${x.a}: ${x.part.toLowerCase()}`, m: `The ${x.part.toLowerCase()} ${x.job}.` })), api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 25 · Match the following'));
+    api.guide('Match each animal to its body adaptation.');
+    matchGame(b, { pairs: BODY.map(x => [x.a, `${x.part}: ${x.job}`, x.e]), hint: i => `The ${BODY[i].a.toLowerCase()} has a ${BODY[i].part.toLowerCase()}.`, onDone: api.done });
+  } else if (r === 2) {
+    b.append(srctag('Page 25 · Think: what if…?'));
+    api.guide('Let us think like scientists. What would happen if the animal did not have its body adaptation?');
+    askSeq(api, b, BODY.map(x => withCard(h('div', { class: 'cluepic', 'aria-hidden': 'true' }, x.e), { guide: x.q, prompt: x.q, options: shuffle([x.whatif, ...x.wrongs]), answer: x.whatif, hint: () => hintP(`Remember: the ${x.part.toLowerCase()} ${x.job}. Without it…`) })), api.done);
+  } else {
+    b.append(srctag('Page 25 · Who am I?'));
+    askSeq(api, b, [
+      whoQ('I have a long neck. It helps me reach the leaves on tall trees.', 'Giraffe', ['Owl', 'Elephant'], 'Which animal is the tallest, with the longest neck?'),
+      whoQ('I hunt at night. My big, sharp eyes help me see in the dark.', 'Owl', ['Woodpecker', 'Giraffe'], 'This bird says “hoo-hoo” at night.'),
+      whoQ('I have a strong head. I peck wood to find food.', 'Woodpecker', ['Owl', 'Sparrow'], 'Its name has “wood” and “peck” in it.'),
+      blankQ('Body adaptations include special body parts and ___.', 'colour', ['clothes', 'houses'], 'Think of the tiger’s stripes and the Arctic fox’s white fur.'),
+    ], api.done);
+  }
+}
+
+/* Stop 4 · page 26 */
+const CAMO = [
+  { a: 'Arctic fox', e: '🦊', how: 'Blends with the snow in winter' },
+  { a: 'Stick insect', e: '🪵🦗', how: 'Looks like a twig' },
+  { a: 'Chameleon', e: '🦎', how: 'Changes its colours to match the background' },
+  { a: 'Tiger', e: '🐅', how: 'Stripes help it hide in tall grass' },
+];
+function playCamo(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 26 · Camouflage'));
+    teach(b, { title: 'Camouflage', body: ['Sometimes animals have to hide from bigger animals that can eat them.', 'Some animals use their body colour to hide in their surroundings. This is called camouflage.', 'Like playing hide-and-seek in a green T-shirt behind a green bush: your friend can hardly see you!'] }, () => {
+      skill('camouflage');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      q.append(h('div', { class: 'hidepair' },
+        h('div', { class: 'hidebox forest', role: 'img', 'aria-label': 'A white rabbit in a green forest' }, '🐇', h('small', {}, 'Green forest')),
+        h('div', { class: 'hidebox snowy', role: 'img', 'aria-label': 'A white rabbit in white snow' }, '🐇', h('small', {}, 'White snow'))));
+      api.guide('Close your eyes and imagine a bright white rabbit. Where can it hide better?');
+      askChoice(q, { prompt: 'Where can a white rabbit hide better?', options: ['In the green forest 🌳', 'In the white snow ❄️'], answer: 'In the white snow ❄️', hint: () => hintP('In the green forest, the white rabbit stands out. Where does white blend in?'), onDone: () => {
+        const c = info('🐇', 'Hard to hide in the forest!', 'A white rabbit is easy to see in a green forest, but very hard to see in white snow. Its colour matches the snow. That is camouflage.');
+        q.append(c); scrollIn(c); api.guide('A white rabbit is easy to see in a green forest, but hard to see in white snow. That is camouflage.');
+        api.done();
+      } });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 26 · Help Chamki hide'));
+    const BG = shuffle([
+      { name: 'a green leaf', bg: '#5DB35F', ans: 'Green' },
+      { name: 'brown tree bark', bg: '#8B5A2B', ans: 'Brown' },
+      { name: 'yellow sand', bg: '#E9C764', ans: 'Yellow' },
+      { name: 'a pink flower', bg: '#F49AC1', ans: 'Pink' },
+    ]);
+    const COLS = { Green: '#5DB35F', Brown: '#8B5A2B', Yellow: '#E9C764', Pink: '#F49AC1' };
+    chain(BG, (g, next, i) => {
+      b.replaceChildren(srctag(`Page 26 · Help Chamki hide · ${i + 1} of 4`));
+      const stage = h('div', { class: 'chamstage', style: `background-color:${g.bg}` });
+      const holder = h('span', {}); holder.innerHTML = chamSvg('#3D7DD8');
+      stage.append(holder, h('span', { class: 'on' }, `Chamki is on ${g.name}`));
+      const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+      let wrongs = 0, over = false;
+      api.guide(`Uh oh! A hungry bird is coming. Chamki is on ${g.name}. Which colour should Chamki turn to hide?`);
+      const sw = h('div', { class: 'swatches' }, Object.entries(COLS).map(([n, c]) => h('button', { type: 'button', class: 'swatch', 'data-ok': n === g.ans ? '1' : null, onclick: e => {
+        if (over) return;
+        paintCham(holder, c); sfx.pop();
+        if (n === g.ans) {
+          over = true; sw.querySelectorAll('button').forEach(x => { x.disabled = true; }); e.currentTarget.classList.add('picked'); sfx.good(); fb.className = 'fb good'; fb.textContent = 'Where did Chamki go? You can hardly see him! 🦅 The bird flies away.'; hintBox.replaceChildren();
+          sayNow('Where did Chamki go? You can hardly see him!');
+          b.append(h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); next(); } }, i < 3 ? 'Next place ➜' : 'Done ➜'));
+        } else {
+          shakeEl(e.currentTarget); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+          fb.textContent = `Chamki is ${n.toLowerCase()} on ${g.name}. He stands out! The bird can see him.`;
+          if (wrongs >= 2 || !run.solo) { const t = `Look at the colour behind Chamki. Match it!`; hintBox.replaceChildren(hintP(t)); }
+        }
+      } }, h('i', { style: `background:${c}` }), n)));
+      b.append(stage, sw, fb, hintBox);
+    }, () => {
+      b.replaceChildren(srctag('Page 26'), fact('🦎 The chameleon changes its colours to match the background.', 'Matching the background keeps it safe. That is camouflage.'));
+      api.guide('The chameleon changes its colours to match the background. That is camouflage.');
+      api.done();
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 26 · Match the following'));
+    api.guide('Match each animal to how it hides.');
+    matchGame(b, { pairs: CAMO.map(x => [x.a, x.how, x.e]), hint: i => `Think of where the ${CAMO[i].a.toLowerCase()} lives and what it looks like.`, onDone: api.done });
+  } else {
+    b.append(srctag('Page 26 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('The Arctic fox blends with the ___ in winter.', 'snow', ['sand', 'grass'], 'The Arctic fox is white. What is white in winter?'),
+      blankQ('The stick insect looks like a ___.', 'twig', ['leaf', 'stone'], 'Its name tells you: it looks like a stick.'),
+      tfQ('The tiger’s stripes help it hide in tall grass.', true),
+      blankQ('Animals using their body colour to hide in their surroundings is called ___.', 'camouflage', ['migration', 'hibernation'], 'Chamki the chameleon does it.'),
+    ], () => spellWord(b, { word: 'camouflage', pic: '🦎', meaning: 'hiding by using body colour to match the surroundings', onDone: api.done }));
+  }
+}
+
+/* Stop 5 · page 27 */
+function pairCard(title, a, b2) {
+  return h('div', { class: 'paircard' }, h('b', {}, title),
+    h('div', { class: 'row2' },
+      h('span', { class: 'who' }, h('span', { 'aria-hidden': 'true' }, a[0]), a[1], h('small', { class: 'tagok' }, a[2])),
+      h('span', { 'aria-hidden': 'true', style: 'font-size:22px' }, '👯'),
+      h('span', { class: 'who' }, h('span', { 'aria-hidden': 'true' }, b2[0]), b2[1], h('small', { class: 'tagbad' }, b2[2]))));
+}
+function playMimic(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 27 · Trail Treasure: Copycats in Nature'));
+    teach(b, { title: 'Mimicry', body: ['Some animals look like other animals to stay safe. This is called mimicry.', 'Animals that look scary or dangerous are usually left alone. Some harmless animals are born looking like them.', 'Like a small boy in a lion mask 🦁: other children may run away, even though he is harmless!'] }, () => {
+      skill('mimicry');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      q.append(h('div', { class: 'pairs' },
+        pairCard('Butterflies', ['🦋', 'Viceroy', 'harmless'], ['🦋', 'Monarch', 'bitter-tasting']),
+        pairCard('Snakes', ['🐍', 'Milk snake', 'harmless'], ['🐍', 'Coral snake', 'poisonous'])));
+      askSeq(api, q, [
+        pickQ('Why do predators avoid the Viceroy butterfly?', 'It looks like the bitter-tasting Monarch butterfly', ['It is very big', 'It can bite', 'It lives in the snow'], 'Which other butterfly does the Viceroy look like? How does that one taste?'),
+        pickQ('Which snake is poisonous?', 'Coral snake', ['Milk snake'], 'The harmless one copies the dangerous one. The milk snake is the copycat.'),
+        pickQ('Why do predators get confused by the Milk snake?', 'It has stripes like the poisonous Coral snake', ['It changes colour', 'It is very long'], 'Look at the snake card again.'),
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 26–27 · Camouflage or mimicry?'));
+    teach(b, { title: 'Two different tricks', body: ['Camouflage = HIDE. The animal’s colour matches its surroundings, so it cannot be seen.', 'Mimicry = COPY. The animal looks like another animal that is dangerous or bitter, so it is left alone.'], btn: 'Let’s sort ➜' }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      sortGame(q, {
+        bins: [{ k: 'c', label: 'Camouflage (hide)', e: '🫥', c: 'var(--green-soft)' }, { k: 'm', label: 'Mimicry (copy)', e: '👯', c: 'var(--orange-soft)' }],
+        items: shuffle([
+          { t: 'Arctic fox in the snow', e: '🦊', bin: 'c', why: 'Its white fur hides it in white snow. It is hiding, not copying.' },
+          { t: 'Viceroy looks like the Monarch', e: '🦋', bin: 'm', why: 'It copies another butterfly that tastes bitter.' },
+          { t: 'Stick insect looks like a twig', e: '🪵', bin: 'c', why: 'A twig is not an animal. It hides by matching its surroundings.' },
+          { t: 'Milk snake has stripes like the Coral snake', e: '🐍', bin: 'm', why: 'It copies a poisonous snake.' },
+          { t: 'Tiger in tall grass', e: '🐅', bin: 'c', why: 'Its stripes help it hide in the grass.' },
+          { t: 'Chameleon matches the leaf', e: '🦎', bin: 'c', why: 'It changes colour to hide.' },
+        ]),
+        ask: it => `${it.t}. Is this camouflage or mimicry?`, onDone: api.done,
+      });
+    });
+  } else {
+    b.append(srctag('Page 27 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('Some animals look like other animals to stay safe. This is called ___.', 'mimicry', ['camouflage', 'migration'], 'The copycat trick.'),
+      blankQ('The ___ snake has stripes like the poisonous Coral snake.', 'Milk', ['Coral', 'Viceroy'], 'It shares its name with something you drink.'),
+      tfQ('The Viceroy butterfly tastes bitter.', false, 'The Monarch butterfly tastes bitter. The Viceroy only looks like it.'),
+    ], () => {
+      api.guide('Think and discuss: which animal would you choose to be, and why? Any answer is fine.');
+      freeChoice(b, { prompt: 'Think and discuss: which animal would you choose to be?', options: ['🦎 Chameleon: I can change colour', '🦒 Giraffe: I can reach the tallest leaves', '🦉 Owl: I can see at night', '🦊 Arctic fox: I stay warm in snow'], onPick: o => { const c = info('💭', 'Great choice!', `You chose: ${o}. That is a real adaptation. Tell a grown-up why you chose it.`); b.append(c); scrollIn(c); api.done(); } });
+    });
+  }
+}
+
+/* Stop 6 · pages 27–28 · Checkpoint 1 (book questions, word for word) */
+const CP1 = [
+  { e: '🦒', story: 'A giraffe lives in open grasslands. There are many tall trees. It eats leaves that grow high up on the trees. Other animals cannot reach these leaves.', qs: [
+    ['Which body part helps the giraffe eat its food?', 'long neck', 'strong horns', 'What can reach the leaves high up?'],
+    ['The giraffe’s long neck is an example of', 'body adaptation', 'learned behaviour', 'The neck is a part of its body.'],
+    ['What would happen if a giraffe had a short neck?', 'It would not be able to eat leaves from tall trees.', 'It would be able to hide better in the bushes.', 'The leaves are high up. Could a short neck reach them?'],
+  ] },
+  { e: '🦉', story: 'An owl hunts at night. It has very big eyes that help it see in low light.', qs: [
+    ['The owl’s big eyes are useful because they', 'can see clearly in the dark', 'can not see it is dark', 'Big eyes help it see in low light.'],
+    ['If the owl had small eyes, it would have trouble', 'hunting at night', 'sleeping at night', 'When does the owl hunt?'],
+    ['The owl’s big eyes are', 'body adaptation', 'camouflage', 'Eyes are a body part. Camouflage is about hiding with colour.'],
+  ] },
+  { e: '🦎🍂', story: 'The leaf-tailed gecko lives in a forest. Its body looks like a dry leaf. It has lines and uneven edges like a leaf.', qs: [
+    ['The leaf-tailed gecko survives mainly by', 'camouflaging in its surroundings', 'moving to a new place', 'It looks like a dry leaf, so it can hide.'],
+    ['This adaptation (camouflage) helps the gecko to', 'stay safe from predators', 'find more friends', 'Why do animals hide?'],
+    ['Which other animal uses a similar method (camouflage) to survive?', 'stick insect', 'owl', 'Which one looks like a twig?'],
+  ] },
+];
+function playCheck1(api) {
+  const b = below(), c = CP1[run.round];
+  b.append(srctag(`Pages 27–28 · Checkpoint 1 · Question ${run.round + 1}`), h('p', { class: 'story exam' }, h('span', { 'aria-hidden': 'true', style: 'font-size:34px' }, c.e + ' '), c.story));
+  api.guide('Tick the correct answer. First read the passage. ' + c.story);
+  setTimeout(() => {
+    if (!b.isConnected) return;
+    askSeq(api, b, c.qs.map(([q, a, w, hint], i) => ({ guide: q, prompt: `${'abc'[i]}. ${q}`, options: shuffle([a, w]), answer: a, hint: () => hintP(hint) })), api.done);
+  }, 200);
+}
+
+/* =================================================================
+   PART 2 · TEETH AND BEAKS (pages 29–33)
+   ================================================================= */
+const EATERS = [
+  { k: 'herb', name: 'Herbivores', one: 'herbivore', eat: 'plants', teeth: 'flat teeth to chew plants', ex: ['Cow', 'Elephant'], trick: 'HERB means plant: herbivores eat plants.' },
+  { k: 'carn', name: 'Carnivores', one: 'carnivore', eat: 'meat', teeth: 'sharp teeth to tear meat', ex: ['Lion', 'Tiger'], trick: 'CARN means meat: carnivores eat meat.' },
+  { k: 'omni', name: 'Omnivores', one: 'omnivore', eat: 'both plants and meat', teeth: 'sharp and flat teeth', ex: ['Bear', 'Pig'], trick: 'OMNI means all: omnivores eat all kinds of food.' },
+  { k: 'ins', name: 'Insectivores', one: 'insectivore', eat: 'insects', teeth: 'long tongues to catch insects', ex: ['Anteater', 'Frog'], trick: 'INSECT is right there in the name: insectivores eat insects.' },
+];
+const EATER_PIC = { Herbivores: '🐄', Carnivores: '🦁', Omnivores: '🐻', Insectivores: '🐸' };
+const eaterCard = x => h('div', { class: 'learn', style: 'background:var(--paper)' }, h('h3', {}, `${x.name}`),
+  h('p', {}, `eat ${x.eat}. They have ${x.teeth}.`), h('p', {}, h('i', {}, x.trick)),
+  h('div', { class: 'ex' }, x.ex.map(a => h('span', { class: 'exchip' }, `${ANIMAL[a]} ${a}`))));
+
+/* Stop 7 · page 29 */
+function playTeeth(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 29 · Food adaptations'));
+    teach(b, { title: 'Teeth match the food', body: ['Animals use their body parts to find and eat the right food. They have special teeth and beaks for the food they need.', 'Feel your own teeth! The front ones are sharp, for biting an apple. The back ones are flat, for grinding chapati.', 'Flat teeth work like a grinding stone (chakki). Sharp teeth work like a knife.', 'Animals can be grouped by the kind of food they eat.'] }, () => {
+      skill('food');
+      const q = h('div', { class: 'below' }); b.append(q, eaterCard(EATERS[0]), eaterCard(EATERS[1]));
+      const qq = h('div', { class: 'below' }); b.append(qq); scrollIn(q);
+      skill('herbivore'); skill('carnivore');
+      api.guide('Herbivores are animals that eat plants. They have flat teeth to chew plants, like the cow and the elephant. Carnivores are animals that eat meat. They have sharp teeth to tear meat, like the lion and the tiger.');
+      askSeq(api, qq, [
+        pickQ('Animals that eat only plants are called…', 'Herbivores', ['Carnivores', 'Insectivores'], EATERS[0].trick, EATER_PIC),
+        pickQ('What kind of teeth does a lion have?', 'Sharp teeth to tear meat', ['Flat teeth to chew plants', 'No teeth at all'], 'A lion eats meat. Meat must be torn, like with a knife.'),
+        pickQ('Why does a cow have flat teeth?', 'To chew plants and grass', ['To tear meat', 'To catch insects'], 'A cow eats grass all day. Flat teeth grind it like a chakki.'),
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 29 · Two more groups'));
+    teach(b, { title: 'Omnivores and insectivores', body: [
+      h('p', {}, h('b', {}, 'Omnivores'), ' eat both plants and meat. They have sharp AND flat teeth. Example: bear, pig. (You eat dal, rice, vegetables and maybe eggs too!)'),
+      h('p', {}, h('b', {}, 'Insectivores'), ' eat insects. They use long tongues to catch insects. Example: anteater, frog. A frog’s tongue shoots out like a sticky party blower!')],
+      read: 'Omnivores eat both plants and meat. They have sharp and flat teeth, like the bear and the pig. Insectivores eat insects. They use long tongues to catch insects, like the anteater and the frog.' }, () => {
+      skill('omnivore'); skill('insectivore');
+      const qq = h('div', { class: 'below' }); b.append(eaterCard(EATERS[2]), eaterCard(EATERS[3]), qq); scrollIn(qq);
+      askSeq(api, qq, [
+        pickQ('Animals that eat both plants and meat are called…', 'Omnivores', ['Herbivores', 'Carnivores'], EATERS[2].trick, EATER_PIC),
+        pickQ('How does a frog catch insects?', 'With its long tongue', ['With its sharp teeth', 'With its strong head'], 'Insectivores use long tongues.'),
+        pickQ('Which teeth does a bear have?', 'Sharp and flat teeth', ['Only flat teeth', 'Only sharp teeth'], 'A bear eats fish AND berries. It needs both kinds.'),
+      ], api.done);
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 29 · Sort the eaters'));
+    api.guide('Sort each animal by the food it eats.');
+    const bins = EATERS.map((x, i) => ({ k: x.k, label: x.name, e: EATER_PIC[x.name], c: ['var(--green-soft)', 'var(--red-soft)', 'var(--sand-soft)', 'var(--violet-soft)'][i] }));
+    const items = [];
+    EATERS.forEach(x => x.ex.forEach(a => items.push({ t: a, e: ANIMAL[a], bin: x.k, why: `The ${a.toLowerCase()} eats ${x.eat}. ${x.trick}` })));
+    items.push({ t: 'Goat', e: '🐐', bin: 'herb', why: 'A goat eats grass and leaves: only plants.' });
+    items.push({ t: 'Horse', e: '🐎', bin: 'herb', why: 'A horse eats grass and hay: only plants.' });
+    sortGame(b, { bins, items: shuffle(items), ask: it => `What does the ${it.t.toLowerCase()} eat?`, onDone: api.done });
+  } else if (r === 3) {
+    b.append(srctag('Page 29 · Match the following'));
+    api.guide('Match each group to its teeth or tongue.');
+    matchGame(b, { pairs: EATERS.map(x => [x.name, x.teeth[0].toUpperCase() + x.teeth.slice(1), EATER_PIC[x.name]]), hint: i => EATERS[i].trick, onDone: () => {
+      const c = info('🐦', 'Birds have no teeth!', 'Some animals use teeth or tongues to eat food. But birds eat food without teeth. Next stop: beaks!');
+      b.append(c); scrollIn(c); api.guide('Some animals use teeth or tongues to eat food. But birds eat food without teeth.');
+      api.done();
+    } });
+  } else {
+    b.append(srctag('Page 29 · Exam practice'));
+    const sp = pickOne(EATERS);
+    askSeq(api, b, [
+      blankQ('Animals that eat meat are called ___.', 'carnivores', ['herbivores', 'omnivores'], EATERS[1].trick),
+      blankQ('Animals that eat insects are called ___.', 'insectivores', ['carnivores', 'herbivores'], EATERS[3].trick),
+      whoQ('I eat grass. I have flat teeth to chew plants.', 'Cow', ['Lion', 'Frog'], 'Herbivores have flat teeth.'),
+      tfQ('Omnivores have only sharp teeth.', false, 'Omnivores have sharp and flat teeth.'),
+      tfQ('Birds eat food without teeth.', true),
+    ], () => spellWord(b, { word: sp.one, pic: EATER_PIC[sp.name], meaning: `an animal that eats ${sp.eat}`, onDone: api.done }));
+  }
+}
+
+/* Stop 8 · pages 30–32 */
+const BEAKS = [
+  { k: 'seed', beak: 'Short, hard beak', food: 'Grains and seeds', fe: '🌾', job: 'to crack seeds', tool: 'like a nutcracker 🥜', birds: ['Sparrow', 'Pigeon'] },
+  { k: 'meat', beak: 'Strong, curved beak', food: 'Flesh (meat)', fe: '🍖', job: 'to tear meat', tool: 'like a hook 🪝', birds: ['Eagle', 'Vulture'] },
+  { k: 'filter', beak: 'Broad, flat beak', food: 'Plants and small animals from water', fe: '🌿', job: 'to filter food from water', tool: 'like a strainer (chhanni) 🥣', birds: ['Duck', 'Swan'] },
+  { k: 'nectar', beak: 'Long, thin beak', food: 'Nectar from flowers', fe: '🌺', job: 'to suck nectar', tool: 'like a straw 🥤', birds: ['Hummingbird', 'Honey eater'] },
+  { k: 'fish', beak: 'Long, sharp beak', food: 'Fish from water', fe: '🐟', job: 'to catch fish from water', tool: 'like a skewer 🍢', birds: ['Kingfisher', 'Pelican'] },
+];
+const FOOD_PIC = {}; BEAKS.forEach(x => { FOOD_PIC[x.food] = x.fe; });
+const beakOf = bird => BEAKS.find(x => x.birds.includes(bird));
+function playBeaks(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 30–31 · Wonder Junction: how do birds chew?'));
+    teach(b, { title: 'Birds and their beaks', body: ['Birds have beaks instead of teeth. A bird’s beak helps it eat food.', 'Different birds eat different kinds of food, so their beaks are different in shape and size. The shape of a bird’s beak matches the food it eats.', 'Just like in your kitchen, every tool fits a job: a nutcracker, a strainer, a straw…'] }, () => {
+      skill('beak');
+      api.guide('Tap each beak card. Each beak works like a kitchen tool.');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      flipCards(q, BEAKS.map(x => ({ e: x.fe, w: x.beak, m: `${x.food}: ${x.job}, ${x.tool}. ${x.birds.join(', ')}.`, say: `${x.beak}, ${x.job}, ${x.tool.replace(/[^\w (),]/g, '')}. For example: ${x.birds.join(' and ')}.` })), api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 30–31 · Match the following'));
+    api.guide('Match each beak to the food it is made for.');
+    matchGame(b, { pairs: BEAKS.map(x => [x.beak, `${x.fe} ${x.food}`]), aHead: 'Beak', bHead: 'Food', hint: i => `Think: ${BEAKS[i].tool}. It is made ${BEAKS[i].job}.`, onDone: api.done });
+  } else if (r === 2) {
+    b.append(srctag('Pages 30–31 · Feed the birds'));
+    const birds = shuffle(['Sparrow', 'Eagle', 'Duck', 'Hummingbird', 'Kingfisher', 'Pigeon', 'Vulture', 'Swan']);
+    askSeq(api, b, birds.map(bird => {
+      const x = beakOf(bird);
+      return withCard(h('p', { class: 'story', style: 'text-align:center' }, h('span', { style: 'font-size:44px', 'aria-hidden': 'true' }, ANIMAL[bird]), h('br'), `${bird} · ${x.beak.toLowerCase()}`),
+        { guide: `Feed the ${bird.toLowerCase()}! It has a ${x.beak.toLowerCase()}. What does it eat?`, prompt: `What does the ${bird.toLowerCase()} eat?`, options: shuffle(BEAKS.map(y => y.food)), answer: x.food, cls: 'pic', render: picOpt(FOOD_PIC), hint: () => hintP(`A ${x.beak.toLowerCase()} is made ${x.job}, ${x.tool}.`) });
+    }), api.done);
+  } else if (r === 3) {
+    b.append(srctag('Page 32 · Discovery Route: Beak Test Challenge'));
+    teach(b, { title: 'Beak Test Challenge', body: ['Big question: can a bird’s beak help it pick up food easily?', 'In your book, you pick up rice grains one by one with tweezers. The tweezers act like a bird’s beak.', 'Let us try it here with two “beaks”: thin tweezers and a big, clumsy oven glove.'], btn: 'Let’s test ➜' }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      api.guide('Prediction: what do you think will happen?');
+      freeChoice(q, { prompt: 'Prediction: what do you think will happen?', options: ['Thin tweezers will pick up rice easily', 'The big glove will pick up rice easily', 'Both will be the same'], onPick: () => {
+        const lab = h('div', { class: 'below' }); q.append(lab); scrollIn(lab);
+        let tool = null, left = 6, triedGlove = false;
+        const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Choose a tool, then tap a rice grain.');
+        const tw = h('button', { type: 'button', class: 'toggle', 'aria-pressed': 'false', onclick: () => setTool('tw') }, '🥢 Tweezers (thin beak)');
+        const gl = h('button', { type: 'button', class: 'toggle', 'aria-pressed': 'false', onclick: () => setTool('gl') }, '🧤 Big glove');
+        const setTool = t => { tool = t; tw.setAttribute('aria-pressed', String(t === 'tw')); gl.setAttribute('aria-pressed', String(t === 'gl')); sfx.pop(); fb.className = 'fb'; fb.textContent = 'Now tap a rice grain on the plate.'; };
+        const plate = h('div', { class: 'plate', role: 'group', 'aria-label': 'A plate with rice grains' });
+        for (let i = 0; i < 6; i++) { const g = h('button', { type: 'button', class: 'grain', 'aria-label': 'Rice grain', onclick: () => {
+          if (!tool) { fb.textContent = 'First choose a tool.'; return; }
+          if (tool === 'gl') { triedGlove = true; shakeEl(g); sfx.oops(); fb.className = 'fb oops'; fb.textContent = 'Oops! The glove is too big and clumsy. The tiny grain slips away. Try the tweezers.'; return; }
+          if (left === 1 && !triedGlove) { fb.className = 'fb'; fb.textContent = 'Wait! Before the last grain, test the big glove on it. Tap “Big glove”, then the grain.'; return; }
+          g.classList.add('gone'); g.disabled = true; left--; sfx.tap(6 - left); fb.className = 'fb good'; fb.textContent = left ? `Picked one up! ${left} left.` : 'All the grains picked up with the thin tweezers!'; check();
+        } }); plate.append(g); }
+        let ended = false;
+        const check = () => {
+          if (ended || left > 0) return;
+          ended = true;
+          api.guide('My discovery: what did you find out?');
+          askChoice(lab, { prompt: 'My Discovery: what did you find out?', options: shuffle(['A beak that fits the food makes eating easy', 'Any beak can pick up any food', 'Birds do not need beaks']), answer: 'A beak that fits the food makes eating easy', hint: () => hintP('The thin tweezers worked. The big glove did not. Why?'), onDone: () => { lab.append(fact('A thin, pointed beak picks up tiny grains easily.', 'The shape of a bird’s beak matches the food it eats.')); api.done(); } });
+        };
+        lab.append(h('div', { class: 'toolrow' }, tw, gl), plate, fb);
+      } });
+    });
+  } else if (r === 4) {
+    b.append(srctag('Page 31 · Detour and Heritage Route'));
+    api.guide('Two fun facts from page 31.');
+    askSeq(api, b, [
+      withCard(info('🐍', 'Detour: snakes are not slimy!', 'Many people think snakes are wet and slimy, but they are not. Snake scales are dry and smooth, and they might look shiny.'), tfQ('Snakes are wet and slimy.', false, 'Snake scales are dry, smooth and might look shiny.')),
+      withCard(info('🎨', 'Heritage Route: cave painters of the past', 'Long ago, people lived in caves. They painted deer, horses, bison and lions on the walls, using colours made from red and black rocks. They did it to remember what they saw and to teach their children.'), pickQ('Why did cave people paint animals on the walls?', 'To remember what they saw and to teach their children', ['To sell the paintings', 'To scare the animals away'], 'Read the card again: two reasons.')),
+      pickQ('What did the cave painters make their colours from?', 'Red and black rocks', ['Paint from a shop', 'Flowers and leaves'], 'They used natural colours from rocks.'),
+    ], api.done);
+  } else {
+    b.append(srctag('Pages 30–31 · Exam practice'));
+    askSeq(api, b, shuffle([
+      whoQ('I have a short, hard beak. I crack seeds.', pickOne(['Sparrow', 'Pigeon']), ['Eagle', 'Duck'], 'Short, hard beaks are for grains and seeds.'),
+      whoQ('I have a strong, curved beak. I tear meat.', 'Eagle', ['Sparrow', 'Swan'], 'Strong, curved beaks are for flesh.'),
+      whoQ('I have a broad, flat beak. I filter food from water.', pickOne(['Duck', 'Swan']), ['Kingfisher', 'Pigeon'], 'Broad, flat beaks work like a strainer.'),
+      whoQ('I have a long, thin beak. I suck nectar from flowers.', 'Hummingbird', ['Vulture', 'Duck'], 'Long, thin beaks work like a straw.'),
+    ]).concat([blankQ('Birds have ___ instead of teeth.', 'beaks', ['claws', 'tongues'], 'Birds eat with their…')]), api.done);
+  }
+}
+
+/* Stop 9 · pages 32–33 · Checkpoint 2 */
+function playCheck2(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 32 · Checkpoint 2 · 1. Answer the following'));
+    const parts = [
+      { q: 'a. What would happen if a lion had flat teeth like a cow?', a: 'It could not tear meat, so it could not eat its food', w: ['It would eat grass happily', 'It would run faster'], hint: 'A lion eats meat. Flat teeth are for chewing plants, not tearing meat.', write: ['A', 'lion', 'with', 'flat', 'teeth', 'could', 'not', 'tear', 'meat', '.'] },
+      { q: 'b. What if a hummingbird had a short, hard beak like a sparrow?', a: 'It could not suck nectar from flowers', w: ['It would crack seeds better', 'It would catch more fish'], hint: 'A hummingbird drinks nectar. It needs a long, thin beak, like a straw.', write: ['It', 'could', 'not', 'suck', 'nectar', 'from', 'flowers', '.'] },
+    ];
+    chain(parts, (p, next) => {
+      const box = h('div', { class: 'below' }); b.append(box); scrollIn(box);
+      api.guide(p.q);
+      askChoice(box, { prompt: p.q, options: shuffle([p.a, ...p.w]), answer: p.a, hint: () => hintP(p.hint), onDone: () => writeIt(box, p.write, next) });
+    }, api.done);
+  } else if (r === 1) {
+    b.append(srctag('Page 33 · Checkpoint 2 · 2. Who Am I?'));
+    api.guide('Who am I? Find the animal from the clues about its food adaptation.');
+    askSeq(api, b, [
+      whoQ('a. I have sharp teeth and claws to tear meat.', 'Lion', ['Cow', 'Duck'], 'Carnivores have sharp teeth.'),
+      whoQ('b. I have a long, sharp beak. I use it to catch fish from water.', 'Kingfisher', ['Sparrow', 'Hummingbird'], 'This bird’s name has “king” in it, and it loves fish.'),
+      whoQ('c. My long beak helps me sip nectar from flowers. My beak is shaped just right for my sweet diet.', 'Hummingbird', ['Eagle', 'Pigeon'], 'This tiny bird hums as it flies.'),
+      whoQ('d. I use my sticky tongue to catch insects. I’m an insectivore with a clever way to eat.', 'Frog', ['Bear', 'Lion'], 'It says “croak” and jumps.'),
+      whoQ('e. I chew grass with my flat teeth!', 'Cow', ['Tiger', 'Eagle'], 'A herbivore that gives us milk.'),
+    ], api.done);
+  } else {
+    b.append(srctag('Pages 29–33 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('A lion has sharp teeth and claws to tear ___.', 'meat', ['grass', 'seeds'], 'Lions are carnivores.'),
+      blankQ('A kingfisher uses its long, sharp beak to catch ___.', 'fish', ['seeds', 'nectar'], 'The kingfisher dives into water.'),
+      blankQ('A frog uses its sticky ___ to catch insects.', 'tongue', ['teeth', 'beak'], 'Insectivores use long tongues.'),
+      pickQ('Why does an eagle have a strong, curved beak?', 'To tear meat', ['To suck nectar', 'To crack seeds'], 'An eagle eats flesh.'),
+    ], api.done);
+  }
+}
+
+/* =================================================================
+   PART 3 · CLEVER BEHAVIOURS (pages 33–35)
+   ================================================================= */
+/* Stop 10 · page 33 */
+function playMigrate(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 33 · Behavioural adaptations'));
+    teach(b, { title: 'Behavioural adaptations', body: ['Animals use their body parts to get food. They also behave in special ways.', 'Behavioural adaptations are special ways animals act to survive. These behaviours help animals find food, stay safe or live in different kinds of weather.', 'When it rains, you open an umbrella ☂️. That is not a body part. It is something you DO. That is behaviour.'] }, () => {
+      skill('behaviour');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      askSeq(api, q, [
+        pickQ('Behavioural adaptations are…', 'Special ways animals act to survive', ['Special body parts', 'Special teeth and beaks'], 'Behaviour = the way you act, what you DO.'),
+        pickQ('Which one is a behavioural adaptation?', 'Birds flying to a warm place in winter', ['A giraffe’s long neck', 'A cow’s flat teeth'], 'Which one is something the animal DOES?'),
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 33 · Migration'));
+    teach(b, { title: 'Migration', body: ['Some animals move from one place to another to find food or warm weather. This movement is called migration.', 'In the hot summer holidays, many families travel to a cool hill station. Birds do something like that in winter: they fly to a warmer place!'] }, () => {
+      skill('migration');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      const crane = h('span', { class: 'flyer', 'aria-hidden': 'true' }, '🕊️');
+      const map = h('div', { class: 'journey', role: 'img', 'aria-label': 'A Siberian crane flies from icy Siberia to warm India' },
+        h('div', { class: 'zone top' }, h('b', {}, '❄️ Siberia'), h('span', {}, 'Winter: icy, little food')),
+        crane,
+        h('div', { class: 'zone bot' }, h('b', {}, '☀️ India'), h('span', {}, 'Warm, lots of food')));
+      api.guide('It is winter in Siberia. It is icy cold and food is hard to find. Tap “Fly!” to help the Siberian crane.');
+      const fly = h('button', { class: 'btn primary', type: 'button', onclick: () => {
+        fly.disabled = true; crane.classList.add('go'); sfx.win();
+        setTimeout(() => {
+          const c = fact('The Siberian crane comes to India in winter.', 'Birds fly to warmer places when it becomes very cold.');
+          q.append(c); scrollIn(c); api.guide('The Siberian crane comes to India in winter. Birds fly to warmer places when it becomes very cold.');
+          askSeq(api, q, [
+            pickQ('Where does the Siberian crane come in winter?', 'India', ['Siberia', 'The North Pole'], 'It flew from icy Siberia to…'),
+            pickQ('Why do birds fly to warmer places in winter?', 'To find food and warm weather', ['To find snow', 'To sleep for a long time'], 'Migration is moving to find food or warm weather.'),
+          ], api.done);
+        }, reduce ? 50 : 2500);
+      } }, '🕊️ Fly!');
+      q.append(map, fly);
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 33 · Whales migrate too'));
+    const c = info('🐋', 'Whales', 'Whales swim to warm seas to give birth to their babies.');
+    b.append(c); api.guide('Whales swim to warm seas to give birth to their babies. That is migration too.');
+    askSeq(api, b, [
+      pickQ('Why do whales swim to warm seas?', 'To give birth to their babies', ['To find snow', 'To sleep all winter'], 'Read the card: whales and their babies.'),
+      { guide: 'Is this migration? Birds fly to warmer places when it becomes very cold.', before: h('p', { class: 'story exam' }, '🐦 Birds fly to warmer places when it becomes very cold.'), prompt: 'Is this migration?', options: ['Yes, it is migration', 'No'], answer: 'Yes, it is migration', hint: () => hintP('The birds MOVE from one place to another.') },
+      { guide: 'Is this migration? A bear sleeps in its den all winter.', before: h('p', { class: 'story exam' }, '🐻 A bear sleeps in its den all winter.'), prompt: 'Is this migration?', options: ['Yes, it is migration', 'No'], answer: 'No', hint: () => hintP('Does the bear move to another place? No. It stays and sleeps. (That has another name. Next stop!)') },
+    ], api.done);
+  } else {
+    b.append(srctag('Page 33 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('Moving from one place to another to find food or warm weather is called ___.', 'migration', ['hibernation', 'camouflage'], 'Migration = moving. Both start with M!'),
+      blankQ('The Siberian ___ comes to India in winter.', 'crane', ['tiger', 'whale'], 'It is a big bird.'),
+      blankQ('Whales swim to ___ seas to give birth to their babies.', 'warm', ['icy', 'dry'], 'Babies need a cosy, warm place.'),
+    ], () => spellWord(b, { word: 'migration', pic: '🕊️', meaning: 'moving to another place to find food or warm weather', onDone: api.done }));
+  }
+}
+
+/* Stop 11 · page 34 */
+function playSleep(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 34 · Hibernation'));
+    teach(b, { title: 'Hibernation', body: ['In very cold weather, food becomes hard to find. Some animals sleep for a long time to save energy. This long sleep is called hibernation.', 'It is like putting a phone on battery-saver 🔋: a sleeping bear uses very little energy, so it can last the whole winter.', 'Bears sleep in their den during winter. Frogs rest in mud or under leaves in cold weather.'] }, () => {
+      skill('hibernation');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      q.append(sc('snow', ['❄️', '☁️', '❄️'], ['🌲', h('span', {}, '🐻💤'), '🕳️', h('span', {}, '🐸🍂'), '🌲'], 'Winter: a bear sleeping in its den and a frog resting under leaves'));
+      askSeq(api, q, [
+        pickQ('Where does a bear sleep during winter?', 'In its den', ['In a tree', 'In the sea'], 'A den is a bear’s cosy cave.'),
+        pickQ('Where do frogs rest in cold weather?', 'In mud or under leaves', ['On a hot beach', 'On top of a tree'], 'Look at the picture: the frog is hiding in leaves.'),
+        pickQ('Why do animals hibernate?', 'To save energy when food is hard to find', ['Because they are lazy', 'To find warm weather'], 'In winter there is little food. Sleeping uses very little energy.'),
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 33–34 · Migrate or hibernate?'));
+    teach(b, { title: 'Don’t mix them up!', body: ['MIGRATE = MOVE. Both start with M. The animal travels to another place.', 'HIBERNATE = a long sleep. The animal stays and sleeps through the cold.'], btn: 'Let’s sort ➜' }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      sortGame(q, {
+        bins: [{ k: 'mig', label: 'Migration (move)', e: '🕊️', c: 'var(--blue-soft)' }, { k: 'hib', label: 'Hibernation (sleep)', e: '😴', c: 'var(--violet-soft)' }],
+        items: shuffle([
+          { t: 'Siberian crane flies to India', e: '🕊️', bin: 'mig', why: 'It moves to a warm place. Moving = migration.' },
+          { t: 'Whale swims to warm seas', e: '🐋', bin: 'mig', why: 'It travels to another place. That is migration.' },
+          { t: 'Bear sleeps in its den all winter', e: '🐻', bin: 'hib', why: 'A long winter sleep is hibernation.' },
+          { t: 'Frog rests in mud in cold weather', e: '🐸', bin: 'hib', why: 'It stays still and rests through the cold. That is hibernation.' },
+          { t: 'Birds fly to warmer places', e: '🐦', bin: 'mig', why: 'Flying away to a warm place is migration.' },
+        ]),
+        ask: it => `${it.t}. Migration or hibernation?`, onDone: api.done,
+      });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 35 · Checkpoint 3 question'));
+    const q = 'It is winter and there is not much food. Will a bear migrate or hibernate?';
+    api.guide(q);
+    askChoice(b, { prompt: q, options: ['Hibernate', 'Migrate'], answer: 'Hibernate', hint: () => hintP('Bears sleep in their den during winter.'), onDone: () => {
+      writeIt(b, ['The', 'bear', 'will', 'hibernate', 'in', 'its', 'den', '.'], () => {
+        const x = h('div', { class: 'below' }); b.append(x); scrollIn(x);
+        askSeq(api, x, [tfQ('Migration means sleeping for a long time during winter.', false, 'Hibernation means sleeping for a long time during winter.')], api.done);
+      });
+    } });
+  } else {
+    b.append(srctag('Page 34 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('The long winter sleep of some animals is called ___.', 'hibernation', ['migration', 'mimicry'], 'Not moving: sleeping.'),
+      blankQ('Bears sleep in their ___ during winter.', 'den', ['nest', 'pond'], 'A bear’s cosy cave home.'),
+      tfQ('Frogs rest in mud or under leaves in cold weather.', true),
+    ], () => spellWord(b, { word: 'hibernation', pic: '🐻', meaning: 'a long sleep in cold weather to save energy', onDone: api.done }));
+  }
+}
+
+/* Stop 12 · page 34 */
+function playProtect(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 34 · Protection behaviours'));
+    teach(b, { title: 'Protection behaviours', body: ['Some animals do special actions to protect themselves from enemies. These actions help them stay safe without fighting.', 'Have you seen a cat puff up its fur and arch its back when a dog comes near? It is trying to look bigger and scarier.'] }, () => {
+      skill('protect');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      const puff = h('span', { class: 'puff', 'aria-hidden': 'true' }, '🐡'), shark = h('span', { class: 'shark', 'aria-hidden': 'true' }, '🦈');
+      q.append(h('div', { class: 'puffwrap', role: 'img', 'aria-label': 'A pufferfish and a hungry shark' }, puff, shark));
+      api.guide('A hungry shark is coming! Tap the button to help the pufferfish.');
+      const go = h('button', { class: 'btn primary', type: 'button', onclick: () => {
+        go.disabled = true; puff.classList.add('big'); sfx.pop();
+        setTimeout(() => {
+          shark.classList.add('away'); sfx.good();
+          const c = info('🐡', 'The pufferfish blows up its body', 'It suddenly looks big and dangerous, so the shark swims away. No fighting needed!');
+          q.append(c); scrollIn(c); api.guide('A pufferfish blows up its body to look big and dangerous. The shark swims away.');
+          askChoice(q, { prompt: 'How does blowing up its body help a pufferfish stay safe?', options: shuffle(['It looks big and dangerous, so enemies stay away', 'It can swim faster', 'It changes colour']), answer: 'It looks big and dangerous, so enemies stay away', hint: () => hintP('Watch what the shark did when the pufferfish became big.'), onDone: api.done });
+        }, reduce ? 50 : 900);
+      } }, '🐡 Puff up!');
+      q.append(go);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 34 · The skunk'));
+    b.append(info('🦨', 'The skunk', 'A skunk sprays a bad smell to scare enemies away. Pee-yoo! 🤢'));
+    api.guide('A skunk sprays a bad smell to scare enemies away.');
+    askChoice(b, { prompt: 'What does a skunk do to scare its enemies?', options: shuffle(['It sprays a bad smell', 'It blows up its body', 'It changes colour']), answer: 'It sprays a bad smell', hint: () => hintP('Read the card. Hold your nose!'), onDone: () => {
+      const m = h('div', { class: 'below' }); b.append(m); scrollIn(m);
+      api.guide('Now match each animal to its behaviour.');
+      matchGame(m, { pairs: [['Skunk', 'Sprays a bad smell', '🦨'], ['Pufferfish', 'Blows up its body', '🐡'], ['Bear', 'Hibernates in its den', '🐻'], ['Siberian crane', 'Migrates to India in winter', '🕊️']], onDone: api.done });
+    } });
+  } else {
+    b.append(srctag('Page 34 · Exam practice'));
+    askSeq(api, b, [
+      tfQ('A pufferfish uses its body colour to scare enemies.', false, 'A pufferfish blows up its body to look big and dangerous.'),
+      blankQ('A skunk sprays a bad ___ to scare enemies away.', 'smell', ['colour', 'song'], 'Hold your nose!'),
+      blankQ('Protection behaviours help animals stay safe without ___.', 'fighting', ['eating', 'sleeping'], 'The pufferfish did not fight the shark.'),
+    ], api.done);
+  }
+}
+
+/* Stop 13 · pages 34–35 · Checkpoint 3 */
+const CREATE = {
+  'Icy cold land ❄️': { good: 'Thick white fur', bad: ['Thin skin with no fur', 'Bright red feathers'], why: 'Thick fur keeps it warm, and white hides it in the snow.' },
+  'Hot desert 🏜️': { good: 'Sand-coloured skin to hide on sand', bad: ['Thick woolly fur', 'Bright blue colour'], why: 'Sand colour hides it on the sand, and no thick fur keeps it from getting too hot.' },
+  'Deep ocean 🌊': { good: 'Fins to swim', bad: ['Long legs to climb trees', 'Thick woolly fur'], why: 'Fins help it swim in water.' },
+  'Green forest 🌳': { good: 'Green colour to hide in leaves', bad: ['White fur like snow', 'Fins to swim'], why: 'Green colour hides it among the leaves: camouflage!' },
+};
+function playCheck3(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 34 · Checkpoint 3 · 1. Write True or False'));
+    askSeq(api, b, [
+      tfQ('a. Behavioural adaptations are actions animals do to survive.', true),
+      tfQ('b. Migration means sleeping for a long time during winter.', false, 'Hibernation means sleeping for a long time during winter. (Migration means moving to another place.)'),
+      tfQ('c. Birds migrate to warmer places when it becomes very cold.', true),
+      tfQ('d. A pufferfish uses its body colour to scare enemies.', false, 'A pufferfish blows up its body to scare enemies.'),
+      tfQ('e. Frogs rest in mud in cold weather.', true),
+    ], api.done);
+  } else if (r === 1) {
+    b.append(srctag('Page 35 · Checkpoint 3 · 2. Answer the following'));
+    const qa = 'a. How does blowing up its body help a pufferfish stay safe?';
+    api.guide(qa);
+    askChoice(b, { prompt: qa, options: shuffle(['It looks big and dangerous, so enemies stay away', 'It can hide in the sand', 'It sprays a bad smell']), answer: 'It looks big and dangerous, so enemies stay away', hint: () => hintP('Remember the shark swimming away.'), onDone: () => {
+      writeIt(b, ['It', 'looks', 'big', 'and', 'dangerous', ',', 'so', 'enemies', 'stay', 'away', '.'], () => {
+        const qb = 'b. It is winter and there is not much food. Will a bear migrate or hibernate?';
+        const x = h('div', { class: 'below' }); b.append(x); scrollIn(x); api.guide(qb);
+        askChoice(x, { prompt: qb, options: ['Hibernate', 'Migrate'], answer: 'Hibernate', hint: () => hintP('Bears sleep in their den during winter.'), onDone: api.done });
+      });
+    } });
+  } else {
+    b.append(srctag('Page 35 · Think Route: Creative Hunt'));
+    api.guide('Create your own animal! First choose where it lives.');
+    const habs = Object.keys(CREATE);
+    freeChoice(b, { prompt: 'Habitat: where does your animal live?', options: habs, onPick: hab => {
+      const c = CREATE[hab], q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      api.guide('Which adaptation will help your animal survive there?');
+      askChoice(q, { prompt: `Which adaptation will help it survive in the ${hab.replace(/[^\w ]/g, '').trim().toLowerCase()}?`, options: shuffle([c.good, ...c.bad]), answer: c.good, hint: () => hintP(c.why), onDone: () => {
+        const n = h('div', { class: 'below' }); q.append(n); scrollIn(n);
+        api.guide('Great thinking! Now give your animal a name.');
+        freeChoice(n, { prompt: 'Pick a name for your animal', options: ['Zoomtail', 'Fluffo', 'Sneaky Sam', 'Ayansh-osaurus'], onPick: name => {
+          const card = h('div', { class: 'mycreature' }, h('h3', {}, '🔍 My animal'), h('div', { class: 'big', 'aria-hidden': 'true' }, '🦄'), h('p', {}, h('b', {}, 'Name: '), name), h('p', {}, h('b', {}, 'Habitat: '), hab), h('p', {}, h('b', {}, 'Adaptation: '), c.good), h('p', { class: 'note' }, c.why));
+          n.append(card); scrollIn(card); sayNow(`Meet ${name}! It lives in the ${hab.replace(/[^\w ]/g, '')}. Its adaptation: ${c.good}.`);
+          api.done();
+        } });
+      } });
+    } });
+  }
+}
+
+/* =================================================================
+   PART 4 · HUMANS ADAPT TOO (pages 35–38)
+   ================================================================= */
+const HBODY = [['Sweat', 'Cools us down when it is hot', '💦'], ['Skin', 'Protects us from strong sunlight', '🖐️'], ['Teeth', 'Bite and chew food', '🦷'], ['Nose and eyelashes', 'Keep dust out', '👃']];
+/* Stop 14 · pages 35–36 */
+function playHumans(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 35 · Did you know? Humans adapt too'));
+    b.append(h('div', { class: 'pairs' },
+      h('div', { class: 'paircard' }, h('span', { style: 'font-size:44px' }, '🧊🥶'), 'Touch ice: “Brrr! Cold!”'),
+      h('div', { class: 'paircard' }, h('span', { style: 'font-size:44px' }, '🦊'), 'Arctic fox: “Safe and warm with my fur!”'),
+      h('div', { class: 'paircard' }, h('span', { style: 'font-size:44px' }, '🧒❄️'), 'Boy: “Without thick fur, would I feel safe here all the time?”')));
+    api.guide('Touch ice for a moment. Brrr, cold! The Arctic fox is warm with its fur. But we have no thick fur. Just like animals, humans also adapt to their surroundings to live and stay safe.');
+    askSeq(api, b, [
+      pickQ('The Arctic fox stays warm in the snow because of its…', 'Thick fur', ['Long neck', 'Sharp beak'], 'Look at the fox card.'),
+      pickQ('We have no thick fur. How do we stay warm in icy places?', 'We wear warm clothes', ['We grow fur', 'We sleep all winter'], 'What do you put on in winter?'),
+      pickQ('Do humans adapt to their surroundings too?', 'Yes, just like animals', ['No, never'], 'The title of the page is “Humans adapt too”.'),
+    ], () => { skill('humans'); api.done(); });
+  } else if (r === 1) {
+    b.append(srctag('Page 36 · Our body adaptations'));
+    teach(b, { title: 'Our body adaptations', body: ['Our body has special parts that help us live comfortably in different places.', 'After running in the sun, your shirt gets wet with sweat. As the sweat dries, you feel cooler!'], ex: HBODY.map(x => `${x[2]} ${x[0]}`) }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      api.guide('Match each body part to how it helps us.');
+      matchGame(q, { pairs: HBODY, hint: i => `Think: what does your ${HBODY[i][0].toLowerCase()} do?`, onDone: api.done });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 36 · Food adaptations'));
+    teach(b, { title: 'We choose our food', body: ['Humans also adapt by choosing different kinds of food, based on where they live and what their body needs.', 'In cold places, people eat warm, energy-rich food. In hot places, people eat juicy food.', 'We cook food to make it soft and safe. We use tools and fire to prepare food.'] }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      sortGame(q, {
+        bins: [{ k: 'cold', label: 'Cold place', e: '🥶', c: 'var(--blue-soft)' }, { k: 'hot', label: 'Hot place', e: '🥵', c: 'var(--orange-soft)' }],
+        items: shuffle([
+          { t: 'Hot soup', e: '🍲', bin: 'cold', why: 'Warm food is good in cold places.' },
+          { t: 'Juicy watermelon', e: '🍉', bin: 'hot', why: 'Juicy food is good in hot places.' },
+          { t: 'Coconut water', e: '🥥', bin: 'hot', why: 'Juicy, cool drinks are good in hot places.' },
+          { t: 'Warm bread and butter', e: '🍞', bin: 'cold', why: 'Warm, energy-rich food is good in cold places.' },
+          { t: 'Juicy oranges', e: '🍊', bin: 'hot', why: 'Juicy fruit is good in hot places.' },
+          { t: 'Hot milk with nuts', e: '🥛', bin: 'cold', why: 'Warm, energy-rich food is good in cold places.' },
+        ]),
+        ask: it => `${it.t}. Better for a cold place or a hot place?`,
+        onDone: () => {
+          const x = h('div', { class: 'below' }); q.append(x); scrollIn(x);
+          askSeq(api, x, [pickQ('Why do we cook food?', 'To make it soft and safe', ['To make it cold', 'To make it hard'], 'Think of raw rice and cooked rice.')], api.done);
+        },
+      });
+    });
+  } else {
+    b.append(srctag('Pages 35–36 · Exam practice'));
+    askSeq(api, b, [
+      blankQ('Sweat helps to ___ our body.', 'cool', ['heat', 'clean'], 'We sweat when it is hot. Sweat cools us down.'),
+      blankQ('Our ___ protects us from strong sunlight.', 'skin', ['nose', 'teeth'], 'It covers your whole body.'),
+      blankQ('Our nose and ___ help keep dust out.', 'eyelashes', ['teeth', 'ears'], 'Tiny hairs around your eyes.'),
+      blankQ('In cold places, people eat warm, ___ food.', 'energy-rich', ['juicy', 'icy'], 'Food that gives lots of energy.'),
+    ], api.done);
+  }
+}
+
+/* Stop 15 · pages 37–38 */
+const ROSHNI = ['In summer the days are very hot, so Roshni’s body sweats to keep her cool.', 'She drinks lots of water and wears light cotton clothes.', 'In winter it is cold, so she wears warm clothes, eats hot food and stays indoors more.', 'In the rainy season she carries an umbrella, and stays inside when it rains heavily.', 'Her body helps her adjust to the weather, and her actions keep her safe and comfortable.'];
+function playRoshni(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 37 · Our behavioural adaptations'));
+    teach(b, { title: 'Things we DO to adapt', body: ['Behavioural adaptations are things humans do to live safely and comfortably.', '👕 We wear clothes according to the weather. 🏠 We live in houses to stay safe. 🚰 We drink water when thirsty and 🛏️ rest when we feel tired.', 'Animals and humans are different, but both need adaptations. Animals are born with their adaptations. Humans use their thinking and actions to adapt.'] }, () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      askSeq(api, q, [
+        pickQ('How are human adaptations different from animal adaptations?', 'Animals are born with them; humans use thinking and actions', ['Humans are born with fur', 'Animals wear clothes'], 'Read the last line of the card again.'),
+        pickQ('Why do we live in houses?', 'To stay safe', ['To hibernate', 'To migrate'], 'A house is our shelter.'),
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 37 · Dress for the weather'));
+    const W = [['☀️ A hot summer day', 'Light cotton clothes 👕'], ['❄️ A cold winter day', 'A warm sweater and jacket 🧥'], ['🌧️ A rainy day', 'A raincoat and umbrella ☂️']];
+    const all = W.map(x => x[1]);
+    askSeq(api, b, W.map(([w, a]) => withCard(h('p', { class: 'story', style: 'text-align:center;font-size:24px' }, w), { guide: `${w.slice(2)}. What should you wear?`, prompt: 'What should you wear?', options: shuffle(all.slice()), answer: a, hint: () => hintP('We wear clothes according to the weather.') })), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Pages 37–38 · Roshni’s seasons'));
+    api.guide('Listen to Roshni’s story. Then sort what she does.');
+    reader(b, { lines: ROSHNI, title: 'Roshni and the weather', onDone: () => {
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      sortGame(q, {
+        bins: [{ k: 's', label: 'Summer', e: '☀️', c: 'var(--orange-soft)' }, { k: 'w', label: 'Winter', e: '❄️', c: 'var(--blue-soft)' }, { k: 'r', label: 'Rainy', e: '🌧️', c: 'var(--green-soft)' }],
+        items: shuffle([
+          { t: 'Drinks lots of water', e: '🚰', bin: 's', why: 'Hot days make us thirsty.' },
+          { t: 'Wears light cotton clothes', e: '👕', bin: 's', why: 'Cotton keeps us cool on hot days.' },
+          { t: 'Wears warm clothes', e: '🧥', bin: 'w', why: 'Warm clothes for the cold.' },
+          { t: 'Eats hot food', e: '🍲', bin: 'w', why: 'Hot food warms us in winter.' },
+          { t: 'Carries an umbrella', e: '☂️', bin: 'r', why: 'An umbrella keeps the rain off.' },
+          { t: 'Stays inside in heavy rain', e: '🏠', bin: 'r', why: 'Heavy rain: better to stay inside.' },
+        ]),
+        ask: it => `Roshni ${it.t.toLowerCase()}. In which season?`, onDone: api.done,
+      });
+    } });
+  } else {
+    b.append(srctag('Page 38 · Checkpoint 4 · 2. Answer the following'));
+    const qa = 'a. How does sweating help Roshni in hot weather?';
+    api.guide(qa);
+    askChoice(b, { prompt: qa, options: shuffle(['It keeps her body cool', 'It keeps her warm', 'It makes her strong']), answer: 'It keeps her body cool', hint: () => hintP('Sweat helps to cool our body.'), onDone: () => {
+      writeIt(b, ['Sweating', 'keeps', 'her', 'body', 'cool', '.'], () => {
+        const qb = 'b. It is very cold. How will Roshni protect herself?';
+        const x = h('div', { class: 'below' }); b.append(x); scrollIn(x); api.guide(qb);
+        askChoice(x, { prompt: qb, options: shuffle(['She will wear warm clothes, eat hot food and stay indoors', 'She will wear cotton clothes and drink cold water', 'She will carry an umbrella']), answer: 'She will wear warm clothes, eat hot food and stay indoors', hint: () => hintP('What does Roshni do in winter?'), onDone: api.done });
+      });
+    } });
+  }
+}
+
+/* Stop 16 · page 37 · Checkpoint 4 fill in the blanks */
+function playCheck4(api) {
+  const b = below();
+  b.append(srctag('Page 37 · Checkpoint 4 · 1. Fill in the blanks'));
+  if (run.round === 0) {
+    askSeq(api, b, [
+      blankQ('a. Sweat helps to ___ our body.', 'cool', ['warm', 'wash'], 'We sweat when it is hot.'),
+      blankQ('b. People in hot places eat ___ food.', 'juicy', ['frozen', 'dry'], 'Watermelon and oranges!'),
+      blankQ('c. We use ___ and fire to cook food.', 'tools', ['water', 'ice'], 'Knives, pans and spoons are…'),
+    ], api.done);
+  } else {
+    askSeq(api, b, [
+      blankQ('d. Humans change their ___ with seasons.', 'clothes', ['teeth', 'houses'], 'Cotton in summer, sweaters in winter.'),
+      blankQ('e. Our ___ protects us from strong sunlight.', 'skin', ['hair', 'teeth'], 'It covers your whole body.'),
+      blankQ('Animals are ___ with their adaptations.', 'born', ['taught', 'given'], 'Humans use thinking and actions; animals have them from birth.'),
+    ], api.done);
+  }
+}
+
+/* Stop 17 · page 38 · Eco Route */
+const HARM = [['Cutting trees', 'Birds and monkeys lose their homes', '🪓'], ['Throwing waste in water', 'Harms fish and turtles', '🗑️'], ['Building roads and cities', 'Less space for animals to live', '🏗️']];
+function playCare(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 38 · Eco Route: Caring for Animals'));
+    teach(b, { title: 'Caring for animals', body: ['Animals are suited to live in certain homes, like forests, oceans, deserts and cold places. Their bodies and behaviours help them survive there.', 'Sometimes human actions change these homes. When animal homes change too much, animals find it hard to survive, even with their adaptations.'] }, () => {
+      skill('care');
+      const q = h('div', { class: 'below' }); b.append(q); scrollIn(q);
+      api.guide('Match what people do to how it harms animals.');
+      matchGame(q, { pairs: HARM, aHead: 'What people do', bHead: 'What happens', hint: i => `Who lives in ${['trees', 'water', 'open land'][i]}?`, onDone: api.done });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 38 · Helper or harmer?'));
+    api.guide('Is it a helper or a harmer? Sort each action.');
+    sortGame(b, {
+      bins: [{ k: 'help', label: 'Helps animals', e: '💚', c: 'var(--green-soft)' }, { k: 'harm', label: 'Harms animals', e: '💔', c: 'var(--red-soft)' }],
+      items: shuffle([
+        { t: 'Planting a tree', e: '🌱', bin: 'help', why: 'Trees are homes for birds and monkeys.' },
+        { t: 'Throwing plastic in a river', e: '🧴', bin: 'harm', why: 'Waste in water harms fish and turtles.' },
+        { t: 'A bowl of water for birds in summer', e: '🥣', bin: 'help', why: 'Thirsty birds can drink.' },
+        { t: 'Cutting down a forest', e: '🪓', bin: 'harm', why: 'Many animals lose their homes.' },
+        { t: 'Putting waste in a dustbin', e: '🗑️', bin: 'help', why: 'The waste does not reach rivers and seas.' },
+        { t: 'Breaking a bird’s nest', e: '🪺', bin: 'harm', why: 'The nest is the bird’s home.' },
+      ]),
+      ask: it => `${it.t}. Helper or harmer?`, onDone: api.done,
+    });
+  } else {
+    b.append(srctag('Page 38 · Exam practice'));
+    askSeq(api, b, [
+      pickQ('What happens when animal homes change too much?', 'Animals find it hard to survive, even with their adaptations', ['Animals grow new adaptations at once', 'Nothing happens'], 'Read the Eco Route again.'),
+      tfQ('Cutting trees removes homes for birds and monkeys.', true),
+      tfQ('Throwing waste in water is good for fish and turtles.', false, 'Throwing waste in water harms fish and turtles.'),
+    ], api.done);
+  }
+}
+
+/* =================================================================
+   GRAND REVIEW · EXAM PRACTICE (3 questions from each part)
+   ================================================================= */
+const seq1 = item => (b, done) => askSeq(api, b, [item], done);
+const REVIEW_QS = [
+  // Part 1
+  { part: 1, sec: 'Fill in the blank', play: (b, done) => seq1(pickOne([
+    blankQ('A habitat is the natural ___ of an animal.', 'home', ['food', 'colour'], 'Where an animal lives.'),
+    blankQ('Special features that help animals survive are called ___.', 'adaptations', ['habitats', 'beaks'], 'Body, food and behaviour…'),
+    blankQ('Hiding by using body colour is called ___.', 'camouflage', ['mimicry', 'migration'], 'The Arctic fox in snow.'),
+    blankQ('Looking like a dangerous animal to stay safe is called ___.', 'mimicry', ['camouflage', 'hibernation'], 'The Viceroy butterfly.'),
+  ]))(b, done) },
+  { part: 1, sec: 'Match the following', play: (b, done) => { api.guide('Match the following.'); const p = shuffle([['Giraffe', 'Long neck', '🦒'], ['Owl', 'Big, sharp eyes', '🦉'], ['Woodpecker', 'Strong head', '🐦🪵'], ['Arctic fox', 'Blends with the snow', '🦊'], ['Stick insect', 'Looks like a twig', '🪵🦗'], ['Chameleon', 'Changes its colours', '🦎']]).slice(0, 3); matchGame(b, { pairs: p, onDone: done }); } },
+  { part: 1, sec: 'True or false', play: (b, done) => seq1(pickOne([
+    tfQ('A giraffe’s long neck is a body adaptation.', true),
+    tfQ('The owl’s big eyes are an example of camouflage.', false, 'The owl’s big eyes are a body adaptation.'),
+    tfQ('A white rabbit can hide easily in a green forest.', false, 'A white rabbit can hide easily in white snow.'),
+    tfQ('The leaf-tailed gecko looks like a dry leaf.', true),
+  ]))(b, done) },
+  // Part 2
+  { part: 2, sec: 'Who am I?', play: (b, done) => seq1(pickOne([
+    whoQ('I eat both plants and meat. I have sharp and flat teeth.', 'Bear', ['Cow', 'Lion'], 'An omnivore.'),
+    whoQ('I eat insects. I have a long tongue.', 'Anteater', ['Elephant', 'Tiger'], 'An insectivore. Insects are in my name!'),
+    whoQ('I have a long, sharp beak to catch fish from water.', 'Kingfisher', ['Sparrow', 'Duck'], 'A fishing bird.'),
+    whoQ('I have a strong, curved beak to tear meat.', 'Vulture', ['Pigeon', 'Swan'], 'A bird that eats flesh.'),
+  ]))(b, done) },
+  { part: 2, sec: 'One-word answer', play: (b, done) => { const x = pickOne(EATERS); seq1(pickQ(`Animals that eat ${x.eat} are called…`, x.name, EATERS.filter(y => y !== x).map(y => y.name).slice(0, 2), x.trick, EATER_PIC))(b, done); } },
+  { part: 2, sec: 'Match the following', play: (b, done) => { api.guide('Match each beak to its bird.'); const p = shuffle(BEAKS.slice()).slice(0, 3).map(x => [x.beak, `${pickOne(x.birds)}: ${x.food.toLowerCase()}`]); matchGame(b, { pairs: p, aHead: 'Beak', bHead: 'Bird and food', onDone: done }); } },
+  // Part 3
+  { part: 3, sec: 'True or false', play: (b, done) => seq1(pickOne([
+    tfQ('Migration means sleeping for a long time during winter.', false, 'Hibernation means sleeping for a long time during winter.'),
+    tfQ('The Siberian crane comes to India in winter.', true),
+    tfQ('A skunk blows up its body to scare enemies.', false, 'A skunk sprays a bad smell to scare enemies.'),
+    tfQ('Whales swim to warm seas to give birth to their babies.', true),
+  ]))(b, done) },
+  { part: 3, sec: 'Fill in the blank', play: (b, done) => seq1(pickOne([
+    blankQ('The long winter sleep of animals is called ___.', 'hibernation', ['migration', 'camouflage'], 'Bears in dens.'),
+    blankQ('Moving to another place for food or warm weather is called ___.', 'migration', ['hibernation', 'mimicry'], 'Birds flying to warm places.'),
+    blankQ('Behavioural adaptations are special ways animals ___ to survive.', 'act', ['eat', 'grow'], 'Behaviour = how you act.'),
+  ]))(b, done) },
+  { part: 3, sec: 'Give a reason', play: (b, done) => seq1(pickOne([
+    pickQ('Why does a pufferfish blow up its body?', 'To look big and dangerous, so enemies stay away', ['To swim faster', 'To find food'], 'Remember the shark.'),
+    pickQ('Why do bears hibernate in winter?', 'Food is hard to find, so they sleep to save energy', ['They like the snow', 'To find warm seas'], 'Cold weather, little food…'),
+    pickQ('Why do birds migrate in winter?', 'To find food and warm weather', ['To sleep in a den', 'To scare enemies'], 'They fly to warmer places.'),
+  ]))(b, done) },
+  // Part 4
+  { part: 4, sec: 'Fill in the blank', play: (b, done) => seq1(pickOne([
+    blankQ('Sweat helps to ___ our body.', 'cool', ['warm', 'wash'], 'We sweat when it is hot.'),
+    blankQ('Our ___ protects us from strong sunlight.', 'skin', ['nose', 'teeth'], 'It covers your body.'),
+    blankQ('We use ___ and fire to cook food.', 'tools', ['water', 'ice'], 'Knives and pans.'),
+    blankQ('Humans change their ___ with seasons.', 'clothes', ['teeth', 'houses'], 'Sweaters in winter.'),
+  ]))(b, done) },
+  { part: 4, sec: 'Give a reason', play: (b, done) => seq1(pickOne([
+    pickQ('Why do we cook food?', 'To make it soft and safe', ['To make it cold', 'To make it hard'], 'Raw rice and cooked rice.'),
+    pickQ('How are humans different from animals in adapting?', 'Humans use thinking and actions; animals are born with adaptations', ['Humans are born with fur', 'Animals wear clothes'], 'Page 37.'),
+    pickQ('How does sweating help us in hot weather?', 'It keeps our body cool', ['It keeps us warm', 'It keeps dust out'], 'Sweat dries and cools us.'),
+  ]))(b, done) },
+  { part: 4, sec: 'True or false', play: (b, done) => seq1(pickOne([
+    tfQ('In cold places, people eat juicy food.', false, 'In cold places, people eat warm, energy-rich food. (Juicy food is for hot places.)'),
+    tfQ('Throwing waste in water harms fish and turtles.', true),
+    tfQ('Our nose and eyelashes help keep dust out.', true),
+    tfQ('Building roads and cities gives animals more space to live.', false, 'Building roads and cities reduces animal living spaces.'),
+  ]))(b, done) },
+];
+function playReview(api) {
+  if (!run.qs) run.qs = shuffle(REVIEW_QS.map((_, i) => i));
+  if (!run.firstTry) run.firstTry = {};
+  const q = REVIEW_QS[run.qs[run.round % run.qs.length]], before = run.mistakes;
+  const b = h('div', { class: 'below' });
+  api.stage.append(srctag(`Question ${run.round + 1} of 12 · ${q.sec} · Part ${q.part}`), b);
+  q.play(b, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Homes, body and colour', 2: 'Teeth and beaks', 3: 'Clever behaviours', 4: 'Humans adapt too' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 5 Animal Expert'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [rr, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${rr} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < rr ? '' : 'off' }, '⭐'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. You are ready for the test!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Something Looks Wrong!', idea: 'Habitat', page: 'Book pages 22–24', rounds: 4, cut: [1, 3], icon: '🏡', play: playHomes },
+  { id: 2, part: 1, name: 'The Sweater Puzzle', idea: 'Adaptations', page: 'Book pages 24–25', rounds: 4, cut: [1, 3], icon: '🧥', play: playAdapt },
+  { id: 3, part: 1, name: 'Body Adaptations', idea: 'Neck, eyes, head', page: 'Book page 25', rounds: 4, cut: [1, 3], icon: '🦒', play: playBody },
+  { id: 4, part: 1, name: 'Hide and Seek', idea: 'Camouflage', page: 'Book page 26', rounds: 4, cut: [2, 4], icon: '🦎', play: playCamo },
+  { id: 5, part: 1, name: 'Copycats in Nature', idea: 'Mimicry', page: 'Book page 27', rounds: 3, cut: [1, 3], icon: '🦋', play: playMimic },
+  { id: 6, part: 1, name: 'Checkpoint 1', idea: 'Book questions', page: 'Book pages 27–28', rounds: 3, cut: [1, 2], icon: '✅', play: playCheck1 },
+  { id: 7, part: 2, name: 'Teeth Tell the Tale', idea: 'Herbivores to insectivores', page: 'Book page 29', rounds: 5, cut: [2, 4], icon: '🦷', play: playTeeth },
+  { id: 8, part: 2, name: 'Beak Buffet', idea: 'Birds and their beaks', page: 'Book pages 30–32', rounds: 6, cut: [2, 5], icon: '🐦', play: playBeaks },
+  { id: 9, part: 2, name: 'Checkpoint 2', idea: 'Book questions', page: 'Book pages 32–33', rounds: 3, cut: [1, 3], icon: '✅', play: playCheck2 },
+  { id: 10, part: 3, name: 'Migration', idea: 'Behavioural adaptations', page: 'Book page 33', rounds: 4, cut: [1, 3], icon: '🕊️', play: playMigrate },
+  { id: 11, part: 3, name: 'Hibernation', idea: 'The long winter sleep', page: 'Book page 34', rounds: 4, cut: [1, 3], icon: '🐻', play: playSleep },
+  { id: 12, part: 3, name: 'Protection Behaviours', idea: 'Skunk and pufferfish', page: 'Book page 34', rounds: 3, cut: [1, 3], icon: '🐡', play: playProtect },
+  { id: 13, part: 3, name: 'Checkpoint 3', idea: 'Book questions', page: 'Book pages 34–35', rounds: 3, cut: [1, 3], icon: '✅', play: playCheck3 },
+  { id: 14, part: 4, name: 'Humans Adapt Too', idea: 'Body and food', page: 'Book pages 35–36', rounds: 4, cut: [1, 3], icon: '🧒', play: playHumans },
+  { id: 15, part: 4, name: 'Roshni’s Seasons', idea: 'Things we do', page: 'Book pages 37–38', rounds: 4, cut: [1, 3], icon: '☂️', play: playRoshni },
+  { id: 16, part: 4, name: 'Checkpoint 4', idea: 'Fill in the blanks', page: 'Book page 37', rounds: 2, cut: [0, 2], icon: '✅', play: playCheck4 },
+  { id: 17, part: 4, name: 'Caring for Animals', idea: 'Eco Route', page: 'Book page 38', rounds: 3, cut: [1, 3], icon: '🌍', play: playCare },
+  { id: 18, part: 5, name: 'Grand Review', idea: 'Exam practice', page: 'All of Chapter 5 · pages 22–38', rounds: 12, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'habitat', e: '🏡', t: 'Habitat', m: 'the natural home of an animal: food, water, air, shelter' },
+  { k: 'adaptation', e: '🦒', t: 'Adaptation', m: 'a special feature that helps an animal survive in its habitat' },
+  { k: 'camouflage', e: '🦎', t: 'Camouflage', m: 'hiding by using body colour to match the surroundings' },
+  { k: 'mimicry', e: '🦋', t: 'Mimicry', m: 'looking like a dangerous animal to stay safe' },
+  { k: 'herbivore', e: '🐄', t: 'Herbivore', m: 'eats plants; flat teeth' },
+  { k: 'carnivore', e: '🦁', t: 'Carnivore', m: 'eats meat; sharp teeth' },
+  { k: 'omnivore', e: '🐻', t: 'Omnivore', m: 'eats plants and meat; sharp and flat teeth' },
+  { k: 'insectivore', e: '🐸', t: 'Insectivore', m: 'eats insects; long tongue' },
+  { k: 'beak', e: '🐦', t: 'Beak', m: 'birds eat with beaks; the shape matches the food' },
+  { k: 'migration', e: '🕊️', t: 'Migration', m: 'moving to another place for food or warm weather' },
+  { k: 'hibernation', e: '😴', t: 'Hibernation', m: 'a long sleep in cold weather to save energy' },
+  { k: 'writer', e: '✍️', t: 'Answer writer', m: 'I wrote full-sentence answers' },
+];
+
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups(); hush();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups(); hush();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren(); delete stageEl.dataset.done;
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run || foot.querySelector('#nextBtn')) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 6 ? 'You finished Part 1: homes, body and colour! Part 2 is all about teeth and beaks.'
+    : L.id === 9 ? 'You finished Part 2! Part 3 has clever animal behaviours.'
+    : L.id === 13 ? 'You finished Part 3! Part 4: how we humans adapt too.'
+    : L.id === 17 ? 'You finished Part 4! One last stop is open: the Grand Review, an exam practice paper for the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole Jungle Safari Trail, Ayansh! You are ready for your EVS test on this chapter. Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the Safari Trail'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#F28C28', '#2E9E5B', '#F7C623', '#8B5A2B', '#FFFFFF', '#E5484D'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 5; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? h('span', { class: 'm' }, s.m) : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null; hush();
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: Chamki hides */
+$('heroCham').innerHTML = chamSvg('#3D7DD8');
+$('showHow').addEventListener('click', async () => {
+  const btn = $('showHow'), st = $('heroStage'), on = $('heroOn');
+  btn.disabled = true;
+  const spots = [['#F8EBCB', '#E9C764', 'the sand'], ['#5DB35F', '#5DB35F', 'a green leaf'], ['#8B5A2B', '#8B5A2B', 'tree bark'], ['#F49AC1', '#F49AC1', 'a pink flower']];
+  for (const [bg, c, name] of spots) {
+    st.style.backgroundColor = bg; paintCham(st, '#3D7DD8'); on.textContent = `I'm on ${name}… watch!`; sfx.pop();
+    await wait(800); paintCham(st, c); on.textContent = `On ${name}: can you see me?`; sfx.tap(1); await wait(1100);
+  }
+  $('reveal').hidden = false; sfx.good();
+  if (voiceOn) say('I change my colour to match what I sit on, so hungry animals cannot see me. That is an adaptation: a special feature that helps an animal survive in its home.');
+  btn.disabled = false; btn.textContent = '↻ Watch me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) hush(); else if (run) speakGuide(guideText); });
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
