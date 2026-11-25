@@ -1,0 +1,2013 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ricky's Road Trip</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column on a fresh green-to-teal background like the book's mint pages; white cards hold the play. Follows EVS Chapter 9, "Transport: Solving the Moving Puzzle" (pages 45–56), page by page. A road stripe tops the bar. A single-look game page (light only), like the other chapter games. */
+:root{
+  --sky1:#E6F6EE; --sky2:#BFE6D2; --sky3:#86CDB0; --sky4:#3E9A78; --night:#1E4D3F;
+  --board:#FFFFFF; --paper:#F6FBFF; --ink:#1E2A44; --ink-soft:#56627A; --shadow:#12302A;
+  --gold:#FFC93D; --gold-soft:#FFF3CC;
+  --red:#E5484D; --orange:#F28C28; --yellow:#F7C623; --green:#2E9E5B; --blue:#2F6FD0; --indigo:#4B3FB5; --violet:#8B5BC8;
+  --red-soft:#FFE1E1; --green-soft:#D6F2E1; --blue-soft:#DDE9FB; --violet-soft:#EEE6FA; --orange-soft:#FFE8D2;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC; --muted:#C9D3E0;
+  --on-dark:#FFFFFF; --on-dark-soft:#D8E6FA; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--night)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);margin:0;
+  background-color:var(--night);
+  background-image:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 20%,var(--sky3) 46%,var(--sky4) 74%,var(--night) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a road stripe */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:26px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:#3A4256;background-image:repeating-linear-gradient(90deg,var(--yellow) 0 28px,transparent 28px 48px);background-size:100% 4px;background-repeat:no-repeat;background-position:0 4px}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--sky4);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.herorow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.rbox{display:grid;place-items:center}
+.rbox svg,.rbsvg{width:min(260px,72vw);height:auto;display:block}
+.colourline{font-family:var(--display);font-weight:800;font-size:22px;min-height:1.4em}
+.herorow .colourline{flex:1;min-width:150px}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--green-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E3E9F1;border-color:#93A0B5}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(4n+1) .stopicon{background:var(--red-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--blue-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--green-soft)}
+.stop:nth-child(4n) .stopicon{background:var(--violet-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--blue)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--red);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--green);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--paper);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:68ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--blue);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--green)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice.pic{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--body);font-size:15px;min-width:92px;padding:6px 10px}
+.choice.pic .pe{font-size:40px;line-height:1.1}
+.choice.chunk{font-family:var(--display);font-size:24px;min-width:84px;letter-spacing:1px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(22px,6vw,32px);line-height:1.15}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--blue-soft);border:3px dashed var(--blue);border-radius:16px;padding:10px 14px;font-weight:700;max-width:540px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:16px;text-align:center;max-width:44ch}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.story{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:18px;max-width:560px;line-height:1.5}
+
+/* learn card: the idea first, before any question */
+.learn{width:100%;max-width:580px;background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;animation:pop .4s}
+.learn h3{font-size:22px;display:flex;gap:8px;align-items:center}
+.learn h3::before{content:"💡"}
+.learn p{font-weight:700}
+.learn .ex{display:flex;flex-wrap:wrap;gap:8px}
+.exchip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800}
+.exchip.a{background:var(--blue-soft)}.exchip.b{background:var(--green-soft)}.exchip.c{background:var(--violet-soft)}
+.hl{background:var(--gold);border-radius:6px;padding:0 3px;font-weight:800}
+.hl2{color:var(--red);font-weight:800;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+
+/* poem and story reader */
+.poem{width:100%;max-width:560px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.ptitle{font-size:26px;text-align:center;margin-bottom:6px}
+.pby{text-align:right;font-style:italic;font-weight:700;color:var(--ink-soft);margin-top:6px}
+.pline{display:flex;flex-wrap:wrap;align-items:center;gap:0 .3em;text-align:left;width:100%;border:none;background:none;border-radius:10px;padding:5px 10px 5px 34px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.35;cursor:pointer;position:relative}
+.pline::before{content:"🔈";position:absolute;left:6px;top:7px;font-size:16px;opacity:.5}
+.pline:hover{background:var(--blue-soft)}
+.pline.now{background:var(--gold);box-shadow:0 0 0 3px var(--ink)}
+.pline.heard::before{content:"✓";color:var(--good);opacity:1;font-weight:800}
+.pgap{height:12px}
+mark.gl{background:none;color:var(--indigo);font-weight:800;text-decoration:underline dotted 3px;text-underline-offset:4px}
+.readbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.glossrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.glossbtn{font-weight:800;border:3px solid var(--indigo);color:var(--indigo);background:var(--board);border-radius:999px;padding:4px 14px;min-height:42px;cursor:pointer}
+.glossbtn.seen{background:var(--violet-soft)}
+.echo{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.echoline{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,32px);line-height:1.2;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;width:100%}
+.echocount{font-weight:800;color:var(--ink-soft)}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%;max-width:600px}
+.flip{min-height:118px;border:3px solid var(--ink);border-radius:16px;background:var(--violet-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.flip .fw{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1}
+.flip .fe{font-size:30px;line-height:1}
+.flip .fm{font-weight:700;font-size:15px;line-height:1.25}
+.flip.open{background:var(--board);animation:pop .35s}
+
+/* sorting */
+.sorter{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.sortnow{min-height:96px;display:grid;place-items:center;margin-bottom:6px}
+.sortcard{display:flex;align-items:center;gap:12px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:10px 20px;box-shadow:0 4px 0 var(--ink);max-width:520px}
+.sortcard .se{font-size:46px;line-height:1}
+.sortcard .st{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,30px);line-height:1.15}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;margin-top:10px}
+.bin{border:3px solid var(--ink);border-radius:16px;background:var(--paper);min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+.binhead{font-family:var(--display);font-weight:800;font-size:18px;padding:4px 10px;background:var(--bc,var(--blue-soft));border-bottom:3px solid var(--ink);display:flex;gap:6px;align-items:center}
+.binlist{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:1px 10px;font-weight:800;font-size:15px}
+
+/* tap the words */
+.tapbox{width:100%;max-width:600px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tapline{display:flex;flex-wrap:wrap;gap:4px 2px;line-height:1.2}
+.w{font-weight:800;font-size:clamp(18px,4.4vw,22px);border:2px solid transparent;background:none;border-radius:10px;padding:4px 6px;cursor:pointer;min-height:44px}
+.w:hover{border-color:var(--muted)}
+.w.hit{background:var(--good);color:var(--on-color);border-color:var(--ink);animation:pop .3s}
+.w.miss{background:var(--oops-soft);animation:shake .4s}
+.w.show{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.counter{font-weight:800;color:var(--ink-soft)}
+.wordgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;width:100%;max-width:560px}
+.wordgrid .w{border:3px solid var(--ink);background:var(--board);box-shadow:0 4px 0 var(--ink);font-size:21px}
+
+/* letter tiles and sentence building */
+.slots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end;min-height:66px}
+.slots .given{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:2px;padding:0 4px}
+.slot{width:48px;height:58px;border-bottom:4px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:38px;line-height:1}
+.slot.fill{color:var(--blue);animation:pop .3s}
+.slots.right .slot{color:var(--good)}
+.ltray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:520px}
+.ltile{width:60px;height:62px;font-family:var(--display);font-weight:800;font-size:32px;border:3px solid var(--ink);border-radius:14px;background:var(--gold-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.ltile:disabled{opacity:.25;cursor:default}
+.ltile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.cluepic{font-size:56px;line-height:1}
+.sline{min-height:64px;width:100%;max-width:600px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px;border:3px dashed var(--ink-soft);border-radius:16px;background:var(--paper)}
+.sline.right{border-style:solid;border-color:var(--good);background:var(--green-soft)}
+.sline .ph{color:var(--ink-soft);font-weight:700}
+.wput{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);line-height:1.2}
+.stray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px}
+.wtile{font-family:var(--display);font-weight:800;font-size:clamp(19px,4.8vw,24px);min-height:52px;min-width:52px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.wtile.used{visibility:hidden}
+.wtile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+
+/* word search */
+.ws{display:grid;grid-template-columns:repeat(var(--c),minmax(0,46px));gap:3px;padding:8px;background:var(--paper);border:3px solid var(--ink);border-radius:14px;max-width:100%}
+.wsc{aspect-ratio:1;min-width:0;font-family:var(--display);font-weight:800;font-size:clamp(17px,4.6vw,24px);border:2px solid var(--muted);border-radius:8px;background:var(--board);cursor:pointer;padding:0}
+.wsc.sel{background:var(--gold);border-color:var(--ink)}
+.wsc.got{background:var(--green-soft);border-color:var(--good);color:var(--good)}
+.wsc.look{box-shadow:0 0 0 3px var(--red)}
+.wslist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wsw{font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 12px;background:var(--board)}
+.wsw.got{background:var(--good);color:var(--on-color);text-decoration:line-through}
+
+/* scenes, pictures and tables */
+.scene{width:100%;max-width:560px;border:3px solid var(--ink);border-radius:18px;padding:12px;background:linear-gradient(180deg,#CFEAFF 0%,#EAF6FF 55%,#BFE3A8 56%,#9ED38A 100%);display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;align-items:flex-end;font-size:40px;line-height:1.1;position:relative;overflow:hidden}
+.scene .small{font-size:26px}
+.scene .rbover{position:absolute;inset:4px 0 auto 0;display:grid;place-items:center;opacity:0;transition:opacity 1s}
+.scene .rbover.on{opacity:.9}
+.scene .rbover svg{width:min(320px,80%)}
+.ctrls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toggle{font-weight:800;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);min-height:56px;padding:4px 16px;cursor:pointer;font-size:18px}
+.toggle[aria-pressed="true"]{background:var(--gold)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:14px}
+.swatch i{width:40px;height:28px;border-radius:8px;border:2px solid var(--ink)}
+.swatch:disabled{opacity:.3;cursor:default}
+.tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px;background:#E9C98F;border:3px solid var(--ink);border-radius:22px;padding:12px}
+.trayitem{display:flex;flex-direction:column;align-items:center;gap:2px;background:#F6E2B8;border:3px solid var(--ink);border-radius:14px;padding:6px;font-size:40px;line-height:1.1;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.trayitem small{font-size:14px;font-weight:800}
+.trayitem:disabled{opacity:.35;cursor:default}
+.tbl{border-collapse:collapse;width:100%;max-width:520px;background:var(--board);border:3px solid var(--ink);font-weight:800}
+.tbl th,.tbl td{border:2px solid var(--ink);padding:6px 10px;text-align:left}
+.tbl th{background:var(--blue-soft);font-family:var(--display);font-size:18px}
+.tbl td.blank{color:var(--ink-soft)}
+.tbl td.now{background:var(--gold-soft);box-shadow:inset 0 0 0 3px var(--gold)}
+.tbl td.fresh{color:var(--good);animation:pop .35s}
+.poster{width:min(300px,100%);background:repeating-conic-gradient(from 0deg at 50% 100%,#F28C28 0 10deg,#F7B35C 10deg 20deg);border:3px solid var(--ink);border-radius:16px;padding:12px;text-align:center;color:#1E2A44;display:flex;flex-direction:column;gap:6px}
+.poster .ph1{font-family:var(--display);font-weight:800;font-size:44px;color:#C62C2C;-webkit-text-stroke:1px var(--ink);line-height:1}
+.poster .row{background:#123B5C;color:#FFF;font-family:var(--display);font-weight:800;font-size:20px;border-radius:8px;padding:2px 8px}
+.poster .feat{background:#FFF3CC;border-radius:8px;padding:4px 8px;font-weight:800;font-size:14px;line-height:1.3}
+.basket{font-size:42px;line-height:1.15;background:#F3E2C4;border:3px solid var(--ink);border-radius:22px 22px 40px 40px;padding:10px 16px;display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;max-width:360px}
+.bag{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bagbox{min-width:220px;min-height:90px;border:3px solid var(--ink);border-radius:26px 26px 18px 18px;background:#5DA9E9;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:10px;font-size:38px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;width:100%;max-width:560px}
+.shelfitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:6px;font-size:36px;line-height:1.1}
+.shelfitem small{font-size:14px;font-weight:800}
+.shelfitem.in{background:var(--green-soft);opacity:.6}
+.shelfitem.no{background:var(--oops-soft);animation:shake .4s}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;max-width:560px}
+.list{background:#FFFDF2;border:3px solid var(--ink);border-radius:8px;padding:10px 14px;min-height:150px;box-shadow:3px 3px 0 var(--shadow)}
+.list h3{font-size:19px;border-bottom:2px solid var(--muted);padding-bottom:4px;margin-bottom:6px}
+.list ol{margin:0;padding-left:22px;font-weight:800}
+.twins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;max-width:600px}
+.twin{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px;cursor:pointer}
+.twin .te{font-size:40px;line-height:1}
+.twin .tw{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:1px}
+.twin.heard{background:var(--green-soft)}
+.tcard{display:flex;flex-direction:column;gap:2px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px 10px;cursor:pointer;text-align:left}
+.tcard b{font-family:var(--display);font-size:28px;color:var(--indigo);letter-spacing:2px}
+.tcard span{font-weight:700;font-size:15px}
+.tcard.heard{background:var(--violet-soft)}
+.mywriting{width:100%;max-width:560px;background:#FFFDF2;border:3px solid var(--ink);border-radius:12px;padding:14px 18px;background-image:repeating-linear-gradient(180deg,transparent 0 34px,#BFD8F2 34px 36px);display:flex;flex-direction:column;gap:6px}
+.mywriting h3{font-size:22px;color:var(--violet)}
+.mywriting p{font-family:var(--display);font-weight:600;font-size:21px;line-height:1.5}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(20,32,56,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D5DDE8;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--violet);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .choice.pic{min-width:78px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .ltile{width:50px;height:54px;font-size:28px}
+  .slot{width:38px;height:50px;font-size:32px}
+  .slots .given{font-size:32px}
+  .scene{font-size:32px}
+  .wsc{border-width:1.5px}
+  .ws{gap:2px;padding:5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+.scene{flex-direction:column;align-items:stretch}
+.srow{display:flex;justify-content:space-around;align-items:flex-end;flex-wrap:wrap;gap:4px 8px;width:100%;position:relative}
+.srow.sky{min-height:56px}
+.trayitem.done{background:var(--green-soft)}
+/* ---------- Ricky's Road Trip: transport pieces ---------- */
+.npad-show{font-family:var(--display);font-weight:800;font-size:44px;min-width:140px;text-align:center;border:3px solid var(--ink);border-radius:16px;background:var(--paper);padding:2px 16px;margin-bottom:10px}
+.npad-show.right{background:var(--good);color:var(--on-color)}
+.npad{display:grid;grid-template-columns:repeat(3,64px);gap:8px}
+.npad button{min-height:56px;font-family:var(--display);font-weight:800;font-size:26px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.npad button.ok{background:var(--gold)}
+.npad-note{font-weight:700;color:var(--ink-soft);margin-top:6px}
+.road{width:100%;max-width:580px;border:3px solid var(--ink);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#CFEAFF 0 34%,#DDEBD5 34% 44%,#5B6378 44% 86%,#9AA3B5 86%);position:relative;padding:8px 10px 10px;display:flex;flex-direction:column;gap:6px}
+.road .rrow{display:flex;justify-content:space-around;align-items:flex-end;flex-wrap:wrap;gap:4px;font-size:36px;line-height:1.1}
+.road .lane{border-top:4px dashed var(--yellow);margin:2px 0}
+.road .cap{font-size:13px;font-weight:800;color:#FFFFFF;text-align:center;font-style:italic}
+.tl{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+.tlbox{width:88px;padding:10px 0;background:#2A3042;border:3px solid var(--ink);border-radius:22px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tlamp{width:58px;height:58px;border-radius:50%;border:3px solid #0E1220;background:#454B5C;cursor:pointer;padding:0;transition:background .2s,box-shadow .2s}
+.tlamp.r.on{background:#FF3B3B;box-shadow:0 0 18px 4px #FF6B6B}
+.tlamp.y.on{background:#FFC928;box-shadow:0 0 18px 4px #FFD95C}
+.tlamp.g.on{background:#25C26B;box-shadow:0 0 18px 4px #5BE39A}
+.tlpole{width:12px;height:30px;background:#2A3042;border:3px solid var(--ink);border-top:none}
+.tlmean{font-family:var(--display);font-weight:800;font-size:clamp(22px,6vw,30px);min-width:150px;text-align:center}
+.rabout{width:min(300px,82vw);height:auto;display:block}
+.rabout .spin{transform-origin:150px 150px;animation:spin 7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;width:100%;max-width:600px}
+.mcol{display:flex;flex-direction:column;gap:10px}
+.mcol h4{margin:0;font-family:var(--display);font-size:16px;text-align:center;color:var(--ink-soft)}
+.mitem{font-weight:800;font-size:clamp(15px,3.8vw,18px);line-height:1.25;min-height:54px;padding:6px 10px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;text-align:center}
+.mitem.sel{background:var(--gold);transform:scale(1.03)}
+.mitem.done{background:var(--green-soft);border-color:var(--good);box-shadow:none;cursor:default}
+.mitem.done::before{content:attr(data-n) " ";color:var(--good)}
+.mitem.wrong{background:var(--oops-soft);animation:shake .4s}
+.mitem.look{box-shadow:0 0 0 4px var(--red)}
+.order{display:flex;flex-direction:column;gap:8px;width:100%;max-width:520px}
+.oslot{display:flex;align-items:center;gap:10px;min-height:52px;border:3px dashed var(--ink-soft);border-radius:14px;padding:4px 12px;background:var(--paper);font-weight:800;font-size:18px}
+.oslot i{font-style:normal;flex:none;width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--on-dark);display:grid;place-items:center;font-family:var(--display)}
+.oslot.fill{border-style:solid;border-color:var(--good);background:var(--green-soft);animation:pop .3s}
+.steps5{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;width:100%;max-width:600px}
+.step5{border:3px solid var(--ink);border-radius:14px;padding:8px 10px;background:var(--board);display:flex;flex-direction:column;gap:2px}
+.step5 b{font-family:var(--display);font-size:20px}
+.step5 span{font-weight:700;font-size:15px;color:var(--ink-soft)}
+.step5.s1{background:#E3F4E5}.step5.s2{background:#DDE9FB}.step5.s3{background:#EEE6FA}.step5.s4{background:#FFE8D2}.step5.s5{background:#D6F2E1}
+.answer{width:100%;max-width:580px;background:#FFFDF2;border:3px solid var(--ink);border-radius:12px;padding:12px 16px;background-image:repeating-linear-gradient(180deg,transparent 0 30px,#BFD8F2 30px 32px);display:flex;flex-direction:column;gap:6px;animation:pop .4s}
+.answer h3{font-size:19px;color:var(--blue)}
+.answer p{font-family:var(--display);font-weight:600;font-size:clamp(18px,4.4vw,21px);line-height:1.5}
+.wordbox{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;border:3px dashed var(--ink);border-radius:14px;padding:8px 10px;background:var(--paper);max-width:560px}
+.wordbox b{font-family:var(--display);width:100%;text-align:center;font-size:15px;color:var(--ink-soft)}
+.tfbig{font-family:var(--display);font-weight:800;font-size:clamp(19px,4.6vw,23px);line-height:1.3;background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;max-width:560px;text-align:center}
+.mapcard{width:100%;max-width:580px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.place{border:3px solid var(--ink);border-radius:16px;background:var(--board);padding:10px;display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;font-weight:700}
+.place .pe2{font-size:42px;line-height:1}
+.place b{font-family:var(--display);font-size:19px}
+.mydesign{width:100%;max-width:580px;background:#FFFDF2;border:3px solid var(--ink);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+.mydesign h3{font-size:24px;color:var(--blue);text-align:center}
+.mydesign p{font-weight:700}
+.mydesign p b{font-family:var(--display)}
+.revlist{display:flex;flex-direction:column;gap:8px;margin:0;padding-left:22px}
+.revlist li b{display:block}
+@media print{body{background:#fff}.topbar,.lvlhead,.guide,.foot,#level{display:none!important}}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Ricky's Road Trip<small>Ayansh's EVS · Chapter 9 · Transport: Solving the Moving Puzzle</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 42</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🛺</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Ricky the auto-rickshaw.</h2>
+        <p>Honk! Honk! Every morning I carry children to school through busy roads. Sometimes we get stuck! <b>How can we help everyone move better?</b></p>
+        <div class="herorow">
+          <div id="heroLight"></div>
+          <p class="colourline" id="colourLine" aria-live="polite"></p>
+        </div>
+        <button class="btn primary" id="showHow" type="button">🚦 Show me</button>
+        <p class="reveal" id="reveal" hidden><b>Transport</b> helps people and things move from one place to another. Let's travel together: to a busy Indian road, to Germany, to the hills of Colombia, and back in time on India's oldest road, solving moving puzzles on the way!</p>
+        <p class="note">Each stop follows your EVS book, page by page. Then the Exam Corner gets you ready for fill in the blanks, true or false, match the following, one-word and short answers.</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You finished the whole road trip! You know EVS Chapter 9 inside out.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Moving around</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Managing traffic</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Clever answers around the world</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Our turn</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Exam Corner</h2>
+    <ol class="stops" id="stops5"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 9</h2>
+    <ol class="stops finale" id="stops6"></ol>
+
+    <section class="skillcard card">
+      <h2>My travel badges</h2>
+      <p class="note">Each badge lights up the first time you earn it in a stop.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body" id="grownups">
+        <p>This follows EVS Chapter 9, “Transport: Solving the Moving Puzzle”, in Ayansh's book (pages 45–56), in the book's order. Because EVS was hard for him last term, every idea starts with a “💡” card that explains it with an everyday example (the school gate at home time, a pencil rolling off the desk, a hill-temple ropeway) before any question. After each answer the full correct sentence or the exam answer is shown and read out, so he hears and sees the right wording, not just “correct”. Teaching is read aloud by default (switch it off at the top). The last round of each stop is <b>on your own</b>: no clue until his second try. Three stars means very few slips.</p>
+        <h3>Part 1 · Moving around (pages 45–47)</h3>
+        <ol>
+          <li><b>The Busy Road</b> (pages 45–46): what transport is (people and things), spot the vehicles on the busy road, and sort vehicles into land, water and air.</li>
+          <li><b>Transport Troubles</b> (page 46): too much traffic, smoke and air pollution, unsafe roads, too far, crowded or steep; good roads need smooth surfaces, clear signs and careful rules.</li>
+          <li><b>Think Like a Designer</b> (pages 46–47): the five steps SEE, ASK, THINK, TRY, CHECK and their questions, practised on a rolling pencil and a hot bus stop, put in order and matched.</li>
+        </ol>
+        <h3>Part 2 · Managing traffic (pages 47–48)</h3>
+        <ol start="4">
+          <li><b>The Traffic Signal</b> (page 47): red stop, yellow wait, green go; what pedestrians are; the three reasons signals were invented.</li>
+          <li><b>Round and Round</b> (pages 47–48): the roundabout (circular junction, island in the middle, same direction); Sion and King's Circle (Mumbai), Hudson Circle (Bangalore), Panjagutta (Hyderabad), Yerawada (Pune); why busy junctions still need signals.</li>
+        </ol>
+        <h3>Part 3 · Clever answers around the world (pages 48–52)</h3>
+        <ol start="6">
+          <li><b>Germany's Autobahn</b> (pages 48–49): a wide highway for fast travel between cities, no roundabouts or signals, few stops.</li>
+          <li><b>Pedal Power</b> (pages 49–50): a bicycle runs on your energy and makes no smoke; cleaner air and quieter roads; what makes cycling to school safer.</li>
+          <li><b>Colombia's Cable Cars</b> (pages 50–51): Medellin's hill problem solved through the air, walked through the five designer steps; ways to go up in the air, under the ground or over water.</li>
+          <li><b>The Grand Trunk Road</b> (pages 51–52): one of India's oldest roads, rebuilt by Sher Shah Suri; trees (shade), wells (water) and sarais (rest); still used today.</li>
+        </ol>
+        <h3>Part 4 · Our turn (pages 53–56)</h3>
+        <ol start="10">
+          <li><b>India's Moving Puzzles</b> (page 53): Germany looked at waiting, Colombia at steep hills; the six problems you may see in an Indian town; every place needs its own clever answer.</li>
+          <li><b>My Moving Puzzle</b> (pages 54–56): he picks a problem, a reason, an idea (from the book's list: safer road, better bus stop, cycle path, sky bus, school walking path, river boat-bus) and why it helps. The game shows his design to copy into pages 54–55 and draw.</li>
+        </ol>
+        <h3>Exam Corner and Grand Review</h3>
+        <ol start="12">
+          <li><b>Key Word Wizard</b>: 10 key words with meanings, one-word answers, and spelling (traffic, signal, bicycle, transport, pollution, cable, island, road).</li>
+          <li><b>Exam Practice</b>: fill in the blanks with a word box, true or false (with the corrected sentence), match the following, and short answers shown as a model “write it like this” answer. Questions are picked fresh each time, so replaying gives new practice.</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all four parts and a “Chapter 9 Moving Puzzle Solver” certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Quick revision: questions to ask him before the exam</h3>
+        <ol class="revlist">
+          <li><b>What is transport?</b> It helps people and things move from one place to another (cars, buses, trains, bicycles, boats, aeroplanes).</li>
+          <li><b>Name two problems transport creates.</b> Too much traffic; smoke from vehicles causes air pollution (also unsafe, crowded roads).</li>
+          <li><b>What do good roads need?</b> Smooth surfaces, clear signs and careful rules.</li>
+          <li><b>The five designer steps?</b> See the problem, ask why, think of ideas, try one idea, check if it works.</li>
+          <li><b>What is a traffic signal? What do the colours mean?</b> Red, yellow and green lights that control vehicles and pedestrians. Red stop, yellow wait, green go.</li>
+          <li><b>Why were traffic signals invented?</b> To prevent accidents at busy intersections, control vehicles and pedestrians, and improve traffic flow.</li>
+          <li><b>What is a roundabout?</b> A circular road junction with a small island in the middle; vehicles go round in the same direction. Signals still work better at very busy intersections.</li>
+          <li><b>What is the Autobahn?</b> Germany's wide, well-planned highway for fast travel between cities, with no roundabouts or traffic signals.</li>
+          <li><b>Why is a bicycle good?</b> It runs on your energy and makes no smoke: cleaner air, quieter roads.</li>
+          <li><b>How did Medellin (Colombia) solve its hill problem?</b> Cable cars: small cabins hanging from strong cables carry people up and down the hills.</li>
+          <li><b>What is the Grand Trunk Road?</b> One of India's oldest road routes, improved and rebuilt by Sher Shah Suri, with trees, wells and resting places called sarais.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Sorting vehicles into land, water and air, the road-safety ideas for cycling, and the meaning of “pedestrians” are small extras to answer the book's own Wonder Junction questions; they are not spelled out in the book.</li>
+          <li>The everyday examples (pencil, hot bus stop, ring game, dhaba) are mine, added to make each idea concrete.</li>
+          <li>Open questions (roundabouts in your city, another clever way to travel, his own design) accept any answer. Please also do the Discovery Route walk on page 53 with him and let him draw his design on page 55.</li>
+          <li>The book says to finish the L1 and L2 worksheets on the school app; I could not find them on the dashboard, so the Exam Practice stop is based on the book pages.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>On the next car or auto ride, ask him to read the traffic signal aloud and say what the driver must do.</li>
+          <li>Find a roundabout near home and watch which way the traffic goes round.</li>
+          <li>Ask him to explain one chapter idea to you as if he were the teacher: explaining is the best test of understanding.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Road map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🛺</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const steps = [1, 2, 10, 5];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+
+const KEY = 'ayansh-ricky-road-trip-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, queue) {
+  try {
+    if (!canSpeak) return;
+    if (!queue) speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ' to ').replace(/=/g, ' equals ').replace(/…/g, ' and so on');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false, wrongs = 0;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own choices
+function freeChoice(parent, { prompt, options, onPick }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' }); let over = false;
+  options.forEach(opt => row.append(h('button', { type: 'button', class: 'choice words', 'data-ok': '1', onclick: e => { if (over) return; over = true; const me = e.currentTarget; row.querySelectorAll('button').forEach(x => { if (x !== me) x.disabled = true; }); me.classList.add('right'); sfx.good(); onPick(opt); } }, opt)));
+  wrap.append(row); parent.append(wrap);
+}
+// several asks one after the other
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (q.before) holder.append(q.before);
+    if (q.onShow) q.onShow();
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 750); } });
+  };
+  next();
+}
+const hintP = t => h('p', { class: 'hintcap' }, t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollIn = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+const srctag = t => h('span', { class: 'srctag' }, t);
+
+/* ---------- speaking helpers ---------- */
+const speakClean = t => String(t).replace(/[“”"]/g, '').replace(/_{2,}/g, ' blank ').replace(/…/g, '. ').replace(/→/g, ' becomes ').replace(/✓/g, '');
+function hush() { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} }
+// speak one line and call done when it ends (with a timer in case the browser never says it ended)
+function speakLine(text, done, rate = 0.85) {
+  let fin = false, t = null;
+  const end = () => { if (fin) return; fin = true; clearTimeout(t); done && done(); };
+  if (!canSpeak || !voiceOn) { t = setTimeout(end, 80); return () => { fin = true; clearTimeout(t); }; }
+  try {
+    const u = new SpeechSynthesisUtterance(speakClean(text));
+    u.lang = 'en-IN'; u.rate = rate; u.pitch = 1.05; u.onend = end; u.onerror = end;
+    speechSynthesis.speak(u);
+  } catch (e) { end(); }
+  t = setTimeout(end, 1600 + String(text).split(/\s+/).length * 620);
+  return () => { fin = true; clearTimeout(t); };
+}
+function sayNow(text) { if (!voiceOn || !canSpeak) return; hush(); setTimeout(() => say(speakClean(text)), 60); }
+
+/* ---------- small builders ---------- */
+const below = () => { const b = h('div', { class: 'below' }); api.stage.append(b); return b; };
+function chain(list, step, onAll) { let i = 0; const next = () => { if (i >= list.length) return onAll && onAll(); const it = list[i++]; step(it, next, i - 1); }; next(); }
+const picOpt = map => o => [h('span', { class: 'pe', 'aria-hidden': 'true' }, map[o] || ''), o];
+function learnCard(title, body, ex) {
+  return h('div', { class: 'learn' }, h('h3', {}, title),
+    [].concat(body).map(b => typeof b === 'string' ? h('p', {}, b) : b),
+    ex ? h('div', { class: 'ex' }, ex.map(x => typeof x === 'string' ? h('span', { class: 'exchip' }, x) : x)) : null);
+}
+const textOf = x => typeof x === 'string' ? x : (x && x.textContent) || '';
+// a "💡" idea card, read aloud, with a button to go on
+function teach(parent, { title, body, ex, read, btn = 'Got it! ➜' }, then) {
+  const card = learnCard(title, body, ex);
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.remove(); hush(); then(); } }, btn);
+  parent.append(card, go);
+  api.guide(read || [title].concat([].concat(body).map(textOf)).join(' '));
+  bubble.textContent = `💡 ${title}: listen, read the card, then tap “Got it!”`;
+  return card;
+}
+function hiWord(word, part) { // a word with one part highlighted
+  const i = word.indexOf(part);
+  return i < 0 ? word : [word.slice(0, i), h('span', { class: 'hl2' }, part), word.slice(i + part.length)];
+}
+function scene(sky, ground, extra) {
+  return h('div', { class: 'scene', role: 'img', 'aria-label': extra && extra.label || 'A picture' },
+    extra && extra.over ? extra.over : null,
+    h('div', { class: 'srow sky' }, sky.map(x => typeof x === 'string' ? h('span', {}, x) : x)),
+    h('div', { class: 'srow' }, ground.map(x => typeof x === 'string' ? h('span', {}, x) : x)));
+}
+
+/* ---------- the rainbow picture ---------- */
+const RB = [['Red', '#E5484D'], ['Orange', '#F28C28'], ['Yellow', '#F7C623'], ['Green', '#2E9E5B'], ['Blue', '#2F6FD0'], ['Indigo', '#4B3FB5'], ['Violet', '#8B5BC8']];
+const OFF = '#E2EAF3';
+function rainbowSvg(n = 7) {
+  let s = '<svg viewBox="0 0 240 128" class="rbsvg" role="img" aria-label="A rainbow">';
+  RB.forEach(([, c], i) => { const r = 112 - i * 12; s += `<path data-arc="${i}" d="M ${120 - r} 124 A ${r} ${r} 0 0 1 ${120 + r} 124" fill="none" stroke="${i < n ? c : OFF}" stroke-width="11" stroke-linecap="round"/>`; });
+  return s + '</svg>';
+}
+function paintArc(svg, i, on = true) { const p = svg.querySelector(`[data-arc="${i}"]`); if (p) p.setAttribute('stroke', on ? RB[i][1] : OFF); }
+
+/* ---------- sorting things into boxes ---------- */
+function sortGame(parent, { bins, items, ask, onDone }) {
+  const wrap = h('div', { class: 'sorter' });
+  const now = h('div', { class: 'sortnow' });
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const lists = {};
+  const binsEl = h('div', { class: 'bins' }, bins.map(b => { const l = h('div', { class: 'binlist' }); lists[b.k] = l; return h('div', { class: 'bin', style: `--bc:${b.c || 'var(--blue-soft)'}` }, h('div', { class: 'binhead' }, h('span', { 'aria-hidden': 'true' }, b.e || ''), b.label), l); }));
+  let i = 0, wrongs = 0, busy = false;
+  const show = () => {
+    hintBox.replaceChildren(); fb.textContent = ''; fb.className = 'fb';
+    if (i >= items.length) { now.replaceChildren(fact('All sorted! ✓')); row.replaceChildren(); return onDone && onDone(); }
+    const it = items[i]; wrongs = 0;
+    now.replaceChildren(h('div', { class: 'sortcard pop' }, it.e ? h('span', { class: 'se', 'aria-hidden': 'true' }, it.e) : null, h('span', { class: 'st' }, it.t)));
+    api.guide(ask ? ask(it) : it.t);
+    row.replaceChildren(...bins.map(b => h('button', { type: 'button', class: 'choice words', 'data-ok': b.k === it.bin ? '1' : null, onclick: e => pick(b, e.currentTarget) }, (b.e ? b.e + ' ' : '') + b.label)));
+  };
+  const pick = (b, el) => {
+    if (busy) return;
+    const it = items[i];
+    if (b.k === it.bin) {
+      busy = true; el.classList.add('right'); [...row.children].forEach(x => x.disabled = true); sfx.good();
+      fb.textContent = it.ok || praise(); fb.className = 'fb good';
+      if (it.ok) sayNow(it.ok);
+      lists[b.k].append(h('span', { class: 'chip pop' }, (it.e ? it.e + ' ' : '') + (it.short || it.t)));
+      setTimeout(() => { busy = false; i++; show(); }, it.ok ? 2600 : 900);
+    } else {
+      el.classList.add('wrong'); el.disabled = true; sfx.oops(); run.mistakes++; wrongs++;
+      fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) { fb.textContent = oopsLine(); if (it.why) { hintBox.replaceChildren(hintP(it.why)); speakGuide(it.why); } }
+      else fb.textContent = 'Not quite. Have a think and try again!';
+    }
+  };
+  wrap.append(now, row, fb, hintBox, binsEl); parent.append(wrap); show();
+}
+
+/* ---------- tap the right words ---------- */
+function tapWords(parent, { lines, targets, grid, onDone, hint, after }) {
+  const T = new Set(targets.map(x => x.toLowerCase()));
+  const clean = w => w.replace(/[^A-Za-z'’-]/g, '').replace(/’/g, "'").toLowerCase();
+  const box = h('div', { class: grid ? 'wordgrid' : 'tapbox' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let need = 0, got = 0, wrongs = 0, over = false;
+  const counter = h('p', { class: 'counter' });
+  const btn = w => {
+    const c = clean(w), ok = T.has(c); if (ok) need++;
+    const b = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+      if (over || b.classList.contains('hit')) return;
+      if (ok) {
+        b.classList.add('hit'); sfx.tap(got); got++; counter.textContent = `Found ${got} of ${need}`;
+        after && after(c, b);
+        if (got >= need) { over = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+      } else {
+        shakeEl(b); b.classList.add('miss'); setTimeout(() => b.classList.remove('miss'), 600);
+        sfx.oops(); run.mistakes++; wrongs++;
+        fb.textContent = `“${w.replace(/[^A-Za-z'’ -]/g, '')}” is not one of them. Try another word.`; fb.className = 'fb oops';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(c); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, w);
+    return b;
+  };
+  if (grid) lines.forEach(w => box.append(btn(w)));
+  else lines.forEach(ln => { const row = h('p', { class: 'tapline' }); ln.split(' ').forEach(w => row.append(btn(w))); box.append(row); });
+  counter.textContent = `Found 0 of ${need}`;
+  parent.append(box, counter, fb, hintBox);
+}
+
+/* ---------- the poem / story reader ---------- */
+function glossify(line, gloss) {
+  if (!gloss) return line;
+  return line.split(' ').map((w, i) => { const c = w.replace(/[^A-Za-z]/g, '').toLowerCase(); return [i ? ' ' : '', gloss[c] ? h('mark', { class: 'gl' }, w) : w]; }).flat();
+}
+function reader(parent, { lines, title, by, gloss, breaks = [], onDone, rate }) {
+  const box = h('div', { class: 'poem' });
+  if (title) box.append(h('h3', { class: 'ptitle' }, title));
+  const heard = new Set(); let stop = null, finished = false;
+  let self = null;
+  const finish = () => { if (finished) return; finished = true; if (self) { self.disabled = true; self.textContent = '✓ All read'; } onDone && onDone(); };
+  const mark = i => { heard.add(i); els[i].classList.add('heard'); if (heard.size === lines.length) finish(); };
+  function halt() { if (stop) stop(); stop = null; hush(); els.forEach(e => e.classList.remove('now')); }
+  function play(i, chainOn) {
+    els.forEach((e, j) => e.classList.toggle('now', j === i));
+    stop = speakLine(lines[i], () => { els[i].classList.remove('now'); mark(i); if (chainOn && i + 1 < lines.length) setTimeout(() => { if (box.isConnected) play(i + 1, true); }, 300); }, rate);
+  }
+  const els = lines.map((ln, i) => {
+    const b = h('button', { type: 'button', class: 'pline', 'aria-label': 'Hear this line: ' + ln, onclick: () => { halt(); setTimeout(() => play(i, false), 80); } }, glossify(ln, gloss));
+    box.append(b); if (breaks.includes(i)) box.append(h('div', { class: 'pgap' }));
+    return b;
+  });
+  if (by) box.append(h('p', { class: 'pby' }, by));
+  const playAll = h('button', { class: 'btn primary', type: 'button', onclick: () => { halt(); setTimeout(() => play(0, true), 80); } }, '▶ Read it to me');
+  self = h('button', { class: 'btn', type: 'button', onclick: () => { halt(); lines.forEach((_, i) => mark(i)); } }, '📖 I read it myself');
+  api.cleanup(halt);
+  parent.append(box, h('div', { class: 'readbtns' }, canSpeak && voiceOn ? playAll : null, self));
+}
+// he reads each line out loud himself
+function echoRead(parent, { lines, onDone, what = 'the whole poem' }) {
+  let i = 0; const box = h('div', { class: 'echo' }); parent.append(box);
+  const show = () => {
+    if (i >= lines.length) { box.replaceChildren(fact('🎤 Super reading!', `You read ${what} aloud by yourself.`)); return onDone && onDone(); }
+    const ln = lines[i];
+    const hear = h('button', { class: 'btn', type: 'button', onclick: () => sayNow(ln) }, '🔊 Hear it first');
+    const said = h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); sfx.good(); i++; show(); } }, '🎤 I said it!');
+    box.replaceChildren(h('p', { class: 'echocount' }, `Line ${i + 1} of ${lines.length}`), h('p', { class: 'echoline' }, ln), h('div', { class: 'readbtns' }, canSpeak ? hear : null, said));
+  };
+  show();
+}
+
+/* ---------- letter tiles: spell a word ---------- */
+function spellTiles(parent, { word, prefix = '', letters, pic, prompt, onDone, hint }) {
+  const need = word.slice(prefix.length).split('');
+  const wrap = h('div', { class: 'ask', 'data-word': word });
+  if (pic) wrap.append(h('div', { class: 'cluepic', 'aria-hidden': 'true' }, pic));
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'slots', 'aria-live': 'polite' }, prefix ? h('span', { class: 'given' }, prefix) : null, need.map(() => h('span', { class: 'slot' }, '')));
+  const slots = [...show.querySelectorAll('.slot')];
+  const tray = h('div', { class: 'ltray', role: 'group', 'aria-label': 'Letters' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  letters.forEach(L => {
+    const b = h('button', { type: 'button', class: 'ltile', 'aria-label': 'Letter ' + L, onclick: () => {
+      if (over || b.disabled) return;
+      if (L.toLowerCase() === need[n]) {
+        slots[n].textContent = L.toLowerCase(); slots[n].classList.add('fill'); b.disabled = true; sfx.tap(n); n++;
+        if (n >= need.length) { over = true; show.classList.add('right'); sfx.good(); fb.textContent = `${praise()} ${word}!`; fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(word); onDone && onDone(); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not that letter. Have a think and try again!';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(n); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, L.toUpperCase());
+    tray.append(b);
+  });
+  wrap.append(show, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word tiles: build a sentence ---------- */
+const joinWords = tiles => tiles.join(' ').replace(/ ([.,!?])/g, '$1');
+function buildSentence(parent, { tiles, decoys = [], decoyWhy, onDone, prompt }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const line = h('div', { class: 'sline', 'aria-live': 'polite' }, h('span', { class: 'ph' }, 'Tap the words in order…'));
+  const tray = h('div', { class: 'stray' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  const all = shuffle([...tiles.map(t => ({ t, real: true })), ...decoys.map(t => ({ t, real: false }))]);
+  all.forEach(o => {
+    const b = h('button', { type: 'button', class: 'wtile', onclick: () => {
+      if (over || b.disabled) return;
+      if (o.t === tiles[n]) {
+        if (n === 0) line.replaceChildren();
+        line.append(h('span', { class: 'wput pop' }, o.t)); b.disabled = true; b.classList.add('used'); sfx.tap(n); n++;
+        if (n >= tiles.length) { over = true; line.classList.add('right'); sfx.good(); const s = joinWords(tiles); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(s); onDone && onDone(s); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = !o.real && decoyWhy ? decoyWhy : n === 0 ? 'A sentence starts with a capital letter. Which word comes first?' : o.t === '.' ? 'The full stop comes at the very end.' : 'Not that word yet. Read what you have and think what comes next.';
+        if (!run.solo || wrongs >= 2) { const x = `Next word: “${tiles[n]}”`; hintBox.replaceChildren(hintP(x)); }
+      }
+    } }, o.t);
+    tray.append(b);
+  });
+  wrap.append(line, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word search (book page 27) ---------- */
+function wordSearch(parent, { grid, words, where, onDone }) {
+  const C = grid[0].length;
+  const g = h('div', { class: 'ws', style: `--c:${C}`, role: 'group', 'aria-label': 'Word search' });
+  const cells = [];
+  grid.forEach((row, r) => row.split('').forEach((ch, c) => { const b = h('button', { type: 'button', class: 'wsc', 'aria-label': `${ch}, row ${r + 1}, column ${c + 1}`, onclick: () => tap(r, c) }, ch); cells.push(b); g.append(b); }));
+  const cell = (r, c) => cells[r * C + c];
+  const list = h('div', { class: 'wslist' }, words.map(w => h('span', { class: 'wsw', 'data-w': w }, w)));
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Tap the first letter of a word, then its last letter.');
+  const found = new Set(); let first = null, wrongs = 0;
+  function tap(r, c) {
+    if (found.size === words.length) return;
+    if (!first) { first = [r, c]; cell(r, c).classList.add('sel'); sfx.pop(); return; }
+    const [r0, c0] = first; cell(r0, c0).classList.remove('sel'); first = null;
+    if (r0 === r && c0 === c) return;
+    const dr = Math.sign(r - r0), dc = Math.sign(c - c0), len = Math.max(Math.abs(r - r0), Math.abs(c - c0)) + 1;
+    const straight = r0 === r || c0 === c || Math.abs(r - r0) === Math.abs(c - c0);
+    let s = ''; const path = [];
+    if (straight) for (let k = 0; k < len; k++) { s += grid[r0 + dr * k][c0 + dc * k]; path.push(cell(r0 + dr * k, c0 + dc * k)); }
+    const w = words.find(x => !found.has(x) && (x === s || x === [...s].reverse().join('')));
+    cells.forEach(x => x.classList.remove('look'));
+    if (w) {
+      found.add(w); path.forEach(p => p.classList.add('got')); list.querySelector(`[data-w="${w}"]`).classList.add('got');
+      sfx.good(); fb.textContent = `${w}! ${found.size} of ${words.length} found.`; fb.className = 'fb good'; sayNow(w.toLowerCase());
+      if (found.size === words.length) { fb.textContent = 'You found them all! ' + praise(); onDone && onDone(); }
+    } else {
+      sfx.oops(); run.mistakes++; wrongs++; cell(r, c).classList.add('shake'); setTimeout(() => cell(r, c).classList.remove('shake'), 450);
+      fb.className = 'fb oops'; fb.textContent = 'That is not one of the words. Tap the first letter, then the last letter.';
+      if (!run.solo || wrongs >= 2) {
+        const left = words.find(x => !found.has(x)), [rr, cc, tip] = where[left];
+        cell(rr, cc).classList.add('look'); fb.textContent = `Clue: ${left} ${tip}. It starts at the letter with the red ring.`; speakGuide(`Clue: ${left.toLowerCase()} ${tip}.`);
+      }
+    }
+  }
+  parent.append(list, g, fb);
+}
+
+
+/* =================================================================
+   TRANSPORT PIECES: traffic light, roundabout, matching, ordering,
+   quiz with an explanation after each answer
+   ================================================================= */
+const LIGHTS = { r: ['Red', 'STOP', 'Red means stop.'], y: ['Yellow', 'WAIT', 'Yellow means wait.'], g: ['Green', 'GO', 'Green means go.'] };
+function trafficLight(on, tap) {
+  const lamps = ['r', 'y', 'g'].map(k => h('button', { type: 'button', class: 'tlamp ' + k + (on === k ? ' on' : ''), 'aria-label': LIGHTS[k][0] + ' light', 'data-k': k, onclick: tap ? () => tap(k) : null, tabindex: tap ? null : '-1' }));
+  const box = h('div', { class: 'tlbox', role: 'img', 'aria-label': 'Traffic signal' }, lamps);
+  const el = h('div', { style: 'display:flex;flex-direction:column;align-items:center' }, box, h('div', { class: 'tlpole' }));
+  el.light = k => lamps.forEach(l => l.classList.toggle('on', l.dataset.k === k));
+  return el;
+}
+function roundaboutSvg() {
+  const car = (a, c) => { const x = 150 + 92 * Math.cos(a), y = 150 + 92 * Math.sin(a), deg = a * 180 / Math.PI; return `<rect x="${x - 13}" y="${y - 8}" width="26" height="16" rx="5" fill="${c}" stroke="#1E2A44" stroke-width="2" transform="rotate(${deg + 90} ${x} ${y})"/>`; };
+  return `<svg viewBox="0 0 300 300" class="rabout" role="img" aria-label="A roundabout: a round road with a green island in the middle, and cars going around it the same way (clockwise, as in India)">
+  <rect width="300" height="300" fill="#BFE3A8"/>
+  <rect x="122" y="0" width="56" height="300" fill="#5B6378"/><rect x="0" y="122" width="300" height="56" fill="#5B6378"/>
+  <circle cx="150" cy="150" r="118" fill="#5B6378"/>
+  <circle cx="150" cy="150" r="66" fill="#6FBF73" stroke="#FFFFFF" stroke-width="5"/>
+  <text x="150" y="146" text-anchor="middle" font-size="34">🌳</text><text x="150" y="176" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="13" fill="#1E2A44">island</text>
+  <circle cx="150" cy="150" r="92" fill="none" stroke="#F7C623" stroke-width="3" stroke-dasharray="12 10"/>
+  <g class="spin">${car(0, '#E5484D')}${car(Math.PI / 2, '#2F6FD0')}${car(Math.PI, '#F7C623')}${car(Math.PI * 1.5, '#FFFFFF')}</g>
+  <path d="M 70 70 A 112 112 0 0 1 150 38" fill="none" stroke="#FFFFFF" stroke-width="4" marker-end="url(#ah)"/>
+  <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#FFFFFF"/></marker></defs>
+</svg>`;
+}
+// match the following: tap a box on the left, then its partner on the right
+function matchGame(parent, { pairs, heads = ['', ''], onDone, why }) {
+  const wrap = h('div', { class: 'match' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Tap a box on the left, then its partner on the right.');
+  const hintBox = h('div', { class: 'below' });
+  const L = h('div', { class: 'mcol' }, heads[0] ? h('h4', {}, heads[0]) : null), R = h('div', { class: 'mcol' }, heads[1] ? h('h4', {}, heads[1]) : null);
+  let sel = null, got = 0, wrongs = 0, n = 0;
+  const lefts = pairs.map(([a], i) => h('button', { type: 'button', class: 'mitem', 'data-i': String(i), onclick: e => { const b = e.currentTarget; if (b.classList.contains('done')) return; lefts.forEach(x => x.classList.remove('sel')); sel = i; b.classList.add('sel'); sfx.pop(); sayNow(a); } }, a));
+  const rights = shuffle(pairs.map(([, r], i) => ({ r, i }))).map(o => h('button', { type: 'button', class: 'mitem', 'data-i': String(o.i), onclick: e => {
+    const b = e.currentTarget; if (b.classList.contains('done')) return;
+    if (sel == null) { fb.textContent = 'First tap a box on the left.'; fb.className = 'fb'; return; }
+    if (o.i === sel) {
+      n++; [lefts[sel], b].forEach(x => { x.classList.remove('sel', 'look'); x.classList.add('done'); x.dataset.n = '✓'; });
+      got++; sfx.good(); const said = `${pairs[sel][0]}: ${pairs[sel][1]}`; fb.textContent = '✓ ' + said; fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(said);
+      sel = null; rights.forEach(x => x.classList.remove('look'));
+      if (got === pairs.length) { fb.textContent = 'All matched! ' + praise(); onDone && setTimeout(onDone, 300); }
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); b.classList.add('wrong'); setTimeout(() => b.classList.remove('wrong'), 450);
+      fb.className = 'fb oops'; fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not quite. Have a think and try again!';
+      if (!run.solo || wrongs >= 2) { const right = rights.find(x => Number(x.dataset.i) === sel); if (wrongs >= 2) right.classList.add('look'); const t = why ? why(sel) : `${pairs[sel][0]} goes with “${pairs[sel][1]}”.`; if (wrongs >= 2 || why) { hintBox.replaceChildren(hintP(wrongs >= 2 ? t : (why ? why(sel) : ''))); speakGuide(hintBox.textContent); } }
+    }
+  } }, o.r));
+  L.append(...lefts); R.append(...rights); wrap.append(L, R);
+  parent.append(wrap, fb, hintBox);
+}
+// put things in the right order
+function orderGame(parent, { items, prompt, onDone, hint }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const slots = items.map((_, i) => h('div', { class: 'oslot' }, h('i', {}, String(i + 1)), h('span', { class: 'note' }, '…')));
+  const list = h('div', { class: 'order' }, slots);
+  const tray = h('div', { class: 'stray' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0;
+  shuffle(items.slice()).forEach(t => {
+    const b = h('button', { type: 'button', class: 'wtile', 'data-ord': String(items.indexOf(t)), onclick: () => {
+      if (n >= items.length || b.disabled) return;
+      if (t === items[n]) {
+        slots[n].classList.add('fill'); slots[n].lastChild.replaceWith(h('span', {}, t)); b.disabled = true; b.classList.add('used'); sfx.tap(n); n++;
+        if (n === items.length) { sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+      } else {
+        wrongs++; run.mistakes++; sfx.oops(); shakeEl(b); fb.className = 'fb oops';
+        fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not that one yet. Have a think!';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(n); hintBox.replaceChildren(hintP(x)); speakGuide(x); }
+      }
+    } }, t);
+    tray.append(b);
+  });
+  wrap.append(list, tray, fb, hintBox); parent.append(wrap);
+}
+// a list of questions; after each right answer an explanation (the full sentence, the reason or an exam answer) and a Next button
+function quiz(parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (list.length > 1) holder.append(h('p', { class: 'counter' }, `Question ${i} of ${list.length}`));
+    if (q.before) holder.append(typeof q.before === 'function' ? q.before() : q.before);
+    askChoice(holder, { ...q, onDone: () => {
+      const after = typeof q.after === 'function' ? q.after() : q.after;
+      if (!after) return setTimeout(next, 750);
+      const node = typeof after === 'string' ? fact(after) : after;
+      holder.append(node); sayNow(textOf(node));
+      const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); next(); } }, i >= list.length ? 'Done ✓' : 'Next question ➜');
+      holder.append(go); scrollIn(go);
+    } });
+  };
+  next();
+}
+const wordBox = words => h('div', { class: 'wordbox' }, h('b', {}, 'Word box'), words.map(w => h('span', { class: 'exchip' }, w)));
+const examCard = (q, a) => h('div', { class: 'answer' }, h('h3', {}, '✍️ Write it like this in your exam'), h('p', {}, a));
+const TF = ['✅ True', '❌ False'];
+const tfQ = ([s, t, fix]) => ({ guide: `True or false? ${s}`, before: h('p', { class: 'tfbig' }, s), prompt: 'True or false?', options: TF, answer: t ? TF[0] : TF[1], hint: () => hintP(t ? 'Think again: this one is right!' : 'Something in this sentence is wrong.'), after: () => fact(t ? '✅ True' : '❌ False', t ? s : 'The right sentence: ' + fix) });
+const fibQ = ([s, a, opts, full]) => ({ guide: s.replace('___', 'blank'), before: () => h('p', { class: 'story' }, s), prompt: 'Which word fills the blank?', options: shuffle([a, ...opts]), answer: a, hint: () => hintP('Read the sentence again with each word. Which one makes sense?'), after: () => fact(s.replace('___', a)) });
+const owQ = ([d, a, opts]) => ({ guide: `One word: ${d}`, before: h('p', { class: 'story' }, d), prompt: 'Which word or name is it?', options: shuffle([a, ...opts]), answer: a, hint: () => hintP('Think back to the chapter. Which stop was this in?'), after: () => fact(a, d) });
+const saQ = ([q, a, wrong]) => ({ guide: q, before: h('p', { class: 'tfbig' }, '❓ ' + q), prompt: 'Which is the best answer?', options: shuffle([a, ...wrong]), answer: a, cls: 'words', hint: () => hintP('Pick the answer that really answers the question, with the reason.'), after: () => examCard(q, a) });
+
+/* =================================================================
+   QUESTION BANKS (all facts from book pages 45–56)
+   ================================================================= */
+const FIB = [
+  ['Transport helps people and things move from one ___ to another.', 'place', ['road', 'colour', 'sky'], 1],
+  ['Smoke from vehicles causes air ___.', 'pollution', ['traffic', 'signals', 'energy'], 1],
+  ['Roads are the paths on which ___ transport moves.', 'land', ['water', 'air', 'cable'], 1],
+  ['Good roads need smooth surfaces, clear ___ and careful rules.', 'signs', ['smoke', 'hills', 'boats'], 1],
+  ['Clever people do not only ___ about a problem. They try to solve it.', 'complain', ['sing', 'sleep', 'draw'], 1],
+  ['The red light means ___.', 'stop', ['go', 'wait', 'turn'], 2],
+  ['The yellow light means ___.', 'wait', ['go', 'stop', 'run'], 2],
+  ['The green light means ___.', 'go', ['stop', 'wait', 'sit'], 2],
+  ['A ___ is a circular road junction with a small island in the middle.', 'roundabout', ['signal', 'cable car', 'highway'], 2],
+  ['In a roundabout, vehicles travel in the ___ direction around the circle.', 'same', ['opposite', 'wrong', 'up'], 2],
+  ['Traffic signals work better at very ___ intersections.', 'busy', ['empty', 'small', 'quiet'], 2],
+  ['Germany is known for well-planned highways called the ___.', 'Autobahn', ['sarai', 'Grand Trunk Road', 'cable car'], 3],
+  ['A bicycle runs on your ___.', 'energy', ['petrol', 'smoke', 'cables'], 3],
+  ['A cable car is a small cabin that hangs from strong ___.', 'cables', ['trees', 'wheels', 'bridges'], 3],
+  ['The cable cars were built in the city of ___ in Colombia.', 'Medellin', ['Mumbai', 'Pune', 'Germany'], 3],
+  ['The Grand Trunk Road was improved and rebuilt by ___.', 'Sher Shah Suri', ['a traffic police officer', 'a bus driver', 'Germany'], 3],
+  ['Resting places on the Grand Trunk Road were called ___.', 'sarais', ['roundabouts', 'signals', 'cable cars'], 3],
+  ['Every place has its own problem, so every place needs its own clever ___.', 'answer', ['bus', 'signal', 'road'], 4],
+  ['SEE, ASK, THINK, TRY and CHECK is called thinking like a ___.', 'designer', ['driver', 'traveller', 'trader'], 1],
+];
+const TFS = [
+  ['Transport helps people and things move from one place to another.', true, '', 1],
+  ['Transport never creates any problems.', false, 'Transport can create problems too, like traffic and air pollution.', 1],
+  ['Clever people only complain about problems.', false, 'Clever people look at a problem carefully and try to solve it.', 1],
+  ['The yellow light means go.', false, 'The yellow light means wait. Green means go.', 2],
+  ['Traffic signals were invented to make roads safer and prevent accidents.', true, '', 2],
+  ['A roundabout has a small island in the middle.', true, '', 2],
+  ['In a roundabout, vehicles travel in different directions.', false, 'In a roundabout, vehicles travel in the same direction around the circle.', 2],
+  ['Hudson Circle is a roundabout in Bangalore.', true, '', 2],
+  ['The Autobahn has many traffic signals and roundabouts.', false, 'The Autobahn has no roundabouts or traffic signals.', 3],
+  ['A bicycle makes a lot of smoke.', false, 'A bicycle makes no smoke. It runs on your energy.', 3],
+  ['A street with more bicycles can mean cleaner air and quieter roads.', true, '', 3],
+  ['In Medellin, cable cars are only for tourists.', false, 'In Medellin, cable cars help people go to school, work and markets every day.', 3],
+  ['Sher Shah Suri improved and rebuilt the Grand Trunk Road.', true, '', 3],
+  ['Parts of the Grand Trunk Road are still used today.', true, '', 3],
+  ['Every place has the same transport problem.', false, 'Every place has its own problem, so every place needs its own clever answer.', 4],
+];
+const ONEWORD = [
+  ['It helps people and things move from one place to another.', 'transport', ['traffic', 'pollution', 'sarai'], 1],
+  ['Dirty air caused by smoke from vehicles.', 'air pollution', ['traffic jam', 'transport', 'cable car'], 1],
+  ['Too many vehicles on a road at the same time.', 'traffic', ['bicycle', 'sarai', 'island'], 1],
+  ['People who walk on or across the road.', 'pedestrians', ['drivers', 'traders', 'designers'], 2],
+  ['A set of red, yellow and green lights that controls vehicles and pedestrians.', 'traffic signal', ['roundabout', 'Autobahn', 'cable car'], 2],
+  ['A circular road junction with a small island in the middle.', 'roundabout', ['traffic signal', 'highway', 'sarai'], 2],
+  ['A wide highway in Germany built for fast travel between cities.', 'Autobahn', ['Grand Trunk Road', 'cycle path', 'roundabout'], 3],
+  ['A vehicle that runs on your energy and makes no smoke.', 'bicycle', ['car', 'bus', 'aeroplane'], 3],
+  ['A small cabin that hangs from strong cables and carries people up and down a hill.', 'cable car', ['bus', 'boat', 'bullock cart'], 3],
+  ['One of India’s oldest road routes.', 'Grand Trunk Road', ['Autobahn', 'Sion Circle', 'cycle path'], 3],
+  ['The ruler who improved and rebuilt the Grand Trunk Road.', 'Sher Shah Suri', ['a trader', 'a messenger', 'a designer'], 3],
+  ['Resting places for travellers on the Grand Trunk Road.', 'sarais', ['wells', 'signals', 'islands'], 3],
+];
+const MATCHES = {
+  world: { heads: ['Place', 'Clever answer'], pairs: [['Germany', 'Autobahn highway'], ['Medellin, Colombia', 'cable cars'], ['India, long ago', 'Grand Trunk Road'], ['Netherlands', 'safe cycle path near school']] },
+  lights: { heads: ['Light', 'Meaning'], pairs: [['🔴 Red', 'stop'], ['🟡 Yellow', 'wait'], ['🟢 Green', 'go']] },
+  steps: { heads: ['Step', 'Question'], pairs: [['1. SEE', 'What is going wrong?'], ['2. ASK', 'Why is it happening?'], ['3. THINK', 'What can we try?'], ['4. TRY', 'Draw it, build it or plan it.'], ['5. CHECK', 'Did it help? Can it be better?']] },
+  circles: { heads: ['Roundabout', 'City'], pairs: [['Sion Circle', 'Mumbai'], ['Hudson Circle', 'Bangalore'], ['Panjagutta circle', 'Hyderabad'], ['Yerawada circle', 'Pune']] },
+  gt: { heads: ['On the old road', 'It gave travellers'], pairs: [['🌳 Trees', 'shade from the hot sun'], ['🪣 Wells', 'water to drink'], ['🏠 Sarais', 'a place to rest']] },
+  problems: { heads: ['Problem', 'Clever answer'], pairs: [['Long waits at traffic signals between cities', 'a highway with no stops (Autobahn)'], ['Homes on steep hills', 'cable cars through the air'], ['Smoke and noise on roads', 'more bicycles and cycle paths'], ['A very long journey long ago', 'a road with trees, wells and sarais']] },
+};
+const SHORT = [
+  ['What is transport?', 'Transport helps people and things move from one place to another. We use cars, buses, trains, bicycles, boats and aeroplanes.', ['Transport is a red light that means stop.', 'Transport is a resting place for travellers.'], 1],
+  ['Name two problems that transport can create.', 'Too much traffic, and smoke in the air which causes air pollution. Roads may also feel unsafe.', ['Clean air and quiet roads.', 'Trees, wells and sarais.'], 1],
+  ['What do good roads need?', 'Good roads need smooth surfaces, clear signs and careful rules.', ['Good roads need lots of honking.', 'Good roads need steep hills.'], 1],
+  ['What are the five steps of thinking like a designer?', 'SEE the problem, ASK why, THINK of ideas, TRY one idea, and CHECK if it works.', ['Stop, wait and go.', 'Complain, complain and complain again.'], 1],
+  ['Why were traffic signals invented?', 'To prevent accidents at busy intersections, to control the movement of vehicles and pedestrians, and to make traffic flow better with less confusion.', ['To make the roads more colourful.', 'So that cars can go faster than trains.'], 2],
+  ['What is a roundabout?', 'A roundabout is a circular road junction with a small island in the middle. Vehicles go around it in the same direction until they turn into the road they need.', ['A roundabout is a German highway with no stops.', 'A roundabout is a cabin hanging from cables.'], 2],
+  ['If roundabouts help traffic move smoothly, why do some places still need traffic lights?', 'Traffic signals work better at very busy intersections. Both help to make roads safer and more organised.', ['Because roundabouts are only for bicycles.', 'Because traffic lights look pretty at night.'], 2],
+  ['How does the Autobahn help people travel quickly?', 'The Autobahn is a wide highway with few stops and no traffic signals or roundabouts, so traffic moves smoothly and fast between cities.', ['It has a red light at every corner.', 'It carries people through the air on cables.'], 3],
+  ['Why is a bicycle good for our city?', 'A bicycle runs on our own energy and makes no smoke. More bicycles mean cleaner air and quieter roads.', ['A bicycle makes a lot of smoke.', 'A bicycle needs a lot of petrol.'], 3],
+  ['How did the people of Medellin solve their hill problem?', 'They built cable cars. The cabins hang from strong cables and carry people through the air, up and down the steep hills, quickly and safely.', ['They built a highway with no traffic signals.', 'They planted trees and dug wells.'], 3],
+  ['Why did travellers long ago need trees, wells and sarais on the Grand Trunk Road?', 'Trees gave them shade, wells gave them water to drink, and sarais gave them a place to rest before they continued their long journey.', ['To control the traffic with lights.', 'To play games on the road.'], 3],
+  ['How can we make cycling to school safer?', 'With safe cycle paths, wearing a helmet, using lights and bright clothes, and following traffic rules.', ['By riding fast on the wrong side of the road.', 'By cycling with no brakes.'], 3],
+];
+const pick = (bank, n, part) => shuffle(bank.filter(x => !part || [].concat(part).includes(x[3]))).slice(0, n);
+
+/* =================================================================
+   PART 1 · MOVING AROUND (pages 45–47)
+   ================================================================= */
+function busyRoad() {
+  return h('div', { class: 'road', role: 'img', 'aria-label': 'A busy road near school time: a school bus, cars, an auto-rickshaw, bicycles, a traffic police officer, and a mother and child waiting to cross' },
+    h('div', { class: 'rrow' }, '🌳', '🏢', '🚸', '🏬', '🌳'),
+    h('div', { class: 'rrow' }, '🚌', '🚗', '🛺', '🚙'),
+    h('div', { class: 'lane' }),
+    h('div', { class: 'rrow' }, '🚲', '👮', '🚲', '🚕', '🛵'),
+    h('div', { class: 'rrow', style: 'font-size:30px' }, '👩', '🧒', '🚶', ' ', '💨'),
+    h('p', { class: 'cap' }, 'A busy Indian road near school time · Honk! Honk!'));
+}
+const VEH = [
+  { e: '🚗', t: 'car', bin: 'land' }, { e: '🚌', t: 'bus', bin: 'land' }, { e: '🚆', t: 'train', bin: 'land' }, { e: '🚲', t: 'bicycle', bin: 'land' }, { e: '🛺', t: 'auto-rickshaw', bin: 'land' },
+  { e: '⛵', t: 'boat', bin: 'water' }, { e: '🚢', t: 'ship', bin: 'water' }, { e: '✈️', t: 'aeroplane', bin: 'air' }, { e: '🚁', t: 'helicopter', bin: 'air' }, { e: '🚡', t: 'cable car', bin: 'air' },
+];
+const LWA = [{ k: 'land', label: 'On land', e: '🛣️', c: 'var(--green-soft)' }, { k: 'water', label: 'On water', e: '🌊', c: 'var(--blue-soft)' }, { k: 'air', label: 'In the air', e: '☁️', c: 'var(--violet-soft)' }];
+function playRoad(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 45–46 · Embark'), busyRoad());
+    teach(b, { title: 'What is transport?', body: ['Honk! Honk! The cars are moving slowly. The bus has stopped. Two bicycles are waiting. Everyone wants to reach school, work, the market and home.', h('p', {}, h('b', {}, 'Transport'), ' helps people and things move from one place to another.'), 'When Papa drives you to school in the car, the car is transport for people. When a truck brings mangoes to the market, the truck is transport for things.'], ex: ['🚗 cars', '🚌 buses', '🚆 trains', '🚲 bicycles', '⛵ boats', '✈️ aeroplanes'] }, () => {
+      quiz(b, [
+        { guide: 'What does transport help us do?', prompt: 'Transport helps people and things…', options: shuffle(['move from one place to another', 'sleep at night', 'grow taller']), answer: 'move from one place to another', hint: () => hintP('Think of the school bus taking you from home to school.'), after: 'Transport helps people and things move from one place to another.' },
+        { guide: 'A truck brings vegetables from the farm to the market. What is it moving?', prompt: 'A truck brings vegetables from the farm to the market. It moves…', options: shuffle(['things', 'people', 'nothing']), answer: 'things', hint: () => hintP('Vegetables are not people. They are things.'), after: 'Transport moves people AND things.' },
+      ], () => { skill('move'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 45 · The busy road'), busyRoad());
+    api.guide('Look at the busy road near school. Tap every vehicle that carries people or things. Do not tap the people or the trees!');
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), counter = h('p', { class: 'counter' }), box = h('div', { class: 'wordgrid' });
+    b.append(box, counter, fb);
+    const VE = ['school bus', 'car', 'auto', 'bicycle', 'scooter', 'taxi'];
+    let got = 0;
+    shuffle(['🚌 school bus', '🚗 car', '🛺 auto', '🚲 bicycle', '🛵 scooter', '🚕 taxi', '👮 policeman', '🌳 tree', '🏢 building', '🚸 sign']).forEach(w => {
+      const ok = VE.includes(w.slice(w.indexOf(' ') + 1));
+      const bt = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+        if (bt.classList.contains('hit') || got >= VE.length) return;
+        if (ok) { bt.classList.add('hit'); sfx.tap(got); got++; counter.textContent = `Found ${got} of ${VE.length}`; if (got === VE.length) { sfx.good(); fb.textContent = 'You found all 6 vehicles! ' + praise(); fb.className = 'fb good'; api.done(); } }
+        else { shakeEl(bt); sfx.oops(); run.mistakes++; fb.className = 'fb oops'; fb.textContent = `A ${w.slice(w.indexOf(' ') + 1)} is not a vehicle. It does not carry people from place to place.`; speakGuide(fb.textContent); }
+      } }, w);
+      box.append(bt);
+    });
+    counter.textContent = `Found 0 of ${VE.length}`;
+  } else if (r === 2) {
+    b.append(srctag('Pages 46 and 51 · Land, water and air'));
+    teach(b, { title: 'Where do vehicles move?', body: ['Roads are the paths on which land transport moves: cars, buses, bicycles. Trains move on land too, on rails.', 'Boats and ships move on water. Aeroplanes move through the air. In hilly cities, cable cars also move through the air!'], ex: ['🛣️ land', '🌊 water', '☁️ air'] }, () => {
+      sortGame(b, { bins: LWA, ask: it => `${it.t}: does it move on land, on water or in the air?`, items: shuffle(VEH.slice()).slice(0, 7).map(x => ({ ...x, why: x.bin === 'land' ? 'It moves on roads or rails, on the ground.' : x.bin === 'water' ? 'It floats and moves on water.' : 'It moves above the ground, through the air.' })), onDone: api.done });
+    });
+  } else {
+    b.append(srctag('Pages 45–46 · On your own'));
+    quiz(b, [fibQ(FIB[0]), fibQ(FIB[2]), owQ(ONEWORD[0]), { guide: 'Which one is NOT a vehicle?', prompt: 'Which one is NOT a vehicle?', options: shuffle(['tree', 'train', 'boat', 'aeroplane']), answer: 'tree', hint: () => hintP('A vehicle carries people or things. Can a tree carry you to school?'), after: 'A tree is not transport. Trains, boats and aeroplanes are.' }], api.done);
+  }
+}
+
+const TROUBLE = [
+  { e: '🚗🚙🚕🚌', t: 'too much traffic', m: 'So many vehicles that everyone moves slowly.' },
+  { e: '💨🚌', t: 'air pollution', m: 'Smoke from vehicles makes the air dirty.' },
+  { e: '⚠️🚸', t: 'unsafe roads', m: 'The road feels dangerous to walk or cycle on.' },
+  { e: '⛰️🚌', t: 'too steep', m: 'The road goes up a very steep hill.' },
+  { e: '🧍🧍🧍🚌', t: 'too crowded', m: 'Too many people squeezed into a bus or train.' },
+];
+function playTrouble(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 46 · Transport problems'));
+    teach(b, { title: 'Transport can create problems too', body: ['There may be too much traffic. There may be smoke in the air, which causes air pollution. The road may feel unsafe. Some places may be too far, too crowded, too steep or too difficult to reach.', h('p', {}, h('b', {}, 'Traffic'), ' means lots of vehicles on the road at the same time, like the long line of cars at your school gate at home time.'), h('p', {}, h('b', {}, 'Air pollution'), ' means dirty air. When a bus puffs black smoke and you cough, that is air pollution.')], ex: TROUBLE.map(x => `${x.e} ${x.t}`) }, () => {
+      quiz(b, TROUBLE.slice(0, 4).map(x => ({ guide: `${x.m} Which problem is this?`, before: h('div', { class: 'cluepic', 'aria-hidden': 'true' }, x.e), prompt: x.m + ' Which problem is it?', options: shuffle([x.t, ...shuffle(TROUBLE.filter(y => y !== x).map(y => y.t)).slice(0, 2)]), answer: x.t, hint: () => hintP(x.m) })), () => { skill('trouble'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 46 · Roads'));
+    teach(b, { title: 'What makes a good road?', body: ['Roads are the paths on which land transport moves. A road is not only a path.', h('p', {}, 'Good roads need ', h('b', {}, 'smooth surfaces, clear signs and careful rules'), '.'), 'Think of a road full of potholes: the auto bumps and jumps! A smooth road with clear signs like “SCHOOL AHEAD” keeps everyone safe.'], ex: ['🛣️ smooth surface', '🚸 clear signs', '🚦 careful rules'] }, () => {
+      api.guide('Tap the three things that every good road needs.');
+      const GOOD = ['smooth surface', 'clear signs', 'careful rules'];
+      const opts = shuffle([...GOOD, 'potholes', 'loud honking', 'no signs']);
+      const fb = h('p', { class: 'fb', 'aria-live': 'polite' }); let got = 0;
+      const grid = h('div', { class: 'wordgrid' }, opts.map(o => { const bt = h('button', { type: 'button', class: 'w', 'data-ok': GOOD.includes(o) ? '1' : null, onclick: () => {
+        if (bt.classList.contains('hit') || got >= 3) return;
+        if (GOOD.includes(o)) { bt.classList.add('hit'); sfx.tap(got); got++; if (got === 3) { sfx.good(); fb.className = 'fb good'; fb.textContent = 'Good roads need smooth surfaces, clear signs and careful rules.'; sayNow(fb.textContent); api.done(); } }
+        else { shakeEl(bt); sfx.oops(); run.mistakes++; fb.className = 'fb oops'; fb.textContent = `“${o}” makes a road worse, not better.`; speakGuide(fb.textContent); }
+      } }, o); return bt; }));
+      b.append(grid, fb);
+    });
+  } else {
+    b.append(srctag('Page 46 · On your own'));
+    quiz(b, [fibQ(FIB[1]), fibQ(FIB[3]), owQ(ONEWORD[1]), owQ(ONEWORD[2]), tfQ(TFS[1])], api.done);
+  }
+}
+
+const STEPS = ['SEE the problem', 'ASK why', 'THINK of ideas', 'TRY one idea', 'CHECK if it works'];
+const STEPQ = ['What is going wrong?', 'Why is it happening?', 'What can we try?', 'Draw it, build it or plan it.', 'Did it help? Can it be made better?'];
+const stepCards = () => h('div', { class: 'steps5' }, STEPS.map((s, i) => h('div', { class: 'step5 s' + (i + 1) }, h('b', {}, `${i + 1}. ${s.split(' ')[0]}`), h('span', {}, s.slice(s.indexOf(' ') + 1)), h('span', {}, STEPQ[i]))));
+const PENCIL = [['My pencil keeps rolling off my desk.', 'SEE'], ['It rolls because it is round and the desk is a little slanted.', 'ASK'], ['Ideas: a pencil box, a rubber band around it, a groove on the desk.', 'THINK'], ['I put a rubber band around my pencil.', 'TRY'], ['Does it still roll? No! It stays on the desk. It worked!', 'CHECK']];
+const BUSSTOP = [['Children wait in the hot sun at the school bus stop.', 'SEE'], ['There is no roof at the bus stop.', 'ASK'], ['Ideas: a roof, a big tree, an umbrella stand.', 'THINK'], ['We plan a bus stop with a roof and a bench.', 'TRY'], ['Now the children wait in the shade. It helped!', 'CHECK']];
+function playDesigner(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 46–47 · How clever people solve transport problems'));
+    teach(b, { title: 'Think like a designer', body: ['Every road, bridge, train, bicycle path and bus route began with a problem. Clever people do not only complain about a problem. They look at it carefully and try to solve it, in five simple steps:', stepCards(), 'This is called thinking like a designer.'], read: 'Think like a designer. Every road, bridge, train, bicycle path and bus route began with a problem. Clever people do not only complain. They look carefully and try to solve it, in five steps. One, SEE the problem: what is going wrong? Two, ASK why: why is it happening? Three, THINK of ideas: what can we try? Four, TRY one idea: draw it, build it or plan it. Five, CHECK if it works: did it help? Can it be made better? This is called thinking like a designer.' }, () => {
+      b.replaceChildren(srctag('A real example: the rolling pencil'));
+      api.guide('Here is a small problem from your own desk. Read each step and say which step it is.');
+      quiz(b, PENCIL.map(([s, a], i) => ({ guide: s + ' Which step is this?', before: h('p', { class: 'story' }, '✏️ ' + s), prompt: 'Which designer step is this?', options: ['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'], answer: a, cls: 'chunk', hint: () => hintP(`Step ${i + 1} is ${a}: ${STEPQ[i]}`) })), () => { skill('design'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 46–47 · The five steps in order'), stepCards());
+    api.guide('Put the five designer steps in the right order. What comes first?');
+    setTimeout(() => { b.querySelector('.steps5').remove(); orderGame(b, { items: ['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'], prompt: 'Tap the steps in order: 1 to 5', hint: n => `Step ${n + 1} is ${['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'][n]}: ${STEPQ[n]}`, onDone: () => { b.append(fact('SEE → ASK → THINK → TRY → CHECK')); api.done(); } }); }, 3500);
+  } else if (r === 2) {
+    b.append(srctag('Pages 46–47 · Step and question'));
+    api.guide('Match each step to its question.');
+    matchGame(b, { ...MATCHES.steps, onDone: api.done });
+  } else if (r === 3) {
+    b.append(srctag('A real example: the hot bus stop'));
+    api.guide('Children wait in the hot sun at the bus stop. Let us solve it like a designer. Which step is each sentence?');
+    quiz(b, BUSSTOP.map(([s, a], i) => ({ guide: s + ' Which step is this?', before: h('p', { class: 'story' }, '🚏 ' + s), prompt: 'Which designer step is this?', options: ['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'], answer: a, cls: 'chunk', hint: () => hintP(`Step ${i + 1} is ${a}: ${STEPQ[i]}`) })), api.done);
+  } else {
+    b.append(srctag('Pages 46–47 · On your own'));
+    quiz(b, [
+      { guide: 'Which step comes first?', prompt: 'Which designer step comes FIRST?', options: shuffle(['SEE', 'TRY', 'CHECK', 'THINK']), answer: 'SEE', cls: 'chunk', hint: () => hintP('Before you can fix a problem, you have to notice it.') , after: 'Step 1: SEE the problem.' },
+      { guide: 'Which step asks: did it help? Can it be made better?', prompt: '“Did it help? Can it be made better?” Which step?', options: shuffle(['CHECK', 'ASK', 'SEE', 'THINK']), answer: 'CHECK', cls: 'chunk', hint: () => hintP('It is the very last step.'), after: 'Step 5: CHECK if it works.' },
+      { guide: 'Which step asks: why is it happening?', prompt: '“Why is it happening?” Which step?', options: shuffle(['ASK', 'TRY', 'CHECK', 'SEE']), answer: 'ASK', cls: 'chunk', hint: () => hintP('This step is a question word: why?'), after: 'Step 2: ASK why.' },
+      fibQ(FIB[4]), fibQ(FIB[18]),
+    ], api.done);
+  }
+}
+
+/* =================================================================
+   PART 2 · MANAGING TRAFFIC (pages 47–48)
+   ================================================================= */
+function playSignal(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 47 · The traffic signal'));
+    teach(b, { title: 'The traffic signal', body: [h('p', {}, 'A ', h('b', {}, 'traffic signal'), ' is a set of red, yellow and green lights used to control vehicles and pedestrians at road crossings.'), h('p', {}, h('b', {}, 'Pedestrians'), ' are people who walk on or across the road, like you and Mumma at the zebra crossing.'), 'It is like a race at school: the teacher says “Stop!”, “Get ready…”, “Go!”'], ex: ['🔴 Red = STOP', '🟡 Yellow = WAIT', '🟢 Green = GO'] }, () => {
+      b.replaceChildren(srctag('Page 47 · Tap each light'));
+      api.guide('Tap each light on the signal to learn what it means.');
+      const seen = new Set(); const mean = h('p', { class: 'tlmean', 'aria-live': 'polite' }, 'Tap a light!');
+      const tl = trafficLight(null, k => { tl.light(k); mean.textContent = `${LIGHTS[k][0]}: ${LIGHTS[k][1]}`; mean.style.color = k === 'r' ? 'var(--red)' : k === 'y' ? '#B98A00' : 'var(--green)'; sayNow(LIGHTS[k][2]); sfx.tap(seen.size); seen.add(k); if (seen.size === 3 && !tl.dataset.done) { tl.dataset.done = '1'; setTimeout(() => { skill('signal'); api.done(); }, 800); } });
+      b.append(h('div', { class: 'tl' }, tl, mean));
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 47 · What should the car do?'));
+    const order = shuffle(['r', 'y', 'g', 'r', 'g']);
+    const tl = trafficLight(null); const holder = h('div', { class: 'below' });
+    b.append(h('div', { class: 'tl' }, tl, h('div', { class: 'cluepic', 'aria-hidden': 'true' }, '🚗')), holder);
+    chain(order, (k, next, i) => {
+      tl.light(k); holder.replaceChildren(h('p', { class: 'counter' }, `Light ${i + 1} of ${order.length}`));
+      api.guide(`The light is ${LIGHTS[k][0].toLowerCase()}. What should the car do?`);
+      askChoice(holder, { prompt: `The light is ${LIGHTS[k][0].toUpperCase()}. The car should…`, options: ['STOP', 'WAIT', 'GO'], answer: LIGHTS[k][1], cls: 'chunk', hint: () => hintP('Red = stop, yellow = wait, green = go.'), onDone: () => setTimeout(next, 900) });
+    }, api.done);
+  } else if (r === 2) {
+    b.append(srctag('Page 47 · Why were traffic signals invented?'));
+    teach(b, { title: 'Why do we have traffic signals?', body: ['Traffic signals were invented to make roads safer and prevent accidents. They help vehicles move in an orderly way and reduce traffic jams.', h('ul', {}, h('li', {}, 'To prevent accidents at busy intersections (where roads cross).'), h('li', {}, 'To control the movement of vehicles and pedestrians.'), h('li', {}, 'To improve traffic flow and reduce confusion on the roads.'))], ex: ['🚫💥 fewer accidents', '🚶 safe crossing', '🚗➡️ smooth traffic'] }, () => {
+      api.guide('Tap the three real reasons why traffic signals were invented.');
+      const GOOD = ['to prevent accidents', 'to control vehicles and pedestrians', 'to reduce confusion and jams'];
+      const opts = shuffle([...GOOD, 'to make roads colourful', 'to make cars go faster', 'to stop people walking']);
+      const fb = h('p', { class: 'fb', 'aria-live': 'polite' }); let got = 0;
+      b.append(h('div', { class: 'wordgrid', style: 'grid-template-columns:repeat(auto-fill,minmax(200px,1fr))' }, opts.map(o => { const bt = h('button', { type: 'button', class: 'w', 'data-ok': GOOD.includes(o) ? '1' : null, onclick: () => {
+        if (bt.classList.contains('hit') || got >= 3) return;
+        if (GOOD.includes(o)) { bt.classList.add('hit'); sfx.tap(got); got++; if (got === 3) { sfx.good(); fb.className = 'fb good'; fb.textContent = 'Signals keep everyone safe and help traffic move in order.'; sayNow(fb.textContent); api.done(); } }
+        else { shakeEl(bt); sfx.oops(); run.mistakes++; fb.className = 'fb oops'; fb.textContent = `No: signals were not invented ${o}.`; speakGuide('Not that one. Signals are about safety and order.'); }
+      } }, o); return bt; })), fb);
+    });
+  } else {
+    b.append(srctag('Page 47 · On your own'));
+    quiz(b, [fibQ(FIB[5]), fibQ(FIB[6]), owQ(ONEWORD[4]), owQ(ONEWORD[3]), tfQ(TFS[3]), saQ(SHORT[4])], api.done);
+  }
+}
+
+const CIRCLES = [['Sion Circle', 'Mumbai'], ['King’s Circle', 'Mumbai'], ['Hudson Circle', 'Bangalore'], ['Panjagutta circle', 'Hyderabad'], ['Yerawada circle', 'Pune']];
+function playRoundabout(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 47–48 · The roundabout'));
+    const pic = h('div', {}); pic.innerHTML = roundaboutSvg(); b.append(pic);
+    teach(b, { title: 'The roundabout', body: [h('p', {}, 'A ', h('b', {}, 'roundabout'), ' is a circular road junction with a small island in the middle.'), 'Vehicles slow down and travel in the same direction around the circle until they turn into the road they need. Because they keep moving smoothly, they do not always have to stop and wait for a signal.', 'It is like a ring game in the playground: everyone walks around the circle the same way, and each child leaves at their own gate.'], ex: ['⭕ circular', '🌳 island in the middle', '🔄 same direction', '🚗 keeps moving'] }, () => {
+      quiz(b, [
+        { guide: 'What is in the middle of a roundabout?', prompt: 'What is in the middle of a roundabout?', options: shuffle(['a small island', 'a traffic light', 'a railway line']), answer: 'a small island', hint: () => hintP('Look at the picture. What is green in the middle?') },
+        { guide: 'How do vehicles go around a roundabout?', prompt: 'Vehicles go around the circle in…', options: shuffle(['the same direction', 'any direction they like', 'opposite directions']), answer: 'the same direction', hint: () => hintP('Watch the cars in the picture. They all go the same way round.'), after: 'Vehicles travel in the SAME direction around the circle.' },
+      ], () => { skill('round'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 48 · Roundabouts in India'));
+    teach(b, { title: 'Roundabouts help traffic move smoothly', body: ['Roundabouts help traffic move smoothly and reduce accidents. India has many famous ones!'], ex: CIRCLES.map(([c, city]) => `⭕ ${c}, ${city}`) }, () => {
+      api.guide('Match each roundabout to its city.');
+      matchGame(b, { ...MATCHES.circles, onDone: api.done });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 48 · Wonder Junction'));
+    teach(b, { title: 'Roundabout or traffic signal?', body: ['If a roundabout helps vehicles move smoothly, why do some places still need traffic lights?', 'A roundabout and a traffic signal both help control traffic. Roundabouts can reduce waiting time, but traffic signals work better at very busy intersections. Both help make roads safer and more organised.'], ex: ['⭕ less waiting', '🚦 best when very busy', '✅ both = safer roads'] }, () => {
+      quiz(b, [fibQ(FIB[10]), tfQ(TFS[6]), saQ(SHORT[6])], api.done);
+    });
+  } else {
+    b.append(srctag('Pages 47–48 · On your own'));
+    quiz(b, [fibQ(FIB[8]), fibQ(FIB[9]), owQ(ONEWORD[5]), tfQ(TFS[5]), tfQ(TFS[7]), saQ(SHORT[5])], api.done);
+  }
+}
+
+/* =================================================================
+   PART 3 · CLEVER ANSWERS AROUND THE WORLD (pages 48–52)
+   ================================================================= */
+const placeCard = (e, name, text) => h('div', { class: 'place' }, h('span', { class: 'pe2', 'aria-hidden': 'true' }, e), h('b', {}, name), h('span', {}, text));
+function playAutobahn(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 48–49 · Germany'));
+    b.append(h('div', { class: 'road', role: 'img', 'aria-label': 'A wide German highway with clear lanes and signs and no traffic lights' }, h('div', { class: 'rrow' }, '🌲', '🪧', '🌲', '🌲', '🪧', '🌲'), h('div', { class: 'rrow' }, '🚗', '🚙', '🚚', '🚗'), h('div', { class: 'lane' }), h('div', { class: 'rrow' }, '🚙', '🚗', '🚐'), h('p', { class: 'cap' }, 'A well-planned German highway with clear lanes and signs')));
+    teach(b, { title: 'Germany’s Autobahn', body: [h('p', {}, 'Germany is known for very well-planned highways called the ', h('b', {}, 'Autobahn'), '. An Autobahn is a wide highway built for fast travel between cities.'), h('p', {}, 'Autobahns have ', h('b', {}, 'no roundabouts or traffic signals'), '. It has few stops, so there are fewer delays. It helps traffic move smoothly and safely.'), 'Germany looked at the problem of WAITING. Imagine running down a long school corridor with no doors to stop at: you reach the end quickly!'], ex: ['🇩🇪 Germany', '🛣️ wide highway', '🚫🚦 no signals', '⚡ fast travel between cities'] }, () => {
+      quiz(b, [
+        { guide: 'What is the Autobahn?', prompt: 'The Autobahn is…', options: shuffle(['a wide highway in Germany', 'a cable car in Colombia', 'an old road in India']), answer: 'a wide highway in Germany', hint: () => hintP('It is a road for fast travel between cities in Germany.') },
+        { guide: 'Why does the Autobahn have fewer delays?', prompt: 'Why does the Autobahn have fewer delays?', options: shuffle(['It has few stops and no traffic signals.', 'It has a signal at every corner.', 'It is very narrow and steep.']), answer: 'It has few stops and no traffic signals.', hint: () => hintP('What makes cars wait on a road? The Autobahn does not have them.'), after: 'Few stops and no traffic signals means less waiting.' },
+      ], () => { skill('world'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 48–49 · True or false?'));
+    api.guide('True or false? Think about the Autobahn.');
+    quiz(b, [tfQ(TFS[8]), tfQ(['The Autobahn was built to help people travel quickly between cities.', true, '']), tfQ(['The Autobahn is in India.', false, 'The Autobahn is in Germany.'])], api.done);
+  } else {
+    b.append(srctag('Pages 48–49 · On your own'));
+    quiz(b, [fibQ(FIB[11]), owQ(ONEWORD[6]), saQ(SHORT[7])], api.done);
+  }
+}
+
+const SAFEBIKE = [
+  { e: '⛑️', t: 'wearing a helmet', bin: 'safe' }, { e: '🚲', t: 'a separate cycle path', bin: 'safe' }, { e: '🦺', t: 'bright clothes and a bell', bin: 'safe' }, { e: '🚦', t: 'stopping at the red light', bin: 'safe' }, { e: '💡', t: 'lights on the cycle', bin: 'safe' },
+  { e: '↩️', t: 'riding on the wrong side', bin: 'unsafe' }, { e: '🙈', t: 'cycling with no hands', bin: 'unsafe' }, { e: '🛑', t: 'a cycle with broken brakes', bin: 'unsafe' }, { e: '📱', t: 'looking at a phone while riding', bin: 'unsafe' },
+];
+function playCycle(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 49 · Eco Route'));
+    teach(b, { title: 'The bicycle: clean and quiet', body: [h('p', {}, 'A bicycle runs on ', h('b', {}, 'your energy'), '. It makes ', h('b', {}, 'no smoke'), '.'), 'A street with more bicycles can mean cleaner air and quieter roads. A car needs petrol and puffs smoke. Your legs are the bicycle’s engine!', 'In the Netherlands there are safe cycle paths near schools, so children can cycle to school safely.'], ex: ['🦵 your energy', '🚭 no smoke', '🌬️ cleaner air', '🤫 quieter roads'] }, () => {
+      quiz(b, [
+        { guide: 'What makes a bicycle move?', prompt: 'A bicycle runs on…', options: shuffle(['your energy', 'petrol', 'electricity from cables']), answer: 'your energy', hint: () => hintP('Who pushes the pedals?') , after: 'A bicycle runs on your energy.' },
+        { guide: 'Which one makes no smoke?', prompt: 'Which one makes NO smoke?', options: shuffle(['🚲 bicycle', '🚌 bus', '🚗 car']), answer: '🚲 bicycle', hint: () => hintP('Which one has no engine?'), after: 'More bicycles = cleaner air and quieter roads.' },
+      ], () => { skill('eco'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 50 · Wonder Junction'));
+    api.guide('Many children in India enjoy cycling. What would make cycling to school safer? Sort each one.');
+    sortGame(b, { bins: [{ k: 'safe', label: 'Safer', e: '✅', c: 'var(--green-soft)' }, { k: 'unsafe', label: 'Not safe', e: '⚠️', c: 'var(--red-soft)' }], ask: it => `${it.t}: safer or not safe?`, items: shuffle(SAFEBIKE.slice()).slice(0, 7).map(x => ({ ...x, why: x.bin === 'safe' ? 'This protects the rider or helps others see them.' : 'This could cause an accident.' })), onDone: api.done });
+  } else {
+    b.append(srctag('Pages 49–50 · On your own'));
+    quiz(b, [fibQ(FIB[12]), tfQ(TFS[9]), tfQ(TFS[10]), saQ(SHORT[8])], api.done);
+  }
+}
+
+const MEDELLIN = [['Homes are on steep hills. The journey to the city below is slow and difficult.', 'SEE'], ['The hill is very steep, so roads are hard to build and buses take a long time to climb.', 'ASK'], ['If the ground is difficult, why not move through the air?', 'THINK'], ['The city builds cable cars.', 'TRY'], ['Now people reach the city quickly and safely, every day.', 'CHECK']];
+const WAYS = [
+  { e: '🚡', t: 'cable car', bin: 'air' }, { e: '✈️', t: 'aeroplane', bin: 'air' }, { e: '🚁', t: 'helicopter', bin: 'air' },
+  { e: '🚇', t: 'metro train in a tunnel', bin: 'under' }, { e: '🕳️', t: 'tunnel through a mountain', bin: 'under' },
+  { e: '⛴️', t: 'ferry boat', bin: 'water' }, { e: '🌉', t: 'bridge over a river', bin: 'water' }, { e: '🛶', t: 'boat', bin: 'water' },
+];
+function playCable(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 50 · Colombia: the hill problem'));
+    b.append(h('div', { class: 'scene', role: 'img', 'aria-label': 'Houses on a steep hill and a cable car gliding down to the city below' }, h('div', { class: 'srow sky' }, '☁️', h('span', {}, '〰️🚡〰️'), '☁️'), h('div', { class: 'srow' }, '🏘️⛰️', h('span', { class: 'small' }, '⬇️'), '🏙️')));
+    teach(b, { title: 'Colombia’s cable cars', body: ['In a city called Medellin in Colombia, many homes were built on steep hills. People needed to reach the city below for school, work and shopping, but the steep roads made the journey slow and difficult.', 'So the people thought about the problem in a new way: “If the ground is difficult, why not move through the air?”', h('p', {}, 'The city built ', h('b', {}, 'cable cars'), '. A cable car is a small cabin that hangs from strong cables. It glides high above the houses and carries people up and down the hill.'), 'Have you seen a ropeway at a hill temple or a hill station? That is the same idea!'], ex: ['🇨🇴 Medellin, Colombia', '⛰️ steep hills', '🚡 cable cars', '☁️ through the air'] }, () => {
+      quiz(b, [
+        { guide: 'What problem did the people of Medellin have?', prompt: 'What was Medellin’s transport problem?', options: shuffle(['Homes on steep hills made travel slow', 'Too many traffic signals', 'No water for travellers']), answer: 'Homes on steep hills made travel slow', hint: () => hintP('Look at the title: the hill problem.') },
+        { guide: 'What is a cable car?', prompt: 'A cable car is…', options: shuffle(['a small cabin that hangs from strong cables', 'a car with no wheels on a road', 'a boat on a river']), answer: 'a small cabin that hangs from strong cables', hint: () => hintP('It hangs in the air from strong wires called cables.'), after: 'A cable car glides high above the houses.' },
+      ], () => { skill('world'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 46 and 50 · Medellin thought like a designer'));
+    api.guide('Medellin solved its puzzle with the five designer steps. Which step is each sentence?');
+    quiz(b, MEDELLIN.map(([s, a], i) => ({ guide: s + ' Which step?', before: h('p', { class: 'story' }, '🚡 ' + s), prompt: 'Which designer step is this?', options: ['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'], answer: a, cls: 'chunk', hint: () => hintP(`Step ${i + 1} is ${a}: ${STEPQ[i]}`) })), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Page 51 · Trail Treasure and Wonder Junction'));
+    teach(b, { title: 'Up, under or over', body: ['In some cities, cable cars are not only for tourists. They help people go to school, work and markets every day.', 'When the ground is hard to cross, people may go up in the air, under the ground, or over water.'], ex: ['☁️ up in the air', '🕳️ under the ground', '🌊 over water'] }, () => {
+      sortGame(b, { bins: [{ k: 'air', label: 'Up in the air', e: '☁️', c: 'var(--violet-soft)' }, { k: 'under', label: 'Under the ground', e: '🕳️', c: 'var(--orange-soft)' }, { k: 'water', label: 'Over water', e: '🌊', c: 'var(--blue-soft)' }], ask: it => `${it.t}: up in the air, under the ground or over water?`, items: shuffle(WAYS.slice()).slice(0, 6).map(x => ({ ...x, why: x.bin === 'air' ? 'It goes above the ground.' : x.bin === 'under' ? 'It goes below the ground.' : 'It goes across water.' })), onDone: api.done });
+    });
+  } else {
+    b.append(srctag('Pages 50–51 · On your own'));
+    quiz(b, [fibQ(FIB[13]), fibQ(FIB[14]), owQ(ONEWORD[8]), tfQ(TFS[11]), saQ(SHORT[9])], api.done);
+  }
+}
+
+function playGTRoad(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 51–52 · Heritage Route'));
+    b.append(h('div', { class: 'scene', role: 'img', 'aria-label': 'The old Grand Trunk Road with trees, a bullock cart, a well and a sarai' }, h('div', { class: 'srow sky' }, '🌳', '🌳', '🕌', '🌳'), h('div', { class: 'srow' }, '🪨', '🐂🛒', '🚶', '🪣', '🏠'), h('p', { class: 'cap', style: 'font-size:13px;font-weight:800;text-align:center' }, 'The Grand Trunk Road long ago')));
+    teach(b, { title: 'India’s old moving puzzle', body: ['Long ago, India also had a transport problem: how could travellers, traders and messengers move across a very large land?', h('p', {}, 'One important answer was the ', h('b', {}, 'Grand Trunk Road'), '. It is one of India’s oldest road routes. It connected many faraway places like one long thread.'), h('p', {}, 'A ruler named ', h('b', {}, 'Sher Shah Suri'), ' improved and rebuilt this old road many years ago. Trees were planted along the road. Wells and resting places called ', h('b', {}, 'sarais'), ' helped travellers. They could stop, rest, drink water and continue their journey.'), 'Even today, parts of this old route are still used. A sarai was like a dhaba or a hotel on a long highway trip today!'], ex: ['🛣️ Grand Trunk Road', '👑 Sher Shah Suri', '🌳 trees', '🪣 wells', '🏠 sarais'] }, () => {
+      quiz(b, [
+        { guide: 'Who improved and rebuilt the Grand Trunk Road?', prompt: 'Who improved and rebuilt the Grand Trunk Road?', options: shuffle(['Sher Shah Suri', 'a bus driver', 'the people of Germany']), answer: 'Sher Shah Suri', hint: () => hintP('He was a ruler, and his name is on the old milestone.') },
+        { guide: 'What were sarais?', prompt: 'Sarais were…', options: shuffle(['resting places for travellers', 'traffic lights', 'cable cars']), answer: 'resting places for travellers', hint: () => hintP('Travellers could stop and rest there.'), after: 'Sarais were resting places for travellers.' },
+      ], () => { skill('history'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 52 · Wonder Junction'));
+    api.guide('Why would travellers long ago need trees, wells and resting places on a long road? Match each one.');
+    matchGame(b, { ...MATCHES.gt, onDone: () => { b.append(fact('Shade, water and rest!', 'Travellers walked or rode bullock carts for many days in the hot sun.')); api.done(); } });
+  } else if (r === 2) {
+    b.append(srctag('Pages 51–52 · Spell it'));
+    api.guide('Spell the name of the resting places on the Grand Trunk Road.');
+    spellTiles(b, { word: 'sarai', letters: shuffle(['s', 'a', 'r', 'a', 'i', 'e', 'o']), pic: '🏠', prompt: 'Resting places for travellers were called…', hint: n => `The word is s-a-r-a-i. Next letter: ${'sarai'[n]}`, onDone: api.done });
+  } else {
+    b.append(srctag('Pages 51–52 · On your own'));
+    quiz(b, [fibQ(FIB[15]), fibQ(FIB[16]), owQ(ONEWORD[9]), tfQ(TFS[13]), saQ(SHORT[10])], api.done);
+  }
+}
+
+/* =================================================================
+   PART 4 · OUR TURN (pages 53–56)
+   ================================================================= */
+const INDIA_PROBS = ['too much traffic near school', 'honking on busy roads', 'smoke from vehicles', 'very crowded buses or trains', 'roads unsafe for walking or cycling', 'waiting too long for transport'];
+function playIndia(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 53 · India’s moving puzzles'));
+    b.append(h('div', { class: 'mapcard' }, placeCard('🇩🇪', 'Germany', 'looked at waiting → Autobahn'), placeCard('🇨🇴', 'Colombia', 'looked at steep hills → cable cars'), placeCard('🇮🇳', 'India, long ago', 'long distances → Grand Trunk Road')));
+    teach(b, { title: 'Now it is our turn', body: ['Germany looked at waiting. Colombia looked at steep hills. India also has many transport puzzles. Look around your own town or city. You may see:', h('ul', {}, INDIA_PROBS.map(p => h('li', {}, p))), h('p', {}, h('b', {}, 'Every place has its own problem. So every place needs its own clever answer.'))] }, () => {
+      api.guide('Match each place to its clever answer.');
+      b.replaceChildren(srctag('Pages 48–53 · Who solved what?'));
+      matchGame(b, { ...MATCHES.world, onDone: () => { skill('world'); api.done(); } });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 53 · What do you notice?'), busyRoad());
+    api.guide('Tap the six transport problems the book says you may see in an Indian town. Do not tap the good things!');
+    const GOOD = ['clean quiet air', 'a safe cycle path', 'a smooth road with clear signs'];
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' }); let got = 0;
+    b.append(h('div', { class: 'wordgrid', style: 'grid-template-columns:repeat(auto-fill,minmax(190px,1fr))' }, shuffle([...INDIA_PROBS, ...GOOD]).map(o => { const ok = INDIA_PROBS.includes(o); const bt = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+      if (bt.classList.contains('hit') || got >= 6) return;
+      if (ok) { bt.classList.add('hit'); sfx.tap(got); got++; fb.className = 'fb'; fb.textContent = `Found ${got} of 6`; if (got === 6) { sfx.good(); fb.className = 'fb good'; fb.textContent = 'All six puzzles found! ' + praise(); api.done(); } }
+      else { shakeEl(bt); sfx.oops(); run.mistakes++; fb.className = 'fb oops'; fb.textContent = `“${o}” is a good thing, not a problem.`; speakGuide(fb.textContent); }
+    } }, o); return bt; })), fb);
+  } else if (r === 2) {
+    b.append(srctag('Pages 48–53 · Every place needs its own clever answer'));
+    api.guide('Match each problem to its clever answer.');
+    matchGame(b, { ...MATCHES.problems, onDone: api.done });
+  } else {
+    b.append(srctag('Page 53 · On your own'));
+    quiz(b, [fibQ(FIB[17]), tfQ(TFS[14]), { guide: 'Which country looked at the problem of waiting?', prompt: 'Which country looked at the problem of WAITING?', options: shuffle(['Germany', 'Colombia', 'India']), answer: 'Germany', hint: () => hintP('Which country built roads with no traffic signals?'), after: 'Germany looked at waiting and built the Autobahn.' }, { guide: 'Which country looked at steep hills?', prompt: 'Which country looked at STEEP HILLS?', options: shuffle(['Colombia', 'Germany', 'Netherlands']), answer: 'Colombia', hint: () => hintP('Which country built cable cars?'), after: 'Colombia looked at steep hills and built cable cars.' }], api.done);
+  }
+}
+
+const DESIGN = {
+  see: ['Too much traffic near my school gate', 'Children wait too long for the school bus', 'There is no safe place to cycle to school', 'Smoke from vehicles near the park'],
+  ask: ['Many cars stop at the gate at the same time', 'There are not enough buses', 'Cars and bikes share one busy road', 'Old vehicles puff smoke'],
+  think: ['a safer road', 'a better bus stop', 'a cycle path', 'a sky bus', 'a school walking path', 'a river boat-bus'],
+  check: ['It makes moving easier', 'It makes moving safer', 'It makes the air cleaner'],
+};
+function playMyPuzzle(api) {
+  const b = below(), r = run.round;
+  if (!run.design) run.design = {};
+  const D = run.design;
+  if (r === 0) {
+    b.append(srctag('Pages 54–55 · My Moving Puzzle'));
+    api.guide('You are now a city designer! Choose one transport problem and use the five designer steps. There is no wrong answer here.');
+    const steps = [
+      ['see', '1. SEE · My transport problem is:'],
+      ['ask', '2. ASK · I think this problem happens because:'],
+      ['think', '3. THINK and 4. TRY · One idea to fix it is:'],
+      ['check', '5. CHECK · My idea will help because:'],
+    ];
+    chain(steps, ([k, q], next) => {
+      const box = h('div', { class: 'below' }); b.replaceChildren(srctag('Pages 54–55 · My Moving Puzzle'), box);
+      api.guide(q);
+      freeChoice(box, { prompt: q, options: DESIGN[k], onPick: v => { D[k] = v; sayNow(v); setTimeout(next, 900); } });
+    }, () => {
+      b.replaceChildren(srctag('Page 55 · My design'), h('div', { class: 'mydesign' }, h('h3', {}, '🏙️ My Moving Puzzle'),
+        h('p', {}, h('b', {}, '1. SEE: '), D.see + '.'), h('p', {}, h('b', {}, '2. ASK: '), D.ask + '.'), h('p', {}, h('b', {}, '3. THINK: '), 'My idea is ' + D.think + '.'), h('p', {}, h('b', {}, '4. TRY: '), 'Draw ' + D.think + ' in the box on page 55!'), h('p', {}, h('b', {}, '5. CHECK: '), D.check + '.')));
+      api.guide('Here is your design. Copy it onto pages 54 and 55 of your book, and draw your idea in the box.');
+      skill('design'); api.done();
+    });
+  } else {
+    b.append(srctag('Page 56 · Share your design'));
+    api.guide('Tell your class about your design. Which question goes with which step?');
+    quiz(b, [
+      { guide: 'What problem did you see? Which step is that?', before: h('p', { class: 'story' }, '🔍 What problem did you see?'), prompt: 'Which designer step does this question come from?', options: ['SEE', 'ASK', 'TRY', 'CHECK'], answer: 'SEE', cls: 'chunk', hint: () => hintP('Seeing the problem is step 1.') },
+      { guide: 'How will your idea make moving easier, safer or cleaner? Which step?', before: h('p', { class: 'story' }, '✅ How will your idea make moving easier, safer or cleaner?'), prompt: 'Which designer step checks if the idea helps?', options: ['SEE', 'ASK', 'TRY', 'CHECK'], answer: 'CHECK', cls: 'chunk', hint: () => hintP('Did it help? That is the last step.') },
+      { guide: 'Who begins every good transport idea?', prompt: 'Every good transport idea begins with someone who…', options: shuffle(['notices a problem and tries to solve it', 'only complains about it', 'honks the loudest']), answer: 'notices a problem and tries to solve it', hint: () => hintP('Remember: clever people do not only complain.'), after: '“Every good transport idea begins with someone who notices a problem and tries to solve it.”' },
+    ], api.done);
+  }
+}
+
+/* =================================================================
+   PART 5 · EXAM CORNER
+   ================================================================= */
+const TERMS = [
+  ['🚌', 'transport', 'helps people and things move from one place to another'],
+  ['🚗🚙', 'traffic', 'lots of vehicles on the road at the same time'],
+  ['💨', 'air pollution', 'dirty air, caused by smoke from vehicles'],
+  ['🚶', 'pedestrians', 'people who walk on or across the road'],
+  ['🚦', 'traffic signal', 'red, yellow and green lights that control vehicles and pedestrians'],
+  ['⭕', 'roundabout', 'a circular road junction with a small island in the middle'],
+  ['🛣️', 'Autobahn', 'a wide, fast highway in Germany with no signals or roundabouts'],
+  ['🚡', 'cable car', 'a small cabin hanging from strong cables, used in Medellin, Colombia'],
+  ['🏠', 'sarai', 'a resting place for travellers on the Grand Trunk Road'],
+  ['🧠', 'designer', 'someone who sees, asks, thinks, tries and checks to solve a problem'],
+];
+const SPELL = [['traffic', '🚗🚙'], ['signal', '🚦'], ['bicycle', '🚲'], ['transport', '🚌'], ['pollution', '💨'], ['cable', '🚡'], ['island', '🌳'], ['road', '🛣️']];
+function playWords(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Key words of the chapter'));
+    api.guide('These are the key words of the chapter. Tap each card to learn its meaning. Exams often ask for these!');
+    const opened = new Set();
+    b.append(h('div', { class: 'flips' }, TERMS.map(([e, w, m]) => {
+      const c = h('button', { type: 'button', class: 'flip', onclick: () => {
+        c.classList.add('open'); c.replaceChildren(h('span', { class: 'fe', 'aria-hidden': 'true' }, e), h('span', { class: 'fw', style: 'font-size:21px' }, w), h('span', { class: 'fm' }, m));
+        sayNow(`${w}: ${m}.`); opened.add(w);
+        if (opened.size === TERMS.length && !b.dataset.done) { b.dataset.done = '1'; skill('words'); setTimeout(api.done, 500); }
+      } }, h('span', { class: 'fe', 'aria-hidden': 'true' }, e), h('span', { class: 'fw', style: 'font-size:21px' }, w), h('span', { class: 'fm' }, 'Tap to see'));
+      return c;
+    })));
+  } else if (r === 1) {
+    b.append(srctag('Exam · One-word answers'));
+    api.guide('Exams ask: give one word. Pick the word that matches.');
+    quiz(b, pick(ONEWORD, 6).map(owQ), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Exam · Spell the key words'));
+    const words = shuffle(SPELL.slice()).slice(0, 3);
+    chain(words, ([w, pic], next, i) => {
+      const box = h('div', { class: 'below' }); b.replaceChildren(srctag('Exam · Spell the key words'), h('p', { class: 'counter' }, `Word ${i + 1} of ${words.length}`), box);
+      api.guide(`Spell the word: ${w}.`);
+      const extra = shuffle('aeiorstn'.split('').filter(x => !w.includes(x))).slice(0, 2);
+      spellTiles(box, { word: w, letters: shuffle([...w.split(''), ...extra]), pic, prompt: 'Spell the word you hear 🔊', hint: n => `The word is ${w.split('').join('-')}. Next letter: ${w[n]}`, onDone: () => setTimeout(next, 1300) });
+      sayNow(w);
+    }, api.done);
+  } else {
+    b.append(srctag('Exam · One-word answers · On your own'));
+    quiz(b, pick(ONEWORD, 6).map(owQ), api.done);
+  }
+}
+
+function playExam(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Exam · Fill in the blanks'));
+    const qs = pick(FIB, 6);
+    api.guide('Fill in the blanks. Use the word box, just like in your exam.');
+    b.append(wordBox(shuffle(qs.map(q => q[1]))));
+    quiz(b, qs.map(q => ({ ...fibQ(q), options: shuffle([q[1], ...shuffle(q[2]).slice(0, 2)]) })), api.done);
+  } else if (r === 1) {
+    b.append(srctag('Exam · True or false'));
+    api.guide('Write T for true and F for false. If it is false, read the right sentence.');
+    quiz(b, pick(TFS, 6).map(tfQ), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Exam · Match the following'));
+    const sets = shuffle(['world', 'lights', 'steps', 'circles', 'gt']).slice(0, 2);
+    chain(sets, (k, next, i) => {
+      const box = h('div', { class: 'below' }); b.replaceChildren(srctag(`Exam · Match the following · ${i + 1} of 2`), box);
+      api.guide('Match column A with column B.');
+      matchGame(box, { ...MATCHES[k], heads: ['Column A', 'Column B'], onDone: () => setTimeout(next, 1200) });
+    }, api.done);
+  } else if (r === 3) {
+    b.append(srctag('Exam · Short answers'));
+    api.guide('Answer in one or two sentences. Pick the best answer, then read the exam answer aloud.');
+    quiz(b, pick(SHORT, 4).map(saQ), api.done);
+  } else {
+    b.append(srctag('Exam · Mixed practice · On your own'));
+    quiz(b, shuffle([...pick(FIB, 2).map(fibQ), ...pick(TFS, 2).map(tfQ), ...pick(ONEWORD, 1).map(owQ), ...pick(SHORT, 1).map(saQ)]), api.done);
+  }
+}
+
+/* =================================================================
+   GRAND REVIEW
+   ================================================================= */
+const fromBank = (bank, part, mk) => (b, done) => { const q = mk(pick(bank, 1, part)[0]); if (q.guide) api.guide(q.guide); if (q.before) b.append(typeof q.before === 'function' ? q.before() : q.before); askChoice(b, { ...q, onDone: () => { const a = typeof q.after === 'function' ? q.after() : q.after; if (a) { const n = typeof a === 'string' ? fact(a) : a; b.append(n); sayNow(textOf(n)); } done(); } }); };
+const REVIEW_QS = [
+  { part: 1, from: 'Pages 45–46', play: fromBank(FIB, 1, fibQ) },
+  { part: 1, from: 'Pages 46–47', play: (b, done) => { const i = rand(0, 4); api.guide(`What is designer step ${i + 1}?`); askChoice(b, { prompt: `Thinking like a designer: what is step ${i + 1}?`, options: ['SEE', 'ASK', 'THINK', 'TRY', 'CHECK'], answer: STEPS[i].split(' ')[0], cls: 'chunk', hint: () => hintP('SEE, ASK, THINK, TRY, CHECK'), onDone: () => { b.append(fact(`${i + 1}. ${STEPS[i]}`, STEPQ[i])); done(); } }); } },
+  { part: 1, from: 'Pages 45–47', play: fromBank(SHORT, 1, saQ) },
+  { part: 2, from: 'Page 47', play: (b, done) => { const k = pickOne(['r', 'y', 'g']); const tl = trafficLight(k); b.append(tl); api.guide('What does this light mean?'); askChoice(b, { prompt: 'What does this light mean?', options: ['STOP', 'WAIT', 'GO'], answer: LIGHTS[k][1], cls: 'chunk', hint: () => hintP('Red = stop, yellow = wait, green = go.'), onDone: done }); } },
+  { part: 2, from: 'Pages 47–48', play: fromBank(TFS, 2, tfQ) },
+  { part: 2, from: 'Pages 47–48', play: fromBank(ONEWORD, 2, owQ) },
+  { part: 2, from: 'Page 48', play: (b, done) => { const [c, city] = pickOne(CIRCLES); api.guide(`${c} is a roundabout in which city?`); askChoice(b, { prompt: `${c} is a roundabout in…`, options: shuffle(['Mumbai', 'Bangalore', 'Hyderabad', 'Pune']), answer: city, hint: () => hintP('Sion and King’s Circle: Mumbai. Hudson: Bangalore. Panjagutta: Hyderabad. Yerawada: Pune.'), onDone: done }); } },
+  { part: 3, from: 'Pages 48–52', play: fromBank(FIB, 3, fibQ) },
+  { part: 3, from: 'Pages 48–52', play: fromBank(TFS, 3, tfQ) },
+  { part: 3, from: 'Pages 48–52', play: fromBank(SHORT, 3, saQ) },
+  { part: 3, from: 'Pages 50–52', play: fromBank(ONEWORD, 3, owQ) },
+  { part: 4, from: 'Pages 53–56', play: (b, done) => { const [p, a] = pickOne(MATCHES.problems.pairs); api.guide(`${p}. What is a clever answer?`); b.append(h('p', { class: 'tfbig' }, p)); askChoice(b, { prompt: 'Which is the clever answer to this puzzle?', options: shuffle(MATCHES.problems.pairs.map(x => x[1])), answer: a, hint: () => hintP('Every place needs its own clever answer. Which one fits this problem?'), onDone: done }); } },
+];
+function playReview(api) {
+  if (!run.qs) { const pool = shuffle(REVIEW_QS.slice()); const byPart = [1, 2, 3, 4].map(p => pool.find(q => q.part === p)); run.qs = [...byPart, ...pool.filter(q => !byPart.includes(q))].slice(0, 10); shuffle(run.qs); }
+  if (!run.firstTry) run.firstTry = {};
+  const q = run.qs[run.round % run.qs.length], before = run.mistakes;
+  const b = h('div', { class: 'below' });
+  api.stage.append(srctag(`Part ${q.part} · ${q.from}`), b);
+  q.play(b, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Moving around', 2: 'Managing traffic', 3: 'Around the world', 4: 'Our turn' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 9 Moving Puzzle Solver'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [rr, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${rr} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < rr ? '' : 'off' }, '⭐'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah! You are ready for the exam.'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'The Busy Road', idea: 'What is transport?', page: 'Book pages 45–46', rounds: 4, cut: [1, 3], icon: '🚌', play: playRoad },
+  { id: 2, part: 1, name: 'Transport Troubles', idea: 'Traffic, pollution, roads', page: 'Book page 46', rounds: 3, cut: [1, 3], icon: '💨', play: playTrouble },
+  { id: 3, part: 1, name: 'Think Like a Designer', idea: 'See, ask, think, try, check', page: 'Book pages 46–47', rounds: 5, cut: [2, 5], icon: '🧠', play: playDesigner },
+  { id: 4, part: 2, name: 'The Traffic Signal', idea: 'Red, yellow, green', page: 'Book page 47', rounds: 4, cut: [1, 3], icon: '🚦', play: playSignal },
+  { id: 5, part: 2, name: 'Round and Round', idea: 'The roundabout', page: 'Book pages 47–48', rounds: 4, cut: [2, 4], icon: '⭕', play: playRoundabout },
+  { id: 6, part: 3, name: 'Germany’s Autobahn', idea: 'No waiting', page: 'Book pages 48–49', rounds: 3, cut: [1, 3], icon: '🛣️', play: playAutobahn },
+  { id: 7, part: 3, name: 'Pedal Power', idea: 'Eco Route · bicycles', page: 'Book pages 49–50', rounds: 3, cut: [1, 3], icon: '🚲', play: playCycle },
+  { id: 8, part: 3, name: 'Colombia’s Cable Cars', idea: 'The hill problem', page: 'Book pages 50–51', rounds: 4, cut: [2, 4], icon: '🚡', play: playCable },
+  { id: 9, part: 3, name: 'The Grand Trunk Road', idea: 'Heritage Route', page: 'Book pages 51–52', rounds: 4, cut: [1, 3], icon: '🐂', play: playGTRoad },
+  { id: 10, part: 4, name: 'India’s Moving Puzzles', idea: 'Every place, its own answer', page: 'Book page 53', rounds: 4, cut: [2, 4], icon: '🇮🇳', play: playIndia },
+  { id: 11, part: 4, name: 'My Moving Puzzle', idea: 'Be a city designer', page: 'Book pages 54–56', rounds: 2, cut: [1, 2], icon: '🏙️', play: playMyPuzzle },
+  { id: 12, part: 5, name: 'Key Word Wizard', idea: 'Meanings and spellings', page: 'Whole chapter', rounds: 4, cut: [2, 4], icon: '🔤', play: playWords },
+  { id: 13, part: 5, name: 'Exam Practice', idea: 'Blanks, true/false, match, answers', page: 'Whole chapter', rounds: 5, cut: [2, 5], icon: '📝', play: playExam },
+  { id: 14, part: 6, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 9 · pages 45–56', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'move', e: '🚌', t: 'Transport spotter' },
+  { k: 'trouble', e: '💨', t: 'Problem finder' },
+  { k: 'design', e: '🧠', t: 'Young designer' },
+  { k: 'signal', e: '🚦', t: 'Signal reader' },
+  { k: 'round', e: '⭕', t: 'Roundabout rider' },
+  { k: 'world', e: '🌍', t: 'World traveller' },
+  { k: 'eco', e: '🚲', t: 'Clean-air cyclist' },
+  { k: 'history', e: '🐂', t: 'History explorer' },
+  { k: 'words', e: '🔤', t: 'Key word wizard' },
+];
+
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups(); hush();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups(); hush();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren(); delete stageEl.dataset.done;
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run || foot.querySelector('#nextBtn')) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 3 ? 'You finished Part 1! Part 2 is all about managing traffic.'
+    : L.id === 5 ? 'You finished Part 2! Part 3 takes you around the world.'
+    : L.id === 9 ? 'You finished Part 3! Part 4: now it is our turn to solve India’s puzzles.'
+    : L.id === 11 ? 'You finished Part 4! The Exam Corner is open: key words and exam practice.'
+    : L.id === 13 ? 'Exam Corner done! One last stop: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole road trip, Ayansh! Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the road map'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = RB.map(x => x[1]).concat(['#FFFFFF']);
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 6; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null; hush();
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: Ricky's traffic light */
+const heroTL = trafficLight(null); $('heroLight').append(heroTL);
+$('showHow').addEventListener('click', async () => {
+  const btn = $('showHow'), line = $('colourLine');
+  btn.disabled = true;
+  for (const [k, c] of [['r', 'var(--red)'], ['y', '#B98A00'], ['g', 'var(--green)']]) { heroTL.light(k); line.textContent = `${LIGHTS[k][0]}: ${LIGHTS[k][1]}!`; line.style.color = c; sfx.tap(k === 'r' ? 0 : k === 'y' ? 1 : 2); await wait(900); }
+  line.textContent = '🛺 Off we go!'; line.style.color = '';
+  $('reveal').hidden = false; sfx.good();
+  if (voiceOn) say('Red means stop. Yellow means wait. Green means go! Transport helps people and things move from one place to another. Let us travel together and solve moving puzzles on the way!');
+  btn.disabled = false; btn.textContent = '↻ Show me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) hush(); else if (run) speakGuide(guideText); });
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
