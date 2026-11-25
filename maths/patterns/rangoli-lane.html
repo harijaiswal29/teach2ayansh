@@ -1,0 +1,1446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Rangoli Lane</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column down a festival lane at dusk, from saffron sky to terracotta courtyard to plum night; white cards hold the play. Follows Chapter 6 (Patterns) of Ayansh's maths book, page by page. Pattern letters always keep one colour: A is pink, B is blue, C is green. This is a single-look game page (light only), like the other chapter games. */
+:root{
+  --dawn:#FFE2AE; --saffron:#FFB866; --coral:#EE7B57; --terra:#B4473A; --plum:#4A2140;
+  --board:#FFFFFF; --paper:#FFF9EE; --ink:#2A1E2C; --ink-soft:#655869; --shadow:#22121F;
+  --gold:#FFC23D; --gold-soft:#FFF2CC;
+  --la:#D6336C; --la-soft:#FCE1EB;
+  --lb:#2F6FD0; --lb-soft:#DDE8FA;
+  --lc:#1C8A55; --lc-soft:#D3F1E0;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC;
+  --lilac:#EFEAF8; --peach:#FFE6CC; --muted:#CFC3C9;
+  --on-dark:#FFFFFF; --on-dark-soft:#F3D9E6; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--plum)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);
+  background-color:var(--plum);
+  background-image:linear-gradient(180deg,var(--dawn) 0%,var(--saffron) 22%,var(--coral) 48%,var(--terra) 76%,var(--plum) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a rangoli-dot border (pink, yellow, green: an ABC pattern) */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:24px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:4px;height:12px;background:radial-gradient(circle,var(--la) 0 5px,transparent 5.5px) 0 0/36px 12px,radial-gradient(circle,var(--gold) 0 5px,transparent 5.5px) 12px 0/36px 12px,radial-gradient(circle,#3FB57A 0 5px,transparent 5.5px) 24px 0/36px 12px;background-repeat:repeat-x}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--lb-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero: the chapter opener (book page 47) */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.herorow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.rgbox{display:grid;place-items:center}
+.rgbox svg{width:min(240px,70vw);height:auto;display:block}
+.rangoli .pet,.rangoli .dot{transition:stroke-width .2s}
+.rangoli .lit{stroke:var(--board);stroke-width:5}
+.colourline{font-family:var(--display);font-weight:800;font-size:20px;min-height:1.4em;text-align:center}
+.herorow .colourline{flex:1;min-width:160px;text-align:left}
+.colourline .a{color:var(--la)}.colourline .b{color:#B98A00}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--lc-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E9DEE2;border-color:#A8949C}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(3n+1) .stopicon{background:var(--la-soft)}
+.stop:nth-child(3n+2) .stopicon{background:var(--lb-soft)}
+.stop:nth-child(3n) .stopicon{background:var(--lc-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--terra)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--la);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--lc);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--lilac);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--lb);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--lc)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice.letter{min-width:110px;letter-spacing:2px}
+.choice.stripchoice{padding:6px;min-width:0;max-width:100%}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(24px,6.5vw,36px);line-height:1.1;font-variant-numeric:tabular-nums}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--lb-soft);border:3px dashed var(--lb);border-radius:16px;padding:10px 14px;font-weight:700;max-width:520px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:16px;text-align:center;max-width:42ch}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+
+/* pattern strips */
+.strip{display:flex;flex-wrap:wrap;gap:6px 4px;justify-content:center;padding:10px;background:var(--paper);border:3px solid var(--ink);border-radius:16px;max-width:100%}
+.strip.mini{padding:4px;gap:2px;border-width:2px;background:var(--board)}
+.tile{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border-radius:12px;min-width:52px;transition:background .2s,box-shadow .2s}
+.strip.mini .tile{min-width:0;padding:2px}
+.tile .num{font-size:13px;font-weight:800;color:var(--ink-soft);line-height:1}
+.itm{width:46px;height:46px;display:grid;place-items:center;font-size:36px;line-height:1}
+.itm svg{width:100%;height:100%;display:block}
+.strip.mini .itm{width:30px;height:30px;font-size:24px}
+.itm.q{border:3px dashed var(--ink-soft);border-radius:10px;font-family:var(--display);font-weight:800;font-size:26px;color:var(--ink-soft);background:var(--board)}
+.itm.fresh{animation:pop .4s}
+.tile.now{background:var(--gold-soft);box-shadow:0 0 0 3px var(--gold)}
+.tile.now .itm.q{border-color:var(--ink);color:var(--ink);animation:bob 1.2s ease-in-out infinite}
+.tile.look{background:var(--lb-soft);box-shadow:0 0 0 3px var(--lb)}
+.tile.g2{background:var(--lilac)}
+.tile.gs{margin-left:10px}
+.tag{min-height:26px;min-width:28px;font-family:var(--display);font-weight:800;font-size:18px;border-radius:8px;display:grid;place-items:center;line-height:1}
+.strip.mini .tag{display:none}
+.tag.on{color:var(--on-color);animation:pop .35s}
+.tag.la{background:var(--la)}.tag.lb{background:var(--lb)}.tag.lc{background:var(--lc)}
+.tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.traybtn{padding:6px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center}
+.traybtn .itm{width:54px;height:54px;font-size:42px}
+.traybtn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.traybtn:disabled{opacity:.4;cursor:default}
+.traybtn.picked{background:var(--gold-soft);opacity:.55}
+.traylabel{font-weight:800;color:var(--ink-soft);font-size:15px}
+
+/* pictures drawn with CSS (book page 48 and the Real Route hunt) */
+.picrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;max-width:520px}
+.picbox{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-weight:800;font-size:14px;line-height:1.2}
+.pic{width:100%;max-width:120px;aspect-ratio:1;border:3px solid var(--ink);border-radius:12px;display:grid;place-items:center;font-size:34px;line-height:1;overflow:hidden}
+.pic.wall{background-color:#C0603A;background-image:linear-gradient(335deg,#A84E2C 23px,transparent 23px),linear-gradient(155deg,#D0754C 23px,transparent 23px),linear-gradient(335deg,#A84E2C 23px,transparent 23px),linear-gradient(155deg,#D0754C 23px,transparent 23px);background-size:58px 58px;background-position:0 2px,4px 35px,29px 31px,34px 6px}
+.pic.zigzag,.pic.dress{background-color:#FFF6EE;background-image:linear-gradient(135deg,#E03A3A 25%,transparent 25%),linear-gradient(225deg,#E03A3A 25%,transparent 25%),linear-gradient(315deg,#E03A3A 25%,transparent 25%),linear-gradient(45deg,#E03A3A 25%,transparent 25%);background-size:30px 30px;background-position:-15px 0,-15px 0,0 0,0 0}
+.pic.zigzag{background-color:#F4E1B8;background-image:linear-gradient(135deg,#2F6FD0 25%,transparent 25%),linear-gradient(225deg,#2F6FD0 25%,transparent 25%),linear-gradient(315deg,#2F6FD0 25%,transparent 25%),linear-gradient(45deg,#2F6FD0 25%,transparent 25%)}
+.pic.chess,.pic.tiles{background:repeating-conic-gradient(#2A1E2C 0 25%,#FFFFFF 0 50%) 0 0/25% 25%}
+.pic.tiles{background:repeating-conic-gradient(#3E8FB0 0 25%,#F3EBD8 0 50%) 0 0/33.4% 33.4%}
+.pic.stripes{background:repeating-linear-gradient(90deg,#E8649E 0 14px,#FFF2CC 14px 28px)}
+.pic.checks{background-color:#FFFFFF;background-image:linear-gradient(90deg,rgba(214,51,108,.55) 50%,transparent 50%),linear-gradient(rgba(214,51,108,.55) 50%,transparent 50%);background-size:24px 24px}
+.pic.dots{background:#DDE8FA radial-gradient(circle,#2F6FD0 0 6px,transparent 6.5px) 0 0/24px 24px}
+.pic.plain{background:#F1E6D6}
+.pic.plainblue{background:#CFE0EE}
+.pic.flower{background:#F7C9A0}
+.pic.fruits{background:#FFF6E0;font-size:26px}
+.pic.grill{background-color:#87C4E8;background-image:linear-gradient(#2A1E2C 4px,transparent 4px),linear-gradient(90deg,#2A1E2C 4px,transparent 4px);background-size:28px 28px}
+.pic.bangles{background:repeating-linear-gradient(90deg,#E03A3A 0 10px,#F7C623 10px 20px,#E03A3A 20px 30px,#F7C623 30px 40px,#FFF6EE 40px 46px)}
+.pic.saree{background:#8A1E4E;font-size:20px;letter-spacing:-2px}
+.hunt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;max-width:520px}
+.huntbtn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:15px;line-height:1.2;position:relative}
+.huntbtn .pic{max-width:96px}
+.huntbtn.found{background:var(--lc-soft);border-color:var(--good)}
+.huntbtn.found::after{content:"✓";position:absolute;top:-10px;right:-8px;width:30px;height:30px;border-radius:50%;background:var(--good);color:var(--on-color);display:grid;place-items:center;font-size:18px;border:2px solid var(--ink)}
+.huntbtn.no{background:var(--oops-soft);opacity:.6}
+
+/* number stones */
+.stones{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:6px 0;max-width:100%}
+.stone{width:58px;height:54px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:26px;background:#F3EBD8;border:3px solid var(--ink);border-radius:46% 54% 42% 58%/58% 46% 54% 42%;font-variant-numeric:tabular-nums}
+.stone.blank{background:var(--board);border-style:dashed;color:var(--ink-soft)}
+.stone.now{background:var(--gold-soft);box-shadow:0 0 0 3px var(--gold);border-style:solid;color:var(--ink)}
+.stone.look{background:var(--lb-soft);box-shadow:0 0 0 3px var(--lb)}
+.stone.fresh{animation:pop .4s;background:var(--lc-soft)}
+.stone.more{border:none;background:none;width:30px;font-size:22px}
+.hop{width:30px;height:54px;position:relative;display:flex;justify-content:center}
+.hop::before{content:"";position:absolute;top:2px;left:-8px;right:-8px;height:22px;border:3px solid transparent;border-top-color:var(--muted);border-radius:50% 50% 0 0}
+.hop i{position:absolute;top:-16px;font-style:normal;font-weight:800;font-size:15px;color:var(--terra);white-space:nowrap;opacity:0;transition:opacity .3s}
+.hop.on::before{border-top-color:var(--coral)}
+.hop.on i{opacity:1}
+
+/* checkpoint colour grid */
+.grid6{display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,48px));gap:0;border:3px solid var(--ink);border-radius:10px;overflow:hidden}
+.cell{aspect-ratio:1;border:1.5px solid rgba(42,30,44,.45);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink-soft);transition:transform .2s,box-shadow .2s}
+.cell.blank{background:var(--board)}
+.cell.diag{box-shadow:inset 0 0 0 4px var(--gold);z-index:1}
+.cell.now{box-shadow:inset 0 0 0 5px var(--ink);animation:glow 1.1s ease-in-out infinite}
+.cell.fresh{animation:pop .4s}
+.palette{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:440px}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:13px}
+.swatch i{width:38px;height:30px;border-radius:8px;border:2px solid var(--ink)}
+.swatch:disabled{opacity:.35;cursor:default}
+.swatch.right{background:var(--lc-soft)}
+
+/* Sam's tower */
+.towers{display:flex;gap:10px;align-items:flex-end;justify-content:center;flex-wrap:wrap}
+.tower{display:flex;flex-direction:column;align-items:center;gap:4px}
+.stack{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:40px;justify-content:flex-start}
+.brick{width:40px;height:14px;border-radius:3px;border:2px solid var(--ink);background:#F28C28}
+.brick.new{background:var(--gold);animation:pop .4s backwards}
+.brick.unk{background:var(--board);border-style:dashed}
+.tower b{font-family:var(--display);font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+.tower small{font-weight:800;color:var(--ink-soft);font-size:13px}
+.tower.now small{color:var(--ink);background:var(--gold);border-radius:6px;padding:0 6px}
+
+/* stamps + Madhubani */
+.strip.madhu{background:#FFF6E0;border:6px double #8A1E4E;border-radius:6px}
+.story{background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:18px;max-width:560px;line-height:1.5}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(34,18,31,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#DED4CE;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--la);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow{0%,100%{box-shadow:inset 0 0 0 3px var(--ink)}50%{box-shadow:inset 0 0 0 6px var(--ink)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .tile{min-width:40px;padding:4px 2px}
+  .itm{width:36px;height:36px;font-size:28px}
+  .traybtn .itm{width:46px;height:46px;font-size:36px}
+  .stone{width:46px;height:44px;font-size:21px}
+  .hop{width:22px;height:44px}
+  .hop i{font-size:13px}
+  .stone.more{display:none}
+  .picrow,.hunt{gap:8px}
+  .brick{width:30px;height:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Rangoli Lane<small>Ayansh's Chapter 6 · Patterns</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 36</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🦚</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Mor the peacock.</h2>
+        <p>Someone made a beautiful rangoli at the door. <b>What do you notice about it?</b></p>
+        <div class="herorow">
+          <div class="rgbox" id="heroRangoli"></div>
+          <p class="colourline" id="colourLine" aria-live="polite"></p>
+        </div>
+        <button class="btn primary" id="showHow" type="button">✨ Show me</button>
+        <p class="reveal" id="reveal" hidden>Pink, yellow, pink, yellow, all the way round! When shapes or colours <b>repeat</b> in a regular way, they make a <b>pattern</b>.</p>
+        <p class="note">Patterns are all around us: on walls, on clothes, in numbers, and on my feathers too!</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You finished every stop on Rangoli Lane! You finished Chapter 6.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Patterns in shapes and colours</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Patterns in art</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Patterns in numbers</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Checkpoint</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 6</h2>
+    <ol class="stops finale" id="stops5"></ol>
+
+    <section class="skillcard card">
+      <h2>My pattern tools</h2>
+      <p class="note">Each tool lights up the first time you use it in a game.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>This follows Chapter 6, “Patterns”, in Ayansh's maths book (pages 47–53). Each stop uses the book's own examples, in the same order. The games teach the ideas, not only the answers: a pattern is something that repeats in a regular way, we name the repeating part with letters (A, B, C), we find what comes next by looking back one repeat, and a number pattern adds or takes away the same number each time. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Patterns in shapes and colours (pages 47–50)</h3>
+        <ol>
+          <li><b>Patterns Everywhere</b> (pages 47–48): the rangoli from the chapter opener, the wall, dress and chessboard (he finishes a chessboard row), then he picks which row repeats in a regular way.</li>
+          <li><b>Name It with Letters</b> (pages 48–49, Guidepost): blue and yellow circles (ABAB), triangles and ovals (AABB), red, blue and green rectangles (ABC). He gives each shape its letter: the same shape gets the same letter, a new shape gets a new letter.</li>
+          <li><b>What's My Pattern?</b> (page 49, Discovery Route): he picks 2 shapes and builds a repeating pattern, then 3 shapes, then the “trickier” one: the same shape in two colours.</li>
+          <li><b>Missing Shape</b> (page 50, GRIP-1): a. the missing yellow circle (ABC) and b. the missing triangle (ABB). Round 3 (AAB) is extra practice I added.</li>
+        </ol>
+        <h3>Part 2 · Patterns in art (pages 50–51)</h3>
+        <ol start="5">
+          <li><b>Thumb-print Parade</b>: Ruhi's cat and cow prints, the stamp activity (stamp 1, stamp 2, stamp 1, stamp 2), turning the odd stamps into one creature and the even stamps into another, and “Which type of pattern is this?” (ABAB).</li>
+        </ol>
+        <h3>Part 3 · Patterns in numbers (pages 51–52)</h3>
+        <ol start="6">
+          <li><b>Number Hops</b> (pages 51–52, Guidepost): Patterns 1 to 5, adding 2, 5 and 10, and subtracting 2 and 5. He sees the first three numbers, finds the jump, then gives the next two.</li>
+          <li><b>Fill the Gaps</b> (page 52, GRIP-2): a. 12, 15  b. 15, 10  c. 12, 20  d. 30, 10.</li>
+          <li><b>Pattern Hunt</b> (page 52, Real Route): “Where do you see a pattern in your home?” as a tap-the-patterns hunt in two rooms.</li>
+        </ol>
+        <h3>Part 4 · Checkpoint (pages 52–53)</h3>
+        <ol start="9">
+          <li><b>Colour the Grid</b> (page 52, Checkpoint 1): the 6 × 6 colour grid with six empty boxes.</li>
+          <li><b>Sam's Tower</b> (page 53, Checkpoint 2): Day 4 = 8 blocks, Day 5 = 10 blocks, 30 blocks in all.</li>
+          <li><b>Madhubani Border</b> (page 53, Trail Treasure): a fish, flower and diamond border to finish and name (ABC).</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all four parts, new each time, and a Chapter 6 Pattern Champion certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Checkpoint 1 does not say what the rule is. I read it as: every row is the row above slid one box to the right, so each slanting line is one colour. The answers are row 1 orange, row 2 green, row 4 red and blue, row 6 pink and yellow. The game teaches it by lighting up the slanting line.</li>
+          <li>The Real Route question is open (“Where do you see pattern in your home?”). I turned it into a hunt with home things I drew. Please also ask him the question for real.</li>
+          <li>The Discovery Route uses Rangometry pieces in class; the game uses drawn shapes. In the stamp activity he chooses his own creatures.</li>
+          <li>The book shows all five numbers in Patterns 1 to 5. The game hides the last two so he works them out.</li>
+          <li>I did not open the separate GRIP and Checkpoint PDFs on the dashboard; I assumed they repeat the book pages.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Make a sound pattern: clap, snap, clap, snap (AB), or clap, clap, stamp (AAB). Ask him to name it with letters.</li>
+          <li>String beads or line up spoons and forks in a pattern and ask what comes next.</li>
+          <li>Walk up the stairs counting in 2s, then come down counting back in 2s.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p>The other chapter games are <a href="https://claude.ai/artifact/2Li63gCKb2RbZiu7umGiWY" target="_blank" rel="noopener">the Multiplication Fair</a>, <a href="https://claude.ai/artifact/EbV8m1UeehzinGfn1Ud28X" target="_blank" rel="noopener">Tick-Tock Town</a> (Time), <a href="https://claude.ai/artifact/RVhsNcQTJGcdwMnuv26oEj" target="_blank" rel="noopener">Skip-Hop Park</a> (Skip Counting) and <a href="https://claude.ai/artifact/88wea1z6q4Pvb6N6LwFyxp" target="_blank" rel="noopener">Take-Away Bazaar</a> (Subtraction).</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Rangoli Lane</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🦚</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const steps = [1, 2, 10, 5];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+/* ---------- shapes, colours and pattern letters ---------- */
+const COLOR = { blue: '#2F6FD0', yellow: '#F7C623', red: '#E03A3A', green: '#2E9E5B', orange: '#F28C28', pink: '#E8649E', purple: '#8B5BC8', grey: '#8C8F99', peach: '#F7B27A', black: '#2A1E2C', white: '#FFFFFF' };
+const SHAPE_NAME = { circle: 'circle', ball: 'circle', triangle: 'triangle', oval: 'oval', rect: 'rectangle', square: 'square', diamond: 'diamond', star: 'star', thumb: 'thumb print' };
+const EMOJI_NAME = { '🐱': 'cat', '🐮': 'cow', '🐟': 'fish', '🌸': 'flower', '🔶': 'diamond', '🐞': 'ladybird', '🐦': 'bird', '🦋': 'butterfly', '🐠': 'fish' };
+function svgFor(kind, color) {
+  const f = COLOR[color] || color, st = 'stroke="#2A1E2C" stroke-width="2.5" stroke-linejoin="round"';
+  const body = {
+    circle: `<circle cx="20" cy="20" r="15" fill="${f}" ${st}/>`,
+    ball: `<circle cx="20" cy="20" r="15" fill="${f}" ${st}/><ellipse cx="14.5" cy="14" rx="5" ry="3.5" fill="#FFFFFF" opacity=".55"/>`,
+    triangle: `<polygon points="20,5 36,34 4,34" fill="${f}" ${st}/>`,
+    oval: `<ellipse cx="20" cy="20" rx="17" ry="11" fill="${f}" ${st}/>`,
+    rect: `<rect x="3" y="10" width="34" height="20" rx="2" fill="${f}" ${st}/>`,
+    square: `<rect x="5" y="5" width="30" height="30" rx="2" fill="${f}" ${st}/>`,
+    diamond: `<polygon points="20,3 36,20 20,37 4,20" fill="${f}" ${st}/>`,
+    star: `<polygon points="20,3 24.7,14.5 37,15.3 27.5,23.2 30.5,35.3 20,28.7 9.5,35.3 12.5,23.2 3,15.3 15.3,14.5" fill="${f}" ${st}/>`,
+    thumb: `<ellipse cx="20" cy="20" rx="13" ry="17" fill="${f}"/><g fill="none" stroke="#FFFFFF" stroke-opacity=".5" stroke-width="1.6"><ellipse cx="20" cy="22" rx="9" ry="12"/><ellipse cx="20" cy="23" rx="5.5" ry="8"/><ellipse cx="20" cy="24" rx="2.2" ry="3.6"/></g>`,
+  }[kind] || '';
+  return `<svg viewBox="0 0 40 40" aria-hidden="true">${body}</svg>`;
+}
+const isShape = k => k.includes(':');
+function itemName(k) {
+  if (!isShape(k)) return EMOJI_NAME[k] || k;
+  const [s, c] = k.split(':');
+  return s === 'thumb' ? `${c} thumb print` : `${c} ${SHAPE_NAME[s] || s}`;
+}
+function itemEl(k, cls = '') {
+  const el = h('span', { class: 'itm ' + cls, role: 'img', 'aria-label': itemName(k) });
+  if (isShape(k)) { const [s, c] = k.split(':'); el.innerHTML = svgFor(s, c); } else el.textContent = k;
+  return el;
+}
+const LC = { A: 'la', B: 'lb', C: 'lc' };
+const patName = core => core === 'AB' ? 'ABAB' : core;
+const ALL_NAMES = ['ABAB', 'AABB', 'ABC', 'ABB', 'AAB'];
+function nameOpts(core) { const right = patName(core); return shuffle([right, ...shuffle(ALL_NAMES.filter(x => x !== right)).slice(0, 2)]); }
+function coreOf(items) {
+  for (let k = 1; k <= items.length; k++) if (items.every((x, i) => x === items[i % k])) { const seen = []; return items.slice(0, k).map(x => { if (!seen.includes(x)) seen.push(x); return 'ABC'[seen.indexOf(x)]; }).join(''); }
+  return '';
+}
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-rangoli-lane-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ' to ').replace(/=/g, ' equals ').replace(/…/g, ' and so on');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (hint) { const x = hint(opt); if (x) hintBox.replaceChildren(x); }
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own choices
+function freeChoice(parent, { prompt, options, onPick }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' }); let over = false;
+  options.forEach(opt => row.append(h('button', { type: 'button', class: 'choice words', 'data-ok': '1', onclick: e => { if (over) return; over = true; e.currentTarget.classList.add('right'); sfx.good(); onPick(opt); } }, opt)));
+  wrap.append(row); parent.append(wrap);
+}
+// several asks one after the other
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (q.before) holder.append(q.before);
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 750); } });
+  };
+  next();
+}
+const hintP = t => h('p', { class: 'hintcap' }, t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollIn = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+const srctag = t => h('span', { class: 'srctag' }, t);
+
+/* ---------- a row of shapes ---------- */
+function strip(items, opts = {}) {
+  const el = h('div', { class: 'strip' + (opts.cls ? ' ' + opts.cls : ''), role: 'group', 'aria-label': 'Pattern' });
+  const tiles = items.map((k, i) => {
+    const t = h('div', { class: 'tile' }, opts.nums ? h('span', { class: 'num' }, String(i + 1)) : null,
+      k == null ? h('span', { class: 'itm q', role: 'img', 'aria-label': 'empty box' }, '?') : itemEl(k), h('span', { class: 'tag' }, ''));
+    el.append(t); return t;
+  });
+  const itm = i => tiles[i].querySelector('.itm');
+  const S = {
+    el, tiles,
+    set(i, k) { itm(i).replaceWith(itemEl(k, 'fresh')); },
+    tag(i, L) { const g = tiles[i].lastChild; g.textContent = L; g.className = 'tag on ' + LC[L]; },
+    focus(i) { tiles.forEach((t, j) => t.classList.toggle('now', j === i)); },
+    look(i) { tiles.forEach((t, j) => t.classList.toggle('look', j === i)); },
+    group(k) { tiles.forEach((t, j) => { t.classList.toggle('g2', Math.floor(j / k) % 2 === 1); t.classList.toggle('gs', j % k === 0 && j > 0); }); },
+  };
+  if (opts.tags) opts.tags.forEach((L, i) => L && S.tag(i, L));
+  return S;
+}
+// name each shape with a letter: the same shape gets the same letter, a new shape a new letter
+function nameStrip(api, parent, items, onDone) {
+  const core = coreOf(items), k = core.length;
+  const S = strip(items); parent.append(S.el);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const seen = []; let i = 0;
+  const letterOf = key => 'ABC'[seen.indexOf(key)];
+  const autoRest = async () => {
+    box.replaceChildren();
+    if (i < items.length) { api.guide('See? It starts again! The rest get the same letters.'); for (let j = i; j < items.length; j++) { S.focus(j); S.tag(j, letterOf(items[j])); sfx.tap(j); await wait(420); } }
+    S.focus(-1); S.group(k); await wait(300);
+    api.guide(`${core.split('').join(' ')}, then ${core.split('').join(' ')} again. The part in each box repeats.`);
+    askChoice(box, { prompt: `It forms an ___ pattern.`, options: nameOpts(core), answer: patName(core), cls: 'letter', hint: () => hintP(`Read the letters out loud: ${items.map(letterOf).join(' ')}.`), onDone: () => onDone && onDone(S) });
+  };
+  const step = () => {
+    box.replaceChildren();
+    if (i > k || i >= items.length) return autoRest();
+    const key = items[i];
+    S.focus(i);
+    if (i === 0) {
+      seen.push(key); S.tag(0, 'A'); sfx.pop();
+      api.guide(`We give each shape a letter. The first one, the ${itemName(key)}, is A.`);
+      i++; setTimeout(step, reduce ? 60 : 1600); return;
+    }
+    const known = seen.includes(key), ans = known ? letterOf(key) : 'ABC'[seen.length];
+    const opts = 'ABC'.slice(0, Math.min(3, seen.length + 1)).split('');
+    api.guide(known ? `Here is a ${itemName(key)} again. Which letter?` : `Here is a ${itemName(key)}. Have we seen it before?`);
+    askChoice(box, { prompt: `Which letter is this ${itemName(key)}?`, options: opts, answer: ans, cls: 'letter',
+      hint: () => {
+        if (known) { S.look(items.indexOf(key)); return hintP(`It is the same as this one, so it gets the same letter.`); }
+        return hintP('This one is new. A new shape gets a new letter.');
+      },
+      onDone: () => { skill('name'); if (!known) seen.push(key); S.look(-1); S.tag(i, ans); i++; setTimeout(step, 650); } });
+  };
+  step();
+  return S;
+}
+// fill the empty boxes from a tray: look back one repeat to find the answer
+function fillStrip(api, parent, { items, blanks, tray, onDone, tags, nums, cls }) {
+  const k = coreOf(items).length || 2;
+  const shown = items.map((x, i) => blanks.includes(i) ? null : x);
+  const S = strip(shown, { nums, cls, tags: tags ? tags.map((L, i) => blanks.includes(i) ? null : L) : null }); parent.append(S.el);
+  const trayEl = h('div', { class: 'tray', role: 'group', 'aria-label': 'Choose a shape' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  parent.append(h('p', { class: 'traylabel' }, 'Tap the one that comes in the yellow box:'), trayEl, fb);
+  const filled = new Set(items.map((_, i) => i).filter(i => !blanks.includes(i)));
+  const order = blanks.slice().sort((a, b) => a - b); let n = 0;
+  const btns = tray.map(key => { const b = h('button', { type: 'button', class: 'traybtn', 'aria-label': itemName(key), onclick: () => pick(key, b) }, itemEl(key)); trayEl.append(b); return b; });
+  function mark() { S.focus(order[n]); btns.forEach((b, j) => b.toggleAttribute('data-ok', tray[j] === items[order[n]])); }
+  function pick(key, b) {
+    if (n >= order.length) return;
+    const i = order[n];
+    if (key === items[i]) {
+      S.set(i, key); filled.add(i); if (tags) S.tag(i, tags[i]); sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; S.look(-1); skill('next');
+      n++;
+      if (n >= order.length) { S.focus(-1); btns.forEach(x => x.disabled = true); onDone && onDone(S); } else mark();
+    } else {
+      run.mistakes++; sfx.oops(); shakeEl(b);
+      const j = [i - k, i + k, i - 2 * k, i + 2 * k].find(x => x >= 0 && x < items.length && filled.has(x));
+      if (j != null) S.look(j);
+      fb.textContent = j != null ? 'Not that one. The pattern repeats, so look at the blue box. It matches!' : oopsLine();
+      fb.className = 'fb oops';
+    }
+  }
+  mark();
+  return S;
+}
+// choose the row that is a pattern
+function pickStrip(parent, { prompt, strips, onDone, hint }) {
+  return askChoice(parent, { prompt, options: strips, answer: strips.find(s => s.ok), cls: 'stripchoice', hint, onDone,
+    render: s => strip(s.items, { cls: 'mini' }).el });
+}
+
+/* ---------- number stones ---------- */
+const ruleText = s => s > 0 ? `Add ${s} each time` : `Take away ${-s} each time`;
+function ruleOpts(s) { const o = new Set([s, -s, s > 0 ? s + 1 : s - 1, s > 1 ? s - 1 : s - 2]); o.delete(0); return shuffle([...o].slice(0, 3)).map(ruleText); }
+function countHint(a, b) {
+  const up = b > a, list = [];
+  for (let x = a + (up ? 1 : -1); up ? x <= b : x >= b; x += up ? 1 : -1) list.push(x);
+  return hintP(`From ${a}, count ${up ? 'on' : 'back'}: ${list.join(', ')}. That is ${list.length} ${up ? 'more' : 'less'}.`);
+}
+function stones(seq, blanks) {
+  const el = h('div', { class: 'stones', role: 'group', 'aria-label': 'Number pattern' });
+  const st = [], hops = [];
+  seq.forEach((n, i) => {
+    if (i) { const hp = h('span', { class: 'hop', 'aria-hidden': 'true' }, h('i', {}, '')); hops.push(hp); el.append(hp); }
+    const b = blanks.includes(i), s = h('span', { class: 'stone' + (b ? ' blank' : '') }, b ? '?' : String(n)); st.push(s); el.append(s);
+  });
+  el.append(h('span', { class: 'stone more', 'aria-hidden': 'true' }, '…'));
+  return {
+    el,
+    set(i) { const s = st[i]; s.textContent = String(seq[i]); s.classList.remove('blank', 'now'); s.classList.add('fresh'); },
+    focus(i) { st.forEach((s, j) => s.classList.toggle('now', j === i)); },
+    pair(p) { st.forEach((s, j) => s.classList.toggle('look', j === p || j === p + 1)); },
+    showHops(step) { hops.forEach(hp => { hp.firstChild.textContent = (step > 0 ? '+' : '−') + Math.abs(step); hp.classList.add('on'); }); st.forEach(s => s.classList.remove('look')); },
+  };
+}
+function numPattern(api, parent, { seq, blanks, onDone, after }) {
+  const S = stones(seq, blanks); parent.append(S.el);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  let p = 0; while (blanks.includes(p) || blanks.includes(p + 1)) p++;
+  const a = seq[p], b = seq[p + 1], step = b - a;
+  S.pair(p);
+  api.guide(`Look at ${a} and ${b}. What happens to get from ${a} to ${b}?`);
+  askChoice(box, { prompt: `${a} → ${b}. What happens each time?`, options: ruleOpts(step), answer: ruleText(step), hint: () => countHint(a, b), onDone: () => {
+    skill('rule'); S.showHops(step);
+    const order = blanks.slice().sort((x, y) => x - y); let n = 0;
+    const next = () => {
+      box.replaceChildren();
+      if (n >= order.length) { S.focus(-1); if (after) box.append(fact(seq.join(', ') + ', …', after)); return onDone(); }
+      const i = order[n++], prev = seq[i - 1];
+      S.focus(i);
+      api.guide(`${prev} ${step > 0 ? '+' : '−'} ${Math.abs(step)} = ?`);
+      askChoice(box, { prompt: `What comes after ${prev}?`, options: numOpts(seq[i], [prev + (step > 0 ? 1 : -1), prev - step]), answer: seq[i], cls: '',
+        hint: () => hintP(`Start at ${prev} and count ${step > 0 ? 'on' : 'back'} ${Math.abs(step)}.`), onDone: () => { S.set(i); setTimeout(next, 700); } });
+    };
+    setTimeout(next, 800);
+  } });
+}
+
+/* ---------- colour grid (Checkpoint 1) ---------- */
+const GRID = [
+  ['blue', 'orange', 'green', 'pink', 'purple', 'grey'],
+  ['yellow', 'blue', 'orange', 'green', 'pink', 'purple'],
+  ['red', 'yellow', 'blue', 'orange', 'green', 'pink'],
+  ['pink', 'red', 'yellow', 'blue', 'orange', 'green'],
+  ['purple', 'pink', 'red', 'yellow', 'blue', 'orange'],
+  ['green', 'purple', 'pink', 'red', 'yellow', 'blue'],
+];
+const GRID_BLANKS = [[0, 1], [1, 3], [3, 1], [3, 3], [5, 2], [5, 4]];
+const PALETTE = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'grey'];
+function colourGrid(grid, blanks) {
+  const n = grid.length;
+  const el = h('div', { class: 'grid6', role: 'img', 'aria-label': `A ${n} by ${n} grid of coloured boxes` }); el.style.setProperty('--n', n);
+  const cells = grid.map((row, r) => row.map((c, col) => {
+    const b = blanks.some(([x, y]) => x === r && y === col);
+    const d = h('div', { class: 'cell' + (b ? ' blank' : '') }, b ? '?' : ''); if (!b) d.style.background = COLOR[c];
+    el.append(d); return d;
+  }));
+  return {
+    el,
+    fill(r, c) { const d = cells[r][c]; d.className = 'cell fresh'; d.textContent = ''; d.style.background = COLOR[grid[r][c]]; },
+    diag(r, c) { cells.forEach((row, i) => row.forEach((d, j) => d.classList.toggle('diag', r != null && j - i === c - r))); },
+    now(r, c) { cells.forEach((row, i) => row.forEach((d, j) => d.classList.toggle('now', i === r && j === c))); },
+  };
+}
+function colourPick(parent, { answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, 'Which colour goes in the box?'));
+  const pal = h('div', { class: 'palette' }), fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let over = false;
+  PALETTE.forEach(c => {
+    const b = h('button', { type: 'button', class: 'swatch', 'data-ok': c === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (c === answer) { over = true; b.classList.add('right'); sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; onDone(); }
+      else { run.mistakes++; b.disabled = true; sfx.oops(); fb.textContent = hint ? hint() : oopsLine(); fb.className = 'fb oops'; }
+    } }, h('i', { style: `background:${COLOR[c]}` }), c);
+    pal.append(b);
+  });
+  wrap.append(pal, fb); parent.append(wrap);
+}
+function fillGrid(api, parent, G, todo, onDone) {
+  let n = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    box.replaceChildren();
+    if (n >= todo.length) { G.diag(null); G.now(-1, -1); return onDone(); }
+    const [r, c] = todo[n++];
+    G.diag(r, c); G.now(r, c);
+    api.guide('Look at the boxes with the yellow edge. They make a slanting line. What colour is that line?');
+    colourPick(box, { answer: GRID[r][c], hint: () => 'Not that one. Look at the other boxes on the slanting yellow line.', onDone: () => { skill('grid'); G.fill(r, c); setTimeout(next, 700); } });
+  };
+  next();
+}
+
+/* ---------- Sam's tower ---------- */
+function towers(days, known) {
+  const el = h('div', { class: 'towers', role: 'img', 'aria-label': 'Towers of blocks for each day' });
+  const T = days.map((n, i) => {
+    const stack = h('div', { class: 'stack' }), lab = h('b', {}, i < known ? String(n) : '?');
+    const t = h('div', { class: 'tower' }, stack, lab, h('small', {}, `Day ${i + 1}`));
+    if (i < known) for (let j = 0; j < n; j++) stack.append(h('i', { class: 'brick' }));
+    else stack.append(h('i', { class: 'brick unk' }));
+    el.append(t); return { t, stack, lab };
+  });
+  return {
+    el,
+    now(i) { T.forEach((x, j) => x.t.classList.toggle('now', j === i)); },
+    build(i, prevN) { const x = T[i]; x.stack.replaceChildren(); for (let j = 0; j < days[i]; j++) { const b = h('i', { class: 'brick' + (j >= prevN ? ' new' : '') }); if (j >= prevN) b.style.animationDelay = (j - prevN) * 0.25 + 's'; x.stack.append(b); } x.lab.textContent = String(days[i]); },
+  };
+}
+
+/* ---------- rangoli (book page 47) ---------- */
+function rangoliSvg() {
+  let s = '<svg viewBox="-100 -100 200 200" class="rangoli" role="img" aria-label="A round rangoli with pink and yellow petals">';
+  s += '<circle r="97" fill="#FFF6E5" stroke="#2A1E2C" stroke-width="3"/>';
+  for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8; s += `<circle class="dot" cx="${(84 * Math.sin(a)).toFixed(1)}" cy="${(-84 * Math.cos(a)).toFixed(1)}" r="7" fill="${i % 2 ? '#F28C28' : '#2F6FD0'}" stroke="#2A1E2C" stroke-width="2"/>`; }
+  for (let i = 0; i < 8; i++) s += `<ellipse cx="0" cy="-64" rx="9" ry="16" transform="rotate(${i * 45 + 22.5})" fill="#2E9E5B" stroke="#2A1E2C" stroke-width="2"/>`;
+  for (let i = 0; i < 8; i++) s += `<ellipse class="pet" cx="0" cy="-42" rx="15" ry="27" transform="rotate(${i * 45})" fill="${i % 2 ? '#F7C623' : '#E8649E'}" stroke="#2A1E2C" stroke-width="2.5"/>`;
+  s += '<circle r="20" fill="#E03A3A" stroke="#2A1E2C" stroke-width="2.5"/><circle r="8" fill="#F7C623" stroke="#2A1E2C" stroke-width="2"/></svg>';
+  return s;
+}
+async function litPetals(svg, line) {
+  const pets = [...svg.querySelectorAll('.pet')];
+  if (line) line.replaceChildren();
+  for (let i = 0; i < pets.length; i++) {
+    pets.forEach(p => p.classList.remove('lit')); pets[i].classList.add('lit'); sfx.tap(i);
+    if (line) line.append(h('span', { class: i % 2 ? 'b' : 'a' }, i % 2 ? 'yellow' : 'pink'), i < pets.length - 1 ? ', ' : '…');
+    await wait(520);
+  }
+  pets.forEach(p => p.classList.add('lit')); await wait(500); pets.forEach(p => p.classList.remove('lit'));
+}
+
+/* ================= STOPS ================= */
+
+/* Stop 1 · pages 47–48 */
+function playEverywhere(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  if (R === 0) {
+    const rg = h('div', { class: 'rgbox' }); rg.innerHTML = rangoliSvg();
+    const line = h('p', { class: 'colourline', 'aria-live': 'polite' });
+    api.stage.append(srctag('Page 47 · The rangoli'), rg, line, below);
+    api.guide('Look at the beautiful rangoli on the floor. What do you notice?');
+    askChoice(below, { prompt: 'What do you notice about the rangoli?', options: shuffle(['The same shapes and colours repeat', 'Every petal is different', 'It has only one colour']), answer: 'The same shapes and colours repeat',
+      hint: () => hintP('Look at the petals going round: pink, yellow, pink, yellow…'),
+      onDone: async () => {
+        api.guide('Watch the petals: pink, yellow, pink, yellow, all the way round!');
+        await litPetals(rg.querySelector('svg'), line);
+        below.append(info('🌸', 'This is a pattern', 'When shapes or colours repeat in a regular way, they make a pattern.'));
+        api.done();
+      } });
+  } else if (R === 1) {
+    const pics = h('div', { class: 'picrow' }, [['wall', 'Pattern on the wall'], ['dress', 'Pattern on the dress'], ['chess', 'Pattern on the chessboard']].map(([c, t]) => h('div', { class: 'picbox' }, h('div', { class: 'pic ' + c, role: 'img', 'aria-label': t }), t)));
+    api.stage.append(srctag('Page 48 · Patterns are all around us'), pics, below);
+    api.guide('Patterns are all around us: on walls, on clothes, on a chessboard. Finish this row of the chessboard.');
+    const B = 'square:black', W = 'square:white';
+    fillStrip(api, below, { items: [B, W, B, W, B, W, B, W], blanks: [5, 6, 7], tray: [B, W], onDone: () => {
+      below.append(fact('black, white, black, white…', 'The chessboard repeats two colours again and again.')); api.done();
+    } });
+  } else {
+    api.stage.append(srctag('Page 48 · Repeated in a regular way'), below);
+    api.guide('Only one of these rows is a pattern. Which one repeats in a regular way?');
+    pickStrip(below, { prompt: 'Which row is a pattern?', strips: shuffle([
+      { items: ['circle:blue', 'circle:yellow', 'circle:blue', 'circle:yellow', 'circle:blue', 'circle:yellow'], ok: true },
+      { items: ['circle:blue', 'circle:blue', 'circle:yellow', 'circle:blue', 'circle:yellow', 'circle:yellow'] },
+      { items: ['triangle:green', 'oval:peach', 'oval:peach', 'triangle:green', 'triangle:green', 'oval:peach'] },
+    ]), hint: () => hintP('In a pattern, the same group comes again and again, in the same order.'),
+    onDone: () => { below.append(info('🔁', 'Repeats in a regular way', 'Blue, yellow, blue, yellow. The same two come again and again, in the same order.')); api.done(); } });
+  }
+}
+/* Stop 2 · pages 48–49 */
+function playNameIt(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  const Q = [
+    { tag: 'Page 48 · One blue circle, one yellow circle', items: ['circle:blue', 'circle:yellow', 'circle:blue', 'circle:yellow', 'circle:blue', 'circle:yellow'], said: 'A B A B A B' },
+    { tag: 'Page 48 · Two triangles, two ovals', items: ['triangle:green', 'triangle:green', 'oval:peach', 'oval:peach', 'triangle:green', 'triangle:green', 'oval:peach', 'oval:peach'], said: 'AA BB AA BB' },
+    { tag: 'Page 49 · Red, blue and green rectangles', items: ['rect:red', 'rect:blue', 'rect:green', 'rect:red', 'rect:blue', 'rect:green'], said: 'A B C A B C' },
+  ][R];
+  api.stage.append(srctag(Q.tag), below);
+  nameStrip(api, below, Q.items, () => {
+    const nm = patName(coreOf(Q.items));
+    below.append(fact(Q.said, `It forms an ${nm} pattern.`));
+    api.guide(`${Q.said}. It forms an ${nm} pattern!`);
+    api.done();
+  });
+}
+/* Stop 3 · page 49, Discovery Route */
+const KIT = ['square:blue', 'triangle:green', 'circle:red', 'diamond:yellow', 'oval:orange', 'star:purple'];
+function pickCore(api, parent, { kit, n, onDone }) {
+  const S = strip(Array(n).fill(null)); parent.append(S.el);
+  const tray = h('div', { class: 'tray', role: 'group', 'aria-label': 'Shapes kit' }); const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  parent.append(tray, fb);
+  const chosen = [];
+  S.focus(0);
+  kit.forEach(key => {
+    const b = h('button', { type: 'button', class: 'traybtn', 'data-ok': '1', 'aria-label': itemName(key), onclick: () => {
+      if (chosen.length >= n) return;
+      if (chosen.includes(key)) { fb.textContent = 'You already have that one. Pick a different one!'; fb.className = 'fb oops'; return; }
+      S.set(chosen.length, key); chosen.push(key); b.classList.add('picked'); b.disabled = true; sfx.pop(); fb.textContent = '';
+      S.focus(chosen.length < n ? chosen.length : -1);
+      if (chosen.length === n) { tray.querySelectorAll('button').forEach(x => x.disabled = true); setTimeout(() => onDone(chosen), 600); }
+    } }, itemEl(key));
+    tray.append(b);
+  });
+}
+function playMyPattern(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  api.stage.append(srctag(['Page 49 · Pick 2 shapes', 'Page 49 · Pick 3 shapes', 'Page 49 · Try something trickier'][R]), below);
+  const build = core => {
+    below.replaceChildren();
+    const k = core.length, len = k === 2 ? 8 : 9;
+    const items = Array.from({ length: len }, (_, i) => core[i % k]);
+    api.guide(`Now keep it going! What comes next each time?`);
+    fillStrip(api, below, { items, blanks: items.map((_, i) => i).filter(i => i >= k), tray: shuffle(core.slice()), onDone: S => {
+      skill('make'); S.group(k);
+      const box = h('div', { class: 'below' }); below.append(box);
+      api.guide('You made a pattern! What do we call it?');
+      askChoice(box, { prompt: 'Your pattern is an ___ pattern.', options: nameOpts(coreOf(items)), answer: patName(coreOf(items)), cls: 'letter',
+        hint: () => hintP(k === 2 ? 'Two different ones taking turns: A B A B…' : 'Three different ones taking turns: A B C A B C…'),
+        onDone: () => api.done() });
+    } });
+  };
+  if (R === 0) { api.guide('Open the shapes kit. Pick 2 different shapes for your pattern.'); pickCore(api, below, { kit: KIT, n: 2, onDone: build }); }
+  else if (R === 1) { api.guide('Now pick 3 different shapes. Make a new pattern!'); pickCore(api, below, { kit: KIT, n: 3, onDone: build }); }
+  else {
+    api.guide('Trickier! The same shape, but in two different colours. Does it still make a pattern?');
+    const items = ['circle:red', 'circle:blue', 'circle:red', 'circle:blue', 'circle:red', 'circle:blue'];
+    below.append(strip(items).el);
+    askChoice(below, { prompt: 'Does it still make a pattern?', options: ['Yes! The colours repeat', 'No, the shapes are all the same'], answer: 'Yes! The colours repeat',
+      hint: () => hintP('Look at the colours: red, blue, red, blue…'),
+      onDone: () => setTimeout(() => {
+        api.guide('Your turn. Pick 2 colours of the same circle.');
+        below.replaceChildren();
+        pickCore(api, below, { kit: ['circle:yellow', 'circle:green', 'circle:pink', 'circle:purple', 'circle:orange'], n: 2, onDone: build });
+      }, 900) });
+  }
+}
+/* Stop 4 · page 50, GRIP-1 */
+function playMissing(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  const Q = [
+    { tag: 'GRIP-1 · a', items: ['ball:yellow', 'triangle:green', 'ball:red', 'ball:yellow', 'triangle:green', 'ball:red'], blanks: [3] },
+    { tag: 'GRIP-1 · b', items: ['triangle:green', 'ball:red', 'ball:red', 'triangle:green', 'ball:red', 'ball:red'], blanks: [3] },
+    { tag: 'One more to try', items: ['star:purple', 'star:purple', 'circle:orange', 'star:purple', 'star:purple', 'circle:orange'], blanks: [4, 5] },
+  ][R];
+  const core = coreOf(Q.items);
+  api.stage.append(srctag(Q.tag), below);
+  api.guide('Find the missing shape. Then name the pattern using letters.');
+  fillStrip(api, below, { items: Q.items, blanks: Q.blanks, tray: shuffle([...new Set(Q.items)]), onDone: S => {
+    const box = h('div', { class: 'below' }); below.append(box);
+    api.guide('Now name the pattern using letters. Call the first shape A.');
+    askChoice(box, { prompt: 'Name the pattern using letters.', options: nameOpts(core), answer: patName(core), cls: 'letter',
+      hint: () => { Q.items.forEach((x, i) => S.tag(i, 'ABC'[[...new Set(Q.items)].indexOf(x)])); return hintP('Here are the letters. Read the first group.'); },
+      onDone: () => { S.group(core.length); Q.items.forEach((x, i) => S.tag(i, core[i % core.length])); api.done(); } });
+  } });
+}
+/* Stop 5 · pages 50–51 */
+function playThumbs(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  const T1 = 'thumb:orange', T2 = 'thumb:blue';
+  if (R === 0) {
+    api.stage.append(srctag('Page 50 · Ruhi\'s thumb prints'), below);
+    api.guide('Ruhi loves colouring. She made a pattern with her thumb and finger prints. What comes next?');
+    fillStrip(api, below, { items: ['🐱', '🐮', '🐱', '🐮', '🐱', '🐮'], blanks: [4, 5], tray: ['🐮', '🐱'], onDone: () => {
+      below.append(info('👍', 'Thumb-print art', 'Ruhi pressed her thumb in paint, then drew legs, ears and a tail.')); api.done();
+    } });
+  } else if (R === 1) {
+    api.stage.append(srctag('Page 50 · Activity'), below);
+    api.guide('Your turn! Stamp 1 is orange. Stamp 2 is blue. Keep repeating: stamp 1, stamp 2, stamp 1, stamp 2…');
+    fillStrip(api, below, { items: [T1, T2, T1, T2, T1, T2], blanks: [1, 2, 3, 4, 5], tray: [T1, T2], nums: true, onDone: () => {
+      below.append(fact('orange, blue, orange, blue…', 'Now let your stamps dry!')); api.done();
+    } });
+  } else {
+    api.stage.append(srctag('Page 51 · Activity'), below);
+    const S = strip([T1, T2, T1, T2, T1, T2], { nums: true }); below.append(S.el);
+    const box = h('div', { class: 'below' }); below.append(box);
+    api.guide('Now turn the stamps into creatures. Give stamp 1 legs, ears and a tail!');
+    freeChoice(box, { prompt: 'What will stamp 1 become?', options: ['🐱 Cat', '🐞 Ladybird', '🐦 Bird'], onPick: a => {
+      const A = a.split(' ')[0]; S.set(0, A);
+      setTimeout(() => {
+        box.replaceChildren();
+        api.guide('Stamp 2 is a different colour. Make it a different creature!');
+        freeChoice(box, { prompt: 'What will stamp 2 become?', options: ['🐮 Cow', '🐟 Fish', '🦋 Butterfly'], onPick: b => {
+          const B = b.split(' ')[0]; S.set(1, B);
+          setTimeout(() => {
+            box.replaceChildren();
+            askSeq(api, box, [
+              { prompt: 'Stamp 3 is orange, like stamp 1. What will stamp 3 become?', options: [a, b], answer: a, guide: 'Stamps 1, 3 and 5 are the odd ones. They all look the same.', onDone: () => { S.set(2, A); S.set(4, A); } },
+              { prompt: 'Stamp 6 is blue, like stamp 2. What will stamp 6 become?', options: [a, b], answer: b, guide: 'Stamps 2, 4 and 6 are the even ones.', onDone: () => { S.set(3, B); S.set(5, B); } },
+              { prompt: 'Which type of pattern is this?', options: ['AAB', 'ABAB', 'ABCABC'], answer: 'ABAB', cls: 'letter', guide: 'Which type of pattern is this?',
+                hint: () => { [0, 1, 2, 3, 4, 5].forEach(i => S.tag(i, i % 2 ? 'B' : 'A')); return hintP('Call the first creature A and the second B. Read the letters.'); } },
+            ], () => { [0, 1, 2, 3, 4, 5].forEach(i => S.tag(i, i % 2 ? 'B' : 'A')); S.group(2); skill('name'); api.guide('A B A B A B. It is an ABAB pattern!'); api.done(); });
+          }, 700);
+        } });
+      }, 700);
+    } });
+  }
+}
+/* Stop 6 · pages 51–52 */
+const HOPS = [[2, 4, 6, 8, 10], [5, 10, 15, 20, 25], [10, 20, 30, 40, 50], [20, 18, 16, 14, 12], [25, 20, 15, 10, 5]];
+function playHops(api) {
+  const R = run.round, seq = HOPS[R], s = seq[1] - seq[0], below = h('div', { class: 'below' });
+  api.stage.append(srctag(`Pattern ${R + 1} · ${s > 0 ? 'Adding' : 'Subtracting'} ${Math.abs(s)}`), below);
+  if (R === 0) below.append(info('🔢', 'Numbers make patterns too', 'When you add or take away the same number each time, you get a number pattern.'));
+  numPattern(api, below, { seq, blanks: [3, 4], after: `Each number is ${Math.abs(s)} ${s > 0 ? 'more' : 'less'} than the one before.`, onDone: api.done });
+}
+/* Stop 7 · page 52, GRIP-2 */
+const GAPS = [{ seq: [3, 6, 9, 12, 15, 18], blanks: [3, 4] }, { seq: [30, 25, 20, 15, 10], blanks: [3, 4] }, { seq: [4, 8, 12, 16, 20, 24], blanks: [2, 4] }, { seq: [50, 40, 30, 20, 10], blanks: [2, 4] }];
+function playGaps(api) {
+  const G = GAPS[run.round], below = h('div', { class: 'below' });
+  api.stage.append(srctag(`GRIP-2 · ${'abcd'[run.round]}`), below);
+  numPattern(api, below, { seq: G.seq, blanks: G.blanks, onDone: api.done });
+}
+/* Stop 8 · page 52, Real Route */
+const HUNT = [
+  [{ n: 'Curtain', p: 'stripes', ok: 'Pink and yellow stripes repeat.' }, { n: 'Wall', p: 'plain', no: 'The wall is plain. Nothing repeats.' }, { n: 'Tablecloth', p: 'checks', ok: 'The checks repeat.' },
+   { n: 'Cushion', p: 'flower', e: '🌼', no: 'Just one flower. Nothing repeats.' }, { n: 'Floor tiles', p: 'tiles', ok: 'Blue, cream, blue, cream. The tiles repeat.' }, { n: 'Bedsheet', p: 'dots', ok: 'The dots repeat in rows.' }],
+  [{ n: 'Doormat', p: 'zigzag', ok: 'The zigzag repeats.' }, { n: 'Fruit bowl', p: 'fruits', e: '🍌🍎🍇', no: 'Just a heap of fruit. No regular repeat.' }, { n: 'Window grill', p: 'grill', ok: 'The squares repeat.' },
+   { n: 'Bangles', p: 'bangles', ok: 'Red, gold, red, gold. The bangles repeat.' }, { n: 'Fridge', p: 'plainblue', no: 'The fridge is plain. Nothing repeats.' }, { n: 'Saree border', p: 'saree', e: '🌸🍃🌸🍃', ok: 'Flower, leaf, flower, leaf. The border repeats.' }],
+];
+function playHunt(api) {
+  const R = run.round, set = HUNT[R], below = h('div', { class: 'below' });
+  api.stage.append(srctag(R ? 'Real Route · In the kitchen and the hall' : 'Real Route · In the bedroom'), below);
+  api.guide('Where do you see patterns at home? Tap everything that has a pattern.');
+  const grid = h('div', { class: 'hunt' }), fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let left = set.filter(x => x.ok).length;
+  set.forEach(x => {
+    const b = h('button', { type: 'button', class: 'huntbtn', 'data-ok': x.ok ? '1' : null, onclick: () => {
+      if (b.disabled) return; b.disabled = true;
+      if (x.ok) { b.classList.add('found'); sfx.good(); fb.textContent = x.ok; fb.className = 'fb good'; left--; if (!left) { fb.textContent = `${x.ok} You found them all!`; grid.querySelectorAll('button').forEach(q => q.disabled = true); api.done(); } }
+      else { b.classList.add('no'); run.mistakes++; sfx.oops(); fb.textContent = x.no; fb.className = 'fb oops'; }
+    } }, h('div', { class: 'pic ' + x.p, 'aria-hidden': 'true' }, x.e || ''), x.n);
+    grid.append(b);
+  });
+  below.append(h('p', { class: 'q' }, `Find ${left} things with a pattern.`), grid, fb);
+}
+/* Stop 9 · page 52, Checkpoint 1 */
+function playGrid(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  const done = [[], [[3, 3]], [[3, 3], [1, 3], [3, 1]]][R];
+  const G = colourGrid(GRID, GRID_BLANKS.filter(([r, c]) => !done.some(([x, y]) => x === r && y === c)));
+  api.stage.append(srctag('Checkpoint 1 · Colour the boxes to continue the pattern'), G.el, below);
+  if (R === 0) {
+    G.diag(0, 0);
+    api.guide('Look at the boxes with the yellow edge. They make a slanting line from the top corner. What colour are they?');
+    askChoice(below, { prompt: 'What colour are the boxes on the slanting line?', options: ['All blue', 'All different', 'All red'], answer: 'All blue', onDone: () => setTimeout(() => {
+      below.replaceChildren();
+      below.append(info('↘️', 'The secret', 'Every slanting line is one colour. Each row is the row above, slid one box to the right!'));
+      fillGrid(api, below, G, [[3, 3]], api.done);
+    }, 800) });
+  } else if (R === 1) fillGrid(api, below, G, [[1, 3], [3, 1]], api.done);
+  else fillGrid(api, below, G, [[5, 2], [5, 4], [0, 1]], () => { below.append(fact('Grid complete!', 'Every slanting line has one colour.')); api.done(); });
+}
+/* Stop 10 · page 53, Checkpoint 2 */
+function playTower(api) {
+  const R = run.round, days = [2, 4, 6, 8, 10], below = h('div', { class: 'below' });
+  const story = h('p', { class: 'story' }, 'Sam is building a tower. Each day, he adds 2 more blocks than the day before. Day 1: 2 blocks, Day 2: 4 blocks, Day 3: 6 blocks.');
+  const T = towers(days, 3 + R > 5 ? 5 : 3 + R);
+  api.stage.append(srctag('Checkpoint 2 · Sam\'s tower'), story, T.el, below);
+  if (R === 0) {
+    api.guide('How many more blocks each day? Then: how many on Day 4?');
+    askSeq(api, below, [
+      { prompt: '2 → 4 → 6. What happens each day?', options: ruleOpts(2), answer: ruleText(2), hint: () => countHint(2, 4), onDone: () => skill('tower') },
+      { prompt: 'Day 4: how many blocks?', options: numOpts(8, [7, 9]), answer: 8, cls: '', guide: '6 + 2 = ?', hint: () => hintP('Day 3 has 6. Add 2 more.'), onDone: () => { T.now(3); T.build(3, 6); } },
+    ], api.done);
+  } else if (R === 1) {
+    api.guide('Day 4 has 8 blocks. How many on Day 5?');
+    askChoice(below, { prompt: 'Day 5: how many blocks?', options: numOpts(10, [9, 12]), answer: 10, cls: '', hint: () => hintP('Day 4 has 8. Add 2 more.'), onDone: () => { T.now(4); T.build(4, 8); api.done(); } });
+  } else {
+    api.guide('How many blocks did Sam use in all 5 days? Add them up, one day at a time.');
+    askSeq(api, below, [
+      { prompt: '2 + 4 = ?', options: numOpts(6), answer: 6, cls: '' },
+      { prompt: '6 + 6 = ?', options: numOpts(12), answer: 12, cls: '', guide: 'Now add Day 3: 6 more.' },
+      { prompt: '12 + 8 = ?', options: numOpts(20), answer: 20, cls: '', guide: 'Now add Day 4: 8 more.' },
+      { prompt: '20 + 10 = ?', options: numOpts(30), answer: 30, cls: '', guide: 'Now add Day 5: 10 more.' },
+    ], () => { below.append(fact('2 + 4 + 6 + 8 + 10 = 30', 'Sam used 30 blocks in all 5 days.')); api.done(); });
+  }
+}
+/* Stop 11 · page 53, Trail Treasure */
+const BORDER = ['🐟', '🌸', '🔶', '🐟', '🌸', '🔶', '🐟', '🌸', '🔶'];
+function playMadhubani(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  api.stage.append(srctag('Trail Treasure · Madhubani painting'), below);
+  if (R === 0) {
+    below.append(info('🎨', 'Madhubani art from Bihar', 'One of India\'s oldest art traditions. Artists paint borders with repeating fish, flowers and shapes.'));
+    api.guide('Help the artist finish this Madhubani border. What comes in each empty box?');
+    fillStrip(api, below, { items: BORDER, blanks: [4, 7, 8], tray: ['🔶', '🐟', '🌸'], cls: 'madhu', onDone: () => api.done() });
+  } else {
+    api.guide('Now name the border pattern with letters.');
+    nameStrip(api, below, BORDER, () => { below.append(fact('A B C A B C A B C', 'Fish, flower, diamond. It is an ABC pattern!')); api.done(); });
+    below.firstChild.classList.add('madhu');
+  }
+}
+
+/* ---------- Grand Review ---------- */
+const KINDS = ['circle', 'triangle', 'square', 'oval', 'diamond', 'star', 'rect'];
+const COLS = ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink'];
+function distinctItems(n) { const ks = shuffle(KINDS.slice()), cs = shuffle(COLS.slice()); return Array.from({ length: n }, (_, i) => `${ks[i]}:${cs[i]}`); }
+const CORES = ['AB', 'AAB', 'ABB', 'AABB', 'ABC'];
+function makePattern(core, len) { const its = distinctItems(4); return { items: Array.from({ length: len }, (_, i) => its['ABC'.indexOf(core[i % core.length])]), its }; }
+function jumbled(its) { for (let t = 0; t < 50; t++) { const a = Array.from({ length: 6 }, () => pickOne(its.slice(0, 2))); if (!coreOf(a) || coreOf(a).length > 3) return a; } return [its[0], its[0], its[1], its[0], its[1], its[1]]; }
+function numSeq(len) { const s = pickOne([2, 3, 4, 5, 10]), up = Math.random() < 0.6; const start = up ? s * rand(0, 4) + rand(0, 1) * s : s * (len + rand(0, 4)); return Array.from({ length: len }, (_, i) => start + (up ? s : -s) * i); }
+const REVIEW_QS = [
+  { part: 1, from: 'Pages 48–49', play: (api, el, done) => { const core = pickOne(CORES), { items } = makePattern(core, Math.max(6, core.length * 2)); api.guide('Name this pattern with letters.'); el.append(strip(items).el); askChoice(el, { prompt: 'Which pattern is it?', options: nameOpts(core), answer: patName(core), cls: 'letter', hint: () => hintP('Call the first shape A. Give a new letter to each new shape.'), onDone: done }); } },
+  { part: 1, from: 'Page 48', play: (api, el, done) => { const core = pickOne(CORES), { items, its } = makePattern(core, core.length * 2 + 1); api.guide('What comes next?'); fillStrip(api, el, { items, blanks: [items.length - 1], tray: shuffle(its.slice(0, Math.max(3, new Set(core).size))), onDone: done }); } },
+  { part: 1, from: 'Page 50', play: (api, el, done) => { const core = pickOne(CORES), { items, its } = makePattern(core, core.length * 2 + 1), b = core.length + rand(0, core.length - 1); api.guide('Find the missing shape.'); fillStrip(api, el, { items, blanks: [b], tray: shuffle(its.slice(0, 3)), onDone: done }); } },
+  { part: 1, from: 'Page 48', play: (api, el, done) => { const { items, its } = makePattern(pickOne(['AB', 'ABC', 'AABB']), 6); api.guide('Which row repeats in a regular way?'); pickStrip(el, { prompt: 'Which row is a pattern?', strips: shuffle([{ items, ok: true }, { items: jumbled(its) }, { items: jumbled(its.slice(1)) }]), hint: () => hintP('In a pattern, the same group comes again and again.'), onDone: done }); } },
+  { part: 2, from: 'Pages 50–51', play: (api, el, done) => { const n = rand(7, 12); api.guide(`Stamps 1, 3, 5 are cats. Stamps 2, 4, 6 are cows. What is stamp ${n}?`); el.append(strip(['🐱', '🐮', '🐱', '🐮', '🐱', '🐮'], { nums: true }).el); askChoice(el, { prompt: `The pattern keeps going. What is stamp ${n}?`, options: ['🐱 Cat', '🐮 Cow'], answer: n % 2 ? '🐱 Cat' : '🐮 Cow', hint: () => hintP('Odd stamps (1, 3, 5, 7, 9, 11) are cats. Even stamps (2, 4, 6, 8, 10, 12) are cows.'), onDone: done }); } },
+  { part: 3, from: 'Pages 51–52', play: (api, el, done) => { const seq = numSeq(4), s = seq[1] - seq[0]; api.guide('Find the jump in this number pattern.'); el.append(stones(seq, []).el); askChoice(el, { prompt: 'What happens each time?', options: ruleOpts(s), answer: ruleText(s), hint: () => countHint(seq[0], seq[1]), onDone: () => { skill('rule'); done(); } }); } },
+  { part: 3, from: 'Page 52', play: (api, el, done) => { const seq = numSeq(5); numPattern(api, el, { seq, blanks: [rand(2, 3)], onDone: done }); } },
+  { part: 3, from: 'Page 52', play: (api, el, done) => { let seq = numSeq(5); if (seq[1] > seq[0]) seq = seq.slice().reverse(); numPattern(api, el, { seq, blanks: [4], onDone: done }); } },
+  { part: 4, from: 'Checkpoint 1', play: (api, el, done) => {
+    const cs = shuffle(['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']);
+    const grid = Array.from({ length: 4 }, (_, r) => Array.from({ length: 4 }, (_, c) => cs[c - r + 3]));
+    let r, c; do { r = rand(1, 3); c = rand(0, 3); } while (Math.abs(c - r) > 2);
+    const G = colourGrid(grid, [[r, c]]);
+    el.append(G.el); G.diag(r, c); G.now(r, c);
+    api.guide('Each slanting line is one colour. Which colour goes in the empty box?');
+    colourPick(el, { answer: grid[r][c], hint: () => 'Look at the other boxes on the slanting yellow line.', onDone: () => { G.fill(r, c); G.diag(null); done(); } });
+  } },
+  { part: 4, from: 'Checkpoint 2', play: (api, el, done) => {
+    const a = pickOne([1, 3, 5]), d = pickOne([2, 3]), days = [a, a + d, a + 2 * d, a + 3 * d];
+    el.append(h('p', { class: 'story' }, `Riya's plant grows. Day 1: ${days[0]} leaves, Day 2: ${days[1]} leaves, Day 3: ${days[2]} leaves. How many leaves on Day 4?`));
+    api.guide('Find the jump, then the next number.');
+    askChoice(el, { prompt: 'Day 4: how many leaves?', options: numOpts(days[3], [days[2] + 1, days[2] + d + 1]), answer: days[3], cls: '', hint: () => countHint(days[0], days[1]), onDone: () => { skill('tower'); done(); } });
+  } },
+];
+function playReview(api) {
+  if (!run.qs) run.qs = shuffle(REVIEW_QS.slice());
+  if (!run.firstTry) run.firstTry = {};
+  const q = run.qs[run.round], before = run.mistakes;
+  const below = h('div', { class: 'below' });
+  api.stage.append(srctag(`Part ${q.part} · ${q.from}`), below);
+  q.play(api, below, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Shapes and colours', 2: 'Patterns in art', 3: 'Number patterns', 4: 'Checkpoint' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 6 Pattern Champion'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [r, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${r} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < r ? '' : 'off' }, '🌸'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Patterns Everywhere', idea: 'What is a pattern?', page: 'Book pages 47–48', rounds: 3, cut: [0, 1], icon: '🌸', play: playEverywhere },
+  { id: 2, part: 1, name: 'Name It with Letters', idea: 'ABAB, AABB and ABC', page: 'Book pages 48–49', rounds: 3, cut: [1, 3], icon: '🔤', play: playNameIt },
+  { id: 3, part: 1, name: 'What\'s My Pattern?', idea: 'Discovery Route', page: 'Book page 49', rounds: 3, cut: [1, 3], icon: '🧩', play: playMyPattern },
+  { id: 4, part: 1, name: 'Missing Shape', idea: 'GRIP-1', page: 'Book page 50', rounds: 3, cut: [1, 2], icon: '🔍', play: playMissing },
+  { id: 5, part: 2, name: 'Thumb-print Parade', idea: 'Ruhi\'s stamps', page: 'Book pages 50–51', rounds: 3, cut: [0, 2], icon: '👍', play: playThumbs },
+  { id: 6, part: 3, name: 'Number Hops', idea: 'Add or take away the same', page: 'Book pages 51–52', rounds: 5, cut: [1, 3], icon: '🐸', play: playHops },
+  { id: 7, part: 3, name: 'Fill the Gaps', idea: 'GRIP-2', page: 'Book page 52', rounds: 4, cut: [1, 3], icon: '✏️', play: playGaps },
+  { id: 8, part: 3, name: 'Pattern Hunt', idea: 'Real Route', page: 'Book page 52', rounds: 2, cut: [0, 1], icon: '🏠', play: playHunt },
+  { id: 9, part: 4, name: 'Colour the Grid', idea: 'Checkpoint 1', page: 'Book page 52', rounds: 3, cut: [1, 2], icon: '🟪', play: playGrid },
+  { id: 10, part: 4, name: 'Sam\'s Tower', idea: 'Checkpoint 2', page: 'Book page 53', rounds: 3, cut: [1, 2], icon: '🧱', play: playTower },
+  { id: 11, part: 4, name: 'Madhubani Border', idea: 'Trail Treasure', page: 'Book page 53', rounds: 2, cut: [0, 2], icon: '🐟', play: playMadhubani },
+  { id: 12, part: 5, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 6 · pages 47–53', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'name', e: '🔤', t: 'Name with letters' },
+  { k: 'next', e: '➡️', t: 'What comes next' },
+  { k: 'make', e: '🎨', t: 'Make my own pattern' },
+  { k: 'rule', e: '🐸', t: 'Find the jump' },
+  { k: 'grid', e: '↘️', t: 'Slanting lines' },
+  { k: 'tower', e: '🧱', t: 'Growing pattern' },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 4 ? 'You finished Part 1! Part 2 is about patterns in art.'
+    : L.id === 5 ? 'Lovely art! Part 3 is about number patterns.'
+    : L.id === 8 ? 'Pattern hunter! Now the Checkpoint, to show what you know.'
+    : L.id === 11 ? 'You finished Part 4! One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 6, Ayansh! Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to Rangoli Lane'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC23D', '#D6336C', '#1C8A55', '#2F6FD0', '#FFFFFF', '#F28C28'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 5; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: the rangoli (book page 47) */
+$('heroRangoli').innerHTML = rangoliSvg();
+$('showHow').addEventListener('click', async () => {
+  $('showHow').disabled = true;
+  await litPetals($('heroRangoli').querySelector('svg'), $('colourLine'));
+  $('reveal').hidden = false; sfx.good();
+  say('Pink, yellow, pink, yellow, all the way round! When shapes or colours repeat in a regular way, they make a pattern.');
+  $('showHow').disabled = false; $('showHow').textContent = '↻ Show me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Tick-Tock Town</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column on a sky that turns from sunrise to midnight as you scroll down the chapter; white cards hold the play. Follows Chapter 10 (Time) of Ayansh's maths book, page by page. */
+:root{
+  --sunrise:#FFC79A; --noon:#7DB9EA; --afternoon:#5E9FDB; --dusk:#7E61B0; --midnight:#18204F;
+  --board:#FFFFFF; --ink:#1F2347; --ink-soft:#585E82; --shadow:#0E1333;
+  --gold:#FFC23D; --gold-soft:#FFF2CC;
+  --minute:#E04848; --minute-soft:#FFE1DC;
+  --hour:#2F6FD0; --hour-soft:#DDE8FA;
+  --teal:#178F74; --teal-soft:#D2F1E8;
+  --lilac:#ECE9F8; --peach:#FFE6D2; --rim:#FFE7A8;
+  --lcd:#13241B; --lcd-ink:#7CF29A;
+  --on-dark:#FFFFFF; --on-dark-soft:#C9CEF0; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--midnight)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);
+  background-color:var(--midnight);
+  background-image:linear-gradient(180deg,var(--sunrise) 0%,var(--noon) 20%,var(--afternoon) 44%,var(--dusk) 74%,var(--midnight) 95%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.chartwrap,.chartcard,.hello-text{min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 16px;box-shadow:5px 6px 0 var(--shadow)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.go{background:var(--teal);color:var(--on-color)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--gold-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero: the chapter opener */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.dayrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.dayrow .clock{width:150px;flex:none}
+.daystrip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;flex:1;min-width:230px}
+.dayitem{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border:2px solid var(--ink);border-radius:14px;background:var(--lilac);font-weight:800;font-size:12px;text-align:center;line-height:1.15;transition:transform .2s,background .2s}
+.dayitem .e{font-size:26px;line-height:1.1}
+.dayitem .tm{font-family:var(--display);font-size:15px;font-variant-numeric:tabular-nums}
+.dayitem.now{background:var(--gold);transform:translateY(-4px)}
+.reveal{font-family:var(--display);font-size:22px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#DCDFF0;border-color:#8E94B8}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(3n+1) .stopicon{background:var(--minute-soft)}
+.stop:nth-child(3n+2) .stopicon{background:var(--hour-soft)}
+.stop:nth-child(3n) .stopicon{background:var(--teal-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--minute)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:#C3C8DE}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:-6px;top:-14px;background:var(--minute);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+
+/* clock collection */
+.chartcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.chartcard h2{font-size:24px}
+.chartwrap{width:100%;overflow-x:auto}
+.chart{display:grid;grid-template-columns:76px repeat(12,minmax(30px,1fr));gap:4px;min-width:470px}
+.ch{aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:var(--lilac);border:2px solid #C9CBE0;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.ch.hd{background:transparent;border:none;aspect-ratio:auto;color:var(--ink-soft);font-size:13px}
+.ch.rowhd{background:transparent;border:none;aspect-ratio:auto;justify-items:start;color:var(--ink);font-size:13px;line-height:1.1}
+.ch.got{background:var(--gold);border-color:var(--ink)}
+.chartcount{font-weight:800}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--hour);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--teal)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:32px;min-width:96px;min-height:74px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:300px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--teal);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--minute-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center}
+.fb.good{color:var(--teal)}
+.fb.oops{color:var(--minute)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(28px,8vw,42px);line-height:1.05;font-variant-numeric:tabular-nums}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--hour-soft);border:3px dashed var(--hour);border-radius:16px;padding:10px 14px;font-weight:700;max-width:520px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+
+/* clock */
+.clock{display:block;width:220px;max-width:100%;height:auto}
+.clock .rim{fill:var(--rim);stroke:var(--ink);stroke-width:3}
+.clock .face{fill:var(--board);stroke:var(--ink);stroke-width:3}
+.clock .tk{stroke:var(--ink-soft);stroke-width:1.4}
+.clock .tk.big{stroke:var(--ink);stroke-width:3}
+.clock .num{font-family:var(--display);font-weight:800;font-size:27px;pointer-events:none}
+.clock .num.flash{animation:numpop .5s}
+.clock .hh{stroke:var(--hour);stroke-width:9;stroke-linecap:round}
+.clock .hhp{fill:var(--hour)}
+.clock .mh{stroke:var(--minute);stroke-width:6;stroke-linecap:round}
+.clock .mhp{fill:var(--minute)}
+.clock .cap{fill:var(--ink)}
+.clock .hand{transform-box:view-box;transform-origin:120px 120px;transition:transform .6s cubic-bezier(.34,1.3,.5,1)}
+.clock .hit{fill:transparent;cursor:pointer}
+.clock .hit:hover{fill:rgba(47,111,208,.14)}
+.clock .hit:focus{outline:none}
+.clock .hit:focus-visible{fill:rgba(255,194,61,.45)}
+.clock .handhit{stroke:transparent;stroke-width:26;stroke-linecap:round;cursor:pointer;pointer-events:stroke}
+.clock .half{fill:var(--gold);opacity:.45}
+.clock.shake{animation:shake .4s}
+.digital{font-family:var(--display);font-weight:800;font-size:clamp(34px,9vw,46px);line-height:1;color:var(--lcd-ink);background:var(--lcd);border:4px solid var(--ink);border-radius:14px;padding:8px 18px 4px;letter-spacing:2px;font-variant-numeric:tabular-nums;box-shadow:0 4px 0 var(--shadow)}
+.digital.sm{font-size:24px;padding:4px 10px 1px;border-width:3px}
+.target{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center}
+.target .words{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,32px)}
+.handpick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.hpick{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;border:3px solid var(--ink);border-radius:999px;padding:6px 14px;min-height:46px;background:var(--board);cursor:pointer}
+.hpick i{width:30px;height:8px;border-radius:4px;display:block}
+.hpick.min i{background:var(--minute);width:38px}
+.hpick.hr i{background:var(--hour);height:10px}
+.hpick[aria-pressed="true"]{background:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.setwrap{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.setwrap .clock{width:min(100%,280px)}
+.pair{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+.pairbox{display:flex;flex-direction:column;align-items:center;gap:6px;border:3px solid var(--ink);border-radius:16px;padding:10px;background:var(--board);font-weight:800;text-align:center;max-width:220px}
+.pairbox .clock{width:150px}
+.pairbox.sun{background:var(--gold-soft)}
+.pairbox.moon{background:#DAD6F2}
+
+/* pizza */
+.pizzarow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;justify-content:center}
+.pizza{width:170px;height:auto}
+.pizza .crust{fill:#E7A95A;stroke:var(--ink);stroke-width:3}
+.pizza .sauce{fill:#E0573C}
+.pizza .cheese{fill:#FFD66E}
+.pizza .top{fill:#C9302C;stroke:var(--ink);stroke-width:1.5}
+.pizza .leaf{fill:#3E9A4C}
+.pizza .halfL{transition:transform .5s}
+.pizza.cut .halfL{transform:translateX(-8px)}
+.pizza .halfR{transition:transform .5s}
+.pizza.cut .halfR{transform:translateX(8px)}
+
+/* counters */
+.counter{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);min-height:1.4em;text-align:center;color:var(--minute);font-variant-numeric:tabular-nums}
+
+/* match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;width:100%;max-width:520px}
+.mcol{display:flex;flex-direction:column;gap:10px}
+.mcol h3{font-size:16px;color:var(--ink-soft);text-align:center}
+.mbtn{min-height:56px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);font-family:var(--display);font-weight:800;font-size:clamp(17px,4.4vw,22px);cursor:pointer;padding:4px 8px;font-variant-numeric:tabular-nums}
+.mbtn.sel{background:var(--hour-soft);border-color:var(--hour);transform:translateY(-2px)}
+.mbtn.m0{background:var(--teal-soft)}.mbtn.m1{background:var(--minute-soft)}.mbtn.m2{background:#EBDDFB}.mbtn.m3{background:var(--gold-soft)}
+.mbtn:disabled{cursor:default;box-shadow:0 2px 0 var(--ink);opacity:1}
+.mbtn.done::after{content:" ✔"}
+
+/* train */
+.track{display:flex;gap:4px;align-items:flex-end;justify-content:center;flex-wrap:wrap;width:100%;padding:6px 0 10px;border-bottom:6px double var(--ink)}
+.tstop{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px}
+.tstop .digital{font-size:16px;padding:3px 6px 1px;border-width:2px;letter-spacing:1px;box-shadow:none}
+.tstop .tr{font-size:30px;line-height:1;min-height:34px}
+.tstop.done .digital{background:var(--teal);color:var(--on-color)}
+.tstop.station .tr{font-size:34px}
+
+/* right or wrong */
+.speech{display:flex;gap:10px;align-items:center;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800;font-size:19px;max-width:480px}
+.speech .who{font-size:40px;line-height:1;flex:none}
+.rwrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px}
+.rwrap .clock{width:min(100%,230px)}
+.stamp{position:absolute;right:-6px;top:-10px;font-family:var(--display);font-weight:800;font-size:26px;line-height:1.2;border:3px solid currentColor;border-radius:10px;padding:0 10px;background:var(--board);transform:rotate(-8deg);animation:pop .3s}
+.stamp.ok{color:var(--teal)}
+.stamp.no{color:var(--minute)}
+
+/* sorting */
+.actcard{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:18px;background:var(--gold-soft);padding:10px 18px;text-align:center;animation:drop .3s;max-width:100%}
+.actcard .e{font-size:48px;line-height:1.1}
+.actcard .t{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,25px);line-height:1.15}
+.actcard .sub{font-weight:800;color:var(--ink-soft)}
+.actcard .clock{width:120px}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(100%,520px)}
+.bin{border:3px solid var(--ink);border-radius:16px;padding:8px;min-height:92px;display:flex;flex-direction:column;gap:6px}
+.bin:nth-child(1){background:var(--gold-soft)}
+.bin:nth-child(2){background:#DAD6F2}
+.binhead{font-family:var(--display);font-weight:800;font-size:18px;text-align:center}
+.binlist{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:1px 10px;font-weight:800;font-size:14px;animation:pop .35s}
+
+/* a.m. / p.m. ribbon */
+.ribbonwrap{width:100%;max-width:560px;display:flex;flex-direction:column;gap:4px}
+.ribbon{position:relative;height:64px;border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:linear-gradient(90deg,#252D63 0%,#F7B88A 25%,#9CCEF2 45%,#9CCEF2 55%,#F59A6E 75%,#252D63 100%)}
+.ribbon::after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px dashed var(--ink)}
+.ribbon .pin{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:28px;line-height:1;animation:pop .4s}
+.ribbonlabs{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;font-size:12px;font-weight:800;color:var(--ink);gap:4px}
+.ribbonlabs span:nth-child(2){text-align:center}
+.ribbonlabs span:nth-child(3){text-align:center}
+.ribbonlabs span:nth-child(5){text-align:right}
+.halves{display:grid;grid-template-columns:1fr 1fr;font-family:var(--display);font-weight:800;font-size:18px;text-align:center}
+.daytable{width:100%;overflow-x:auto}
+.daytable table{border-collapse:collapse;width:100%;min-width:300px;font-variant-numeric:tabular-nums}
+.daytable th,.daytable td{border:2px solid var(--ink);padding:6px 8px;text-align:center;font-weight:800}
+.daytable th{background:var(--gold-soft);font-size:14px}
+
+/* timer */
+.timer{width:200px;height:200px;border-radius:50%;border:4px solid var(--ink);display:grid;place-items:center;background:conic-gradient(var(--minute) calc(var(--p,1)*360deg),var(--minute-soft) 0);box-shadow:0 5px 0 var(--shadow)}
+.timer span{width:150px;height:150px;border-radius:50%;background:var(--board);border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:56px;font-variant-numeric:tabular-nums;line-height:1}
+.stepper{display:flex;align-items:center;gap:10px;background:var(--hour-soft);border:3px solid var(--ink);border-radius:999px;padding:5px 7px}
+.stepper button{width:48px;height:48px;border-radius:50%;border:3px solid var(--ink);background:var(--board);font-size:26px;font-weight:800;line-height:1;cursor:pointer}
+.stepper output{font-family:var(--display);font-size:32px;font-weight:800;min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ordering */
+.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.tile{font-family:var(--display);font-weight:800;font-size:19px;min-height:50px;padding:4px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--gold);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.tile:disabled{opacity:.25;cursor:default;box-shadow:none}
+.orderout{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:40px;max-width:560px;padding:8px;border:3px dashed var(--ink-soft);border-radius:14px;width:100%}
+.ochip{background:var(--teal-soft);border:2px solid var(--ink);border-radius:10px;padding:2px 10px;font-weight:800;animation:pop .3s}
+
+/* calendar */
+.cal{width:min(100%,440px);border:3px solid var(--ink);border-radius:16px;overflow:hidden;background:var(--board);box-shadow:0 5px 0 var(--shadow)}
+.calhead{background:var(--hour);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:24px;text-align:center;padding:4px 0 0;letter-spacing:1px}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;padding:6px}
+.dow{font-size:12px;font-weight:800;text-align:center;color:var(--ink-soft);padding:2px 0;border-radius:6px}
+.dow.hl{background:var(--gold);color:var(--ink)}
+.date{position:relative;aspect-ratio:1;border:2px solid #C9CBE0;border-radius:10px;background:var(--board);font-family:var(--display);font-weight:800;font-size:clamp(15px,4.2vw,19px);cursor:pointer;padding:0;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.date:hover{border-color:var(--hour)}
+.date.hl{background:var(--gold-soft);border-color:var(--gold)}
+.date.ok{background:var(--teal);color:var(--on-color);border-color:var(--ink);animation:pop .35s}
+.date.wk{background:var(--hour-soft);border-color:var(--hour)}
+.date.no{animation:shake .4s;background:var(--minute-soft)}
+.date .mk{position:absolute;right:-4px;top:-8px;font-size:15px;line-height:1}
+.date .nth{position:absolute;left:1px;bottom:0;font-family:var(--body);font-size:9px;font-weight:800;line-height:1.2}
+.blank{aspect-ratio:1}
+
+/* story */
+.story{width:min(100%,520px);background:var(--gold-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 16px;display:flex;flex-direction:column;gap:2px;font-weight:700}
+.story .line{padding:2px 6px;border-radius:8px}
+.story .line.now{background:var(--gold);font-weight:800}
+.story .line.done{color:var(--teal)}
+.minis{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mini{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:800;gap:2px;width:96px;text-align:center}
+.mini .clock{width:84px}
+.clues{background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 16px;font-weight:800;display:flex;flex-direction:column;gap:4px;width:min(100%,440px)}
+.clues h3{font-size:18px}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(14,19,51,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:34px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D3D6E6;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.cert{width:100%;border:3px dashed var(--minute);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:320px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes numpop{0%,100%{font-size:27px}50%{font-size:38px}}
+@keyframes drop{0%{transform:translateY(-20px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 12px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:84px;font-size:28px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .pairbox .clock{width:120px}
+  .dayrow .clock{width:120px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Tick-Tock Town<small>Ayansh's Chapter 10 · Time</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 51</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🐓</div>
+      <div class="hello-text">
+        <h2>Good morning, Ayansh! I'm Kuku.</h2>
+        <p>We wake up, go to school, eat, play and sleep. <b>What helps us plan our day and know when things happen?</b></p>
+        <div class="dayrow">
+          <div id="heroClock"></div>
+          <div class="daystrip" id="daystrip"></div>
+        </div>
+        <button class="btn primary" id="showHow" type="button">✨ Show me</button>
+        <p class="reveal" id="reveal" hidden>A <b>clock</b>! Time tells us when things happen and how long they take.</p>
+        <p class="donebanner" id="allDone" hidden>🎉 You walked all of Tick-Tock Town! You finished Chapter 10.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Reading the clock</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · a.m. and p.m.</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · How long does it take?</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · The calendar</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Part 5 · Final checkpoint</h2>
+    <ol class="stops" id="stops5"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 10</h2>
+    <ol class="stops finale" id="stops6"></ol>
+
+    <section class="chartcard card">
+      <h2>My clock collection</h2>
+      <p class="note">Every time you read or set one of these times correctly, its clock turns gold.</p>
+      <div class="chartwrap"><div class="chart" id="chart" role="img" aria-label="O'clock and half past times from 1 to 12"></div></div>
+      <p class="chartcount" id="chartCount"></p>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>This follows Chapter 10, “Time”, in Ayansh's maths book (pages 58–78). Each stop uses the book's own examples and numbers, in the same order.</p>
+        <h3>Part 1 · Reading the clock (pages 58–65)</h3>
+        <ol>
+          <li><b>Clock Hands</b> (pages 58–59): he taps the short hand (hour) and the long hand (minute) on the book's 10 o'clock clock, then reads o'clock times. Kuku repeats the book's tip: read the hour hand first.</li>
+          <li><b>Set the Clock</b> (page 60): 10 o'clock is 10:00 in digital form. He matches a clock to its digital time, then sets the hands for 11:00, 8:00 and football practice at 5 o'clock.</li>
+          <li><b>Straw Clock</b> (page 61): the Discovery Route activity. He moves the long hand one number at a time and counts in 5s up to 6 (30 minutes), sees the short hand sitting between 4 and 5, then finishes the book's challenge (30 more minutes back to 12).</li>
+          <li><b>Half Past Pizza</b> (pages 60–62): Radha's pizza cut into two halves, then the book's half past 4, half past 2 and half past 10, plus one more.</li>
+          <li><b>Train to Sunnyside</b> (page 63): GRIP-2. Matching 1:30, 7:30 and 11:30 to “half past”, then setting the six clocks where the train stops.</li>
+          <li><b>Clock Doctor</b> (pages 64–65): right or wrong? The book's Detour mistake (long hand on 6 is not 6 o'clock) and Sonu's “half past 12” clock (the answer is NO, because the short hand should be halfway between 12 and 1).</li>
+        </ol>
+        <h3>Part 2 · a.m. and p.m. (pages 65–68)</h3>
+        <ol start="7">
+          <li><b>Ayansh's Day</b> (pages 65–66): the book's day table (6:30 wake up to 9:00 bedtime). Each activity goes on a midnight-to-midnight strip as a.m. or p.m.</li>
+          <li><b>Sun or Moon?</b> (pages 65 and 67): breakfast and dinner both at 7 o'clock, then all of GRIP-3 (a.m. or p.m., and the most likely time for David, Megha and Rahul).</li>
+        </ol>
+        <h3>Part 3 · How long does it take? (pages 68–70)</h3>
+        <ol start="9">
+          <li><b>One-Minute Challenge</b> (page 68): he writes his name on paper while a 1-minute timer runs, then tells the game how many times. The game can't check this count, so any number is fine.</li>
+          <li><b>Minute or Hour?</b> (pages 69–70): the book's examples and GRIP-4, sorted into minutes and hours, plus the Think Route question.</li>
+        </ol>
+        <h3>Part 4 · The calendar (pages 70–73)</h3>
+        <ol start="11">
+          <li><b>Tara's Party</b> (page 70): the October calendar. 2nd Saturday (10), 5 days before (5), one week after (17).</li>
+          <li><b>Days &amp; Months</b> (pages 71 and 73): put the days and months in order, GRIP-5, and 365 / 366 days with the leap year.</li>
+          <li><b>Rohan's December</b> (pages 71–72): finding the 3rd Thursday (21), counting back 3 days (18) and moving one row down for a week later (28).</li>
+          <li><b>January Checkpoint</b> (page 73): Checkpoint question 1, all five parts. Answers: 4 Mondays, Tuesday, 26, 10 weekdays, 11.</li>
+        </ol>
+        <h3>Part 5 · Final checkpoint (pages 74–76)</h3>
+        <ol start="15">
+          <li><b>Picnic Day</b> (page 74): he sets the six picnic clocks from the story, then sorts the times into a.m. and p.m.</li>
+          <li><b>Clock Detective</b> (pages 75–76): Ravi's two 6:30 clocks, Aarav in the park (4:30), and the Skill Trail detective clues (11:30 p.m., and 11:30 a.m. in the daytime).</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all five parts in a random order, with a Chapter 10 Time Champion certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>The hands use the book's colours: the long minute hand is red and the short hour hand is blue.</li>
+          <li>When he sets a half past time, the short hand slides halfway to the next number by itself, like a real clock. He taps the number the short hand has just passed.</li>
+          <li>Page 74 says the picnic is on the 2nd Friday of November, but the book shows no November calendar, so the game leaves the date out.</li>
+          <li>Left out: the “Little Clock” poem on page 76 (read it together from the book) and the blank “Mind Movers” note pages 77–78.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Page 61: make a straw clock with a paper plate, a long straw and a short straw. Move the long straw and count in 5s together.</li>
+          <li>Page 64, “My Daily Clock”: write the real times he wakes up, goes to school, has lunch, plays and goes to bed, and say a.m. or p.m. for each.</li>
+          <li>Use your wall calendar: find family birthdays, count “3 days before” and “one week after” by moving one row down.</li>
+        </ul>
+        <p>The earlier chapter's game is the <a href="https://claude.ai/artifact/2Li63gCKb2RbZiu7umGiWY" target="_blank" rel="noopener">Multiplication Fair</a>.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Town map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐓</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const nxt = hr => hr % 12 + 1;
+const digi = (hr, m) => `${hr}:${pad(m)}`;
+const words = (hr, m) => m === 0 ? `${hr} o'clock` : m === 30 ? `Half past ${hr}` : digi(hr, m);
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const ORD = ['', '1st', '2nd', '3rd', '4th', '5th'];
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, text) { const el = document.createElementNS(SVGNS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text != null) el.textContent = text; return el; }
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-tick-tock-town-v1';
+let P = { stars: {}, unlocked: 1, times: [], sound: true, resetAt: 0 };
+let timeSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock and every collected item, so nothing already earned is ever lost.
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    times: Array.isArray(saved.times) ? saved.times.filter(x => typeof x === 'string' && x.length < 12) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0 };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  timeSet = new Set(P.times);
+  // stops added later unlock for anyone who already finished the stop before them
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), times: [...new Set([...a.times, ...b.times])], sound: a.sound, resetAt: a.resetAt };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.times.slice().sort(), x.resetAt]);
+function current() { P.times = [...timeSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function gotTime(hr, m) { if (m === 0 || m === 30) { timeSet.add(hr + ':' + m); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tick: i => tone(i % 2 ? 1250 : 950, 0.05, 'square', 0, 0.05),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  bell: () => [0, 0.45, 0.9].forEach(w => { tone(880, 0.7, 'sine', w, 0.14); tone(1320, 0.5, 'sine', w, 0.05); }),
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const t = text.replace(/(\d+):00/g, "$1 o'clock").replace(/(\d+):30/g, '$1 thirty').replace(/a\.m\./g, 'A M').replace(/p\.m\./g, 'P M');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+
+/* ---------- the clock ---------- */
+const NUMC = ['#C2367E', '#D33D3D', '#D9781A', '#2E8B4E', '#2F6FD0', '#7E4FC0'];
+function rot(g, target, forward) {
+  const cur = g._a == null ? target : g._a;
+  let d = ((target - cur) % 360 + 360) % 360;
+  if (!forward && d > 180) d -= 360;
+  g._a = cur + d; g.style.transform = `rotate(${g._a}deg)`;
+}
+function clockFace({ hr = 12, m = 0, size, tap, handTap, label } = {}) {
+  const svg = sv('svg', { viewBox: '0 0 240 240', class: 'clock', role: 'img' });
+  if (size) svg.style.width = size + 'px';
+  svg.append(sv('circle', { cx: 120, cy: 120, r: 116, class: 'rim' }), sv('circle', { cx: 120, cy: 120, r: 104, class: 'face' }));
+  const halfLayer = sv('g', {}); svg.append(halfLayer);
+  for (let i = 0; i < 60; i++) {
+    const a = i * 6 * Math.PI / 180, big = i % 5 === 0, r1 = big ? 91 : 96, r2 = 102;
+    svg.append(sv('line', { x1: 120 + r1 * Math.sin(a), y1: 120 - r1 * Math.cos(a), x2: 120 + r2 * Math.sin(a), y2: 120 - r2 * Math.cos(a), class: big ? 'tk big' : 'tk' }));
+  }
+  const nums = [];
+  for (let n = 1; n <= 12; n++) {
+    const a = n * 30 * Math.PI / 180, x = 120 + 75 * Math.sin(a), y = 120 - 75 * Math.cos(a);
+    nums[n] = sv('text', { x, y: y + 1, class: 'num', fill: NUMC[n % 6], 'text-anchor': 'middle', 'dominant-baseline': 'central' }, String(n));
+    svg.append(nums[n]);
+  }
+  const hourG = sv('g', { class: 'hand hour' });
+  hourG.append(sv('line', { x1: 120, y1: 134, x2: 120, y2: 72, class: 'hh' }), sv('polygon', { points: '120,58 110,76 130,76', class: 'hhp' }));
+  const minG = sv('g', { class: 'hand minute' });
+  minG.append(sv('line', { x1: 120, y1: 138, x2: 120, y2: 42, class: 'mh' }), sv('polygon', { points: '120,26 112,44 128,44', class: 'mhp' }));
+  if (handTap) {
+    hourG.append(sv('line', { x1: 120, y1: 120, x2: 120, y2: 62, class: 'handhit' }));
+    minG.append(sv('line', { x1: 120, y1: 120, x2: 120, y2: 30, class: 'handhit' }));
+    hourG.addEventListener('click', () => handTap('hour'));
+    minG.addEventListener('click', () => handTap('minute'));
+  }
+  svg.append(hourG, minG, sv('circle', { cx: 120, cy: 120, r: 8, class: 'cap' }));
+  if (tap) {
+    for (let n = 1; n <= 12; n++) {
+      const a = n * 30 * Math.PI / 180;
+      const c = sv('circle', { cx: 120 + 75 * Math.sin(a), cy: 120 - 75 * Math.cos(a), r: 21, class: 'hit', tabindex: 0, role: 'button', 'aria-label': `Number ${n}` });
+      c.addEventListener('click', () => tap(n));
+      c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tap(n); } });
+      svg.append(c);
+    }
+  }
+  const api = {
+    el: svg, hr, m, hourG, minG, nums,
+    set(hr2, m2, forward) {
+      api.hr = hr2; api.m = m2;
+      rot(minG, m2 * 6, forward); rot(hourG, (hr2 % 12) * 30 + m2 * 0.5, forward);
+      svg.setAttribute('aria-label', label || `A clock showing ${words(hr2, m2)}`);
+    },
+    raw(hourDeg, minDeg) { rot(hourG, hourDeg); rot(minG, minDeg); },
+    flash(n) { const t = nums[n]; if (!t) return; t.classList.remove('flash'); requestAnimationFrame(() => t.classList.add('flash')); },
+    showHalf(on) { halfLayer.replaceChildren(); if (on) halfLayer.append(sv('path', { d: 'M120 120 L120 16 A104 104 0 0 1 120 224 Z', class: 'half' })); },
+  };
+  api.set(hr, m);
+  return api;
+}
+
+/* ---------- shared pieces ---------- */
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words' }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
+        hint && hint(opt);
+      }
+    } }, String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb); parent.append(wrap);
+  return wrap;
+}
+// run several asks one after the other in the same box
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.append(holder);
+    if (q.before) holder.append(q.before);
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 650); } });
+    if (i > 1) holder.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  };
+  next();
+}
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+function fresh(gen) {
+  for (let i = 0; i < 40; i++) { const v = gen(); const k = [].concat(v).join('x'); if (!run.used.has(k)) { run.used.add(k); return v; } }
+  return gen();
+}
+function digital(hr, m, small) { return h('div', { class: 'digital' + (small ? ' sm' : ''), 'aria-label': words(hr, m) }, digi(hr, m)); }
+
+// read a clock: choose the right words
+function readOptions(hr, m) {
+  const set = new Set([words(hr, m)]);
+  const cands = m === 0 ? [`12 o'clock`, `${nxt(hr)} o'clock`, `Half past ${hr}`, `${hr % 12 === 1 ? 12 : hr - 1} o'clock`]
+    : [`Half past ${nxt(hr)}`, `6 o'clock`, `${hr} o'clock`, `Half past ${hr === 1 ? 12 : hr - 1}`];
+  for (const c of cands) { if (set.size >= 3) break; set.add(c); }
+  return shuffle([...set]);
+}
+function readHint(hr, m) {
+  return m === 0 ? `The long hand is on 12, so it is o'clock. Read the short hand first: it points to ${hr}.`
+    : `The long hand is on 6, so it is half past. The short hand is between ${hr} and ${nxt(hr)}. Say the number it has just passed: ${hr}.`;
+}
+function readClock(api, parent, hr, m, onDone, prompt) {
+  const c = clockFace({ hr, m }); c.el.style.width = 'min(100%,240px)';
+  parent.append(c.el);
+  askChoice(parent, { prompt: prompt || 'What time is it?', options: readOptions(hr, m), answer: words(hr, m), hint: () => api.guide(readHint(hr, m)),
+    onDone: () => { gotTime(hr, m); parent.append(fact(digi(hr, m), `${words(hr, m)} is written ${digi(hr, m)}.`)); onDone && onDone(); } });
+  return c;
+}
+
+// set a clock by tapping numbers: first the long hand, then the short hand
+function setClock(api, parent, { hr, m, label, show = 'digital', onDone, intro }) {
+  const wrap = h('div', { class: 'setwrap', 'data-target': hr + ':' + m });
+  const tgt = h('div', { class: 'target' });
+  if (label) tgt.append(h('span', { class: 'words' }, label));
+  if (show === 'digital' || show === 'both') tgt.append(digital(hr, m));
+  if (show === 'words' || show === 'both') tgt.append(h('span', { class: 'words' }, words(hr, m)));
+  const cur = { hr: 12, m: 0 }, touched = { minute: false, hour: false };
+  let active = 'minute', over = false, sawGear = false;
+  const pickMin = h('button', { type: 'button', class: 'hpick min', 'aria-pressed': 'true', onclick: () => choose('minute') }, h('i'), 'Long hand');
+  const pickHr = h('button', { type: 'button', class: 'hpick hr', 'aria-pressed': 'false', onclick: () => choose('hour') }, h('i'), 'Short hand');
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const check = h('button', { type: 'button', class: 'btn go', disabled: true, onclick: () => doCheck() }, '✓ Check my clock');
+  const c = clockFace({ hr: 12, m: 0, tap: n => tapNum(n), label: 'Clock to set. Tap a number to move a hand.' });
+  function choose(which) {
+    if (over) return;
+    active = which; pickMin.setAttribute('aria-pressed', String(which === 'minute')); pickHr.setAttribute('aria-pressed', String(which === 'hour'));
+    api.guide(which === 'minute' ? 'Tap the number where the LONG red hand should point.' : 'Now tap the number where the SHORT blue hand should point.');
+  }
+  function tapNum(n) {
+    if (over) return;
+    sfx.pop(); c.flash(n);
+    if (active === 'minute') {
+      cur.m = n === 12 ? 0 : n * 5; touched.minute = true;
+      c.set(cur.hr, cur.m);
+      if (cur.m === 30 && !sawGear && touched.hour) { sawGear = true; }
+      if (!touched.hour) choose('hour');
+    } else {
+      cur.hr = n; touched.hour = true; c.set(cur.hr, cur.m);
+      if (cur.m === 30 && !sawGear) { sawGear = true; api.guide(`See? At half past, the short hand slides halfway to the next number, just like a real clock.`); }
+    }
+    check.disabled = !(touched.minute && touched.hour);
+  }
+  function doCheck() {
+    if (over) return;
+    if (cur.hr === hr && cur.m === m) {
+      over = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; check.disabled = true;
+      pickMin.disabled = pickHr.disabled = true;
+      gotTime(hr, m); onDone && onDone();
+    } else {
+      run.mistakes++; sfx.oops(); shakeEl(c.el); fb.className = 'fb oops';
+      if (cur.m !== m) { fb.textContent = 'Look at the long hand.'; choose('minute'); api.guide(m === 0 ? `For o'clock, the long red hand points to 12. Tap 12.` : `For half past, the long red hand points to 6. Tap 6.`); }
+      else { fb.textContent = 'Look at the short hand.'; choose('hour'); api.guide(m === 0 ? `At ${hr} o'clock, the short blue hand points to ${hr}. Tap ${hr}.` : `At half past ${hr}, the short hand has just passed ${hr}. Tap ${hr} and it will sit halfway to ${nxt(hr)}.`); }
+    }
+  }
+  wrap.append(tgt, h('div', { class: 'handpick' }, pickMin, pickHr), c.el, check, fb);
+  parent.append(wrap);
+  api.guide(intro || 'Set the clock! First tap where the LONG red hand should point.');
+  return c;
+}
+
+// tap a left card, then its partner on the right
+function matchPairs(api, parent, pairs, heads, onAll) {
+  const left = shuffle(pairs.map((p, i) => ({ t: p[0], i }))), right = shuffle(pairs.map((p, i) => ({ t: p[1], i })));
+  let sel = null, done = 0;
+  const lc = h('div', { class: 'mcol' }, h('h3', {}, heads[0])), rc = h('div', { class: 'mcol' }, h('h3', {}, heads[1]));
+  const lbs = left.map(x => { const b = h('button', { type: 'button', class: 'mbtn', 'data-k': x.i, onclick: () => { if (b.disabled) return; lbs.forEach(y => y.classList.remove('sel')); sel = { x, b }; b.classList.add('sel'); sfx.pop(); } }, x.t); lc.append(b); return b; });
+  right.forEach(x => {
+    const b = h('button', { type: 'button', class: 'mbtn', 'data-k': x.i, onclick: () => {
+      if (b.disabled) return;
+      if (!sel) { api.guide(`First tap a card on the left, then its partner on the right.`); return; }
+      if (sel.x.i === x.i) {
+        const cls = 'm' + (done % 4); sel.b.classList.remove('sel'); sel.b.classList.add('done', cls); b.classList.add('done', cls);
+        sel.b.disabled = b.disabled = true; done++; sfx.good(); sel = null;
+        if (done === pairs.length) onAll();
+      } else { run.mistakes++; sfx.oops(); shakeEl(b); api.guide(`Not a pair. ${sel.x.t}: look at the number before the colon. That is the hour.`); }
+    } }, x.t);
+    rc.append(b);
+  });
+  parent.append(h('div', { class: 'match' }, lc, rc));
+}
+
+// sort cards into two bins, one card at a time
+function sortCards(api, parent, items, bins, onAll, hintFor) {
+  let i = 0;
+  const binEls = {};
+  const binsRow = h('div', { class: 'bins' }, bins.map(b => { const list = h('div', { class: 'binlist' }); binEls[b.id] = list; return h('div', { class: 'bin' }, h('div', { class: 'binhead' }, `${b.icon} ${b.label}`), list); }));
+  const cardBox = h('div', { class: 'below' });
+  parent.append(cardBox, binsRow);
+  const next = () => {
+    cardBox.replaceChildren();
+    if (i >= items.length) return onAll && onAll();
+    const it = items[i++];
+    const card = h('div', { class: 'actcard', 'data-ans': it.ans }, h('span', { class: 'e', 'aria-hidden': 'true' }, it.e), h('span', { class: 't' }, it.t), it.sub ? h('span', { class: 'sub' }, it.sub) : null);
+    if (it.clock) card.append(clockFace({ hr: it.clock[0], m: it.clock[1] }).el);
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    let over = false;
+    const btns = bins.map(b => h('button', { type: 'button', class: 'choice words', onclick: ev => {
+      if (over) return;
+      const btn = ev.currentTarget;
+      if (b.id === it.ans) {
+        over = true; btn.classList.add('right'); sfx.good(); fb.textContent = praise(); fb.className = 'fb good';
+        binEls[b.id].append(h('span', { class: 'chip' }, `${it.e} ${it.short || it.t}`));
+        it.onRight && it.onRight();
+        setTimeout(next, 750);
+      } else { btn.classList.add('wrong'); btn.disabled = true; run.mistakes++; sfx.oops(); fb.textContent = 'Think again!'; fb.className = 'fb oops'; api.guide(hintFor(it)); }
+    } }, `${b.icon} ${b.label}`));
+    cardBox.append(card, h('div', { class: 'choices' }, btns), fb);
+    api.guide(it.q || `${it.t}${it.sub ? ' ' + it.sub : ''}. Where does it go?`);
+  };
+  next();
+}
+
+// tap tiles in the right order
+function orderTiles(api, parent, list, what, onAll) {
+  let k = 0;
+  const out = h('div', { class: 'orderout', 'aria-live': 'polite' });
+  const pool = h('div', { class: 'tiles' });
+  shuffle(list.slice()).forEach(w => {
+    const b = h('button', { type: 'button', class: 'tile', onclick: () => {
+      if (w === list[k]) {
+        b.disabled = true; out.append(h('span', { class: 'ochip' }, `${k + 1}. ${w}`)); k++; sfx.tick(k);
+        if (k === list.length) { sfx.good(); onAll(); } else api.guide(`Yes! What comes after ${w}?`);
+      } else { run.mistakes++; sfx.oops(); shakeEl(b); api.guide(k === 0 ? `Which ${what} comes first? Say them out loud from the start.` : `Not yet. Which ${what} comes right after ${list[k - 1]}?`); }
+    } }, w);
+    pool.append(b);
+  });
+  parent.append(out, pool);
+}
+
+// month calendar
+function calendar({ month, start, days }) {
+  const grid = h('div', { class: 'calgrid' });
+  const heads = DAYS.map(d => { const s = h('span', { class: 'dow' }, d.slice(0, 3)); grid.append(s); return s; });
+  for (let i = 0; i < start; i++) grid.append(h('span', { class: 'blank' }));
+  const cal = { el: null, cells: [], handler: null, dow: d => (start + d - 1) % 7 };
+  for (let d = 1; d <= days; d++) {
+    const b = h('button', { type: 'button', class: 'date', 'aria-label': `${DAYS[cal.dow(d)]} ${d} ${month}`, onclick: () => cal.handler && cal.handler(d, b) }, String(d));
+    cal.cells[d] = b; grid.append(b);
+  }
+  cal.el = h('div', { class: 'cal' }, h('div', { class: 'calhead' }, month), grid);
+  cal.col = (dw, cls = 'hl') => { heads[dw].classList.add('hl'); for (let d = 1; d <= days; d++) if (cal.dow(d) === dw) cal.cells[d].classList.add(cls); };
+  cal.clear = (cls = 'hl') => { heads.forEach(x => x.classList.remove('hl')); cal.cells.forEach(c => c && c.classList.remove(cls)); };
+  cal.mark = (d, emoji, cls) => { const c = cal.cells[d]; if (cls) c.classList.add(cls); if (emoji) { const old = c.querySelector('.mk'); if (old) old.remove(); c.append(h('span', { class: 'mk', 'aria-hidden': 'true' }, emoji)); } };
+  cal.label = (d, text) => cal.cells[d].append(h('span', { class: 'nth' }, text));
+  cal.nthOf = (dw, n) => { let c = 0; for (let d = 1; d <= days; d++) if (cal.dow(d) === dw && ++c === n) return d; return null; };
+  return cal;
+}
+function tapDate(api, cal, { answer, hint, onDone, emoji }) {
+  let over = false;
+  cal.el.dataset.answer = answer;
+  cal.handler = (d, b) => {
+    if (over) return;
+    if (d === answer) { over = true; sfx.good(); cal.mark(d, emoji, 'ok'); cal.handler = null; onDone && onDone(); }
+    else { run.mistakes++; sfx.oops(); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); hint && hint(d); }
+  };
+}
+
+// right or wrong?
+function rightWrong(api, parent, { who, says, clock, isRight, onDone }) {
+  const box = h('div', { class: 'rwrap' });
+  box.append(clock.el, h('div', { class: 'speech' }, h('span', { class: 'who', 'aria-hidden': 'true' }, who[0]), h('span', {}, `${who[1]} says: “${says}”`)));
+  parent.append(box);
+  askChoice(parent, { prompt: 'Is that right?', options: ['✔ Right', '✘ Wrong'], answer: isRight ? '✔ Right' : '✘ Wrong',
+    hint: () => api.guide(isRight ? 'Check again: where do the long hand and the short hand point?' : 'Look closely at both hands. Something is not right.'),
+    onDone: () => { box.append(h('span', { class: 'stamp ' + (isRight ? 'ok' : 'no') }, isRight ? 'RIGHT ✔' : 'WRONG ✘')); onDone && onDone(); } });
+}
+
+/* ---------- Part 1 · Reading the clock ---------- */
+function playHands(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    let step = 'hour', over = false;
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    const c = clockFace({ hr: 10, m: 0, handTap: which => {
+      if (over) return;
+      if (which === step) {
+        sfx.good();
+        if (step === 'hour') { step = 'minute'; fb.textContent = 'Short hand = hour hand ✔'; fb.className = 'fb good'; api.guide('Yes! The SHORT hand is the HOUR hand. Now tap the LONG hand.'); }
+        else { over = true; fb.textContent = 'Long hand = minute hand ✔'; s.append(fact('10:00', 'The short hand is the hour hand. The long hand is the minute hand. When the long hand points to 12, we say o\'clock.')); api.guide('Super! The long hand is the minute hand. It points to 12, and the short hand points to 10. It is 10 o\'clock!'); api.done(); }
+      } else { run.mistakes++; sfx.oops(); shakeEl(c.el); fb.textContent = step === 'hour' ? 'That is the long one. Find the short one!' : 'That is the short one. Find the long one!'; fb.className = 'fb oops'; }
+    } });
+    c.el.style.width = 'min(100%,280px)';
+    s.append(c.el, fb);
+    api.guide('This clock has two hands. Tap the SHORT hand.');
+    return;
+  }
+  const hr = run.round === 1 ? 10 : fresh(() => [rand(1, 12)])[0];
+  if (run.round === 1) run.used.add('10');
+  api.guide(run.round === 1 ? 'Read the hour hand first. Then look at the minute hand. What time is it?' : 'What time does this clock show?');
+  const below = h('div', { class: 'below' }); s.append(below);
+  readClock(api, below, hr, 0, api.done);
+}
+
+function playSetClock(api) {
+  const s = api.stage, below = h('div', { class: 'below' }); s.append(below);
+  if (run.round === 0) {
+    let hr = fresh(() => [rand(1, 12)])[0]; if (hr === 10) hr = 3;
+    below.append(info('⏰', '10 o\'clock is written as 10:00', 'The two zeros after the colon mean zero extra minutes.'));
+    const c = clockFace({ hr, m: 0 }); c.el.style.width = 'min(100%,220px)'; below.append(c.el);
+    api.guide('10 o\'clock is written 10:00 on a digital clock. Which digital clock matches this clock?');
+    askChoice(below, { prompt: 'Pick the digital time:', options: shuffle([digi(hr, 0), `12:${pad(hr)}`, digi(nxt(hr), 0)]), answer: digi(hr, 0), cls: '',
+      hint: () => api.guide(`The short hand shows the hour: ${hr}. The long hand on 12 means zero extra minutes, so we write :00.`),
+      onDone: () => { gotTime(hr, 0); api.done(); } });
+    return;
+  }
+  const list = [{ hr: 11, m: 0 }, { hr: 8, m: 0 }, { hr: 5, m: 0, label: '⚽ Football practice', show: 'words' }];
+  const t = list[run.round - 1];
+  setClock(api, below, { ...t, onDone: () => { if (t.label) below.append(fact('5:00', 'Ready for football practice at 5 o\'clock!')); api.done(); },
+    intro: t.label ? 'You have football practice at 5 o\'clock. Set the clock! First tap where the LONG red hand goes.' : `Show ${digi(t.hr, 0)} on the clock. First tap where the LONG red hand goes.` });
+}
+
+function playStraw(api) {
+  const s = api.stage;
+  if (run.round === 1) {
+    const c = clockFace({ hr: 4, m: 30 }); c.el.style.width = 'min(100%,240px)'; s.append(c.el);
+    api.guide('When the long hand went from 12 to 6, the short hand moved a little too. Look at the short hand.');
+    askSeq(api, s, [
+      { prompt: 'Where is the short hand?', options: ['Exactly on 4', 'Between 4 and 5', 'Exactly on 6'], answer: 'Between 4 and 5', hint: () => api.guide('Follow the short blue hand. It is not exactly on a number.') },
+      { guide: 'It is halfway between 4 and 5. So what time is it?', prompt: 'What time is it?', options: ['Half past 4', 'Half past 5', '6 o\'clock'], answer: 'Half past 4', hint: () => api.guide('The short hand has just passed 4. The long hand on 6 means half past.'),
+        onDone: hold => { gotTime(4, 30); hold.append(fact('4:30', 'Half past 4 is written 4:30.')); } },
+    ], api.done);
+    return;
+  }
+  const startM = run.round === 0 ? 0 : 30, stopM = run.round === 0 ? 30 : 60;
+  const c = clockFace({ hr: 4, m: startM }); c.el.style.width = 'min(100%,240px)';
+  let m = startM;
+  const counter = h('p', { class: 'counter', 'aria-live': 'polite' }, run.round === 0 ? 'Count: 0 minutes' : '');
+  const btn = h('button', { type: 'button', class: 'btn primary big', onclick: () => {
+    m += 5; c.set(4, m, true); sfx.tick(m / 5);
+    const n = m / 5;
+    counter.textContent = run.round === 0 ? `Count: ${Array.from({ length: n }, (_, i) => (i + 1) * 5).join(', ')}` : `${m - 30} more minutes`;
+    if (m >= stopM) {
+      btn.disabled = true;
+      const below = h('div', { class: 'below' }); s.append(below);
+      if (run.round === 0) {
+        api.guide('Stop! The long hand is on 6. How many minutes passed?');
+        askChoice(below, { prompt: 'How many minutes passed?', options: shuffle([30, 6, 60]), answer: 30, cls: '', hint: () => api.guide('You counted in 5s: 5, 10, 15, 20, 25, 30.'), onDone: api.done });
+      } else {
+        api.guide('The long hand is back on 12! How many more minutes did that take?');
+        askChoice(below, { prompt: 'How many more minutes?', options: shuffle([30, 6, 60]), answer: 30, cls: '', hint: () => api.guide('Count the jumps from 6 to 12 in 5s: 5, 10, 15, 20, 25, 30.'),
+          onDone: () => { below.append(fact('60 minutes = 1 hour', 'The long hand went all the way round. The short hand moved from 4 to 5. Now it is 5 o\'clock!')); api.done(); } });
+      }
+    } else if (n === 1 && run.round === 0) api.guide('Moving from one number to the next is 5 minutes. Each small line is 1 minute. Keep going!');
+  } }, 'Move the long hand ➜');
+  s.append(c.el, counter, btn);
+  api.guide(run.round === 0 ? 'This is our straw clock. Keep the short hand still and move the long hand one number at a time. Count in 5s!'
+    : 'Challenge! How many more minutes will it take for the long hand to reach 12 again? Move it and count.');
+}
+
+function pizzaSVG() {
+  const svg = sv('svg', { viewBox: '0 0 200 200', class: 'pizza', role: 'img', 'aria-label': 'A round pizza' });
+  const half = (cls, d) => { const g = sv('g', { class: cls }); g.append(sv('path', { d, class: 'crust' })); return g; };
+  const L = half('halfL', 'M100 10 A90 90 0 0 0 100 190 Z'), R = half('halfR', 'M100 10 A90 90 0 0 1 100 190 Z');
+  [[L, 'M100 22 A78 78 0 0 0 100 178 Z'], [R, 'M100 22 A78 78 0 0 1 100 178 Z']].forEach(([g, d]) => { g.append(sv('path', { d, class: 'sauce' })); g.append(sv('path', { d: d.replace('78 78', '72 72').replace('22', '28').replace('178', '172'), class: 'cheese' })); });
+  [[62, 70, L], [70, 130, L], [48, 104, L], [138, 70, R], [130, 130, R], [152, 104, R]].forEach(([x, y, g]) => g.append(sv('circle', { cx: x, cy: y, r: 11, class: 'top' })));
+  [[80, 100, L], [120, 100, R], [85, 150, L], [115, 50, R]].forEach(([x, y, g]) => g.append(sv('ellipse', { cx: x, cy: y, rx: 7, ry: 4, class: 'leaf' })));
+  svg.append(L, R);
+  return svg;
+}
+function playPizza(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    const pz = pizzaSVG();
+    const c = clockFace({ hr: 12, m: 0 }); c.el.style.width = '170px';
+    const row = h('div', { class: 'pizzarow' }, pz, c.el);
+    const btn = h('button', { type: 'button', class: 'btn primary', onclick: () => {
+      btn.disabled = true; pz.classList.add('cut'); sfx.pop(); c.showHalf(true); c.set(12, 30, true);
+      api.guide('One whole pizza became two halves! A clock can be cut in half too. The long hand goes from 12 to 6: that is half of the clock.');
+      const below = h('div', { class: 'below' }); s.append(below);
+      askChoice(below, { prompt: 'How many minutes is half the clock?', options: shuffle([30, 6, 15]), answer: 30, cls: '', hint: () => api.guide('Count in 5s from 12 to 6: 5, 10, 15, 20, 25, 30.'),
+        onDone: () => { below.append(fact('Half past', 'When the long hand is on 6, 30 minutes have passed. We say “half past”.')); api.done(); } });
+    } }, '🔪 Cut the pizza in half');
+    s.append(row, btn);
+    api.guide('Radha\'s pizza is cut into two equal parts. Can a clock be cut into halves too? Tap the button!');
+    return;
+  }
+  const book = [4, 2, 10];
+  const hr = run.round <= 3 ? book[run.round - 1] : fresh(() => [pickOne([1, 3, 5, 6, 7, 8, 9, 11, 12])])[0];
+  run.used.add(String(hr));
+  api.guide(run.round === 1 ? 'The long hand is on 6. The short hand is halfway between two numbers. What time is it?' : 'What time is it?');
+  const below = h('div', { class: 'below' }); s.append(below);
+  readClock(api, below, hr, 30, api.done);
+}
+
+function playTrain(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    api.guide('Match each clock time to how we say it. Tap a time on the left, then its partner on the right.');
+    matchPairs(api, s, [['1:30', 'Half past 1'], ['7:30', 'Half past 7'], ['11:30', 'Half past 11']], ['Clock time', 'We say'], () => { [1, 7, 11].forEach(x => gotTime(x, 30)); api.guide('All matched! The number before the colon is the hour. :30 means half past.'); api.done(); });
+    return;
+  }
+  const stops = [[10, 0], [10, 30], [11, 30], [1, 0], [2, 30], [4, 0]];
+  const done = (run.round - 1) * 2;
+  const track = h('div', { class: 'track', 'aria-label': 'The train track and its stops' });
+  const els = stops.map((t, i) => { const el = h('div', { class: 'tstop' + (i < done ? ' done' : '') }, h('span', { class: 'tr' }, i === done ? '🚂' : ''), h('div', { class: 'digital' }, digi(...t))); track.append(el); return el; });
+  const station = h('div', { class: 'tstop station' }, h('span', { class: 'tr' }, '🚉'), h('span', { class: 'eyebrow' }, 'Sunnyside'));
+  track.append(station);
+  s.append(track);
+  const box = h('div', { class: 'below' }); s.append(box);
+  const doStop = k => {
+    box.replaceChildren();
+    const [hr, m] = stops[k];
+    setClock(api, box, { hr, m, show: 'digital', intro: `The train stops at ${digi(hr, m)}. Set the clock! First tap where the LONG red hand goes.`,
+      onDone: () => {
+        els[k].classList.add('done'); els[k].querySelector('.tr').textContent = '';
+        if (k + 1 < stops.length) els[k + 1].querySelector('.tr').textContent = '🚂'; else station.querySelector('.tr').textContent = '🚂🚉';
+        if (k % 2 === 0) setTimeout(() => doStop(k + 1), 900);
+        else { if (k === stops.length - 1) { box.append(fact('🚉 Sunnyside Station!', 'The train made every stop on time.')); api.guide('Toot toot! We reached Sunnyside Station!'); } api.done(); }
+      } });
+  };
+  doStop(done);
+}
+
+function playDoctor(api) {
+  const s = api.stage;
+  const cases = [
+    { who: ['🧒', 'Mini'], says: 'The long hand is on 6. It must be 6 o\'clock!', hr: 11, m: 30, isRight: false,
+      follow: { prompt: 'So what is the real time?', options: ['Half past 11', '6 o\'clock', 'Half past 12'], answer: 'Half past 11' },
+      why: 'The long hand on 6 means 30 minutes have passed: half past. The short hand is between 11 and 12. So it is half past 11, or 11:30.' },
+    { who: ['👦', 'Sonu'], says: 'It is half past 12.', raw: [0, 180], isRight: false,
+      follow: { prompt: 'Where should the short hand be?', options: ['Exactly on 12', 'Halfway between 12 and 1', 'On 6'], answer: 'Halfway between 12 and 1' },
+      why: 'At half past 12 the short hand has moved halfway from 12 towards 1.', fix: [12, 30] },
+    { who: ['👧', 'Zoya'], says: 'It is 3 o\'clock.', hr: 3, m: 0, isRight: true, why: 'The long hand is on 12 and the short hand points to 3. Zoya is right!' },
+    { who: ['🧑', 'Kabir'], says: 'It is half past 8.', hr: 7, m: 30, isRight: false,
+      follow: { prompt: 'What time is it really?', options: ['Half past 7', 'Half past 8', '7 o\'clock'], answer: 'Half past 7' },
+      why: 'The short hand is between 7 and 8. It has just passed 7, so it is half past 7.' },
+  ];
+  const k = cases[run.round];
+  const c = k.raw ? clockFace({ hr: 12, m: 30 }) : clockFace({ hr: k.hr, m: k.m });
+  if (k.raw) c.raw(...k.raw);
+  api.guide(run.round === 0 ? 'Doctor Ayansh, some friends read their clocks. Are they right or wrong?' : `${k.who[1]} read the clock. Is it right or wrong?`);
+  const box = h('div', { class: 'below' }); s.append(box);
+  rightWrong(api, box, { who: k.who, says: k.says, clock: c, isRight: k.isRight, onDone: () => {
+    const end = () => {
+      box.append(fact(k.fix ? '12:30' : k.hr ? digi(k.hr, k.m) : '', k.why));
+      if (k.fix) c.set(12, 30);
+      if (k.hr) gotTime(k.hr, k.m);
+      if (run.round === 3) { box.append(info('🔔', 'Trail Treasure', 'The word “clock” comes from “clocca”, which means bell. Long ago, clocks rang bells to tell the time.')); sfx.bell(); }
+      api.guide(k.why); api.done();
+    };
+    if (k.follow) { const fbox = h('div', { class: 'below' }); box.append(fbox); askChoice(fbox, { ...k.follow, hint: () => api.guide(k.why.split('.')[0] + '.'), onDone: end }); }
+    else end();
+  } });
+}
+
+/* ---------- Part 2 · a.m. and p.m. ---------- */
+const DAY_ITEMS = [
+  { e: '🛏️', t: 'Wake up', clock: [6, 30], ans: 'am', h24: 6.5 },
+  { e: '🥣', t: 'Breakfast', clock: [7, 0], ans: 'am', h24: 7 },
+  { e: '🚌', t: 'School bus', clock: [8, 0], ans: 'am', h24: 8 },
+  { e: '✏️', t: 'Maths class', clock: [10, 0], ans: 'am', h24: 10 },
+  { e: '🏫', t: 'School ends', clock: [3, 30], ans: 'pm', h24: 15.5 },
+  { e: '🏏', t: 'Cricket', clock: [6, 0], ans: 'pm', h24: 18 },
+  { e: '🍛', t: 'Dinner', clock: [8, 0], ans: 'pm', h24: 20 },
+  { e: '😴', t: 'Bedtime', clock: [9, 0], ans: 'pm', h24: 21 },
+];
+const AMPM = [{ id: 'am', label: 'a.m.', icon: '☀️' }, { id: 'pm', label: 'p.m.', icon: '🌙' }];
+function playMyDay(api) {
+  const s = api.stage;
+  if (!run.placed) run.placed = [];
+  const rib = h('div', { class: 'ribbon', role: 'img', 'aria-label': 'One day, from midnight to noon to midnight' });
+  const pins = () => { rib.replaceChildren(...run.placed.map(it => { const p = h('span', { class: 'pin', title: it.t }, it.e); p.style.left = (it.h24 / 24 * 100) + '%'; return p; })); };
+  pins();
+  s.append(h('div', { class: 'ribbonwrap' },
+    h('div', { class: 'halves' }, h('span', {}, '☀️ a.m.'), h('span', {}, '🌙 p.m.')), rib,
+    h('div', { class: 'ribbonlabs' }, h('span', {}, 'midnight'), h('span', {}, ''), h('span', {}, '12 noon'), h('span', {}, ''), h('span', {}, 'midnight'))));
+  if (run.round === 0) s.append(info('🌗', '12 hours + 12 hours = 24 hours in a day', 'So every hour from 1 to 12 comes twice! a.m. is from midnight to noon. p.m. is from noon to just before midnight.'));
+  const items = DAY_ITEMS.slice(run.round * 2, run.round * 2 + 2).map(it => ({ ...it, sub: `at ${digi(...it.clock)}`, q: `${it.t} at ${digi(...it.clock)}. Is that a.m. or p.m.?`,
+    onRight: () => { run.placed.push(it); pins(); gotTime(...it.clock); } }));
+  const box = h('div', { class: 'below' }); s.append(box);
+  sortCards(api, box, items, AMPM, () => {
+    if (run.round === 3) {
+      box.append(h('div', { class: 'daytable' }, h('table', {}, h('thead', {}, h('tr', {}, h('th', {}, 'Time'), h('th', {}, 'Activity'), h('th', {}, 'a.m. or p.m.'))),
+        h('tbody', {}, DAY_ITEMS.map(it => h('tr', {}, h('td', {}, digi(...it.clock)), h('td', {}, `${it.e} ${it.t}`), h('td', {}, it.ans === 'am' ? 'a.m.' : 'p.m.')))))));
+      api.guide('That is Ayansh\'s whole day! Morning times are a.m. Afternoon and evening times are p.m.');
+    }
+    api.done();
+  }, it => it.ans === 'am' ? 'Is it morning? Morning, from midnight to noon, is a.m.' : 'Is it afternoon or evening? From noon to midnight is p.m.');
+}
+
+function playSunMoon(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    const a = clockFace({ hr: 7, m: 0 }), b = clockFace({ hr: 7, m: 0 });
+    s.append(h('div', { class: 'pair' }, h('div', { class: 'pairbox sun' }, a.el, '🥣 Breakfast'), h('div', { class: 'pairbox moon' }, b.el, '🍛 Dinner')));
+    api.guide('Both clocks show 7 o\'clock. One boy eats breakfast and one eats dinner. Is it the same time of day?');
+    askSeq(api, s, [
+      { prompt: 'Is it the same time of day?', options: ['Yes, the same', 'No! One is a.m., one is p.m.'], answer: 'No! One is a.m., one is p.m.', hint: () => api.guide('Breakfast is in the morning. Dinner is at night. The clock shows 7 both times!') },
+      { guide: 'Which one is 7 a.m.?', prompt: 'Which one is 7 a.m.?', options: ['🥣 Breakfast', '🍛 Dinner'], answer: '🥣 Breakfast', hint: () => api.guide('a.m. is for the morning.'),
+        onDone: hold => { gotTime(7, 0); hold.append(fact('7 a.m. and 7 p.m.', 'Breakfast is at 7 a.m. Dinner is at 7 p.m.')); } },
+    ], api.done);
+    return;
+  }
+  const box = h('div', { class: 'below' }); s.append(box);
+  const hint = it => it.ans === 'am' ? 'That happens in the morning, so it is a.m.' : 'That happens in the afternoon, evening or night, so it is p.m.';
+  if (run.round === 1 || run.round === 2) {
+    const items = run.round === 1
+      ? [{ e: '🍳', t: 'Eating breakfast', sub: 'at 7:00', ans: 'am' }, { e: '🛝', t: 'Playing in the park', sub: 'at 5:00', ans: 'pm' }, { e: '🛌', t: 'Going to sleep', sub: 'at 9:00', ans: 'pm' }]
+      : [{ e: '🏫', t: 'Morning assembly', sub: 'at 8:00', ans: 'am' }, { e: '🌟', t: 'Watching stars', sub: 'at 10:00', ans: 'pm' }];
+    sortCards(api, box, items.map(it => ({ ...it, q: `${it.t} ${it.sub}. Write a.m. or p.m.` })), AMPM, api.done, hint);
+    return;
+  }
+  api.guide('Tick the most likely time for each activity.');
+  askSeq(api, box, [
+    { prompt: '🤸 David is doing his morning exercises. What time is it?', options: ['7 a.m.', '11 a.m.', '3 p.m.', '12 noon'], answer: '7 a.m.', cls: 'words', hint: () => api.guide('Morning exercises happen early in the morning.') },
+    { guide: 'Next one!', prompt: '🍲 Megha is cooking dinner. What time is it?', options: ['7 p.m.', '11 a.m.', '3 a.m.', '1 p.m.'], answer: '7 p.m.', hint: () => api.guide('Dinner is in the evening. Evening times are p.m.') },
+    { guide: 'Last one!', prompt: '🍱 Rahul is having his lunch. What time is it?', options: ['8 a.m.', '1 p.m.', '6 p.m.', '5 a.m.'], answer: '1 p.m.', hint: () => api.guide('Lunch is just after noon, in the afternoon.') },
+  ], api.done);
+}
+
+/* ---------- Part 3 · How long does it take? ---------- */
+function playMinute(api) {
+  const s = api.stage;
+  if (run.round === 1) {
+    api.guide('Some activities take a few minutes. Some take many hours.');
+    askSeq(api, s, [
+      { prompt: 'Which one takes LONGER than writing your name once?', options: ['👀 Blinking your eyes', '🍱 Eating your lunch', '👋 Saying “hi”'], answer: '🍱 Eating your lunch', hint: () => api.guide('Which one takes many minutes?') },
+      { guide: 'Short activities and long activities are measured differently.', prompt: 'Short activities are measured in…', options: ['minutes', 'hours'], answer: 'minutes', hint: () => api.guide('A minute is a short amount of time.') },
+      { guide: 'And long ones?', prompt: 'Long activities are measured in…', options: ['minutes', 'hours'], answer: 'hours', hint: () => api.guide('An hour is a longer amount of time.') },
+    ], api.done);
+    return;
+  }
+  const T = 60;
+  let left = T, timer = null, count = 0;
+  const face = h('span', {}, String(T));
+  const ring = h('div', { class: 'timer', role: 'timer', 'aria-label': 'One minute timer' }, face);
+  const start = h('button', { type: 'button', class: 'btn go big', onclick: () => {
+    start.disabled = true; sfx.pop(); api.guide('Go! Write your name again and again. Keep going until the bell rings!');
+    const t0 = Date.now();
+    timer = setInterval(() => {
+      left = Math.max(0, T - Math.floor((Date.now() - t0) / 1000));
+      face.textContent = String(left); ring.style.setProperty('--p', left / T);
+      if (left <= 10 && left > 0) sfx.tick(left);
+      if (left === 0) { clearInterval(timer); timer = null; sfx.bell(); finish(); }
+    }, 250);
+  } }, '▶ Start 1 minute');
+  api.cleanup(() => timer && clearInterval(timer));
+  const finish = () => {
+    api.guide('Ring ring! Stop writing. Count how many times you wrote your name.');
+    const out = h('output', {}, '0');
+    const step = d => { count = Math.max(0, Math.min(60, count + d)); out.textContent = String(count); sfx.pop(); };
+    const box = h('div', { class: 'below' },
+      h('p', { class: 'q' }, 'How many times did you write your name?'),
+      h('div', { class: 'stepper' }, h('button', { type: 'button', 'aria-label': 'One less', onclick: () => step(-1) }, '−'), out, h('button', { type: 'button', 'aria-label': 'One more', onclick: () => step(1) }, '+')));
+    const ok = h('button', { type: 'button', class: 'btn primary', onclick: () => {
+      ok.disabled = true; sfx.good();
+      box.append(fact(`${count} times in 1 minute!`, 'One minute is a short time. Writing your name once takes just a few seconds.'));
+      api.guide(`Wow, ${count} times in one minute!`); api.done();
+    } }, 'That\'s my number');
+    box.append(ok); s.append(box);
+  };
+  s.append(info('✏️', 'Get a paper and a pencil', 'Press Start, then write your name as many times as you can before the bell rings. No pencil? Clap instead, and a grown-up counts the claps.'), ring, start);
+  api.guide('One-minute challenge! How many times can you write your name in one minute?');
+}
+
+function playMinHour(api) {
+  const s = api.stage;
+  const bins = [{ id: 'min', label: 'Minutes', icon: '⏱️' }, { id: 'hr', label: 'Hours', icon: '🕐' }];
+  const hint = it => it.ans === 'min' ? 'That is quick! It only takes a few minutes.' : 'That takes a long time. We measure it in hours.';
+  if (run.round === 0) {
+    api.guide('A minute is a short amount of time. An hour is a longer amount of time. Does each one take minutes or hours?');
+    sortCards(api, s, [
+      { e: '🪥', t: 'Brushing your teeth', short: 'Brushing teeth', ans: 'min', note: 'about 2 minutes' },
+      { e: '🧼', t: 'Washing hands with soap', short: 'Washing hands', ans: 'min', note: 'about 1 minute' },
+      { e: '💃', t: 'A dance class', short: 'Dance class', ans: 'hr', note: 'about 1 hour' },
+      { e: '📖', t: 'Reading one page', short: 'One page', ans: 'min', note: 'a few minutes' },
+      { e: '🎬', t: 'Watching a movie', short: 'Movie', ans: 'hr', note: 'about 2–3 hours' },
+      { e: '🛝', t: 'Playing in the park', short: 'Park', ans: 'hr', note: 'about 1 hour' },
+    ].map(it => ({ ...it, onRight: () => api.guide(`Yes! ${it.t}: ${it.note}.`) })), bins, api.done, hint);
+    return;
+  }
+  if (run.round === 1) {
+    api.guide('Write minute or hour for each activity.');
+    sortCards(api, s, [
+      { e: '⚽', t: 'Playing outside', ans: 'hr' },
+      { e: '🧴', t: 'Washing your hands before lunch', short: 'Washing hands', ans: 'min' },
+      { e: '🚆', t: 'A long train journey across the city', short: 'Train journey', ans: 'hr' },
+    ], bins, api.done, hint);
+    return;
+  }
+  api.guide('A thinking question!');
+  askSeq(api, s, [{ prompt: 'Can two children take different amounts of time to do the same thing?', options: ['Yes', 'No'], answer: 'Yes', hint: () => api.guide('Think about a race. Does everyone finish at the same time?'),
+    onDone: hold => hold.append(fact('Yes!', 'One friend may read faster, or eat more slowly. We are all different, so the same activity can take different amounts of time.')) }], api.done);
+}
+
+/* ---------- Part 4 · The calendar ---------- */
+function playTara(api) {
+  const s = api.stage;
+  const cal = calendar({ month: 'October', start: 4, days: 31 });
+  if (!run.marks) run.marks = [];
+  run.marks.forEach(([d, e]) => cal.mark(d, e, 'ok'));
+  const clue = ['🎂 My birthday is on the 2nd Saturday of the month.', '🎁 My best friend\'s birthday was 5 days before mine.', '🧺 The school picnic is exactly one week after my birthday.'][run.round];
+  s.append(h('div', { class: 'clues' }, h('h3', {}, 'Tara\'s clue'), h('span', {}, clue)), cal.el);
+  const steps = [
+    { answer: 10, emoji: '🎂', guide: 'Tara mixed up her party notes! Use the calendar. Tap the 2nd Saturday of October.',
+      hint: () => { cal.col(6); api.guide('Look at the Saturday column. The 1st Saturday is 3. The 2nd Saturday is one row down.'); } },
+    { answer: 5, emoji: '🎁', guide: 'Tara\'s birthday is on the 10th. Her best friend\'s birthday was 5 days before. Tap it!',
+      hint: () => api.guide('Start at 10 and count back 5 days: 9, 8, 7, 6, 5.') },
+    { answer: 17, emoji: '🧺', guide: 'The school picnic is exactly one week after Tara\'s birthday on the 10th. Tap it!',
+      hint: () => api.guide('One week is 7 days. On a calendar, just move one row down from 10.') },
+  ];
+  const st = steps[run.round];
+  api.guide(st.guide);
+  tapDate(api, cal, { answer: st.answer, emoji: st.emoji, hint: st.hint, onDone: () => {
+    cal.clear(); run.marks.push([st.answer, st.emoji]);
+    if (run.round < 2) { s.append(fact(`${st.answer} October`, run.round === 0 ? 'Tara\'s birthday is Saturday, 10 October.' : 'Her best friend\'s birthday is Monday, 5 October.')); api.done(); return; }
+    s.append(fact('17 October', 'The school picnic is Saturday, 17 October.'));
+    const box = h('div', { class: 'below' }); s.append(box);
+    api.guide('Now think: could you answer these with only a clock?');
+    askChoice(box, { prompt: 'What does a calendar tell you that a clock never can?', options: ['The date and the day', 'The minutes', 'The hour'], answer: 'The date and the day', hint: () => api.guide('A clock shows hours and minutes. What does a calendar show?'), onDone: api.done });
+  } });
+}
+
+function playDaysMonths(api) {
+  const s = api.stage;
+  if (run.round === 0) { api.guide('There are 7 days in a week. Tap them in order, starting with Sunday.'); orderTiles(api, s, DAYS, 'day', () => { s.append(fact('7 days in a week', 'Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday.')); api.done(); }); return; }
+  if (run.round === 1) { api.guide('There are 12 months in a year. Tap them in order, starting with January.'); orderTiles(api, s, MONTHS, 'month', () => { s.append(fact('12 months in a year', 'From January to December.')); api.done(); }); return; }
+  const box = h('div', { class: 'below' }); s.append(box);
+  const dayOpts = a => shuffle([a, ...shuffle(DAYS.filter(d => d !== a)).slice(0, 2)]);
+  const monOpts = a => shuffle([a, ...shuffle(MONTHS.filter(x => x !== a)).slice(0, 2)]);
+  if (run.round === 2) {
+    api.guide('Fill in the blanks!');
+    askSeq(api, box, [
+      { prompt: 'Which day comes after Tuesday?', options: dayOpts('Wednesday'), answer: 'Wednesday', hint: () => api.guide('Say the days: Sunday, Monday, Tuesday, …') },
+      { prompt: 'Which day comes before Friday?', options: dayOpts('Thursday'), answer: 'Thursday', hint: () => api.guide('Before means just in front of it. Say the days up to Friday.') },
+    ], api.done);
+    return;
+  }
+  if (run.round === 3) {
+    askSeq(api, box, [
+      { guide: 'Now the months!', prompt: 'Which month comes after July?', options: monOpts('August'), answer: 'August', hint: () => api.guide('January, February, March, April, May, June, July, …') },
+      { prompt: 'Which month comes before December?', options: monOpts('November'), answer: 'November', hint: () => api.guide('December is the last month. Which month is just before it?') },
+      { prompt: 'How many months are there in a year?', options: shuffle([12, 7, 10]), answer: 12, cls: '', hint: () => api.guide('Count the months from January to December.') },
+    ], api.done);
+    return;
+  }
+  api.guide('Let\'s count the days in a year.');
+  askSeq(api, box, [
+    { prompt: 'Most years have how many days?', options: shuffle([365, 366, 100]), answer: 365, cls: '', hint: () => api.guide('Most years have three hundred and sixty-five days.') },
+    { guide: 'Every four years, we add one extra day to the calendar.', prompt: 'Which month gets the extra day?', options: ['February', 'December', 'January'], answer: 'February', hint: () => api.guide('The extra day makes this month 29 days long.') },
+    { prompt: 'A leap year has how many days?', options: shuffle([366, 365, 29]), answer: 366, cls: '', hint: () => api.guide('365 days plus one extra day.'),
+      onDone: hold => hold.append(fact('Leap year = 366 days', 'When February has 29 days, it is called a leap year.')) },
+  ], api.done);
+}
+
+function playRohan(api) {
+  const s = api.stage;
+  const cal = calendar({ month: 'December', start: 5, days: 31 });
+  if (!run.marks) run.marks = [];
+  run.marks.forEach(([d, e]) => cal.mark(d, e, 'ok'));
+  s.append(cal.el);
+  if (run.round === 0) {
+    let n = 1;
+    const want = () => cal.nthOf(4, n);
+    cal.el.dataset.answer = want();
+    api.guide('Rohan\'s art competition is on the 3rd Thursday of December. First, tap the 1st Thursday.');
+    cal.handler = (d, b) => {
+      if (d === want()) {
+        sfx.good(); cal.mark(d, null, n < 3 ? 'wk' : 'ok'); cal.label(d, ORD[n]);
+        if (n === 3) { cal.handler = null; cal.mark(d, '🎨'); run.marks.push([21, '🎨']); s.append(fact('Thursday, 21 December', '1st Thursday → 7, 2nd Thursday → 14, 3rd Thursday → 21.')); api.guide('The art competition is on Thursday, 21 December!'); api.done(); return; }
+        n++; cal.el.dataset.answer = want(); api.guide(`Yes! Now tap the ${ORD[n]} Thursday.`);
+      } else { run.mistakes++; sfx.oops(); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); cal.col(4); api.guide(`Find the Thu column at the top. The ${ORD[n]} Thursday is the ${ORD[n]} date in that column.`); }
+    };
+    return;
+  }
+  if (run.round === 1) {
+    api.guide('Rohan wants to practise 3 days before the competition on the 21st. Tap the day he should start.');
+    tapDate(api, cal, { answer: 18, emoji: '✏️', hint: () => api.guide('Start at 21 and count backwards: 20, 19, 18.'),
+      onDone: () => { run.marks.push([18, '✏️']); s.append(fact('18 December', '21 → 20 → 19 → 18. Rohan starts practising on the 18th.')); api.done(); } });
+    return;
+  }
+  api.guide('The prize ceremony is one week after the competition on the 21st. Tap it!');
+  tapDate(api, cal, { answer: 28, emoji: '🏆', hint: () => api.guide('One week later is the same day of the week. Move one row down from 21.'),
+    onDone: () => { s.append(fact('28 December', '21 ↓ 28. The prize ceremony is on the 28th.'), info('🪔', 'Heritage Route', 'India has its own National Calendar. Its months have Sanskrit names like Chaitra, Vaisakha and Jyaistha.')); api.done(); } });
+}
+
+function playJanuary(api) {
+  const s = api.stage;
+  const cal = calendar({ month: 'January', start: 3, days: 31 });
+  if (!run.marks) run.marks = [];
+  run.marks.forEach(([d, e]) => cal.mark(d, e, 'ok'));
+  s.append(cal.el);
+  const box = h('div', { class: 'below' });
+  if (run.round === 0) {
+    s.append(box); api.guide('Read the January calendar. How many Mondays are in January?');
+    askChoice(box, { prompt: 'How many Mondays are in January?', options: shuffle([4, 5, 3]), answer: 4, cls: '', hint: () => { cal.col(1); api.guide('Count the dates in the Mon column.'); },
+      onDone: () => { cal.clear(); cal.col(1, 'wk'); box.append(fact('4 Mondays', '6, 13, 20 and 27 January.')); api.done(); } });
+    return;
+  }
+  if (run.round === 1) {
+    s.append(box); cal.mark(14, '❓');
+    api.guide('On which day does 14th January fall?');
+    askChoice(box, { prompt: 'On which day is 14th January?', options: ['Tuesday', 'Wednesday', 'Monday'], answer: 'Tuesday', hint: () => api.guide('Find 14 on the calendar, then look up to the top of its column.'),
+      onDone: () => { cal.mark(14, '📌', 'ok'); run.marks.push([14, '📌']); api.done(); } });
+    return;
+  }
+  if (run.round === 2) {
+    api.guide('What is the date of the 4th Sunday? Tap it!');
+    tapDate(api, cal, { answer: 26, emoji: '☀️', hint: () => { cal.col(0); api.guide('Look at the Sun column. Count 1st, 2nd, 3rd, 4th.'); }, onDone: () => { cal.clear(); run.marks.push([26, '☀️']); s.append(fact('26 January', 'The Sundays are 5, 12, 19 and 26.')); api.done(); } });
+    return;
+  }
+  if (run.round === 3) {
+    s.append(box); api.guide('Weekdays are Monday to Friday. How many weekdays are there in the last two weeks of January, from the 19th?');
+    askChoice(box, { prompt: 'How many weekdays from the 19th to the end of January?', options: shuffle([10, 14, 12]), answer: 10, cls: '',
+      hint: () => { [20, 21, 22, 23, 24, 27, 28, 29, 30, 31].forEach(d => cal.mark(d, null, 'hl')); api.guide('Saturday and Sunday are not weekdays. Count the dates I lit up: Monday to Friday, two times.'); },
+      onDone: () => { cal.clear(); [20, 21, 22, 23, 24, 27, 28, 29, 30, 31].forEach(d => cal.mark(d, null, 'wk')); box.append(fact('10 weekdays', '20 to 24 is 5 weekdays, and 27 to 31 is 5 more.')); api.done(); } });
+    return;
+  }
+  api.guide('A sports day is planned for the 2nd Saturday of January. Tap the date!');
+  tapDate(api, cal, { answer: 11, emoji: '🏅', hint: () => { cal.col(6); api.guide('Look at the Sat column. The 1st Saturday is 4. The 2nd is one row down.'); }, onDone: () => { cal.clear(); s.append(fact('Saturday, 11 January', 'Sports day! 🏅')); api.done(); } });
+}
+
+/* ---------- Part 5 · Final checkpoint ---------- */
+const PICNIC = [
+  { t: 'Students reach school at 7:30 a.m.' },
+  { t: 'The bus leaves at 8:00 a.m.', lab: 'Bus leaves', hr: 8, m: 0, e: '🚌' },
+  { t: 'They reach the picnic spot at 10:00 a.m.', lab: 'Reach picnic spot', hr: 10, m: 0, e: '🧺' },
+  { t: 'They have lunch at 1 o\'clock in the afternoon.', lab: 'Lunch', hr: 1, m: 0, e: '🥪' },
+  { t: 'Students play games at half past 3 in the afternoon.', lab: 'Play games', hr: 3, m: 30, e: '🎯' },
+  { t: 'They start the return journey at half past 5 in the evening.', lab: 'Return journey', hr: 5, m: 30, e: '🚌' },
+  { t: 'They reach school back at 8 o\'clock at night.', lab: 'Reach school back', hr: 8, m: 0, e: '🏫' },
+];
+function playPicnic(api) {
+  const s = api.stage;
+  const doneN = run.round * 2;
+  const lines = PICNIC.map((p, i) => h('span', { class: 'line' + (i >= 1 && i <= doneN ? ' done' : '') }, p.t));
+  s.append(h('div', { class: 'story' }, h('b', {}, '🧺 The school picnic'), lines));
+  const minis = h('div', { class: 'minis' });
+  PICNIC.slice(1, 1 + doneN).forEach(p => { const c = clockFace({ hr: p.hr, m: p.m }); minis.append(h('div', { class: 'mini' }, c.el, `${p.e} ${p.lab}`)); });
+  if (doneN) s.append(minis);
+  if (run.round === 3) {
+    api.guide('Great picnic! Now sort these picnic times into a.m. and p.m.');
+    sortCards(api, s, [
+      { e: '🎒', t: 'Reach school', sub: 'at 7:30', ans: 'am', clock: [7, 30] },
+      { e: '🥪', t: 'Lunch', sub: 'at 1:00 in the afternoon', ans: 'pm', clock: [1, 0] },
+      { e: '🏫', t: 'Reach school back', sub: 'at 8:00 at night', ans: 'pm', clock: [8, 0] },
+    ], AMPM, api.done, it => it.ans === 'am' ? 'Morning times are a.m.' : 'Afternoon, evening and night times are p.m.');
+    return;
+  }
+  const box = h('div', { class: 'below' }); s.append(box);
+  const doOne = k => {
+    const p = PICNIC[k];
+    lines.forEach((l, i) => l.classList.toggle('now', i === k));
+    box.replaceChildren();
+    setClock(api, box, { hr: p.hr, m: p.m, label: `${p.e} ${p.lab}`, show: 'none', intro: `Read the story. ${p.t} Set the clock! First the LONG red hand.`,
+      onDone: () => {
+        lines[k].classList.remove('now'); lines[k].classList.add('done');
+        const c = clockFace({ hr: p.hr, m: p.m }); minis.append(h('div', { class: 'mini' }, c.el, `${p.e} ${p.lab}`)); if (!minis.isConnected) box.before(minis);
+        if (k % 2 === 1) setTimeout(() => doOne(k + 1), 900); else api.done();
+      } });
+  };
+  doOne(doneN + 1);
+}
+
+function playDetective(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    const a = clockFace({ hr: 6, m: 30 }), b = clockFace({ hr: 6, m: 30 });
+    s.append(h('div', { class: 'pair' }, h('div', { class: 'pairbox' }, 'Clock 1', a.el, '🎒 Ravi leaves for school'), h('div', { class: 'pairbox' }, 'Clock 2', b.el, '⚽ Ravi goes to play football')));
+    api.guide('Morning or evening? Both clocks show 6:30.');
+    askSeq(api, s, [
+      { prompt: 'Which clock shows a.m. time?', options: ['Clock 1 🎒', 'Clock 2 ⚽'], answer: 'Clock 1 🎒', hint: () => api.guide('Ravi goes to school in the morning. Morning is a.m.') },
+      { guide: 'And the other one?', prompt: 'Which clock shows p.m. time?', options: ['Clock 1 🎒', 'Clock 2 ⚽'], answer: 'Clock 2 ⚽', hint: () => api.guide('Football is in the evening. Evening is p.m.'), onDone: () => gotTime(6, 30) },
+    ], api.done);
+    return;
+  }
+  if (run.round === 1) {
+    s.append(h('div', { class: 'clues' }, h('h3', {}, '🛝 Aarav in the park'), h('span', {}, 'It was time to play in the park. The minute hand was on 6. The hour hand was between 4 and 5.')));
+    const box = h('div', { class: 'below' }); s.append(box);
+    setClock(api, box, { hr: 4, m: 30, show: 'none', label: 'Show Aarav\'s time', intro: 'Show the time Aarav saw. The minute hand was on 6, so first tap 6 for the LONG red hand.',
+      onDone: () => {
+        askChoice(box, { prompt: 'What time was it?', options: ['Half past 4', 'Half past 5', '6 o\'clock'], answer: 'Half past 4', hint: () => api.guide('The hour hand has just passed 4.'), onDone: () => { box.append(fact('4:30', 'Half past 4.')); api.done(); } });
+        api.guide('Now say the time!');
+      } });
+    return;
+  }
+  if (run.round === 2) {
+    const c = clockFace({ hr: 11, m: 30 }); c.el.style.width = 'min(100%,220px)';
+    s.append(h('div', { class: 'clues' }, h('h3', {}, '🕵️ Clock Detective clues'), h('span', {}, '1. The minute hand is on 6.'), h('span', {}, '2. The hour hand is between 11 and 12.'), h('span', {}, '3. The sky is dark, and most of you are fast asleep. 🌙')), c.el);
+    api.guide('Detective Ayansh, read the clues!');
+    askSeq(api, s, [
+      { prompt: 'What time could it be?', options: ['Half past 11', 'Half past 12', '6 o\'clock'], answer: 'Half past 11', hint: () => api.guide(readHint(11, 30)) },
+      { guide: 'Now the last clue: the sky is dark and everyone is asleep.', prompt: 'Is it a.m. or p.m.?', options: ['a.m.', 'p.m.'], answer: 'p.m.', hint: () => api.guide('It is night, just before midnight. From noon to midnight is p.m.'),
+        onDone: hold => { gotTime(11, 30); hold.append(fact('11:30 p.m.', 'It is night time, before midnight, so it is p.m.')); } },
+    ], api.done);
+    return;
+  }
+  const c = clockFace({ hr: 11, m: 30 }); c.el.style.width = 'min(100%,200px)';
+  s.append(c.el);
+  api.guide('Challenge! This same clock also happens in the daytime: 11:30 a.m. What might you be doing then?');
+  askChoice(s, { prompt: 'At 11:30 a.m., you might be…', options: ['🛏️ Sleeping in bed', '🏫 In class at school', '🌟 Watching the stars'], answer: '🏫 In class at school', hint: () => api.guide('11:30 a.m. is in the morning, when the sun is up.'),
+    onDone: () => { s.append(fact('11:30 a.m. and 11:30 p.m.', 'The same clock, two times of day!')); api.done(); } });
+}
+
+/* ---------- Grand Review ---------- */
+const REVIEW_QS = [
+  { part: 1, from: 'Clock Hands', play: (api, b, done) => { const hr = rand(1, 12); api.guide('What time is it?'); readClock(api, b, hr, 0, done); } },
+  { part: 1, from: 'Set the Clock', play: (api, b, done) => { const hr = pickOne([2, 3, 6, 7, 9, 12]); setClock(api, b, { hr, m: 0, onDone: done }); } },
+  { part: 1, from: 'Half Past Pizza', play: (api, b, done) => { const hr = rand(1, 12); api.guide('What time is it?'); readClock(api, b, hr, 30, done); } },
+  { part: 1, from: 'Train to Sunnyside', play: (api, b, done) => { const hr = pickOne([3, 6, 8, 9, 12]); setClock(api, b, { hr, m: 30, onDone: done, intro: `Set the clock to ${digi(hr, 30)}. First the LONG red hand.` }); } },
+  { part: 1, from: 'Clock Doctor', play: (api, b, done) => { const hr = pickOne([2, 5, 9]); const c = clockFace({ hr, m: 30 }); api.guide('Spot the mistake!'); rightWrong(api, b, { who: ['🧒', 'Mini'], says: `It is ${nxt(hr)} o'clock.`, clock: c, isRight: false, onDone: () => { b.append(fact(digi(hr, 30), `It is half past ${hr}.`)); done(); } }); } },
+  { part: 2, from: 'Sun or Moon?', play: (api, b, done) => { const it = pickOne([{ e: '🥣', t: 'Eating breakfast', sub: 'at 7:00', ans: 'am' }, { e: '😴', t: 'Going to bed', sub: 'at 9:00', ans: 'pm' }, { e: '🏏', t: 'Cricket practice', sub: 'at 6:00 in the evening', ans: 'pm' }, { e: '🚌', t: 'School bus', sub: 'at 8:00 in the morning', ans: 'am' }]); sortCards(api, b, [it], AMPM, done, x => x.ans === 'am' ? 'Morning is a.m.' : 'Afternoon and night are p.m.'); } },
+  { part: 3, from: 'Minute or Hour?', play: (api, b, done) => { const it = pickOne([{ e: '🪥', t: 'Brushing your teeth', ans: 'min' }, { e: '🎬', t: 'Watching a movie', ans: 'hr' }, { e: '🧼', t: 'Washing your hands', ans: 'min' }, { e: '🚆', t: 'A long train journey', ans: 'hr' }]); api.guide('Minutes or hours?'); sortCards(api, b, [it], [{ id: 'min', label: 'Minutes', icon: '⏱️' }, { id: 'hr', label: 'Hours', icon: '🕐' }], done, x => x.ans === 'min' ? 'That is quick: minutes.' : 'That takes a long time: hours.'); } },
+  { part: 4, from: 'Days & Months', play: (api, b, done) => {
+    const q = pickOne([
+      () => { const i = rand(0, 5); return { p: `Which day comes after ${DAYS[i]}?`, a: DAYS[i + 1], o: DAYS }; },
+      () => { const i = rand(1, 6); return { p: `Which day comes before ${DAYS[i]}?`, a: DAYS[i - 1], o: DAYS }; },
+      () => { const i = rand(0, 10); return { p: `Which month comes after ${MONTHS[i]}?`, a: MONTHS[i + 1], o: MONTHS }; },
+    ])();
+    api.guide(q.p); askChoice(b, { prompt: q.p, options: shuffle([q.a, ...shuffle(q.o.filter(x => x !== q.a)).slice(0, 2)]), answer: q.a, hint: () => api.guide('Say them in order out loud.'), onDone: done });
+  } },
+  { part: 4, from: 'Rohan\'s December', play: (api, b, done) => {
+    const start = rand(0, 6), dw = rand(0, 6), n = rand(2, 3), month = pickOne(['March', 'July', 'August']);
+    const cal = calendar({ month, start, days: 31 }); b.append(cal.el);
+    const ans = cal.nthOf(dw, n);
+    api.guide(`Tap the ${ORD[n]} ${DAYS[dw]} of ${month}.`);
+    tapDate(api, cal, { answer: ans, emoji: '⭐', hint: () => { cal.col(dw); api.guide(`Look at the ${DAYS[dw].slice(0, 3)} column and count down to the ${ORD[n]} one.`); }, onDone: () => { cal.clear(); done(); } });
+  } },
+  { part: 5, from: 'Clock Detective', play: (api, b, done) => {
+    const hr = pickOne([3, 4, 5]);
+    b.append(h('div', { class: 'clues' }, h('h3', {}, '🕵️ Clues'), h('span', {}, 'The minute hand is on 6.'), h('span', {}, `The hour hand is between ${hr} and ${hr + 1}.`), h('span', {}, 'School is over and you are playing outside. ☀️')));
+    api.guide('Read the clues. What time is it?');
+    askChoice(b, { prompt: 'What time is it?', options: shuffle([`Half past ${hr} p.m.`, `Half past ${hr} a.m.`, `Half past ${hr + 1} p.m.`]), answer: `Half past ${hr} p.m.`, hint: () => api.guide(`The hour hand has just passed ${hr}. After school is in the afternoon: p.m.`), onDone: () => { gotTime(hr, 30); done(); } });
+  } },
+];
+function playReview(api) {
+  if (!run.qs) { run.qs = shuffle(REVIEW_QS.slice()); run.firstTry = {}; }
+  const q = run.qs[run.round], before = run.mistakes;
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('span', { class: 'srctag' }, `Part ${q.part} · ${q.from}`), below);
+  q.play(api, below, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Reading the clock', 2: 'a.m. and p.m.', 3: 'How long?', 4: 'The calendar', 5: 'Checkpoint' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4, 5].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 10 Time Champion'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [r, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${r} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < r ? '' : 'off' }, '⏰'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Clock Hands', idea: 'Hour hand and minute hand', page: 'Book pages 58–59', rounds: 5, cut: [1, 3], icon: '🕙', play: playHands },
+  { id: 2, part: 1, name: 'Set the Clock', idea: 'O\'clock and 10:00', page: 'Book page 60', rounds: 4, cut: [1, 3], icon: '⏰', play: playSetClock },
+  { id: 3, part: 1, name: 'Straw Clock', idea: 'Counting minutes in 5s', page: 'Book page 61', rounds: 3, cut: [1, 2], icon: '🥤', play: playStraw },
+  { id: 4, part: 1, name: 'Half Past Pizza', idea: 'Half past', page: 'Book pages 60–62', rounds: 5, cut: [1, 3], icon: '🍕', play: playPizza },
+  { id: 5, part: 1, name: 'Train to Sunnyside', idea: 'GRIP-2', page: 'Book page 63', rounds: 4, cut: [1, 3], icon: '🚂', play: playTrain },
+  { id: 6, part: 1, name: 'Clock Doctor', idea: 'Spot the mistake', page: 'Book pages 64–65', rounds: 4, cut: [1, 3], icon: '🩺', play: playDoctor },
+  { id: 7, part: 2, name: 'Ayansh\'s Day', idea: 'a.m. and p.m.', page: 'Book pages 65–66', rounds: 4, cut: [1, 3], icon: '🌅', play: playMyDay },
+  { id: 8, part: 2, name: 'Sun or Moon?', idea: 'GRIP-3', page: 'Book pages 65 and 67', rounds: 4, cut: [1, 3], icon: '🌙', play: playSunMoon },
+  { id: 9, part: 3, name: 'One-Minute Challenge', idea: 'Estimating duration', page: 'Book page 68', rounds: 2, cut: [0, 1], icon: '⏱️', play: playMinute },
+  { id: 10, part: 3, name: 'Minute or Hour?', idea: 'GRIP-4', page: 'Book pages 69–70', rounds: 3, cut: [1, 2], icon: '⏳', play: playMinHour },
+  { id: 11, part: 4, name: 'Tara\'s Party', idea: 'Reading a calendar', page: 'Book page 70', rounds: 3, cut: [1, 2], icon: '🎂', play: playTara },
+  { id: 12, part: 4, name: 'Days & Months', idea: 'Week, year and leap year', page: 'Book pages 71 and 73', rounds: 5, cut: [2, 5], icon: '📅', play: playDaysMonths },
+  { id: 13, part: 4, name: 'Rohan\'s December', idea: 'Calendar puzzles', page: 'Book pages 71–72', rounds: 3, cut: [1, 2], icon: '🎨', play: playRohan },
+  { id: 14, part: 4, name: 'January Checkpoint', idea: 'Checkpoint 1', page: 'Book page 73', rounds: 5, cut: [1, 3], icon: '🗓️', play: playJanuary },
+  { id: 15, part: 5, name: 'Picnic Day', idea: 'Checkpoint 2', page: 'Book page 74', rounds: 4, cut: [1, 3], icon: '🧺', play: playPicnic },
+  { id: 16, part: 5, name: 'Clock Detective', idea: 'Checkpoint 3 and Skill Trail', page: 'Book pages 75–76', rounds: 4, cut: [1, 3], icon: '🕵️', play: playDetective },
+  { id: 17, part: 6, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 10 · pages 58–76', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function startLevel(L) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0, used: new Set() };
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 6 ? 'You can read o\'clock and half past! Part 2 is about a.m. and p.m.'
+    : L.id === 8 ? 'Morning or evening, you know it! Part 3 is about how long things take.'
+    : L.id === 10 ? 'Minutes and hours, done! Part 4 is about the calendar.'
+    : L.id === 14 ? 'Calendar champion! Part 5 is the final checkpoint.'
+    : L.id === 16 ? 'You finished Part 5! One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 10, Ayansh! Tick-tock, well done!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to town'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC23D', '#E04848', '#178F74', '#2F6FD0', '#FFFFFF'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 6; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  const cells = [h('span', { class: 'ch hd' }, '')];
+  for (let c = 1; c <= 12; c++) cells.push(h('span', { class: 'ch hd' }, String(c)));
+  [[0, "o'clock"], [30, 'half past']].forEach(([m, lab]) => {
+    cells.push(h('span', { class: 'ch rowhd' }, lab));
+    for (let c = 1; c <= 12; c++) { const got = timeSet.has(c + ':' + m); cells.push(h('span', { class: 'ch' + (got ? ' got' : ''), title: got ? words(c, m) : 'Not yet' }, got ? digi(c, m) : '')); }
+  });
+  $('chart').replaceChildren(...cells);
+  const lit = [...timeSet].filter(k => /^([1-9]|1[0-2]):(0|30)$/.test(k)).length;
+  $('chartCount').textContent = lit === 0 ? 'No clocks collected yet. Start at Stop 1!' : `${lit} of 24 clocks collected`;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: a day on the clock */
+const HERO = [['☀️', 'Wake up', 7, 0], ['🏫', 'School', 9, 0], ['🍱', 'Lunch', 1, 0], ['⚽', 'Play', 5, 0], ['🌙', 'Sleep', 9, 0]];
+const heroClock = clockFace({ hr: 7, m: 0, label: 'A clock' });
+$('heroClock').append(heroClock.el);
+const heroItems = HERO.map(([e, t, hr, m]) => { const d = h('div', { class: 'dayitem' }, h('span', { class: 'e', 'aria-hidden': 'true' }, e), t, h('span', { class: 'tm' }, digi(hr, m))); $('daystrip').append(d); return d; });
+$('showHow').addEventListener('click', async () => {
+  $('showHow').disabled = true;
+  for (let i = 0; i < HERO.length; i++) {
+    heroItems.forEach((d, j) => d.classList.toggle('now', j === i));
+    heroClock.set(HERO[i][2], HERO[i][3], true); sfx.tick(i); await wait(900);
+  }
+  heroItems.forEach(d => d.classList.remove('now'));
+  $('reveal').hidden = false; sfx.bell();
+  say('A clock! Time tells us when things happen and how long they take.');
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, times: [], sound: P.sound, resetAt: Date.now() }; timeSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { times: [...timeSet] }) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Take-Away Bazaar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column down a market street, from morning sky to marigold stalls to the spice-coloured ground; white cards hold the play. Follows Chapter 8 (Subtraction of 3-digit Numbers) of Ayansh's maths book, page by page. Hundreds are always blue, tens green, ones orange, and borrowing marks are red like the book's. */
+:root{
+  --sky:#A6DCF2; --marigold:#FFD27A; --spice:#F0A055; --clay:#B65A3C; --deep:#4A2A23;
+  --board:#FFFFFF; --ink:#2A211D; --ink-soft:#64564F; --shadow:#2B1712;
+  --gold:#FFC23D; --gold-soft:#FFF2CC;
+  --hun:#2F6FD0; --hun-soft:#DDE8FA;
+  --ten:#1C8A55; --ten-soft:#D3F1E0;
+  --one:#D9721C; --one-soft:#FFE6CC;
+  --borrow:#D23B3B; --borrow-soft:#FFE0DC;
+  --answer:#DDF3E4; --lilac:#EFEAF8; --awning:#E2483D;
+  --on-dark:#FFFFFF; --on-dark-soft:#F3DCCD; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--deep)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);
+  background-color:var(--deep);
+  background-image:linear-gradient(180deg,var(--sky) 0%,var(--marigold) 24%,var(--spice) 50%,var(--clay) 78%,var(--deep) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a shop awning */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:22px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:repeating-linear-gradient(90deg,var(--awning) 0 22px,var(--gold-soft) 22px 44px)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--one-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero: the chapter opener (book page 7) */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.shop{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.shelf{display:flex;flex-wrap:wrap;max-width:100%;gap:2px;padding:8px 10px 6px;border-bottom:8px solid #9A6233;background:var(--gold-soft);border-radius:10px 10px 0 0;min-height:58px;align-items:flex-end}
+.fruit{font-size:26px;line-height:1;transition:transform .5s cubic-bezier(.34,1.3,.5,1),opacity .5s}
+.fruit.sold{transform:translate(40px,-30px) scale(.4);opacity:0}
+.basket{font-size:40px;line-height:1}
+.shopsum{font-family:var(--display);font-weight:800;font-size:28px;min-height:1.2em;font-variant-numeric:tabular-nums}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--ten-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E8DED8;border-color:#A8968C}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(3n+1) .stopicon{background:var(--one-soft)}
+.stop:nth-child(3n+2) .stopicon{background:var(--ten-soft)}
+.stop:nth-child(3n) .stopicon{background:var(--hun-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--clay)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:#CDC2BC}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--awning);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--ten);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid #CDC2BC;border-radius:14px;padding:8px 10px;background:var(--lilac);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--hun);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--ten)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices, keypad + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.q.big{font-family:var(--display);font-size:clamp(24px,6vw,30px);font-variant-numeric:tabular-nums}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--ten);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--borrow-soft);animation:shake .4s}
+.keypad{display:grid;grid-template-columns:repeat(5,minmax(0,64px));gap:8px;justify-content:center}
+.key{font-family:var(--display);font-weight:800;font-size:28px;height:60px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.key:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.key:disabled{opacity:.4;cursor:default}
+.key.right{background:var(--ten);color:var(--on-color);opacity:1}
+.key.wrong{background:var(--borrow-soft)}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center}
+.fb.good{color:var(--ten)}
+.fb.oops{color:var(--borrow)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(26px,7vw,40px);line-height:1.05;font-variant-numeric:tabular-nums}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--hun-soft);border:3px dashed var(--hun);border-radius:16px;padding:10px 14px;font-weight:700;max-width:520px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.who-says{display:flex;gap:10px;align-items:center;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800;font-size:18px;max-width:560px}
+.who-says .e{font-size:38px;line-height:1;flex:none}
+.sumline{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,38px);line-height:1;font-variant-numeric:tabular-nums}
+.hintbox{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px}
+.dotrow{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:300px}
+.dotrow i{width:18px;height:18px;border-radius:50%;background:var(--one);border:2px solid var(--ink);position:relative}
+.dotrow i.x{background:var(--borrow-soft);border-color:var(--borrow)}
+.dotrow i.x::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:3px;background:var(--borrow);transform:rotate(-40deg)}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:15px;text-align:center}
+
+/* UTH kit: place value blocks */
+.uth{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;max-width:620px;border:3px solid var(--ink);border-radius:16px;overflow:hidden}
+.ucol{display:flex;flex-direction:column;min-width:0;border-left:3px solid var(--ink);transition:background .2s}
+.ucol:first-child{border-left:none}
+.uhd{font-family:var(--display);font-weight:800;font-size:17px;text-align:center;color:var(--on-color);padding:2px 4px}
+.ucol.h .uhd{background:var(--hun)}.ucol.t .uhd{background:var(--ten)}.ucol.o .uhd{background:var(--one)}
+.ucol.on{background:var(--gold-soft)}
+.pile{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start;justify-content:center;padding:8px 4px;min-height:120px}
+.cnt{font-family:var(--display);font-weight:800;font-size:26px;text-align:center;border-top:2px dashed #CDC2BC;font-variant-numeric:tabular-nums}
+.ucol.h .cnt{color:var(--hun)}.ucol.t .cnt{color:var(--ten)}.ucol.o .cnt{color:var(--one)}
+.blk{position:relative;padding:0;border:2px solid var(--ink);cursor:pointer;flex:none}
+.blk:disabled{cursor:default}
+.blk.h{width:46px;height:46px;border-radius:4px;background-color:var(--hun-soft);background-image:linear-gradient(var(--hun) 1px,transparent 1px),linear-gradient(90deg,var(--hun) 1px,transparent 1px);background-size:4.2px 4.2px}
+.blk.t{width:14px;height:46px;border-radius:3px;background-color:var(--ten-soft);background-image:linear-gradient(var(--ten) 1px,transparent 1px);background-size:100% 4.2px}
+.blk.o{width:20px;height:20px;border-radius:4px;background:var(--one)}
+.blk.fresh{animation:pop .45s backwards}
+.blk.poof{animation:poof .3s forwards}
+.blk.gone{opacity:.35}
+.blk.gone::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:3px;background:var(--borrow);transform:rotate(-45deg)}
+.uth.store .blk{border:none;background:none;font-size:30px;line-height:1;width:auto;height:auto}
+.uth.store .blk.t{font-size:24px}.uth.store .blk.o{font-size:18px}
+.tip{min-height:1.4em;font-weight:800;text-align:center;color:var(--clay)}
+
+/* column method: H T O table */
+.hto{display:grid;grid-template-columns:30px repeat(3,60px);border:3px solid var(--ink);border-radius:14px;overflow:hidden;background:var(--board)}
+.hto > *{display:grid;place-items:center;min-height:56px;font-family:var(--display);font-weight:800;font-size:32px;line-height:1;font-variant-numeric:tabular-nums;border-left:2px solid #CDC2BC}
+.hto > .sg{border-left:none;font-size:28px}
+.hto .hd{min-height:38px;font-size:20px;color:var(--on-color)}
+.hto .hd.h{background:var(--hun)}.hto .hd.t{background:var(--ten)}.hto .hd.o{background:var(--one)}
+.hto .hd.sg{background:var(--ink)}
+.hto .br{min-height:28px;font-size:18px;color:var(--borrow);font-family:var(--body)}
+.hto .br s{color:var(--ink-soft);margin-right:3px}
+.hto .tp{border:none;border-left:2px solid #CDC2BC;border-bottom:2px solid #E6DDD8;background:none;cursor:default;padding:0;width:100%;height:100%}
+.hto > .sg.tps{border-bottom:2px solid #E6DDD8}
+.hto .tp.x{text-decoration:line-through;text-decoration-color:var(--borrow);text-decoration-thickness:3px;color:var(--ink-soft)}
+.hto .tp.tapme{cursor:pointer;background:var(--gold);animation:glow 1.1s ease-in-out infinite}
+.hto .bt{border-bottom:3px solid var(--ink)}
+.hto .an{background:var(--answer);color:var(--ten)}
+.hto .an.now{background:var(--gold-soft);color:var(--ink-soft)}
+.hto .cur{box-shadow:inset 0 0 0 3px var(--gold)}
+.hto .an.ring{position:relative}
+.hto .an.ring::after{content:"";position:absolute;inset:6px;border:4px solid var(--borrow);border-radius:50%}
+
+/* expanded form */
+.exp{display:grid;grid-template-columns:auto auto auto auto auto auto auto;gap:4px 8px;align-items:center;justify-items:end;font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,28px);font-variant-numeric:tabular-nums;padding:10px 14px;border:3px solid var(--ink);border-radius:16px;background:var(--gold-soft)}
+.exp .ar{color:var(--borrow);justify-self:center}
+.exp .pl{color:var(--ink-soft);justify-self:center}
+.exp .part{position:relative;min-width:2.2ch;text-align:right}
+.exp .part.h{color:var(--hun)}.exp .part.t{color:var(--ten)}.exp .part.o{color:var(--one)}
+.exp .part .old{position:absolute;right:0;top:-.95em;font-size:.6em;color:var(--borrow)}
+.exp .part.x > .v{text-decoration:line-through;text-decoration-color:var(--borrow);color:var(--ink-soft)}
+.exp .line{grid-column:1/-1;justify-self:stretch;border-top:3px solid var(--ink);height:0}
+.exp .blank{color:#B9ACA5}
+
+/* bar model + word problems */
+.story{background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:19px;max-width:560px;display:flex;flex-wrap:wrap;gap:4px 6px;line-height:1.5}
+.word{border:none;background:none;padding:0 2px;border-radius:6px;font-weight:800;cursor:pointer}
+.word:hover{background:var(--gold-soft)}
+.word.key{background:var(--gold);text-decoration:underline;text-decoration-thickness:3px}
+.word.no{background:var(--borrow-soft)}
+.bar{width:100%;max-width:480px;display:flex;flex-direction:column;gap:0;font-weight:800}
+.bar .row{display:flex}
+.bar .seg{display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid var(--ink);padding:6px 4px;min-height:58px;text-align:center;font-size:14px;line-height:1.15}
+.bar .seg b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+.bar .tot{flex:1;background:var(--hun-soft);border-radius:12px 12px 0 0}
+.bar .take{background:var(--borrow-soft);border-top:none;border-radius:0 0 0 12px}
+.bar .left{background:var(--answer);border-top:none;border-left:none;border-radius:0 0 12px 0;flex:1}
+.gears{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;max-width:520px}
+.gear{border:3px solid var(--ink);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:2px;font-weight:700;font-size:15px;line-height:1.3}
+.gear b{font-family:var(--display);font-size:20px}
+.gear:nth-child(1){background:var(--hun-soft)}.gear:nth-child(2){background:var(--ten-soft)}.gear:nth-child(3){background:var(--gold-soft)}.gear:nth-child(4){background:var(--borrow-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;font-weight:800;font-size:15px}
+.comic{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:100%}
+.panel{border:3px solid var(--ink);border-radius:14px;padding:8px;background:var(--hun-soft);display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-weight:800;font-size:14px;line-height:1.25}
+.panel .e{font-size:34px;line-height:1}
+.panel .zone{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.panel.on{background:var(--gold)}
+
+/* vault + riddles */
+.vault{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;background:#5E6670;border:3px solid var(--ink);border-radius:16px;padding:10px 14px}
+.vault .lab{color:var(--on-color);font-weight:800;font-size:14px;margin-right:4px}
+.vbox{display:flex;flex-direction:column;align-items:center;gap:2px}
+.vbox span{width:40px;height:46px;display:grid;place-items:center;background:var(--board);border:3px solid var(--ink);border-radius:8px;font-family:var(--display);font-weight:800;font-size:26px}
+.vbox small{color:var(--on-color);font-weight:800}
+.vbox.now span{background:var(--gold-soft);box-shadow:0 0 0 3px var(--gold)}
+.vault.open{background:var(--ten)}
+.item{font-size:56px;line-height:1}
+.riddle{background:#3C5A47;color:var(--on-color);border:6px solid #8A5A2B;border-radius:12px;padding:12px 16px;max-width:520px;width:100%;display:flex;flex-direction:column;gap:6px;font-weight:700}
+.riddle b{font-family:var(--display);font-size:19px;color:var(--gold)}
+.magic{display:grid;grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);gap:6px;justify-content:center;align-items:center;justify-items:center}
+.magic .c{width:68px;height:68px;border-radius:50%;border:4px solid;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:24px;background:var(--board)}
+.magic .mid{width:64px;height:64px;border:4px solid #7A3FA0;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:26px;background:var(--board)}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(43,23,18,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#DED4CE;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.cert{width:100%;border:3px dashed var(--ten);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes poof{to{transform:scale(1.6);opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow{0%,100%{box-shadow:inset 0 0 0 3px var(--borrow)}50%{box-shadow:inset 0 0 0 6px var(--borrow)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .blk.h{width:34px;height:34px;background-size:3.1px 3.1px}
+  .blk.t{width:11px;height:34px;background-size:100% 3.1px}
+  .blk.o{width:17px;height:17px}
+  .uhd{font-size:14px}
+  .key{height:54px;font-size:24px}
+  .gears{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Take-Away Bazaar<small>Ayansh's Chapter 8 · Subtraction of 3-digit Numbers</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 54</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🐿️</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Chikki, and I run a fruit stall.</h2>
+        <p>Customers come and go all day. <b>How do I know what is still on my shelf?</b></p>
+        <div class="shop">
+          <div class="shelf" id="shelf" role="img" aria-label="A shelf with 8 mangoes"></div>
+          <span class="basket" aria-hidden="true">🧺</span>
+          <span class="shopsum" id="shopSum" aria-live="polite"></span>
+        </div>
+        <button class="btn primary" id="showHow" type="button">✨ Show me</button>
+        <p class="reveal" id="reveal" hidden>A customer buys 3 mangoes. 8 − 3 = 5. I <b>subtract</b>! Subtraction tells us how many are <b>left</b>.</p>
+        <p class="note">Aman and Sara invited 350 people to a New Year party, and 186 have come in. How many are they still waiting for? By Stop 12 you will know how to find out.</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You finished every stall in the Take-Away Bazaar! You finished Chapter 8.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Take away, no regrouping</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Regrouping by breaking</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Take away with regrouping</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Word problems</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 8</h2>
+    <ol class="stops finale" id="stops5"></ol>
+
+    <section class="skillcard card">
+      <h2>My subtraction tools</h2>
+      <p class="note">Each tool lights up the first time you use it in a game.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>This follows Chapter 8, “Subtraction of 3-digit Numbers”, in Ayansh's maths book (pages 7–27). Each stop uses the book's own examples and numbers, in the same order. The games teach the ideas behind the sums, not only the answers: blocks for hundreds, tens and ones, why we start at the ones, breaking a ten or a hundred when there are not enough, and adding back to check. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Take away, no regrouping (pages 7–13)</h3>
+        <ol>
+          <li><b>Block Shop</b> (pages 8–9, Discovery Route): he takes away with place value blocks: 138 − 4, then a 2-digit and a 3-digit number (265 − 32 and 476 − 253). He crosses out cubes, then rods, then flats, and counts what is left.</li>
+          <li><b>Expand &amp; Subtract</b> (pages 10–11, Guidepost): 586 − 4, 790 − 50 and 687 − 221, first in expanded form, then in the H T O columns. Ends with the Spotlight: always start from the ones.</li>
+          <li><b>Cross Out Blocks</b> (page 12, GRIP-1 Q1): 446 − 5 and 357 − 23.</li>
+          <li><b>Expand It</b> (page 12, GRIP-1 Q2): 295 − 22 and 954 − 623.</li>
+          <li><b>Line Them Up</b> (page 12, GRIP-1 Q3): 668 − 27, 702 − 102 and 368 − 113. He first says which column the smaller number's digits go in.</li>
+          <li><b>Secret Vault</b> (page 13, Checkpoint 1): Detective Thomas's six museum sums. The circled digit of each answer goes into the vault, which opens with the code 306443.</li>
+        </ol>
+        <h3>Part 2 · Regrouping by breaking (pages 14–17)</h3>
+        <ol start="7">
+          <li><b>Break It Up</b> (pages 14–15): he taps a ten rod to break it into 10 ones and a hundred flat to break it into 10 tens. Then 3 tens 2 ones becomes 2 tens 12 ones, and 5 hundreds 4 tens becomes 4 hundreds 14 tens. Spotlight: the number stays the same, only its form changes.</li>
+          <li><b>Regroup Guidepost</b> (page 16): 2 hundreds 3 tens = 1 hundred 13 tens, 4 hundreds 5 ones = 3 hundreds 10 tens 5 ones, and 4 hundreds 5 tens = 3 hundreds 14 tens 10 ones.</li>
+          <li><b>Fill the Blanks</b> (page 17, GRIP-2): questions a to g.</li>
+        </ol>
+        <h3>Part 3 · Take away with regrouping (pages 17–23)</h3>
+        <ol start="10">
+          <li><b>Not Enough Ones</b> (pages 17 and 19): 462 − 8 with blocks, then 643 − 9 in columns.</li>
+          <li><b>Borrow Again</b> (pages 18 and 20): 356 − 78 with blocks (he breaks a ten and a hundred), then 530 − 19 in columns.</li>
+          <li><b>Borrow a Hundred</b> (pages 18 and 21): 526 − 348, then 425 − 253 in expanded form and in columns, then the New Year party from page 8: 350 − 186 = 164.</li>
+          <li><b>GRIP-3 Practice</b> (page 21): 595 − 287 and 890 − 476 by expanding, then 587 − 59, 921 − 234 and 903 − 98.</li>
+          <li><b>Notebook Store</b> (page 22): Wonder Junction, 423 − 156 with cartons of 100, boxes of 10 and loose notebooks (267), then the Skill Trail magic number (300).</li>
+          <li><b>Riddle Board</b> (page 23, Checkpoint 2): the four riddles, then 100 − 9, 649 − 288, 716 − 30 and 832 − 458.</li>
+        </ol>
+        <h3>Part 4 · Word problems (pages 24–27)</h3>
+        <ol start="16">
+          <li><b>Story Steps</b> (pages 24–25): the four steps (read, underline the subtraction word, write what you know, subtract), Rio's coins (504 − 6 = 498) and the train (216 − 196 = 20).</li>
+          <li><b>Library &amp; Future Fair</b> (pages 26–27): the library (329 − 245 = 84) and Checkpoint 3: digital pets (625 − 38 = 587), drones (936 − 178 = 758) and instruments minus robots (842 − 684 = 158).</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all four parts, with new numbers each time, and a Chapter 8 Subtraction Champion certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Checking by adding back (answer + number taken away = starting number) is not in this chapter. I added it as a short last step on some stops because it builds the habit of checking. Each time, he adds and sees that he gets back the number he started with.</li>
+          <li>The book's Discovery Route says “numbers given by your teacher”. I picked 265 − 32 and 476 − 253 for Stop 1.</li>
+          <li>Page 19 has a small misprint: the last column table shows 389 being taken away from 643. The game uses 9, as in the rest of that example.</li>
+          <li>The drawing tasks (page 15 Task 3 and page 18 Task 4) are done by tapping blocks to break them instead of drawing. The comic on page 26 gives no number for the drones; question 2 on page 27 works it out (758).</li>
+          <li>When a wrong digit is tapped in the columns, a dot picture appears (for example 13 dots with 9 crossed out) so he can count what is left.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Play shop with ₹100 notes, ₹10 coins and ₹1 coins as hundreds, tens and ones. When there are not enough ₹1 coins to pay, change a ₹10 coin for ten ₹1 coins. That is regrouping.</li>
+          <li>Page 24: in any story sum, ask him to find the subtraction word first (left, fewer, remain, take away, difference, lost).</li>
+          <li>After any subtraction, ask: “How can you check it?” Add the answer to the number taken away.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p>The other chapter games are <a href="https://claude.ai/artifact/2Li63gCKb2RbZiu7umGiWY" target="_blank" rel="noopener">the Multiplication Fair</a>, <a href="https://claude.ai/artifact/EbV8m1UeehzinGfn1Ud28X" target="_blank" rel="noopener">Tick-Tock Town</a> (Time) and <a href="https://claude.ai/artifact/RVhsNcQTJGcdwMnuv26oEj" target="_blank" rel="noopener">Skip-Hop Park</a> (Skip Counting).</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Bazaar map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐿️</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+
+/* ---------- place value words ---------- */
+const COLS = ['h', 't', 'o'];
+const NAME = { h: 'Hundreds', t: 'Tens', o: 'Ones' };
+const PL = { h: 'hundreds', t: 'tens', o: 'ones' };
+const ONE = { h: 'hundred', t: 'ten', o: 'one' };
+const SHAPE = { h: 'flat', t: 'rod', o: 'cube' };
+const UP = { o: 't', t: 'h' };
+const dig = n => ({ h: Math.floor(n / 100), t: Math.floor(n / 10) % 10, o: n % 10 });
+const plural = (n, c) => `${n} ${n === 1 ? ONE[c] : PL[c]}`;
+// the classic mistake: taking the smaller digit from the bigger in every column
+function swapErr(a, b) { const A = dig(a), B = dig(b); return Math.abs(A.h - B.h) * 100 + Math.abs(A.t - B.t) * 10 + Math.abs(A.o - B.o); }
+// a different number near the answer, in steps that fit its size
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const unit = ans >= 100 && ans % 100 === 0 ? 100 : ans >= 10 && ans % 10 === 0 ? 10 : 1;
+  const steps = unit === 1 ? [1, 10, 100, 2] : [unit, unit * 2, 10, 1];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-take-away-bazaar-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone(520 - (i % 8) * 30, 0.1, 'triangle', 0, 0.1, 380 - (i % 8) * 20),
+  crack: () => { tone(900, 0.06, 'square', 0, 0.06, 300); tone(500, 0.18, 'triangle', 0.05, 0.1, 1200); },
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ', ').replace(/=/g, ' equals ').replace(/___/g, ' blank ');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', big }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' + (big ? ' big' : '') }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'hintbox' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (hint) { const x = hint(opt); if (x) hintBox.replaceChildren(x); }
+      }
+    } }, String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// big digit keypad for one column's answer (0 to 9)
+function keypad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  wrap.append(h('p', { class: 'q big' }, prompt));
+  const pad = h('div', { class: 'keypad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'hintbox' });
+  const keys = []; let over = false;
+  for (let d = 1; d <= 10; d++) {
+    const n = d % 10;
+    const k = h('button', { type: 'button', class: 'key', 'data-key': String(n), onclick: () => {
+      if (over) return;
+      if (n === answer) {
+        over = true; k.classList.add('right'); keys.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+        setTimeout(() => onDone && onDone(), 450);
+      } else {
+        k.classList.add('wrong'); k.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (hint && !hintBox.firstChild) hintBox.replaceChildren(hint());
+      }
+    } }, String(n));
+    keys.push(k); pad.append(k);
+  }
+  wrap.append(pad, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// a dot picture: a dots with the last b crossed out
+function dotsHint(a, b) {
+  return h('div', { class: 'hintbox' },
+    h('div', { class: 'dotrow', role: 'img', 'aria-label': `${a} dots, ${b} crossed out` }, Array.from({ length: a }, (_, i) => h('i', { class: i >= a - b ? 'x' : '' }))),
+    h('p', { class: 'hintcap' }, `${a} take away ${b}. Count the dots that are left.`));
+}
+// run several asks one after the other in the same box
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.append(holder);
+    if (q.before) holder.append(q.before);
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 650); } });
+    if (i > 1) holder.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  };
+  next();
+}
+function chain(steps, onAll) {
+  let i = 0;
+  const next = () => { if (i >= steps.length) return onAll && onAll(); steps[i++](next); };
+  next();
+}
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function whoSays(emoji, text) { return h('div', { class: 'who-says' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('span', {}, text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollTo = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+
+/* ---------- UTH kit: hundreds flats, tens rods, ones cubes ---------- */
+function blockBoard(parent, n, skin) {
+  const d = dig(n);
+  const wrap = h('div', { class: 'uth' + (skin ? ' store' : '') });
+  const cols = {}, items = { h: [], t: [], o: [] };
+  const names = skin ? { h: 'Cartons (100)', t: 'Boxes (10)', o: 'Loose (1)' } : NAME;
+  COLS.forEach(c => {
+    const pile = h('div', { class: 'pile' }), cnt = h('span', { class: 'cnt', 'aria-live': 'polite' });
+    const col = h('div', { class: 'ucol ' + c }, h('div', { class: 'uhd' }, names[c]), pile, cnt);
+    cols[c] = { col, pile, cnt }; wrap.append(col);
+  });
+  const msg = h('p', { class: 'tip', 'aria-live': 'polite' });
+  parent.append(wrap, msg);
+  const B = { el: wrap, onTap: null };
+  const look = { h: '📦', t: '🗂️', o: '📓' };
+  function add(c, k, fresh) {
+    for (let i = 0; i < k; i++) {
+      const it = { gone: false, c };
+      it.el = h('button', { type: 'button', class: 'blk ' + c + (fresh ? ' fresh' : ''), 'aria-label': `${ONE[c]} ${SHAPE[c]}`, onclick: () => { if (!it.gone && B.onTap) B.onTap(c, it); } }, skin ? look[c] : null);
+      if (fresh && !reduce) it.el.style.animationDelay = (i * 0.04) + 's';
+      items[c].push(it); cols[c].pile.append(it.el);
+    }
+    count();
+  }
+  function count() { COLS.forEach(c => { cols[c].cnt.textContent = String(B.live(c)); }); }
+  B.live = c => items[c].filter(i => !i.gone).length;
+  B.value = () => B.live('h') * 100 + B.live('t') * 10 + B.live('o');
+  B.cross = it => { it.gone = true; it.el.classList.add('gone'); it.el.disabled = true; count(); };
+  B.breakOne = c => {
+    const it = items[c].find(i => !i.gone); if (!it) return;
+    items[c].splice(items[c].indexOf(it), 1); it.el.disabled = true; it.el.classList.add('poof');
+    setTimeout(() => it.el.remove(), reduce ? 0 : 300);
+    add(c === 'h' ? 't' : 'o', 10, true); sfx.crack();
+  };
+  B.highlight = c => COLS.forEach(x => cols[x].col.classList.toggle('on', x === c));
+  B.nudge = it => shakeEl(it.el);
+  B.say = t => { msg.textContent = t; };
+  B.lock = () => { COLS.forEach(c => items[c].forEach(i => { i.el.disabled = true; })); B.onTap = null; B.highlight(null); };
+  add('h', d.h); add('t', d.t); add('o', d.o);
+  return B;
+}
+
+// take b away from a with blocks: ones first, breaking a ten or hundred when needed
+function blockSub(api, parent, { a, b, onDone, skin, check }) {
+  parent.append(h('p', { class: 'sumline' }, `${a} − ${b}`));
+  const board = blockBoard(parent, a, skin);
+  const need = dig(b);
+  const order = ['o', 't', 'h'];
+  const word = skin ? { h: 'carton', t: 'box', o: 'loose notebook' } : SHAPE;
+  const many = skin ? { h: 'cartons', t: 'boxes', o: 'loose notebooks' } : { h: 'flats', t: 'rods', o: 'cubes' };
+  const box = h('div', { class: 'below' }); parent.append(box);
+  let ci = 0, mode = null, left = 0, asked = false;
+  function step() {
+    if (ci >= 3) return finish();
+    const c = order[ci], k = need[c];
+    if (k === 0) { ci++; return step(); }
+    const have = board.live(c);
+    if (have < k) {
+      if (!asked) {
+        asked = true; board.highlight(c);
+        api.guide(`Now the ${PL[c]}. We must take away ${plural(k, c)}, and we have ${plural(have, c)}.`);
+        askChoice(box, { prompt: `Can we take ${k} ${PL[c]} from ${have} ${PL[c]}?`, options: ['Yes', 'No'], answer: 'No', onDone: () => setTimeout(() => { box.replaceChildren(); step(); }, 600) });
+        return;
+      }
+      const u = UP[c];
+      if (board.live(u) === 0) {
+        mode = { type: 'break', col: 'h' }; board.highlight('h');
+        api.guide(`Not enough ${PL[c]}, and there are no ${PL.t} to break! First tap a hundred ${word.h} to break it into 10 tens.`);
+      } else {
+        mode = { type: 'break', col: u }; board.highlight(u);
+        api.guide(`Not enough ${PL[c]}! Tap one ${ONE[u]} ${word[u]} to break it into 10 ${PL[c]}.`);
+      }
+      return;
+    }
+    asked = false;
+    mode = { type: 'cross', col: c }; left = k; board.highlight(c); board.say('');
+    api.guide(`Take away ${plural(k, c)}. Tap ${k} ${k === 1 ? word[c] : many[c]} to cross ${k === 1 ? 'it' : 'them'} out.`);
+  }
+  board.onTap = (c, it) => {
+    if (!mode) return board.nudge(it);
+    if (mode.type === 'break') {
+      if (c === mode.col) {
+        mode = null; board.breakOne(c); skill(c === 't' ? 'ten' : 'hundred');
+        board.say(c === 't' ? '1 ten = 10 ones' : '1 hundred = 10 tens');
+        setTimeout(step, 700);
+      } else { board.nudge(it); board.say(`Tap a ${ONE[mode.col]} ${word[mode.col]} to break it.`); }
+      return;
+    }
+    if (c === mode.col) {
+      board.cross(it); sfx.tap(left); left--;
+      if (left === 0) { mode = null; ci++; setTimeout(step, 450); }
+    } else {
+      board.nudge(it);
+      board.say(`We have enough ${PL[mode.col]}. Cross out ${PL[mode.col]} now.`);
+    }
+  };
+  function finish() {
+    board.lock(); board.say('');
+    const r = a - b;
+    api.guide('Now count what is left: the hundreds, the tens and the ones.');
+    if (need.h + need.t + need.o > 0 && dig(a).o >= need.o && dig(a).t >= need.t) skill('plain');
+    askChoice(box, { prompt: 'How many are left?', options: numOpts(r, [swapErr(a, b), r + 10, r + 100]), answer: r, cls: '', onDone: () => {
+      box.append(fact(`${a} − ${b} = ${r}`, `${board.live('h')} ${board.live('h') === 1 ? 'hundred' : 'hundreds'}, ${board.live('t')} ${board.live('t') === 1 ? 'ten' : 'tens'} and ${board.live('o')} ${board.live('o') === 1 ? 'one' : 'ones'} are left.`));
+      if (check) checkStep(api, box, a, b, r, onDone); else onDone && onDone();
+    } });
+    scrollTo(box);
+  }
+  step();
+}
+
+// add back to check a subtraction
+function checkStep(api, parent, a, b, r, onDone) {
+  api.guide(`Let us check! Add back what we took away: ${r} + ${b}. We should get ${a}, the number we started with.`);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  askChoice(box, { prompt: `Check it: ${r} + ${b} = ?`, options: numOpts(a, [a + 10, a - 10, a + 100]), answer: a, cls: '', onDone: () => {
+    skill('check');
+    box.append(info('✅', 'It matches!', ` ${r} + ${b} = ${a}, the number we started with. So ${r} is right.`));
+    onDone && onDone();
+  } });
+  scrollTo(box);
+}
+
+/* ---------- column method: the H T O table ---------- */
+function columnSub(api, parent, { a, b, onDone, check, ring }) {
+  const top = [dig(a).h, dig(a).t, dig(a).o], bot = [dig(b).h, dig(b).t, dig(b).o];
+  const bLen = String(b).length, ci = ['h', 't', 'o'];
+  const grid = h('div', { class: 'hto', role: 'group', 'aria-label': `${a} minus ${b} in hundreds, tens and ones` });
+  const cells = { br: [], tp: [], bt: [], an: [] }, hist = [[top[0]], [top[1]], [top[2]]];
+  grid.append(h('span', { class: 'hd sg' }), ...ci.map(c => h('span', { class: 'hd ' + c }, c.toUpperCase())));
+  grid.append(h('span', { class: 'br sg' }));
+  ci.forEach((c, i) => { const x = h('span', { class: 'br' }); cells.br.push(x); grid.append(x); });
+  grid.append(h('span', { class: 'sg tps' }));
+  let tapTarget = -1, tapThen = null;
+  ci.forEach((c, i) => {
+    const x = h('button', { type: 'button', class: 'tp', 'aria-label': `${NAME[c]} digit ${top[i]}`, onclick: () => {
+      if (tapTarget < 0) return;
+      if (i === tapTarget) { x.classList.remove('tapme'); tapTarget = -1; const f = tapThen; tapThen = null; sfx.crack(); f(); }
+      else shakeEl(x);
+    } }, String(top[i]));
+    cells.tp.push(x); grid.append(x);
+  });
+  grid.append(h('span', { class: 'sg bt' }, '−'));
+  ci.forEach((c, i) => { const x = h('span', { class: 'bt' }, i < 3 - bLen ? '' : String(bot[i])); cells.bt.push(x); grid.append(x); });
+  grid.append(h('span', { class: 'sg an' }));
+  ci.forEach(() => { const x = h('span', { class: 'an' }); cells.an.push(x); grid.append(x); });
+  parent.append(grid);
+  const panel = h('div', { class: 'below' }); parent.append(panel);
+  const curCol = i => ['br', 'tp', 'bt', 'an'].forEach(r => cells[r].forEach((x, j) => x.classList.toggle('cur', j === i)));
+  const showBorrow = k => {
+    hist[k].push(top[k]); cells.tp[k].classList.add('x');
+    cells.br[k].replaceChildren(...hist[k].slice(1, -1).map(v => h('s', {}, String(v))), String(top[k]));
+  };
+  const waitTap = (k, then) => { tapTarget = k; tapThen = then; cells.tp[k].classList.add('tapme'); };
+  let i = 2;
+  function col() {
+    if (i < 0) return finish();
+    curCol(i); panel.replaceChildren();
+    const c = ci[i], tv = top[i], bv = bot[i];
+    if (tv < bv) {
+      api.guide(`Look at the ${PL[c]}: ${tv} − ${bv}. Is ${tv} big enough to take away ${bv}?`);
+      askChoice(panel, { prompt: `Can we take ${bv} from ${tv}?`, options: ['Yes', 'No'], answer: 'No', onDone: () => setTimeout(() => { panel.replaceChildren(); borrow(i, answerCol); }, 600) });
+    } else answerCol();
+    scrollTo(panel);
+  }
+  function borrow(i, then) {
+    const j = i - 1, c = ci[i];
+    if (top[j] === 0) {
+      api.guide(`We need to borrow from the ${PL[ci[j]]}, but there are 0 ${PL[ci[j]]}! First borrow 1 hundred. Tap the hundreds digit.`);
+      waitTap(j - 1, () => {
+        top[j - 1]--; top[j] += 10; showBorrow(j - 1); showBorrow(j); skill('zero');
+        api.guide(`1 hundred = 10 tens, so now there are ${top[j]} tens. Now tap the tens digit to borrow 1 ten.`);
+        waitTap(j, () => { top[j]--; top[i] += 10; showBorrow(j); showBorrow(i); api.guide(`1 ten = 10 ones. Now we have ${top[i]} ones.`); setTimeout(then, 900); });
+      });
+    } else {
+      api.guide(`Borrow 1 ${ONE[ci[j]]} from the ${PL[ci[j]]}. Tap the ${PL[ci[j]]} digit.`);
+      waitTap(j, () => {
+        top[j]--; top[i] += 10; showBorrow(j); showBorrow(i); skill(j === 1 ? 'ten' : 'hundred');
+        api.guide(`1 ${ONE[ci[j]]} = 10 ${PL[c]}. Now we have ${top[i]} ${PL[c]}, and ${top[j]} ${top[j] === 1 ? ONE[ci[j]] : PL[ci[j]]} left next door.`);
+        setTimeout(then, 900);
+      });
+    }
+  }
+  function answerCol() {
+    const c = ci[i], tv = top[i], bv = bot[i], r = tv - bv;
+    if (!api.quiet) api.guide(i === 2 ? `Start with the ones. ${tv} − ${bv} = ?` : i === 1 ? `Next, the tens. ${tv} − ${bv} = ?` : `Last, the hundreds. ${tv} − ${bv} = ?`);
+    cells.an[i].textContent = '?'; cells.an[i].classList.add('now');
+    keypad(panel, { prompt: `${NAME[c]}: ${tv} − ${bv} = ?`, answer: r, hint: () => dotsHint(tv, bv), onDone: () => {
+      cells.an[i].textContent = String(r); cells.an[i].classList.remove('now');
+      i--; setTimeout(col, 250);
+    } });
+  }
+  function finish() {
+    curCol(-1); panel.replaceChildren();
+    const r = a - b;
+    if (r < 100) { cells.an[0].textContent = ''; if (r < 10) cells.an[1].textContent = ''; }
+    if (ring != null) cells.an[ring].classList.add('ring');
+    const cap = r < 100 ? 'We do not write a 0 at the front of a number.' : null;
+    panel.append(fact(`${a} − ${b} = ${r}`, cap));
+    if (check) checkStep(api, panel, a, b, r, () => onDone && onDone(r));
+    else onDone && onDone(r);
+  }
+  api.guide('Ones first, then tens, then hundreds.');
+  col();
+  return { cells };
+}
+
+/* ---------- expanded form ---------- */
+function expandSub(api, parent, { a, b, onDone }) {
+  const A = [dig(a).h * 100, dig(a).t * 10, dig(a).o], Bv = [dig(b).h * 100, dig(b).t * 10, dig(b).o], bLen = String(b).length;
+  const grid = h('div', { class: 'exp', role: 'group', 'aria-label': `${a} minus ${b} in expanded form` });
+  const mk = (txt, cls) => h('span', { class: cls }, txt);
+  const partEl = (v, c) => { const s = h('span', { class: 'part ' + c }, h('span', { class: 'v' }, String(v))); return s; };
+  const rowA = [partEl('?', 'h'), partEl('?', 't'), partEl('?', 'o')];
+  const rowB = [0, 1, 2].map(k => k < 3 - bLen ? h('span', { class: 'part blank' }) : partEl(Bv[k], ['h', 't', 'o'][k]));
+  const rowR = [partEl('?', 'h'), partEl('?', 't'), partEl('?', 'o')];
+  const lead = (n, sign) => h('span', {}, (sign ? '− ' : '') + n);
+  const ansLead = h('span', {}, '?');
+  grid.append(lead(a), mk('→', 'ar'), rowA[0], mk('+', 'pl'), rowA[1], mk('+', 'pl'), rowA[2]);
+  grid.append(lead(b, true), mk('→', 'ar'), rowB[0], mk(bLen === 3 ? '+' : '', 'pl'), rowB[1], mk(bLen >= 2 ? '+' : '', 'pl'), rowB[2]);
+  grid.append(h('span', { class: 'line' }));
+  grid.append(ansLead, mk('→', 'ar'), rowR[0], mk('+', 'pl'), rowR[1], mk('+', 'pl'), rowR[2]);
+  parent.append(h('p', { class: 'sumline' }, `${a} − ${b}`), grid);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const cur = A.slice();
+  const setPart = (row, k, v, old) => {
+    const el = row[k];
+    if (old != null) { el.classList.add('x'); el.append(h('span', { class: 'old' }, String(v))); }
+    else el.firstChild.textContent = String(v);
+  };
+  const wrongs = [`${dig(a).h} + ${dig(a).t} + ${dig(a).o}`, `${dig(a).h * 100} + ${dig(a).t} + ${dig(a).o * 10}`];
+  const steps = [];
+  steps.push(next => {
+    api.guide(`First write ${a} in expanded form: hundreds + tens + ones.`);
+    askChoice(box, { prompt: `${a} = ?`, options: shuffle([`${A[0]} + ${A[1]} + ${A[2]}`, ...wrongs]), answer: `${A[0]} + ${A[1]} + ${A[2]}`, onDone: () => { [0, 1, 2].forEach(k => setPart(rowA, k, A[k])); setTimeout(() => { box.replaceChildren(); next(); }, 700); } });
+  });
+  // ones, tens, hundreds
+  [2, 1, 0].forEach(k => steps.push(next => {
+    const c = ['h', 't', 'o'][k], unit = [100, 10, 1][k];
+    const goOn = () => {
+      const r = cur[k] - Bv[k];
+      if (Bv[k] === 0 || k < 3 - bLen) {
+        rowR[k].firstChild.textContent = String(r);
+        api.guide(`Nothing to take away from the ${PL[c]}, so ${cur[k]} stays ${cur[k]}.`);
+        return setTimeout(next, 1300);
+      }
+      api.guide(`Now the ${PL[c]}: ${cur[k]} − ${Bv[k]}.`);
+      askChoice(box, { prompt: `${cur[k]} − ${Bv[k]} = ?`, options: numOpts(r, [Math.abs(A[k] - Bv[k]), r + unit, r + unit * 10].filter(x => x !== r)), answer: r, cls: '', onDone: () => { rowR[k].firstChild.textContent = String(r); setTimeout(() => { box.replaceChildren(); next(); }, 650); } });
+    };
+    if (cur[k] < Bv[k]) {
+      const upK = k - 1, up = ['h', 't', 'o'][upK];
+      api.guide(`${cur[k]} is less than ${Bv[k]}. We cannot take ${Bv[k]} from ${cur[k]}.`);
+      askChoice(box, { prompt: 'What should we do?', options: shuffle([`Take ${[100, 10][upK]} from the ${PL[up]}`, `Do ${Bv[k]} − ${cur[k]} instead`, 'Write 0']), answer: `Take ${[100, 10][upK]} from the ${PL[up]}`, onDone: () => {
+        cur[upK] -= [100, 10][upK]; cur[k] += [100, 10][upK];
+        setPart(rowA, upK, cur[upK], true); setPart(rowA, k, cur[k], true);
+        skill(upK === 1 ? 'ten' : 'hundred');
+        setTimeout(() => { box.replaceChildren(); goOn(); }, 900);
+      } });
+    } else goOn();
+  }));
+  steps.push(next => {
+    const R = [cur[0] - Bv[0], cur[1] - Bv[1], cur[2] - Bv[2]], r = a - b;
+    api.guide('Put the parts together.');
+    askChoice(box, { prompt: `${R[0]} + ${R[1]} + ${R[2]} = ?`, options: numOpts(r, [swapErr(a, b), r + 10]), answer: r, cls: '', onDone: () => { ansLead.textContent = String(r); box.append(fact(`${a} − ${b} = ${r}`)); next(); } });
+  });
+  chain(steps, () => onDone && onDone());
+}
+
+/* ---------- breaking blocks to regroup ---------- */
+function breakGame(api, parent, { n, breaks, guide, asks, onDone }) {
+  const board = blockBoard(parent, n);
+  const box = h('div', { class: 'below' }); parent.append(box);
+  let bi = 0;
+  const askNext = () => {
+    if (bi >= breaks.length) {
+      board.lock();
+      askSeq(api, box, asks, () => { onDone && onDone(); });
+      return;
+    }
+    const c = breaks[bi]; board.highlight(c);
+    api.guide(guide && guide[bi] || `Tap one ${ONE[c]} ${SHAPE[c]} to break it into 10 ${c === 'h' ? 'tens' : 'ones'}.`);
+    board.onTap = (col, it) => {
+      if (col !== c) { board.nudge(it); board.say(`Tap a ${ONE[c]} ${SHAPE[c]}.`); return; }
+      board.onTap = null; board.breakOne(c); skill(c === 't' ? 'ten' : 'hundred');
+      board.say(c === 't' ? '1 ten = 10 ones' : '1 hundred = 10 tens');
+      bi++; setTimeout(askNext, 900);
+    };
+  };
+  askNext();
+  return board;
+}
+
+/* ---------- word problems ---------- */
+function keywordTap(api, parent, { text, keys, onDone }) {
+  const card = h('div', { class: 'story' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  let over = false;
+  text.split(' ').forEach(w => {
+    const bare = w.toLowerCase().replace(/[^a-z]/g, '');
+    const b = h('button', { type: 'button', class: 'word', 'data-k': keys.includes(bare) ? '1' : null, onclick: () => {
+      if (over) return;
+      if (keys.includes(bare)) {
+        over = true; card.querySelectorAll('.word').forEach(x => { if (keys.includes(x.textContent.toLowerCase().replace(/[^a-z]/g, ''))) x.classList.add('key'); });
+        sfx.good(); fb.textContent = `Yes! “${w.replace(/[^A-Za-z ]/g, '')}” tells us to subtract.`; fb.className = 'fb good'; skill('story');
+        setTimeout(() => onDone && onDone(), 700);
+      } else { b.classList.add('no'); setTimeout(() => b.classList.remove('no'), 600); sfx.oops(); run.mistakes++; fb.textContent = 'That word does not tell us to take away. Try another word.'; fb.className = 'fb oops'; }
+    } }, w);
+    card.append(b);
+  });
+  parent.append(card, fb);
+}
+function barModel(parent, { total, take, totalLab, takeLab, leftLab }) {
+  const left = h('b', {}, '?');
+  const el = h('div', { class: 'bar', role: 'img', 'aria-label': `${totalLab} ${total}, ${takeLab} ${take}, ${leftLab} unknown` },
+    h('div', { class: 'row' }, h('div', { class: 'seg tot' }, h('span', {}, totalLab), h('b', {}, String(total)))),
+    h('div', { class: 'row' },
+      h('div', { class: 'seg take', style: `flex:0 0 ${Math.max(28, Math.min(62, Math.round(take / total * 100)))}%` }, h('span', {}, takeLab), h('b', {}, String(take))),
+      h('div', { class: 'seg left' }, h('span', {}, leftLab), left)));
+  parent.append(el);
+  return { setLeft: v => { left.textContent = String(v); } };
+}
+// the four steps of page 24: read, find the word, write what you know, subtract
+function storyProblem(api, parent, { text, keys, total, take, totalLab, takeLab, leftLab, totalQ, takeQ, check, onDone }) {
+  const box = h('div', { class: 'below' }); parent.append(box);
+  chain([
+    next => { api.guide('Read the story. Then tap the word that tells us to subtract.'); keywordTap(api, box, { text, keys, onDone: next }); },
+    next => askSeq(api, box, [
+      { guide: 'Now write what we know.', prompt: totalQ || 'How many in all at the start?', options: shuffle([total, take, total + take]), answer: total, cls: '' },
+      { prompt: takeQ || 'How many are taken away?', options: shuffle([take, total, total - take]), answer: take, cls: '' },
+    ], next),
+    next => { const bm = barModel(box, { total, take, totalLab, takeLab, leftLab }); box._bm = bm; api.guide(`So we subtract: ${total} − ${take}.`); next(); },
+    next => columnSub(api, box, { a: total, b: take, check, onDone: r => { box._bm.setLeft(r); next(); } }),
+  ], () => onDone && onDone());
+}
+
+/* ================= STOPS ================= */
+
+/* Stop 1 · pages 8–9 */
+function playBlockShop(api) {
+  const R = run.round, below = h('div', { class: 'below' }); api.stage.append(below);
+  if (R === 0) {
+    api.guide('Let us solve 138 − 4 with blocks. A flat is 100, a rod is 10 and a small cube is 1.');
+    askSeq(api, below, [
+      { prompt: 'Do we need to show the 4 with blocks too?', options: ['No, we take 4 away from 138', 'Yes, show 4 blocks too'], answer: 'No, we take 4 away from 138', guide: 'We put out 138 with blocks. What about the 4?' },
+      { prompt: 'From where do we start taking away?', options: ['Ones', 'Tens', 'Hundreds'], answer: 'Ones', guide: 'Ones, tens or hundreds: where do we start?' },
+    ], () => { below.replaceChildren(); blockSub(api, below, { a: 138, b: 4, onDone: api.done }); });
+  } else if (R === 1) { api.guide('Now take a 2-digit number from a 3-digit number.'); blockSub(api, below, { a: 265, b: 32, onDone: api.done }); }
+  else { api.guide('Now take a 3-digit number from a 3-digit number.'); blockSub(api, below, { a: 476, b: 253, onDone: api.done }); }
+}
+/* Stop 2 · pages 10–11 */
+function playExpand(api) {
+  const Q = [[586, 4, 'Subtract 586 − 4'], [790, 50, 'Find the difference between 790 and 50'], [687, 221, 'Subtract 221 from 687']][run.round];
+  const below = h('div', { class: 'below' }); api.stage.append(h('span', { class: 'srctag' }, Q[2]), below);
+  expandSub(api, below, { a: Q[0], b: Q[1], onDone: () => {
+    const b2 = h('div', { class: 'below' }); below.append(b2);
+    api.guide('Now the column method. Put each digit in its place.');
+    setTimeout(() => columnSub(api, b2, { a: Q[0], b: Q[1], onDone: () => {
+      if (run.round === 2) b2.append(info('🔦', 'Spotlight', 'Always start subtracting from the ones, then the tens and finally the hundreds place.'));
+      api.done();
+    } }), 700);
+  } });
+}
+/* Stop 3 · page 12 */
+function playCross(api) {
+  const Q = [[446, 5], [357, 23]][run.round];
+  const below = h('div', { class: 'below' }); api.stage.append(h('span', { class: 'srctag' }, 'GRIP-1 · Cross out to subtract'), below);
+  blockSub(api, below, { a: Q[0], b: Q[1], onDone: api.done });
+}
+/* Stop 4 · page 12 */
+function playExpandIt(api) {
+  const Q = [[295, 22], [954, 623]][run.round];
+  const below = h('div', { class: 'below' }); api.stage.append(h('span', { class: 'srctag' }, 'GRIP-1 · Subtract by expanding'), below);
+  expandSub(api, below, { a: Q[0], b: Q[1], onDone: api.done });
+}
+/* Stop 5 · page 12 */
+function playLineUp(api) {
+  const Q = [[668, 27, '2', 'Tens', 'the 2 in 27'], [702, 102, '1', 'Hundreds', 'the 1 at the front of 102'], [368, 113, '3', 'Ones', 'the 3 at the end of 113']][run.round];
+  const below = h('div', { class: 'below' }); api.stage.append(h('span', { class: 'srctag' }, 'GRIP-1 · Arrange in columns'), h('p', { class: 'sumline' }, `${Q[0]} − ${Q[1]}`), below);
+  api.guide(`Before we subtract, each digit must go in the right column. Where does ${Q[4]} go?`);
+  askChoice(below, { prompt: `Where does ${Q[4]} go?`, options: ['Hundreds', 'Tens', 'Ones'], answer: Q[3], hint: () => h('p', { class: 'hintcap' }, `${Q[1]} has ${String(Q[1]).length} digits. Line up the last digit under the ones.`), onDone: () => {
+    setTimeout(() => { below.replaceChildren(); columnSub(api, below, { a: Q[0], b: Q[1], onDone: api.done }); }, 700);
+  } });
+}
+/* Stop 6 · page 13, Checkpoint 1 */
+const VAULT = [
+  { e: '👑', n: 'crown', a: 864, b: 321, c: 2 }, { e: '💎', n: 'diamond', a: 955, b: 253, c: 1 }, { e: '🔑', n: 'golden key', a: 791, b: 140, c: 0 },
+  { e: '🏆', n: 'trophy', a: 582, b: 241, c: 1 }, { e: '🗿', n: 'statue', a: 864, b: 422, c: 0 }, { e: '🕰️', n: 'clock', a: 945, b: 312, c: 2 },
+];
+const vaultDigit = v => String(v.a - v.b)[v.c];
+function playVault(api) {
+  const R = run.round, V = VAULT[R];
+  const vault = h('div', { class: 'vault', role: 'img', 'aria-label': 'The secret vault code' }, h('span', { class: 'lab' }, '🔒 Vault'),
+    VAULT.map((v, i) => h('div', { class: 'vbox' + (i === R ? ' now' : '') }, h('span', {}, i < R ? vaultDigit(v) : ''), h('small', {}, 'abcdef'[i]))));
+  const below = h('div', { class: 'below' });
+  api.stage.append(vault, h('span', { class: 'item', 'aria-hidden': 'true' }, V.e), below);
+  if (R === 0) api.stage.prepend(whoSays('🕵️', 'Detective Thomas: A thief hid the museum treasures in a secret vault! Each treasure has a subtraction clue. Solve it to find a digit of the code.'));
+  api.quiet = false;
+  columnSub(api, below, { a: V.a, b: V.b, ring: V.c, onDone: r => {
+    const place = PL[['h', 't', 'o'][V.c]], d = vaultDigit(V);
+    api.guide(`The circle is on the ${place} place of ${r}. Which digit goes in vault box ${'abcdef'[R]}?`);
+    const opts = [...new Set(String(r).padStart(3, '0').split(''))];
+    while (opts.length < 3) { const x = String(rand(0, 9)); if (!opts.includes(x)) opts.push(x); }
+    askChoice(below, { prompt: `Which digit is in the circle (${place} place)?`, options: shuffle(opts), answer: d, cls: '', onDone: () => {
+      vault.querySelectorAll('.vbox span')[R].textContent = d;
+      if (R === VAULT.length - 1) { vault.classList.add('open'); vault.querySelector('.lab').textContent = '🔓 Open!'; below.append(fact('Code: 306443', 'The vault is open and the treasures are safe!')); }
+      api.done();
+    } });
+    scrollTo(below);
+  } });
+}
+/* Stop 7 · pages 14–15 */
+function playBreak(api) {
+  const R = run.round, below = h('div', { class: 'below' }); api.stage.append(below);
+  if (R === 0) {
+    api.stage.prepend(info('🧱', 'Regrouping by breaking', 'Just as 1 ten can be regrouped as 10 ones, 1 hundred can be regrouped as 10 tens.'));
+    breakGame(api, below, { n: 10, breaks: ['t'], guide: ['This is 1 ten. Tap the ten rod to break it into ones.'], asks: [
+      { prompt: '1 ten = ___ ones', options: [1, 10, 100], answer: 10, cls: '', guide: 'Count the ones.' },
+    ], onDone: () => {
+      const b2 = h('div', { class: 'below' }); below.append(b2); scrollTo(b2);
+      breakGame(api, b2, { n: 100, breaks: ['h'], guide: ['This is 1 hundred. Tap the flat to break it into tens.'], asks: [
+        { prompt: '1 hundred = ___ tens', options: [1, 10, 100], answer: 10, cls: '', guide: 'Count the tens.' },
+      ], onDone: api.done });
+    } });
+  } else if (R === 1) {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'Task 3 a · Regroup 1 ten in 3 tens 2 ones'));
+    breakGame(api, below, { n: 32, breaks: ['t'], guide: ['Here are 3 tens 2 ones. Break 1 ten into ones.'], asks: [
+      { prompt: 'After regrouping: ___ tens', options: [2, 3, 12], answer: 2, cls: '', guide: 'How many tens now?' },
+      { prompt: 'After regrouping: ___ ones', options: [2, 10, 12], answer: 12, cls: '', guide: 'How many ones now?' },
+      { prompt: '2 tens 12 ones makes which number?', options: [212, 32, 22], answer: 32, cls: '', guide: '20 + 12 = ?', onDone: h2 => h2.append(fact('Still 32!', 'Regrouping does not change the number. It only changes its form.')) },
+    ], onDone: api.done });
+  } else {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'Task 3 b · Regroup 1 hundred in 5 hundreds 4 tens'));
+    breakGame(api, below, { n: 540, breaks: ['h'], guide: ['Here are 5 hundreds 4 tens. Break 1 hundred into tens.'], asks: [
+      { prompt: 'After regrouping: ___ hundreds', options: [4, 5, 14], answer: 4, cls: '', guide: 'How many hundreds now?' },
+      { prompt: 'After regrouping: ___ tens', options: [4, 10, 14], answer: 14, cls: '', guide: 'How many tens now?' },
+      { prompt: '4 hundreds 14 tens makes which number?', options: [414, 540, 440], answer: 540, cls: '', guide: '400 + 140 = ?', onDone: h2 => h2.append(info('🔦', 'Spotlight', 'Regrouping doesn’t change the value of the number. It only changes its form.')) },
+    ], onDone: api.done });
+  }
+}
+/* Stop 8 · page 16 */
+function playRegroupGuide(api) {
+  const R = run.round, below = h('div', { class: 'below' }); api.stage.append(below);
+  if (R === 0) breakGame(api, below, { n: 230, breaks: ['h'], guide: ['2 hundreds 3 tens. Break 1 hundred into tens.'], asks: [
+    { prompt: '2 hundreds 3 tens = 1 hundred ___ tens', options: [3, 10, 13], answer: 13, cls: '', guide: '3 tens and 10 more tens make how many tens?' }], onDone: api.done });
+  else if (R === 1) breakGame(api, below, { n: 405, breaks: ['h'], guide: ['4 hundreds 5 ones, and no tens. Break 1 hundred into tens.'], asks: [
+    { prompt: '4 hundreds 5 ones = 3 hundreds ___ tens 5 ones', options: [0, 10, 15], answer: 10, cls: '', guide: 'Count the tens now.' }], onDone: api.done });
+  else breakGame(api, below, { n: 450, breaks: ['h', 't'], guide: ['4 hundreds 5 tens. First break 1 hundred into tens.', 'Now break 1 ten into ones.'], asks: [
+    { prompt: '4 hundreds 5 tens = 3 hundreds ___ tens 10 ones', options: [15, 14, 5], answer: 14, cls: '', guide: 'We broke a hundred (15 tens), then a ten. How many tens now?' },
+    { prompt: 'Is it still 450?', options: ['Yes, still 450', 'No, it is 3,14,10'], answer: 'Yes, still 450', guide: '300 + 140 + 10 = ?' }], onDone: api.done });
+}
+/* Stop 9 · page 17, GRIP-2 */
+const BLANKS = [
+  [['7 hundreds = ___ tens', [7, 70, 700], 70, 'Both are 700.']],
+  [['4 hundreds = ___ hundreds 10 tens', [3, 4, 40], 3, 'Both are 400.']],
+  [['9 hundreds = 8 hundreds ___ tens', [1, 9, 10], 10, 'Both are 900.']],
+  [['6 hundreds 3 tens = ___ hundreds 13 tens', [5, 6, 7], 5, 'Both are 630.']],
+  [['5 hundreds 6 tens = 4 hundreds ___ tens', [6, 15, 16], 16, null], ['5 hundreds 6 tens = 4 hundreds 15 tens ___ ones', [1, 6, 10], 10, 'All are 560.']],
+  [['4 hundreds 5 tens = 3 hundreds ___ tens', [5, 14, 15], 15, null], ['4 hundreds 5 tens = 3 hundreds 14 tens ___ ones', [1, 5, 10], 10, 'All are 450.']],
+  [['7 hundreds 2 tens 6 ones = 6 hundreds ___ tens 6 ones', [2, 11, 12], 12, 'Both are 726.']],
+];
+function playBlanks(api) {
+  const set = BLANKS[run.round];
+  api.stage.append(h('span', { class: 'srctag' }, `GRIP-2 · ${'abcdefg'[run.round]}`));
+  if (run.round === 0) api.stage.append(info('💡', 'Remember', '1 hundred = 10 tens, and 1 ten = 10 ones.'));
+  askSeq(api, api.stage, set.map(([p, o, ans, val]) => ({
+    prompt: p, options: o, answer: ans, cls: '', guide: 'Fill in the blank. Think: 1 hundred = 10 tens, 1 ten = 10 ones.',
+    hint: () => h('p', { class: 'hintcap' }, '1 hundred = 10 tens. 1 ten = 10 ones.'),
+    onDone: val ? h2 => h2.append(fact(val, 'Same number, new form.')) : null,
+  })), api.done);
+}
+/* Stop 10 · pages 17 and 19 */
+function playNotEnough(api) {
+  const below = h('div', { class: 'below' }); api.stage.append(below);
+  if (run.round === 0) { api.stage.prepend(h('span', { class: 'srctag' }, 'Discovery Route · Task 1')); blockSub(api, below, { a: 462, b: 8, onDone: api.done }); }
+  else {
+    api.stage.prepend(info('💡', 'Remember', 'When there are not enough ones or tens, we regroup and continue subtracting.'));
+    columnSub(api, below, { a: 643, b: 9, check: true, onDone: api.done });
+  }
+}
+/* Stop 11 · pages 18 and 20 */
+function playBorrowAgain(api) {
+  const below = h('div', { class: 'below' }); api.stage.append(below);
+  if (run.round === 0) { api.stage.prepend(h('span', { class: 'srctag' }, 'Discovery Route · Task 2')); blockSub(api, below, { a: 356, b: 78, onDone: api.done }); }
+  else { api.stage.prepend(h('span', { class: 'srctag' }, 'Guidepost b · 0 in the ones')); columnSub(api, below, { a: 530, b: 19, check: true, onDone: api.done }); }
+}
+/* Stop 12 · pages 18, 21 and 8 */
+function playBorrowHundred(api) {
+  const below = h('div', { class: 'below' }); api.stage.append(below);
+  if (run.round === 0) { api.stage.prepend(h('span', { class: 'srctag' }, 'Discovery Route · Task 3 · Subtract 348 from 526')); columnSub(api, below, { a: 526, b: 348, onDone: api.done }); }
+  else if (run.round === 1) {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'Guidepost c · 425 − 253'));
+    expandSub(api, below, { a: 425, b: 253, onDone: () => { const b2 = h('div', { class: 'below' }); below.append(b2); setTimeout(() => columnSub(api, b2, { a: 425, b: 253, onDone: api.done }), 700); } });
+  } else {
+    api.stage.prepend(whoSays('🎉', 'Sara: We sent invites to 350 people. Only 186 have checked in. Aman: So how many are we still waiting for?'));
+    api.guide('Remember the New Year party? Now you can solve it! 350 − 186.');
+    columnSub(api, below, { a: 350, b: 186, check: true, onDone: () => { below.append(info('🎆', 'Aman and Sara', 'They are still waiting for 164 people.')); api.done(); } });
+  }
+}
+/* Stop 13 · page 21, GRIP-3 */
+function playGrip3(api) {
+  const R = run.round, below = h('div', { class: 'below' }); api.stage.append(below);
+  if (R < 2) { const Q = [[595, 287], [890, 476]][R]; api.stage.prepend(h('span', { class: 'srctag' }, 'GRIP-3 · Expand and subtract')); expandSub(api, below, { a: Q[0], b: Q[1], onDone: api.done }); }
+  else {
+    const Q = [[587, 59], [921, 234], [903, 98]][R - 2];
+    api.stage.prepend(h('span', { class: 'srctag' }, 'GRIP-3 · Subtract'));
+    if (R === 4) below.append(whoSays('🐿️', 'Careful! 903 has a 0 in the tens place.'));
+    columnSub(api, below, { a: Q[0], b: Q[1], check: R === 4, onDone: api.done });
+  }
+}
+/* Stop 14 · page 22 */
+function playStore(api) {
+  const below = h('div', { class: 'below' }); api.stage.append(below);
+  if (run.round === 0) {
+    api.stage.prepend(whoSays('📚', 'The school storeroom has 423 notebooks: 4 big cartons of 100, 2 small boxes of 10 and 3 loose notebooks. The store in-charge must send 156 notebooks to the classrooms.'));
+    blockSub(api, below, { a: 423, b: 156, skin: true, onDone: () => { below.append(info('📦', 'Number of notebooks left in the storeroom', '267. We had to open a box and a carton!')); api.done(); } });
+  } else {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'Skill Trail · Find the magic number'));
+    const mid = h('span', { class: 'mid' }, '?');
+    const c = (n, col, area) => h('span', { class: 'c', style: `border-color:${col};grid-area:${area}` }, String(n));
+    below.append(h('div', { class: 'magic', role: 'img', 'aria-label': '800 on top, 500 at the bottom, 700 on the left, 400 on the right' },
+      c(800, 'var(--hun)', '1/2/2/3'), c(700, 'var(--ten)', '2/1/3/2'), h('span', { style: 'grid-area:2/2/3/3' }, mid), c(400, 'var(--borrow)', '2/3/3/4'), c(500, 'var(--one)', '3/2/4/3')));
+    askSeq(api, below, [
+      { guide: 'Subtract opposite numbers. First, top minus bottom.', prompt: 'Top − Bottom: 800 − 500 = ?', options: [300, 200, 1300], answer: 300, cls: '' },
+      { guide: 'Now left minus right.', prompt: 'Left − Right: 700 − 400 = ?', options: [300, 400, 1100], answer: 300, cls: '' },
+      { guide: 'Both differences are the same. That is the magic number!', prompt: 'What is the magic number?', options: [300, 800, 500], answer: 300, cls: '', onDone: () => { mid.textContent = '300'; } },
+    ], api.done);
+  }
+}
+/* Stop 15 · page 23, Checkpoint 2 */
+const RIDDLES = [
+  { first: ['I am the smallest 3-digit number.'], a: 100, aOpts: [100, 999, 101], second: ['I am the greatest 1-digit number.'], b: 9, bOpts: [9, 1, 10] },
+  { first: ['I come before 6 hundreds 5 tens 0 ones.'], a: 649, aOpts: [649, 651, 640], second: ['I come after 2 hundreds 8 tens 7 ones.'], b: 288, bOpts: [288, 286, 297] },
+  { first: ['I am greater than 700 and less than 730.', 'I come after 7 hundreds 1 ten 5 ones.'], a: 716, aOpts: [716, 714, 751], second: ['I am greater than 20 and less than 40.', 'I come before 3 tens 1 one.'], b: 30, bOpts: [30, 32, 13] },
+  { first: ['I am greater than 800 and less than 840.', 'I have 2 in the ones place.', 'I have 3 in the tens place.'], a: 832, aOpts: [832, 823, 842], second: ['I am greater than 450 and less than 460.', 'I have 8 in the ones place.'], b: 458, bOpts: [458, 485, 448] },
+];
+function playRiddles(api) {
+  const Rd = RIDDLES[run.round], below = h('div', { class: 'below' });
+  const card = (title, lines) => h('div', { class: 'riddle' }, h('b', {}, title), lines.map(l => h('span', {}, '• ' + l)));
+  api.stage.append(h('span', { class: 'srctag' }, `Checkpoint 2 · ${'abcd'[run.round]}`), card('First Number', Rd.first), card('Second Number', Rd.second), below);
+  askSeq(api, below, [
+    { guide: 'Solve the riddle for the first number.', prompt: 'The first number is…', options: shuffle(Rd.aOpts.slice()), answer: Rd.a, cls: '' },
+    { guide: 'Now the second number.', prompt: 'The second number is…', options: shuffle(Rd.bOpts.slice()), answer: Rd.b, cls: '' },
+  ], () => { const b2 = h('div', { class: 'below' }); below.append(b2); columnSub(api, b2, { a: Rd.a, b: Rd.b, onDone: api.done }); scrollTo(b2); });
+}
+/* Stop 16 · pages 24–25 */
+function playStorySteps(api) {
+  const R = run.round, below = h('div', { class: 'below' }); api.stage.append(below);
+  if (R === 0) {
+    api.guide('A word problem is like a short story with numbers. Here are the 4 steps to solve one.');
+    below.append(h('div', { class: 'gears' },
+      h('div', { class: 'gear' }, h('b', {}, '1 Read'), 'Read the word problem carefully.'),
+      h('div', { class: 'gear' }, h('b', {}, '2 Underline'), 'Underline the subtraction word.'),
+      h('div', { class: 'gear' }, h('b', {}, '3 Analyse'), 'How many in all? How many taken away? How many left?'),
+      h('div', { class: 'gear' }, h('b', {}, '4 Subtract'), 'Place the numbers in H T O and subtract.')),
+      h('div', { class: 'chips', 'aria-label': 'Subtraction words' }, ['left', 'fewer', 'remain', 'take away', 'difference'].map(w => h('span', { class: 'chip' }, w))));
+    askSeq(api, below, [
+      { prompt: 'What do we do first?', options: shuffle(['Read the problem carefully', 'Start subtracting', 'Guess the answer']), answer: 'Read the problem carefully' },
+      { prompt: 'Which word tells us to subtract?', options: shuffle(['left', 'more', 'altogether']), answer: 'left', guide: 'Look at the subtraction words.' },
+      { prompt: 'What do we ask ourselves?', options: shuffle(['What do I need to find?', 'What colour is it?', 'How long is the story?']), answer: 'What do I need to find?' },
+    ], api.done);
+  } else if (R === 1) {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'Guidepost · Rio’s coins'));
+    storyProblem(api, below, { text: 'Rio had 504 old coins. He lost 6 coins on his vacation to his aunt’s house. How many coins does he have now?', keys: ['lost'], total: 504, take: 6, totalLab: 'Total coins', takeLab: 'Lost', leftLab: 'Remaining', totalQ: 'How many coins did Rio have?', takeQ: 'How many did he lose?', check: true, onDone: api.done });
+  } else {
+    api.stage.prepend(h('span', { class: 'srctag' }, 'GRIP-4 · 1'));
+    storyProblem(api, below, { text: 'Inside the compartment in the train there are 216 passengers. 196 of them got off at a station. How many passengers are left in the compartment?', keys: ['left', 'off'], total: 216, take: 196, totalLab: 'Passengers', takeLab: 'Got off', leftLab: 'Left', takeQ: 'How many got off?', onDone: api.done });
+  }
+}
+/* Stop 17 · pages 26–27, Checkpoint 3 */
+const FAIR = [
+  { e: '🤖', zone: 'Robot Arena', line: '684 playing robots' }, { e: '🛸', zone: 'Drone Race Zone', line: 'mini drones' }, { e: '🐶', zone: 'Digital Pet Zone', line: '625 digital pets' },
+  { e: '🎹', zone: 'Digital Music Zone', line: '842 musical instruments' }, { e: '🎨', zone: 'Magic Screen Studio', line: '936 drawing pads' },
+];
+function playFair(api) {
+  const R = run.round, below = h('div', { class: 'below' });
+  if (R === 0) {
+    api.stage.append(h('span', { class: 'srctag' }, 'GRIP-4 · 2'), below);
+    storyProblem(api, below, { text: 'A library has 329 books. Last weekend, 245 books were borrowed by members. How many books are there in the library now?', keys: ['borrowed'], total: 329, take: 245, totalLab: 'Books', takeLab: 'Borrowed', leftLab: 'In the library now', takeQ: 'How many were borrowed?', onDone: api.done });
+    return;
+  }
+  const on = [null, 2, 4, 3][R];
+  api.stage.append(h('span', { class: 'srctag' }, `Checkpoint 3 · ${R}`), h('div', { class: 'comic' }, FAIR.map((f, i) => h('div', { class: 'panel' + (i === on || (R === 3 && i === 0) ? ' on' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, f.e), h('span', { class: 'zone' }, f.zone), f.line))), below);
+  if (R === 1) storyProblem(api, below, { text: 'There are 625 digital pets. If 38 digital pets are adopted by students, how many digital pets will be left?', keys: ['adopted', 'left'], total: 625, take: 38, totalLab: 'Digital pets', takeLab: 'Adopted', leftLab: 'Left', takeQ: 'How many are adopted?', check: true, onDone: api.done });
+  else if (R === 2) storyProblem(api, below, { text: 'The number of drones is 178 less than the number of digital drawing pads. How many drones are there?', keys: ['less'], total: 936, take: 178, totalLab: 'Drawing pads', takeLab: '178 less', leftLab: 'Drones', totalQ: 'How many drawing pads are there? (Look at the comic.)', takeQ: 'How many fewer drones are there?', onDone: api.done });
+  else storyProblem(api, below, { text: 'What is the difference between the number of digital musical instruments and robots?', keys: ['difference'], total: 842, take: 684, totalLab: 'Instruments', takeLab: 'Robots', leftLab: 'Difference', totalQ: 'How many instruments? (Look at the comic.)', takeQ: 'How many robots?', check: true, onDone: api.done });
+}
+
+/* ---------- Grand Review ---------- */
+function gen(kind) {
+  for (let tries = 0; tries < 500; tries++) {
+    const a = rand(201, 989), b = kind === 'small' ? rand(11, 99) : rand(102, a - 50);
+    const A = dig(a), B = dig(b);
+    if (b >= a) continue;
+    if (kind === 'plain' && A.o >= B.o && A.t >= B.t && B.h >= 1) return [a, b];
+    if (kind === 'ones' && A.o < B.o && A.t >= 1 && A.t - 1 >= B.t && A.h >= B.h) return [a, b];
+    if (kind === 'tens' && A.o >= B.o && A.t < B.t && A.h - 1 >= B.h) return [a, b];
+    if (kind === 'small' && A.o < B.o && A.t >= 1) return [a, b];
+  }
+  return [532, 217];
+}
+function genZero() { const hh = rand(3, 9), o = rand(0, 5); const a = hh * 100 + o; const b = rand(12, 89); return dig(b).o > o ? [a, b] : [a, (b - dig(b).o) + o + 1 > 99 ? 89 : (b - dig(b).o) + o + 1]; }
+const REVIEW_QS = [
+  { part: 1, from: 'Pages 8–12', play: (api, el, done) => { const [a, b] = gen('plain'); api.guide(`Subtract ${a} − ${b}. Ones first!`); columnSub(api, el, { a, b, onDone: done }); } },
+  { part: 1, from: 'Page 10', play: (api, el, done) => { const n = rand(312, 987), D = dig(n); api.guide(`Write ${n} in expanded form.`); askChoice(el, { prompt: `${n} = ?`, options: shuffle([`${D.h * 100} + ${D.t * 10} + ${D.o}`, `${D.h} + ${D.t} + ${D.o}`, `${D.h * 100} + ${D.t} + ${D.o * 10}`]), answer: `${D.h * 100} + ${D.t * 10} + ${D.o}`, onDone: done }); } },
+  { part: 2, from: 'Page 17', play: (api, el, done) => { const x = rand(3, 9), y = rand(1, 8); api.guide('Fill in the blank. 1 hundred = 10 tens.'); askChoice(el, { prompt: `${x} hundreds ${y} tens = ${x - 1} hundreds ___ tens`, options: shuffle([y + 10, y, y + 1]), answer: y + 10, cls: '', onDone: done }); } },
+  { part: 2, from: 'Pages 15–16', play: (api, el, done) => { const t = rand(3, 8), o = rand(1, 8), n = t * 10 + o; api.guide(`We regroup ${t} tens ${o} ones as ${t - 1} tens ${o + 10} ones.`); askChoice(el, { prompt: `Is the number still ${n}?`, options: [`Yes, still ${n}`, `No, now it is ${n - 10}`, `No, now it is ${n + 10}`], answer: `Yes, still ${n}`, onDone: done }); } },
+  { part: 3, from: 'Pages 19–20', play: (api, el, done) => { const [a, b] = gen('ones'); api.guide(`Subtract ${a} − ${b}. Watch the ones!`); columnSub(api, el, { a, b, onDone: done }); } },
+  { part: 3, from: 'Page 21', play: (api, el, done) => { const [a, b] = gen('tens'); api.guide(`Subtract ${a} − ${b}. Watch the tens!`); columnSub(api, el, { a, b, onDone: done }); } },
+  { part: 3, from: 'Page 21', play: (api, el, done) => { const [a, b] = genZero(); api.guide(`Subtract ${a} − ${b}. There is a 0 in the tens!`); columnSub(api, el, { a, b, onDone: done }); } },
+  { part: 3, from: 'Checking', play: (api, el, done) => {
+    const [a, b] = gen('ones'), r = a - b, right = Math.random() < 0.5, said = right ? r : r + 10;
+    el.append(whoSays('👧', `Riya says ${a} − ${b} = ${said}.`));
+    api.guide(`Check Riya's answer by adding back: ${said} + ${b}.`);
+    askSeq(api, el, [
+      { prompt: `${said} + ${b} = ?`, options: numOpts(said + b, [said + b + 10, said + b - 10]), answer: said + b, cls: '', onDone: () => skill('check') },
+      { prompt: `Is Riya right? (We started with ${a}.)`, options: ['Yes, she is right', 'No, she made a mistake'], answer: right ? 'Yes, she is right' : 'No, she made a mistake' },
+    ], done);
+  } },
+  { part: 4, from: 'Pages 24–25', play: (api, el, done) => { const [a, b] = gen('small'); storyProblem(api, el, { text: `Chikki's stall had ${a} mangoes. ${b} mangoes were sold. How many mangoes are left?`, keys: ['sold', 'left'], total: a, take: b, totalLab: 'Mangoes', takeLab: 'Sold', leftLab: 'Left', takeQ: 'How many were sold?', onDone: done }); } },
+  { part: 4, from: 'Page 27', play: (api, el, done) => { const [a, b] = gen('tens'); storyProblem(api, el, { text: `A school has ${a} girls and ${b} boys. What is the difference between the number of girls and boys?`, keys: ['difference'], total: a, take: b, totalLab: 'Girls', takeLab: 'Boys', leftLab: 'Difference', totalQ: 'How many girls?', takeQ: 'How many boys?', onDone: done }); } },
+];
+function playReview(api) {
+  if (!run.qs) run.qs = shuffle(REVIEW_QS.slice());
+  if (!run.firstTry) run.firstTry = {};
+  const q = run.qs[run.round], before = run.mistakes;
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('span', { class: 'srctag' }, `Part ${q.part} · ${q.from}`), below);
+  q.play(api, below, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'No regrouping', 2: 'Regrouping', 3: 'With regrouping', 4: 'Word problems' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 8 Subtraction Champion'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [r, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${r} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < r ? '' : 'off' }, '🥭'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Block Shop', idea: 'Take away with blocks', page: 'Book pages 7–9', rounds: 3, cut: [0, 2], icon: '🧱', play: playBlockShop },
+  { id: 2, part: 1, name: 'Expand & Subtract', idea: 'Expanded form and columns', page: 'Book pages 10–11', rounds: 3, cut: [1, 3], icon: '🧮', play: playExpand },
+  { id: 3, part: 1, name: 'Cross Out Blocks', idea: 'GRIP-1 question 1', page: 'Book page 12', rounds: 2, cut: [0, 1], icon: '❌', play: playCross },
+  { id: 4, part: 1, name: 'Expand It', idea: 'GRIP-1 question 2', page: 'Book page 12', rounds: 2, cut: [0, 2], icon: '➕', play: playExpandIt },
+  { id: 5, part: 1, name: 'Line Them Up', idea: 'GRIP-1 question 3', page: 'Book page 12', rounds: 3, cut: [1, 2], icon: '📏', play: playLineUp },
+  { id: 6, part: 1, name: 'Secret Vault', idea: 'Checkpoint 1', page: 'Book page 13', rounds: 6, cut: [1, 3], icon: '🕵️', play: playVault },
+  { id: 7, part: 2, name: 'Break It Up', idea: '1 ten = 10 ones', page: 'Book pages 14–15', rounds: 3, cut: [0, 2], icon: '🔨', play: playBreak },
+  { id: 8, part: 2, name: 'Regroup Guidepost', idea: 'Same number, new form', page: 'Book page 16', rounds: 3, cut: [0, 1], icon: '🔄', play: playRegroupGuide },
+  { id: 9, part: 2, name: 'Fill the Blanks', idea: 'GRIP-2', page: 'Book page 17', rounds: 7, cut: [1, 3], icon: '✏️', play: playBlanks },
+  { id: 10, part: 3, name: 'Not Enough Ones', idea: 'Break a ten', page: 'Book pages 17 and 19', rounds: 2, cut: [0, 2], icon: '🍬', play: playNotEnough },
+  { id: 11, part: 3, name: 'Borrow Again', idea: 'Two regroups and a 0', page: 'Book pages 18 and 20', rounds: 2, cut: [0, 2], icon: '🎒', play: playBorrowAgain },
+  { id: 12, part: 3, name: 'Borrow a Hundred', idea: 'Break a hundred', page: 'Book pages 8, 18 and 21', rounds: 3, cut: [1, 3], icon: '🎆', play: playBorrowHundred },
+  { id: 13, part: 3, name: 'GRIP-3 Practice', idea: 'Expand and subtract', page: 'Book page 21', rounds: 5, cut: [1, 3], icon: '🏋️', play: playGrip3 },
+  { id: 14, part: 3, name: 'Notebook Store', idea: 'Wonder Junction and Skill Trail', page: 'Book page 22', rounds: 2, cut: [0, 2], icon: '📦', play: playStore },
+  { id: 15, part: 3, name: 'Riddle Board', idea: 'Checkpoint 2', page: 'Book page 23', rounds: 4, cut: [1, 3], icon: '🧩', play: playRiddles },
+  { id: 16, part: 4, name: 'Story Steps', idea: 'Read, underline, analyse, subtract', page: 'Book pages 24–25', rounds: 3, cut: [0, 2], icon: '📖', play: playStorySteps },
+  { id: 17, part: 4, name: 'Library & Future Fair', idea: 'GRIP-4 and Checkpoint 3', page: 'Book pages 26–27', rounds: 4, cut: [1, 3], icon: '🤖', play: playFair },
+  { id: 18, part: 5, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 8 · pages 7–27', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'plain', e: '🧱', t: 'Take away with blocks' },
+  { k: 'ten', e: '🔨', t: 'Break a ten' },
+  { k: 'hundred', e: '💥', t: 'Break a hundred' },
+  { k: 'zero', e: '0️⃣', t: 'Borrow across a 0' },
+  { k: 'check', e: '✅', t: 'Check by adding' },
+  { k: 'story', e: '🔎', t: 'Find the story word' },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+  quiet: false,
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 6 ? 'The vault is open! Part 2 is about regrouping: breaking a ten or a hundred.'
+    : L.id === 9 ? 'Regrouping champion! In Part 3 you will use regrouping to subtract.'
+    : L.id === 12 ? 'You solved the New Year party problem! They were waiting for 164 people.'
+    : L.id === 15 ? 'Checkpoint 2 done! Part 4 is all about word problems.'
+    : L.id === 17 ? 'You finished Part 4! One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 8, Ayansh! Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the bazaar'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC23D', '#E2483D', '#1C8A55', '#2F6FD0', '#FFFFFF', '#D9721C'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 5; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: Chikki's shelf (book page 7) */
+const fruits = [];
+for (let i = 0; i < 8; i++) { const f = h('span', { class: 'fruit' }, '🥭'); fruits.push(f); $('shelf').append(f); }
+$('showHow').addEventListener('click', async () => {
+  $('showHow').disabled = true;
+  fruits.forEach(f => f.classList.remove('sold')); $('shopSum').textContent = '8'; await wait(500);
+  for (let i = 0; i < 3; i++) { fruits[7 - i].classList.add('sold'); sfx.tap(i); $('shopSum').textContent = `8 − ${i + 1}`; await wait(700); }
+  $('shopSum').textContent = '8 − 3 = 5';
+  $('reveal').hidden = false; sfx.good();
+  say('A customer buys 3 mangoes. 8 minus 3 equals 5. I subtract! Subtraction tells us how many are left.');
+  $('showHow').disabled = false; $('showHow').textContent = '↻ Show me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
