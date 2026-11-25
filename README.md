@@ -14,6 +14,7 @@ maths/
   patterns/         Rangoli Lane (Chapter 6)
   skip-counting/    Skip-Hop Park (Chapter 4)
 english/
+  the-rainbow/      Rainbow Bridge (Chapter 1)
   the-letter/       Snail Mail Trail (Chapter 4)
 ```
 
@@ -29,6 +30,7 @@ See [maths/README.md](maths/README.md) and [english/README.md](english/README.md
 | Maths | Multiplication | [Multiplication Fair](maths/multiplication/) | Ch 9, pp. 28–57 |
 | Maths | Multiplication | [Times Quest](maths/multiplication/) | (not from the book) |
 | Maths | Time | [Tick-Tock Town](maths/time/) | Ch 10, pp. 58–76 |
+| English | The Rainbow | [Rainbow Bridge](english/the-rainbow/) | Ch 1, pp. 7–32 |
 | English | The Letter | [Snail Mail Trail](english/the-letter/) | Ch 4, pp. 34–54 |
 
 ## Adding a new game

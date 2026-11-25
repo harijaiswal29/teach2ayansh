@@ -1,0 +1,1945 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Rainbow Bridge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column under an open sky, from pale morning blue down to deep evening blue; white cards hold the play. Follows English Chapter 1, "The Rainbow" (pages 7–32), page by page. The seven rainbow colours are the accents. A single-look game page (light only), like the other chapter games. */
+:root{
+  --sky1:#D9F0FF; --sky2:#A9DCF8; --sky3:#72BCEB; --sky4:#3F7FC8; --night:#22407A;
+  --board:#FFFFFF; --paper:#F6FBFF; --ink:#1E2A44; --ink-soft:#56627A; --shadow:#142038;
+  --gold:#FFC93D; --gold-soft:#FFF3CC;
+  --red:#E5484D; --orange:#F28C28; --yellow:#F7C623; --green:#2E9E5B; --blue:#2F6FD0; --indigo:#4B3FB5; --violet:#8B5BC8;
+  --red-soft:#FFE1E1; --green-soft:#D6F2E1; --blue-soft:#DDE9FB; --violet-soft:#EEE6FA; --orange-soft:#FFE8D2;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC; --muted:#C9D3E0;
+  --on-dark:#FFFFFF; --on-dark-soft:#D8E6FA; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--night)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);margin:0;
+  background-color:var(--night);
+  background-image:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 20%,var(--sky3) 46%,var(--sky4) 74%,var(--night) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a rainbow stripe */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:26px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:linear-gradient(180deg,var(--red) 0 2px,var(--orange) 2px 4px,var(--yellow) 4px 6px,var(--green) 6px 8px,var(--blue) 8px 10px,var(--indigo) 10px 12px,var(--violet) 12px 14px)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--sky4);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.herorow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.rbox{display:grid;place-items:center}
+.rbox svg,.rbsvg{width:min(260px,72vw);height:auto;display:block}
+.colourline{font-family:var(--display);font-weight:800;font-size:22px;min-height:1.4em}
+.herorow .colourline{flex:1;min-width:150px}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--green-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E3E9F1;border-color:#93A0B5}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(4n+1) .stopicon{background:var(--red-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--blue-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--green-soft)}
+.stop:nth-child(4n) .stopicon{background:var(--violet-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--blue)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--red);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--green);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--paper);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:68ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--blue);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--green)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice.pic{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--body);font-size:15px;min-width:92px;padding:6px 10px}
+.choice.pic .pe{font-size:40px;line-height:1.1}
+.choice.chunk{font-family:var(--display);font-size:24px;min-width:84px;letter-spacing:1px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(22px,6vw,32px);line-height:1.15}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--blue-soft);border:3px dashed var(--blue);border-radius:16px;padding:10px 14px;font-weight:700;max-width:540px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:16px;text-align:center;max-width:44ch}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.story{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:18px;max-width:560px;line-height:1.5}
+
+/* learn card: the idea first, before any question */
+.learn{width:100%;max-width:580px;background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;animation:pop .4s}
+.learn h3{font-size:22px;display:flex;gap:8px;align-items:center}
+.learn h3::before{content:"💡"}
+.learn p{font-weight:700}
+.learn .ex{display:flex;flex-wrap:wrap;gap:8px}
+.exchip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800}
+.exchip.a{background:var(--blue-soft)}.exchip.b{background:var(--green-soft)}.exchip.c{background:var(--violet-soft)}
+.hl{background:var(--gold);border-radius:6px;padding:0 3px;font-weight:800}
+.hl2{color:var(--red);font-weight:800;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+
+/* poem and story reader */
+.poem{width:100%;max-width:560px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.ptitle{font-size:26px;text-align:center;margin-bottom:6px}
+.pby{text-align:right;font-style:italic;font-weight:700;color:var(--ink-soft);margin-top:6px}
+.pline{display:flex;flex-wrap:wrap;align-items:center;gap:0 .3em;text-align:left;width:100%;border:none;background:none;border-radius:10px;padding:5px 10px 5px 34px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.35;cursor:pointer;position:relative}
+.pline::before{content:"🔈";position:absolute;left:6px;top:7px;font-size:16px;opacity:.5}
+.pline:hover{background:var(--blue-soft)}
+.pline.now{background:var(--gold);box-shadow:0 0 0 3px var(--ink)}
+.pline.heard::before{content:"✓";color:var(--good);opacity:1;font-weight:800}
+.pgap{height:12px}
+mark.gl{background:none;color:var(--indigo);font-weight:800;text-decoration:underline dotted 3px;text-underline-offset:4px}
+.readbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.glossrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.glossbtn{font-weight:800;border:3px solid var(--indigo);color:var(--indigo);background:var(--board);border-radius:999px;padding:4px 14px;min-height:42px;cursor:pointer}
+.glossbtn.seen{background:var(--violet-soft)}
+.echo{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.echoline{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,32px);line-height:1.2;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;width:100%}
+.echocount{font-weight:800;color:var(--ink-soft)}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%;max-width:600px}
+.flip{min-height:118px;border:3px solid var(--ink);border-radius:16px;background:var(--violet-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.flip .fw{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1}
+.flip .fe{font-size:30px;line-height:1}
+.flip .fm{font-weight:700;font-size:15px;line-height:1.25}
+.flip.open{background:var(--board);animation:pop .35s}
+
+/* sorting */
+.sorter{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.sortnow{min-height:96px;display:grid;place-items:center;margin-bottom:6px}
+.sortcard{display:flex;align-items:center;gap:12px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:10px 20px;box-shadow:0 4px 0 var(--ink);max-width:520px}
+.sortcard .se{font-size:46px;line-height:1}
+.sortcard .st{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,30px);line-height:1.15}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;margin-top:10px}
+.bin{border:3px solid var(--ink);border-radius:16px;background:var(--paper);min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+.binhead{font-family:var(--display);font-weight:800;font-size:18px;padding:4px 10px;background:var(--bc,var(--blue-soft));border-bottom:3px solid var(--ink);display:flex;gap:6px;align-items:center}
+.binlist{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:1px 10px;font-weight:800;font-size:15px}
+
+/* tap the words */
+.tapbox{width:100%;max-width:600px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tapline{display:flex;flex-wrap:wrap;gap:4px 2px;line-height:1.2}
+.w{font-weight:800;font-size:clamp(18px,4.4vw,22px);border:2px solid transparent;background:none;border-radius:10px;padding:4px 6px;cursor:pointer;min-height:44px}
+.w:hover{border-color:var(--muted)}
+.w.hit{background:var(--good);color:var(--on-color);border-color:var(--ink);animation:pop .3s}
+.w.miss{background:var(--oops-soft);animation:shake .4s}
+.w.show{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.counter{font-weight:800;color:var(--ink-soft)}
+.wordgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;width:100%;max-width:560px}
+.wordgrid .w{border:3px solid var(--ink);background:var(--board);box-shadow:0 4px 0 var(--ink);font-size:21px}
+
+/* letter tiles and sentence building */
+.slots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end;min-height:66px}
+.slots .given{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:2px;padding:0 4px}
+.slot{width:48px;height:58px;border-bottom:4px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:38px;line-height:1}
+.slot.fill{color:var(--blue);animation:pop .3s}
+.slots.right .slot{color:var(--good)}
+.ltray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:520px}
+.ltile{width:60px;height:62px;font-family:var(--display);font-weight:800;font-size:32px;border:3px solid var(--ink);border-radius:14px;background:var(--gold-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.ltile:disabled{opacity:.25;cursor:default}
+.ltile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.cluepic{font-size:56px;line-height:1}
+.sline{min-height:64px;width:100%;max-width:600px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px;border:3px dashed var(--ink-soft);border-radius:16px;background:var(--paper)}
+.sline.right{border-style:solid;border-color:var(--good);background:var(--green-soft)}
+.sline .ph{color:var(--ink-soft);font-weight:700}
+.wput{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);line-height:1.2}
+.stray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px}
+.wtile{font-family:var(--display);font-weight:800;font-size:clamp(19px,4.8vw,24px);min-height:52px;min-width:52px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.wtile.used{visibility:hidden}
+.wtile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+
+/* word search */
+.ws{display:grid;grid-template-columns:repeat(var(--c),minmax(0,46px));gap:3px;padding:8px;background:var(--paper);border:3px solid var(--ink);border-radius:14px;max-width:100%}
+.wsc{aspect-ratio:1;min-width:0;font-family:var(--display);font-weight:800;font-size:clamp(17px,4.6vw,24px);border:2px solid var(--muted);border-radius:8px;background:var(--board);cursor:pointer;padding:0}
+.wsc.sel{background:var(--gold);border-color:var(--ink)}
+.wsc.got{background:var(--green-soft);border-color:var(--good);color:var(--good)}
+.wsc.look{box-shadow:0 0 0 3px var(--red)}
+.wslist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wsw{font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 12px;background:var(--board)}
+.wsw.got{background:var(--good);color:var(--on-color);text-decoration:line-through}
+
+/* scenes, pictures and tables */
+.scene{width:100%;max-width:560px;border:3px solid var(--ink);border-radius:18px;padding:12px;background:linear-gradient(180deg,#CFEAFF 0%,#EAF6FF 55%,#BFE3A8 56%,#9ED38A 100%);display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;align-items:flex-end;font-size:40px;line-height:1.1;position:relative;overflow:hidden}
+.scene .small{font-size:26px}
+.scene .rbover{position:absolute;inset:4px 0 auto 0;display:grid;place-items:center;opacity:0;transition:opacity 1s}
+.scene .rbover.on{opacity:.9}
+.scene .rbover svg{width:min(320px,80%)}
+.ctrls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toggle{font-weight:800;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);min-height:56px;padding:4px 16px;cursor:pointer;font-size:18px}
+.toggle[aria-pressed="true"]{background:var(--gold)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:14px}
+.swatch i{width:40px;height:28px;border-radius:8px;border:2px solid var(--ink)}
+.swatch:disabled{opacity:.3;cursor:default}
+.tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px;background:#E9C98F;border:3px solid var(--ink);border-radius:22px;padding:12px}
+.trayitem{display:flex;flex-direction:column;align-items:center;gap:2px;background:#F6E2B8;border:3px solid var(--ink);border-radius:14px;padding:6px;font-size:40px;line-height:1.1;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.trayitem small{font-size:14px;font-weight:800}
+.trayitem:disabled{opacity:.35;cursor:default}
+.tbl{border-collapse:collapse;width:100%;max-width:520px;background:var(--board);border:3px solid var(--ink);font-weight:800}
+.tbl th,.tbl td{border:2px solid var(--ink);padding:6px 10px;text-align:left}
+.tbl th{background:var(--blue-soft);font-family:var(--display);font-size:18px}
+.tbl td.blank{color:var(--ink-soft)}
+.tbl td.now{background:var(--gold-soft);box-shadow:inset 0 0 0 3px var(--gold)}
+.tbl td.fresh{color:var(--good);animation:pop .35s}
+.poster{width:min(300px,100%);background:repeating-conic-gradient(from 0deg at 50% 100%,#F28C28 0 10deg,#F7B35C 10deg 20deg);border:3px solid var(--ink);border-radius:16px;padding:12px;text-align:center;color:#1E2A44;display:flex;flex-direction:column;gap:6px}
+.poster .ph1{font-family:var(--display);font-weight:800;font-size:44px;color:#C62C2C;-webkit-text-stroke:1px var(--ink);line-height:1}
+.poster .row{background:#123B5C;color:#FFF;font-family:var(--display);font-weight:800;font-size:20px;border-radius:8px;padding:2px 8px}
+.poster .feat{background:#FFF3CC;border-radius:8px;padding:4px 8px;font-weight:800;font-size:14px;line-height:1.3}
+.basket{font-size:42px;line-height:1.15;background:#F3E2C4;border:3px solid var(--ink);border-radius:22px 22px 40px 40px;padding:10px 16px;display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;max-width:360px}
+.bag{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bagbox{min-width:220px;min-height:90px;border:3px solid var(--ink);border-radius:26px 26px 18px 18px;background:#5DA9E9;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:10px;font-size:38px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;width:100%;max-width:560px}
+.shelfitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:6px;font-size:36px;line-height:1.1}
+.shelfitem small{font-size:14px;font-weight:800}
+.shelfitem.in{background:var(--green-soft);opacity:.6}
+.shelfitem.no{background:var(--oops-soft);animation:shake .4s}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;max-width:560px}
+.list{background:#FFFDF2;border:3px solid var(--ink);border-radius:8px;padding:10px 14px;min-height:150px;box-shadow:3px 3px 0 var(--shadow)}
+.list h3{font-size:19px;border-bottom:2px solid var(--muted);padding-bottom:4px;margin-bottom:6px}
+.list ol{margin:0;padding-left:22px;font-weight:800}
+.twins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;max-width:600px}
+.twin{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px;cursor:pointer}
+.twin .te{font-size:40px;line-height:1}
+.twin .tw{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:1px}
+.twin.heard{background:var(--green-soft)}
+.tcard{display:flex;flex-direction:column;gap:2px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px 10px;cursor:pointer;text-align:left}
+.tcard b{font-family:var(--display);font-size:28px;color:var(--indigo);letter-spacing:2px}
+.tcard span{font-weight:700;font-size:15px}
+.tcard.heard{background:var(--violet-soft)}
+.mywriting{width:100%;max-width:560px;background:#FFFDF2;border:3px solid var(--ink);border-radius:12px;padding:14px 18px;background-image:repeating-linear-gradient(180deg,transparent 0 34px,#BFD8F2 34px 36px);display:flex;flex-direction:column;gap:6px}
+.mywriting h3{font-size:22px;color:var(--violet)}
+.mywriting p{font-family:var(--display);font-weight:600;font-size:21px;line-height:1.5}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(20,32,56,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D5DDE8;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--violet);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .choice.pic{min-width:78px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .ltile{width:50px;height:54px;font-size:28px}
+  .slot{width:38px;height:50px;font-size:32px}
+  .slots .given{font-size:32px}
+  .scene{font-size:32px}
+  .wsc{border-width:1.5px}
+  .ws{gap:2px;padding:5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+.scene{flex-direction:column;align-items:stretch}
+.srow{display:flex;justify-content:space-around;align-items:flex-end;flex-wrap:wrap;gap:4px 8px;width:100%;position:relative}
+.srow.sky{min-height:56px}
+.trayitem.done{background:var(--green-soft)}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Rainbow Bridge<small>Ayansh's English · Chapter 1 · The Rainbow</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 51</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">☁️</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Badal the cloud.</h2>
+        <p>I sail across the sky every day. When the sun shines on my raindrops, something beautiful appears. <b>Do you know what it is?</b></p>
+        <div class="herorow">
+          <div class="rbox" id="heroRainbow"></div>
+          <p class="colourline" id="colourLine" aria-live="polite"></p>
+        </div>
+        <button class="btn primary" id="showHow" type="button">🌈 Show me</button>
+        <p class="reveal" id="reveal" hidden>A <b>rainbow</b>! It is a curved bow of colours that seems to join the earth to the sky. Our poem, <i>The Rainbow</i>, is all about it.</p>
+        <p class="note">Walk the Rainbow Bridge stop by stop: the poem, a nature walk, lots of nouns, sound teams, a story and your own rainbow writing.</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You crossed the whole Rainbow Bridge! You finished English Chapter 1.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · The poem</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Out and about</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Nouns</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Sounds, story and writing</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 1</h2>
+    <ol class="stops finale" id="stops5"></ol>
+
+    <section class="skillcard card">
+      <h2>My word tools</h2>
+      <p class="note">Each tool lights up the first time you use it in a game.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body" id="grownups">
+        <p>This follows English Chapter 1, “The Rainbow”, in Ayansh's book (pages 7–32). Each stop uses the book's own poem, words and exercises, in the same order. Every new idea starts with a short “💡” card that explains it with an example before any question. Teaching is read aloud by default (switch it off at the top). The last round of each stop is an <b>on your own</b> round: no clue until his second try. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · The poem (pages 7–10)</h3>
+        <ol>
+          <li><b>Where Do Clouds Go?</b> (page 7): the opening question, answered his own way, then what pushes clouds (the wind). Extra, not in the book: how sun and rain make a rainbow, and the seven colours in order.</li>
+          <li><b>Read the Poem</b> (page 8): the whole poem by Christina Rossetti, read aloud line by line as he follows. The five word helpers from the page (sail, prettier, heaven, bridges, overtops) as flip cards, a meaning check, then “which picture fits this line?”.</li>
+          <li><b>What the Poem Means</b> (pages 9–10): About the Poet (born December 5, 1830, died December 29, 1894; poet, storyteller, nature lover, dreamer) and her two personal questions. He reads each line aloud himself (question 1–2). Then question 3: a. on the rivers; c. goes higher than the trees; d. the rainbow looks like a curved road from the ground up to the sky; e. a new title (his choice). “The bow” is taught as the rainbow, curved like a bow.</li>
+          <li><b>Rhyme Time</b> (page 10, question 3b): seas–these and please–trees from the poem, then rhyme picks, odd one out, and finish-the-rhyme.</li>
+        </ol>
+        <h3>Part 2 · Out and about (pages 11–13)</h3>
+        <ol start="5">
+          <li><b>Nature Detective Walk</b> (pages 11–12): I spy, I hear, I touch, and I wonder questions with a park picture. Please also do the real walk and fill in the pages.</li>
+          <li><b>Trash to Treasure Trail</b> (page 13, Eco Route): the three words Recycled, Reused and Refused with the book's meanings, then sorting everyday things.</li>
+        </ol>
+        <h3>Part 3 · Nouns (pages 13–27)</h3>
+        <ol start="7">
+          <li><b>Common and Proper Nouns</b> (pages 13–15): person, place, animal or thing; the book's examples sorted; the circus poster; page 14 question 2 (monkey, Ananya, Hanging garden, uncle, Zara); and two sentences built from page 15's nouns, with the capital letter.</li>
+          <li><b>Plural Patrol</b> (pages 15–17): one or more than one (astronaut, quails, fairies, volcano); add s or es (s, ss, sh, ch, x); y to ies, -o words and special plurals; the Detour mistakes (mans, babys, boxs, cat's, mouses); then he spells plurals himself.</li>
+          <li><b>Snack Tray, Basket and Zoo</b> (pages 18–21): plurals of the snack tray, the laundry basket table (t-shirts, box, brushes, socks, baskets, teddy bears, towel) and the national park (1 bear, giraffes, no second monkey, and the singular sentence “The child saw an elephant and a giraffe at the zoo.”).</li>
+          <li><b>Count It or Not?</b> (pages 21–23): countable and uncountable, numbers versus some, much, a little, the kitchen picture, and a shopping list with 4 of each.</li>
+          <li><b>Five-Senses Nouns</b> (pages 24–25): concrete nouns; bell–hear, flower–smell, and pencil, apple and dress with see or touch; then four things for his school bag.</li>
+          <li><b>Collective Nouns</b> (pages 25–27): flock, herd, pack, swarm, class, crew, family, bunch, pile, bouquet, parliament of owls, school of fish; the five underline sentences; and the book's word search (FLOCK, HERD, PACK, SWARM, TEAM, SCHOOL).</li>
+        </ol>
+        <h3>Part 4 · Sounds, story and writing (pages 27–32)</h3>
+        <ol start="13">
+          <li><b>Trigraph Tongue Twisters</b> (pages 27–28): the ten trigraphs (igh, tch, dge, sch, shr, spl, spr, str, thr, squ), the tongue twisters, and the Secret Trigraph Code: splash, spring, squid, shrub, square.</li>
+          <li><b>Double Letter Twins</b> (page 28): rabbit, bell, happy, ladder, egg, then the circle-the-words list (apple, glass, running, hopping, pillow, bell, dress, hill).</li>
+          <li><b>Max's Amazing Race</b> (pages 29–30): the listening story with its ace words (place, race, face, space) and ame words (name, game, flame, frame). The story is retold in my own words, with the same events and the same eight words.</li>
+          <li><b>If I Could Touch a Rainbow</b> (pages 30–32): he picks an ending for each of the five sentences, then builds the whole sentence word by word, starting with a capital letter and ending with a full stop. His five sentences are shown at the end to copy onto page 32.</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all four parts, new each time, and a Chapter 1 Word Wizard certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Open questions (where the clouds go, a new title, art lover, I wonder, favourite find, the rainbow writing) accept any answer. For the silly options in the writing (eat it like a candy, wet socks, more homework…) the game smiles and accepts them, as the book asks for “the best” in his view.</li>
+          <li>Page 24 has two “touch” labels, one “see”, one “smell” and one “hear”. The game accepts see or touch for the pencil, the apple and the dress, as long as the five labels fit.</li>
+          <li>On the circus poster I counted “The Grand Arena”, “April” and “Titan” as proper nouns, and circus, strongman and flyers as common nouns.</li>
+          <li>The book's tongue twisters are for saying fast, not trigraph words, except “Catch the kitten in the kitchen” (tch).</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Read the poem together, then let him read it to you or in the mirror (page 10).</li>
+          <li>Go on the Nature Detective Walk and the Trash to Treasure Trail, and sort what you find.</li>
+          <li>Write a real shopping list with him: 4 countable and 4 uncountable things.</li>
+          <li>On a sunny day, stand with your back to the sun and spray water from a hose or a spray bottle to make your own rainbow.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Rainbow Bridge</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">☁️</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const steps = [1, 2, 10, 5];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+
+const KEY = 'ayansh-rainbow-bridge-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, queue) {
+  try {
+    if (!canSpeak) return;
+    if (!queue) speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ' to ').replace(/=/g, ' equals ').replace(/…/g, ' and so on');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false, wrongs = 0;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own choices
+function freeChoice(parent, { prompt, options, onPick }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' }); let over = false;
+  options.forEach(opt => row.append(h('button', { type: 'button', class: 'choice words', 'data-ok': '1', onclick: e => { if (over) return; over = true; const me = e.currentTarget; row.querySelectorAll('button').forEach(x => { if (x !== me) x.disabled = true; }); me.classList.add('right'); sfx.good(); onPick(opt); } }, opt)));
+  wrap.append(row); parent.append(wrap);
+}
+// several asks one after the other
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (q.before) holder.append(q.before);
+    if (q.onShow) q.onShow();
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 750); } });
+  };
+  next();
+}
+const hintP = t => h('p', { class: 'hintcap' }, t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollIn = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+const srctag = t => h('span', { class: 'srctag' }, t);
+
+/* ---------- speaking helpers ---------- */
+const speakClean = t => String(t).replace(/[“”"]/g, '').replace(/_{2,}/g, ' blank ').replace(/…/g, '. ').replace(/→/g, ' becomes ').replace(/✓/g, '');
+function hush() { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} }
+// speak one line and call done when it ends (with a timer in case the browser never says it ended)
+function speakLine(text, done, rate = 0.85) {
+  let fin = false, t = null;
+  const end = () => { if (fin) return; fin = true; clearTimeout(t); done && done(); };
+  if (!canSpeak || !voiceOn) { t = setTimeout(end, 80); return () => { fin = true; clearTimeout(t); }; }
+  try {
+    const u = new SpeechSynthesisUtterance(speakClean(text));
+    u.lang = 'en-IN'; u.rate = rate; u.pitch = 1.05; u.onend = end; u.onerror = end;
+    speechSynthesis.speak(u);
+  } catch (e) { end(); }
+  t = setTimeout(end, 1600 + String(text).split(/\s+/).length * 620);
+  return () => { fin = true; clearTimeout(t); };
+}
+function sayNow(text) { if (!voiceOn || !canSpeak) return; hush(); setTimeout(() => say(speakClean(text)), 60); }
+
+/* ---------- small builders ---------- */
+const below = () => { const b = h('div', { class: 'below' }); api.stage.append(b); return b; };
+function chain(list, step, onAll) { let i = 0; const next = () => { if (i >= list.length) return onAll && onAll(); const it = list[i++]; step(it, next, i - 1); }; next(); }
+const picOpt = map => o => [h('span', { class: 'pe', 'aria-hidden': 'true' }, map[o] || ''), o];
+function learnCard(title, body, ex) {
+  return h('div', { class: 'learn' }, h('h3', {}, title),
+    [].concat(body).map(b => typeof b === 'string' ? h('p', {}, b) : b),
+    ex ? h('div', { class: 'ex' }, ex.map(x => typeof x === 'string' ? h('span', { class: 'exchip' }, x) : x)) : null);
+}
+const textOf = x => typeof x === 'string' ? x : (x && x.textContent) || '';
+// a "💡" idea card, read aloud, with a button to go on
+function teach(parent, { title, body, ex, read, btn = 'Got it! ➜' }, then) {
+  const card = learnCard(title, body, ex);
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.remove(); hush(); then(); } }, btn);
+  parent.append(card, go);
+  api.guide(read || [title].concat([].concat(body).map(textOf)).join(' '));
+  bubble.textContent = `💡 ${title}: listen, read the card, then tap “Got it!”`;
+  return card;
+}
+function hiWord(word, part) { // a word with one part highlighted
+  const i = word.indexOf(part);
+  return i < 0 ? word : [word.slice(0, i), h('span', { class: 'hl2' }, part), word.slice(i + part.length)];
+}
+function scene(sky, ground, extra) {
+  return h('div', { class: 'scene', role: 'img', 'aria-label': extra && extra.label || 'A picture' },
+    extra && extra.over ? extra.over : null,
+    h('div', { class: 'srow sky' }, sky.map(x => typeof x === 'string' ? h('span', {}, x) : x)),
+    h('div', { class: 'srow' }, ground.map(x => typeof x === 'string' ? h('span', {}, x) : x)));
+}
+
+/* ---------- the rainbow picture ---------- */
+const RB = [['Red', '#E5484D'], ['Orange', '#F28C28'], ['Yellow', '#F7C623'], ['Green', '#2E9E5B'], ['Blue', '#2F6FD0'], ['Indigo', '#4B3FB5'], ['Violet', '#8B5BC8']];
+const OFF = '#E2EAF3';
+function rainbowSvg(n = 7) {
+  let s = '<svg viewBox="0 0 240 128" class="rbsvg" role="img" aria-label="A rainbow">';
+  RB.forEach(([, c], i) => { const r = 112 - i * 12; s += `<path data-arc="${i}" d="M ${120 - r} 124 A ${r} ${r} 0 0 1 ${120 + r} 124" fill="none" stroke="${i < n ? c : OFF}" stroke-width="11" stroke-linecap="round"/>`; });
+  return s + '</svg>';
+}
+function paintArc(svg, i, on = true) { const p = svg.querySelector(`[data-arc="${i}"]`); if (p) p.setAttribute('stroke', on ? RB[i][1] : OFF); }
+
+/* ---------- sorting things into boxes ---------- */
+function sortGame(parent, { bins, items, ask, onDone }) {
+  const wrap = h('div', { class: 'sorter' });
+  const now = h('div', { class: 'sortnow' });
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const lists = {};
+  const binsEl = h('div', { class: 'bins' }, bins.map(b => { const l = h('div', { class: 'binlist' }); lists[b.k] = l; return h('div', { class: 'bin', style: `--bc:${b.c || 'var(--blue-soft)'}` }, h('div', { class: 'binhead' }, h('span', { 'aria-hidden': 'true' }, b.e || ''), b.label), l); }));
+  let i = 0, wrongs = 0, busy = false;
+  const show = () => {
+    hintBox.replaceChildren(); fb.textContent = ''; fb.className = 'fb';
+    if (i >= items.length) { now.replaceChildren(fact('All sorted! ✓')); row.replaceChildren(); return onDone && onDone(); }
+    const it = items[i]; wrongs = 0;
+    now.replaceChildren(h('div', { class: 'sortcard pop' }, it.e ? h('span', { class: 'se', 'aria-hidden': 'true' }, it.e) : null, h('span', { class: 'st' }, it.t)));
+    api.guide(ask ? ask(it) : it.t);
+    row.replaceChildren(...bins.map(b => h('button', { type: 'button', class: 'choice words', 'data-ok': b.k === it.bin ? '1' : null, onclick: e => pick(b, e.currentTarget) }, (b.e ? b.e + ' ' : '') + b.label)));
+  };
+  const pick = (b, el) => {
+    if (busy) return;
+    const it = items[i];
+    if (b.k === it.bin) {
+      busy = true; el.classList.add('right'); [...row.children].forEach(x => x.disabled = true); sfx.good();
+      fb.textContent = it.ok || praise(); fb.className = 'fb good';
+      if (it.ok) sayNow(it.ok);
+      lists[b.k].append(h('span', { class: 'chip pop' }, (it.e ? it.e + ' ' : '') + (it.short || it.t)));
+      setTimeout(() => { busy = false; i++; show(); }, it.ok ? 2600 : 900);
+    } else {
+      el.classList.add('wrong'); el.disabled = true; sfx.oops(); run.mistakes++; wrongs++;
+      fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) { fb.textContent = oopsLine(); if (it.why) { hintBox.replaceChildren(hintP(it.why)); speakGuide(it.why); } }
+      else fb.textContent = 'Not quite. Have a think and try again!';
+    }
+  };
+  wrap.append(now, row, fb, hintBox, binsEl); parent.append(wrap); show();
+}
+
+/* ---------- tap the right words ---------- */
+function tapWords(parent, { lines, targets, grid, onDone, hint, after }) {
+  const T = new Set(targets.map(x => x.toLowerCase()));
+  const clean = w => w.replace(/[^A-Za-z'’-]/g, '').replace(/’/g, "'").toLowerCase();
+  const box = h('div', { class: grid ? 'wordgrid' : 'tapbox' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let need = 0, got = 0, wrongs = 0, over = false;
+  const counter = h('p', { class: 'counter' });
+  const btn = w => {
+    const c = clean(w), ok = T.has(c); if (ok) need++;
+    const b = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+      if (over || b.classList.contains('hit')) return;
+      if (ok) {
+        b.classList.add('hit'); sfx.tap(got); got++; counter.textContent = `Found ${got} of ${need}`;
+        after && after(c, b);
+        if (got >= need) { over = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+      } else {
+        shakeEl(b); b.classList.add('miss'); setTimeout(() => b.classList.remove('miss'), 600);
+        sfx.oops(); run.mistakes++; wrongs++;
+        fb.textContent = `“${w.replace(/[^A-Za-z'’ -]/g, '')}” is not one of them. Try another word.`; fb.className = 'fb oops';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(c); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, w);
+    return b;
+  };
+  if (grid) lines.forEach(w => box.append(btn(w)));
+  else lines.forEach(ln => { const row = h('p', { class: 'tapline' }); ln.split(' ').forEach(w => row.append(btn(w))); box.append(row); });
+  counter.textContent = `Found 0 of ${need}`;
+  parent.append(box, counter, fb, hintBox);
+}
+
+/* ---------- the poem / story reader ---------- */
+function glossify(line, gloss) {
+  if (!gloss) return line;
+  return line.split(' ').map((w, i) => { const c = w.replace(/[^A-Za-z]/g, '').toLowerCase(); return [i ? ' ' : '', gloss[c] ? h('mark', { class: 'gl' }, w) : w]; }).flat();
+}
+function reader(parent, { lines, title, by, gloss, breaks = [], onDone, rate }) {
+  const box = h('div', { class: 'poem' });
+  if (title) box.append(h('h3', { class: 'ptitle' }, title));
+  const heard = new Set(); let stop = null, finished = false;
+  let self = null;
+  const finish = () => { if (finished) return; finished = true; if (self) { self.disabled = true; self.textContent = '✓ All read'; } onDone && onDone(); };
+  const mark = i => { heard.add(i); els[i].classList.add('heard'); if (heard.size === lines.length) finish(); };
+  function halt() { if (stop) stop(); stop = null; hush(); els.forEach(e => e.classList.remove('now')); }
+  function play(i, chainOn) {
+    els.forEach((e, j) => e.classList.toggle('now', j === i));
+    stop = speakLine(lines[i], () => { els[i].classList.remove('now'); mark(i); if (chainOn && i + 1 < lines.length) setTimeout(() => { if (box.isConnected) play(i + 1, true); }, 300); }, rate);
+  }
+  const els = lines.map((ln, i) => {
+    const b = h('button', { type: 'button', class: 'pline', 'aria-label': 'Hear this line: ' + ln, onclick: () => { halt(); setTimeout(() => play(i, false), 80); } }, glossify(ln, gloss));
+    box.append(b); if (breaks.includes(i)) box.append(h('div', { class: 'pgap' }));
+    return b;
+  });
+  if (by) box.append(h('p', { class: 'pby' }, by));
+  const playAll = h('button', { class: 'btn primary', type: 'button', onclick: () => { halt(); setTimeout(() => play(0, true), 80); } }, '▶ Read it to me');
+  self = h('button', { class: 'btn', type: 'button', onclick: () => { halt(); lines.forEach((_, i) => mark(i)); } }, '📖 I read it myself');
+  api.cleanup(halt);
+  parent.append(box, h('div', { class: 'readbtns' }, canSpeak && voiceOn ? playAll : null, self));
+}
+// he reads each line out loud himself
+function echoRead(parent, { lines, onDone, what = 'the whole poem' }) {
+  let i = 0; const box = h('div', { class: 'echo' }); parent.append(box);
+  const show = () => {
+    if (i >= lines.length) { box.replaceChildren(fact('🎤 Super reading!', `You read ${what} aloud by yourself.`)); return onDone && onDone(); }
+    const ln = lines[i];
+    const hear = h('button', { class: 'btn', type: 'button', onclick: () => sayNow(ln) }, '🔊 Hear it first');
+    const said = h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); sfx.good(); i++; show(); } }, '🎤 I said it!');
+    box.replaceChildren(h('p', { class: 'echocount' }, `Line ${i + 1} of ${lines.length}`), h('p', { class: 'echoline' }, ln), h('div', { class: 'readbtns' }, canSpeak ? hear : null, said));
+  };
+  show();
+}
+
+/* ---------- letter tiles: spell a word ---------- */
+function spellTiles(parent, { word, prefix = '', letters, pic, prompt, onDone, hint }) {
+  const need = word.slice(prefix.length).split('');
+  const wrap = h('div', { class: 'ask' });
+  if (pic) wrap.append(h('div', { class: 'cluepic', 'aria-hidden': 'true' }, pic));
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'slots', 'aria-live': 'polite' }, prefix ? h('span', { class: 'given' }, prefix) : null, need.map(() => h('span', { class: 'slot' }, '')));
+  const slots = [...show.querySelectorAll('.slot')];
+  const tray = h('div', { class: 'ltray', role: 'group', 'aria-label': 'Letters' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  letters.forEach(L => {
+    const b = h('button', { type: 'button', class: 'ltile', 'aria-label': 'Letter ' + L, onclick: () => {
+      if (over || b.disabled) return;
+      if (L.toLowerCase() === need[n]) {
+        slots[n].textContent = L.toLowerCase(); slots[n].classList.add('fill'); b.disabled = true; sfx.tap(n); n++;
+        if (n >= need.length) { over = true; show.classList.add('right'); sfx.good(); fb.textContent = `${praise()} ${word}!`; fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(word); onDone && onDone(); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not that letter. Have a think and try again!';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(n); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, L.toUpperCase());
+    tray.append(b);
+  });
+  wrap.append(show, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word tiles: build a sentence ---------- */
+const joinWords = tiles => tiles.join(' ').replace(/ ([.,!?])/g, '$1');
+function buildSentence(parent, { tiles, decoys = [], decoyWhy, onDone, prompt }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const line = h('div', { class: 'sline', 'aria-live': 'polite' }, h('span', { class: 'ph' }, 'Tap the words in order…'));
+  const tray = h('div', { class: 'stray' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  const all = shuffle([...tiles.map(t => ({ t, real: true })), ...decoys.map(t => ({ t, real: false }))]);
+  all.forEach(o => {
+    const b = h('button', { type: 'button', class: 'wtile', onclick: () => {
+      if (over || b.disabled) return;
+      if (o.t === tiles[n]) {
+        if (n === 0) line.replaceChildren();
+        line.append(h('span', { class: 'wput pop' }, o.t)); b.disabled = true; b.classList.add('used'); sfx.tap(n); n++;
+        if (n >= tiles.length) { over = true; line.classList.add('right'); sfx.good(); const s = joinWords(tiles); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(s); onDone && onDone(s); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = !o.real && decoyWhy ? decoyWhy : n === 0 ? 'A sentence starts with a capital letter. Which word comes first?' : o.t === '.' ? 'The full stop comes at the very end.' : 'Not that word yet. Read what you have and think what comes next.';
+        if (!run.solo || wrongs >= 2) { const x = `Next word: “${tiles[n]}”`; hintBox.replaceChildren(hintP(x)); }
+      }
+    } }, o.t);
+    tray.append(b);
+  });
+  wrap.append(line, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word search (book page 27) ---------- */
+function wordSearch(parent, { grid, words, where, onDone }) {
+  const C = grid[0].length;
+  const g = h('div', { class: 'ws', style: `--c:${C}`, role: 'group', 'aria-label': 'Word search' });
+  const cells = [];
+  grid.forEach((row, r) => row.split('').forEach((ch, c) => { const b = h('button', { type: 'button', class: 'wsc', 'aria-label': `${ch}, row ${r + 1}, column ${c + 1}`, onclick: () => tap(r, c) }, ch); cells.push(b); g.append(b); }));
+  const cell = (r, c) => cells[r * C + c];
+  const list = h('div', { class: 'wslist' }, words.map(w => h('span', { class: 'wsw', 'data-w': w }, w)));
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Tap the first letter of a word, then its last letter.');
+  const found = new Set(); let first = null, wrongs = 0;
+  function tap(r, c) {
+    if (found.size === words.length) return;
+    if (!first) { first = [r, c]; cell(r, c).classList.add('sel'); sfx.pop(); return; }
+    const [r0, c0] = first; cell(r0, c0).classList.remove('sel'); first = null;
+    if (r0 === r && c0 === c) return;
+    const dr = Math.sign(r - r0), dc = Math.sign(c - c0), len = Math.max(Math.abs(r - r0), Math.abs(c - c0)) + 1;
+    const straight = r0 === r || c0 === c || Math.abs(r - r0) === Math.abs(c - c0);
+    let s = ''; const path = [];
+    if (straight) for (let k = 0; k < len; k++) { s += grid[r0 + dr * k][c0 + dc * k]; path.push(cell(r0 + dr * k, c0 + dc * k)); }
+    const w = words.find(x => !found.has(x) && (x === s || x === [...s].reverse().join('')));
+    cells.forEach(x => x.classList.remove('look'));
+    if (w) {
+      found.add(w); path.forEach(p => p.classList.add('got')); list.querySelector(`[data-w="${w}"]`).classList.add('got');
+      sfx.good(); fb.textContent = `${w}! ${found.size} of ${words.length} found.`; fb.className = 'fb good'; sayNow(w.toLowerCase());
+      if (found.size === words.length) { fb.textContent = 'You found them all! ' + praise(); onDone && onDone(); }
+    } else {
+      sfx.oops(); run.mistakes++; wrongs++; cell(r, c).classList.add('shake'); setTimeout(() => cell(r, c).classList.remove('shake'), 450);
+      fb.className = 'fb oops'; fb.textContent = 'That is not one of the words. Tap the first letter, then the last letter.';
+      if (!run.solo || wrongs >= 2) {
+        const left = words.find(x => !found.has(x)), [rr, cc, tip] = where[left];
+        cell(rr, cc).classList.add('look'); fb.textContent = `Clue: ${left} ${tip}. It starts at the letter with the red ring.`; speakGuide(`Clue: ${left.toLowerCase()} ${tip}.`);
+      }
+    }
+  }
+  parent.append(list, g, fb);
+}
+
+/* =================================================================
+   PART 1 · THE POEM (pages 7–10)
+   ================================================================= */
+const POEM = ['Boats sail on the rivers,', 'And ships sail on the seas;', 'But clouds that sail across the sky', 'Are prettier far than these.', 'There are bridges on the rivers,', 'As pretty as you please;', 'But the bow that bridges heaven,', 'And overtops the trees,', 'And builds a road from earth to sky,', 'Is prettier far than these.'];
+const GLOSS = {
+  sail: { m: 'to move smoothly over water or through the sky', e: '⛵', line: 'Boats sail on the rivers.' },
+  prettier: { m: 'more beautiful', e: '🌸', line: 'Are prettier far than these.' },
+  heaven: { m: 'the sky, or a place high above the earth', e: '🌌', line: 'But the bow that bridges heaven.' },
+  bridges: { m: 'things that connect two places, often over water', e: '🌉', line: 'There are bridges on the rivers.' },
+  overtops: { m: 'goes higher than something else', e: '⬆️', line: 'And overtops the trees.' },
+};
+
+/* Stop 1 · page 7 */
+function playClouds(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 7 · Embark'), scene(['☁️', '☁️', h('span', { class: 'small' }, '☁️'), '☁️'], ['⛰️', '🌳', '🏞️', '🌳', '⛰️'], { label: 'Clouds over hills, trees and a river' }));
+    api.guide('Look at the clouds on page 7. Where do you think the clouds are going, and why? There is no wrong answer.');
+    freeChoice(b, { prompt: 'Where are the clouds going?', options: ['To bring rain to the fields 🌧️', 'The wind is pushing them along 💨', 'To cover up the hot sun ⛅', 'To find a rainbow 🌈'], onPick: () => {
+      b.append(info('💨', 'Good thinking!', 'Clouds really do travel. The wind pushes them across the sky. Clouds are made of tiny drops of water. When the drops get heavy, they fall as rain.'));
+      api.guide('Good thinking! The wind pushes clouds across the sky. Clouds are made of tiny drops of water. When the drops get heavy, they fall as rain.');
+      askChoice(b, { prompt: 'What pushes the clouds across the sky?', options: shuffle(['The wind', 'The birds', 'A boat', 'The trees']), answer: 'The wind', hint: () => hintP('Think of what makes kites fly and leaves blow about.'), onDone: api.done });
+    } });
+  } else if (r === 1) {
+    const over = h('div', { class: 'rbover' }); over.innerHTML = rainbowSvg();
+    const sun = h('span', { style: 'opacity:.2' }, '☀️'), rain = h('span', { style: 'opacity:.2' }, '🌧️');
+    b.append(scene([sun, '☁️', rain], ['🌳', '🏡', '🌳', '🌷'], { over, label: 'A sky with a sun and a rain cloud' }));
+    api.guide('Let us make a rainbow! Turn on the sun, and turn on the rain. What happens?');
+    let s = false, w = false, made = false;
+    const tg = (label, get, set, el) => { const x = h('button', { type: 'button', class: 'toggle', 'aria-pressed': 'false', onclick: () => { set(!get()); x.setAttribute('aria-pressed', String(get())); el.style.opacity = get() ? 1 : .2; sfx.pop(); check(); } }, label); return x; };
+    const ctr = h('div', { class: 'ctrls' }, tg('☀️ Sun', () => s, v => s = v, sun), tg('🌧️ Rain', () => w, v => w = v, rain));
+    const out = h('div', { class: 'below' });
+    b.append(ctr, out);
+    function check() {
+      over.classList.toggle('on', s && w);
+      if (s && w && !made) {
+        made = true; sfx.win();
+        out.append(learnCard('Sun + rain = rainbow!', ['When the sun shines while it is raining, sunlight goes into the raindrops. Each drop splits the light into colours, and we see a rainbow in the sky.']));
+        api.guide('Sun plus rain makes a rainbow! When the sun shines while it is raining, sunlight goes into the raindrops. Each drop splits the light into colours, and we see a rainbow.');
+        askChoice(out, { prompt: 'When can we see a rainbow?', options: shuffle(['When the sun shines while it rains', 'Only at night', 'When there are no clouds at all', 'When it is very cold']), answer: 'When the sun shines while it rains', hint: () => hintP('We needed two things to make our rainbow. Which two?'), onDone: api.done });
+      }
+    }
+  } else {
+    teach(b, { title: 'The seven colours', body: ['From the top, a rainbow goes: red, orange, yellow, green, blue, indigo, violet. Read it from the bottom and you get VIBGYOR!'], ex: RB.map(([n, c]) => h('span', { class: 'exchip', style: `border-color:${c};border-width:3px` }, n)) }, () => {
+      b.replaceChildren(srctag('Build the rainbow'));
+      const box = h('div', { class: 'rbox' }); box.innerHTML = rainbowSvg(0); const svg = box.querySelector('svg');
+      const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+      let n = 0, wrongs = 0;
+      api.guide('Now you build it. Tap the colours in order, starting with the top stripe.');
+      const sw = h('div', { class: 'swatches' }, shuffle(RB.map(x => x)).map(([name, c]) => {
+        const x = h('button', { type: 'button', class: 'swatch', onclick: () => {
+          if (n >= 7) return;
+          if (name === RB[n][0]) { paintArc(svg, n, true); x.disabled = true; sfx.tap(n); n++; wrongs = 0; hintBox.replaceChildren(); fb.textContent = n < 7 ? `${name}!` : 'Your rainbow is finished! 🌈'; fb.className = 'fb good'; if (n >= 7) { sfx.good(); api.done(); } }
+          else { shakeEl(x); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops'; fb.textContent = 'Not that one yet. Try again!'; if (wrongs >= 2) { const t = `Next comes ${RB[n][0].toLowerCase()}.`; hintBox.replaceChildren(hintP(t)); speakGuide(t); } }
+        } }, h('i', { style: `background:${c}` }), name);
+        return x;
+      }));
+      b.append(box, sw, fb, hintBox);
+    });
+  }
+}
+
+/* Stop 2 · page 8 */
+function playPoem(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 8 · The poem'));
+    api.guide('Here is the poem, The Rainbow, by Christina Rossetti. Tap “Read it to me” and follow each line with your finger. Tap any line to hear it again.');
+    reader(b, { lines: POEM, title: 'The Rainbow', by: '– by Christina Rossetti', gloss: GLOSS, breaks: [3], onDone: () => { skill('poem'); api.done(); } });
+  } else if (r === 1) {
+    b.append(srctag('Page 8 · Word helpers'));
+    api.guide('The purple words in the poem are word helpers. Tap each card to find out what it means.');
+    const opened = new Set();
+    const flips = h('div', { class: 'flips' }, Object.entries(GLOSS).map(([w, g]) => {
+      const c = h('button', { type: 'button', class: 'flip', onclick: () => {
+        c.classList.add('open'); c.replaceChildren(h('span', { class: 'fe', 'aria-hidden': 'true' }, g.e), h('span', { class: 'fw' }, w), h('span', { class: 'fm' }, g.m));
+        sayNow(`${w} means ${g.m}. In the poem: ${g.line}`); opened.add(w);
+        if (opened.size === 5 && !c.dataset.done) { c.dataset.done = '1'; setTimeout(api.done, 400); }
+      } }, h('span', { class: 'fw' }, w), h('span', { class: 'fm' }, 'Tap to see'));
+      return c;
+    }));
+    b.append(flips);
+  } else if (r === 2) {
+    b.append(srctag('Page 8 · Word helpers'));
+    const all = Object.keys(GLOSS);
+    askSeq(api, b, shuffle(all.slice()).map(w => ({
+      guide: `What does “${w}” mean?`,
+      before: h('p', { class: 'story' }, '“', hiWord(GLOSS[w].line, w), '”'),
+      prompt: `What does “${w}” mean?`,
+      options: shuffle([GLOSS[w].m, ...shuffle(all.filter(x => x !== w)).slice(0, 3).map(x => GLOSS[x].m)]),
+      answer: GLOSS[w].m,
+      hint: () => hintP(`Think of ${GLOSS[w].e}. Read the line again: “${GLOSS[w].line}”`),
+    })), api.done);
+  } else {
+    b.append(srctag('Page 8 · Picture the poem'));
+    const P = { 'A boat on a river': '⛵', 'A ship on the sea': '🚢', 'Clouds in the sky': '☁️', 'A bridge over a river': '🌉', 'A rainbow in the sky': '🌈' };
+    const L = [['Boats sail on the rivers', 'A boat on a river'], ['And ships sail on the seas', 'A ship on the sea'], ['But clouds that sail across the sky', 'Clouds in the sky'], ['There are bridges on the rivers', 'A bridge over a river'], ['But the bow that bridges heaven', 'A rainbow in the sky']];
+    askSeq(api, b, L.map(([ln, ans]) => ({
+      guide: `Which picture fits this line? ${ln}.`,
+      before: h('p', { class: 'story' }, `“${ln}…”`),
+      prompt: 'Which picture fits this line?',
+      options: shuffle(Object.keys(P)), answer: ans, cls: 'pic', render: picOpt(P),
+      hint: () => hintP(ln.includes('bow') ? 'The “bow” is curved and stretches across the sky.' : 'Find the main word in the line, then find its picture.'),
+    })), api.done);
+  }
+}
+
+/* Stop 3 · pages 9–10 */
+function playMeaning(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 9 · About the Poet'));
+    teach(b, { title: 'Meet the poet: Christina Rossetti', body: ['She was born on December 5, 1830, and died on December 29, 1894. She wrote poems and stories for children. She loved nature, and she was a dreamer.'], ex: ['✍️ Poet', '📚 Storyteller', '🌿 Nature lover', '💭 Dreamer'] }, () => {
+      askChoice(b, { prompt: 'What did Christina Rossetti write?', options: shuffle(['Poems and stories', 'Maths books', 'Maps', 'Recipes']), answer: 'Poems and stories', hint: () => hintP('Look at the first word on the cards: ✍️ Poet.'), onDone: () => setTimeout(() => {
+        api.guide('Now two questions about you. Any answer is right!');
+        freeChoice(b, { prompt: 'a. Are you an art lover?', options: ['Yes 😀', 'No 🙂'], onPick: () => {
+          freeChoice(b, { prompt: 'b. What is your expression of art?', options: ['🎵 Music', '📝 Poem', '🌿 Nature'], onPick: o => {
+            b.append(fact('Lovely! 🎨', `${o.slice(3)} is a wonderful way to show what you feel. Christina showed it with poems.`)); api.done();
+          } });
+        } });
+      }, 700) });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 10 · Questions 1 and 2'));
+    api.guide('Page 10 says: read the poem aloud on your own. Read each line out loud, then tap “I said it!”. You can hear it first if you like.');
+    echoRead(b, { lines: POEM, onDone: api.done });
+  } else if (r === 2) {
+    b.append(srctag('Page 10 · Question 3a · Verse 1'));
+    teach(b, { title: 'The poet compares', body: ['In verse 1, three things sail: boats on the rivers, ships on the seas, and clouds across the sky. The poet says the clouds are prettier far than the boats and the ships.'], ex: ['⛵ boats → rivers', '🚢 ships → seas', '☁️ clouds → sky'] }, () => {
+      askSeq(api, b, [
+        { guide: 'a. Where do the boats sail?', prompt: 'a. Where do the boats sail?', options: shuffle(['On the rivers', 'On the seas', 'Across the sky', 'In the park']), answer: 'On the rivers', hint: () => hintP('Line 1: “Boats sail on the rivers.”') },
+        { guide: 'Where do the ships sail?', prompt: 'Where do the ships sail?', options: shuffle(['On the seas', 'On the rivers', 'Across the sky', 'Under the bridge']), answer: 'On the seas', hint: () => hintP('Line 2: “And ships sail on the seas.”') },
+        { guide: 'What does the poet say is prettier far than boats and ships?', prompt: 'What is prettier far than boats and ships?', options: shuffle(['Clouds', 'Bridges', 'Trees', 'Rivers']), answer: 'Clouds', hint: () => hintP('Lines 3 and 4: “But clouds that sail across the sky are prettier far than these.”') },
+      ], api.done);
+    });
+  } else if (r === 3) {
+    b.append(srctag('Page 10 · Questions 3c and 3d · Verse 2'));
+    teach(b, { title: 'What is “the bow”?', body: ['A bow 🏹 is curved. A rainbow is curved like a bow, so the poet calls the rainbow “the bow”. It “bridges heaven”: it stretches across the sky like a bridge.'], ex: ['🏹 bow = curved', '🌈 rainbow = the bow', '🌉 bridges = joins two places'] }, () => {
+      askSeq(api, b, [
+        { guide: 'What is the bow that bridges heaven?', prompt: 'What is “the bow that bridges heaven”?', options: shuffle(['The rainbow', 'A boat', 'A bridge on a river', 'A tall tree']), answer: 'The rainbow', hint: () => hintP('Which one is curved like a bow and stretches across the sky?') },
+        { guide: 'c. But the bow that bridges heaven and overtops the trees. What does overtops mean?', before: h('p', { class: 'story' }, '“But the bow that bridges heaven and ', h('span', { class: 'hl2' }, 'overtops'), ' the trees.”'), prompt: 'c. What does “overtops” mean here?', options: ['stands next to the trees', 'grows from the trees', 'goes higher than the trees', 'hides behind the trees'], answer: 'goes higher than the trees', hint: () => hintP('“Over” + “tops”: it goes over the tops of the trees. ⬆️') },
+        { guide: 'd. And builds a road from earth to sky. What does this line mean?', prompt: 'd. “And builds a road from earth to sky.” What does it mean?', options: shuffle(['The rainbow looks like a curved road from the ground up into the sky', 'Workers build a real road to the sky', 'The rainbow is made of bricks and stones', 'The road goes under the trees']), answer: 'The rainbow looks like a curved road from the ground up into the sky', hint: () => hintP('The poet is imagining. A rainbow starts near the ground and curves up into the sky, like a road.') },
+      ], api.done);
+    });
+  } else {
+    b.append(srctag('Page 10 · Remember the poem'));
+    askSeq(api, b, [
+      { guide: 'Which word means more beautiful?', prompt: 'Which word means “more beautiful”?', options: shuffle(['prettier', 'overtops', 'heaven', 'sail']), answer: 'prettier', hint: () => hintP('“Are ___ far than these.”') },
+      { guide: 'In the poem, what sails across the sky?', prompt: 'What sails across the sky?', options: shuffle(['Clouds', 'Boats', 'Ships', 'Bridges']), answer: 'Clouds', hint: () => hintP('“But ___ that sail across the sky.”') },
+      { guide: 'In the poem, heaven means…', prompt: '“Heaven” in the poem means…', options: shuffle(['the sky', 'the river', 'the trees', 'the road']), answer: 'the sky', hint: () => hintP('The rainbow bridges heaven: it stretches across the ___.') },
+    ], () => {
+      api.guide('e. If you could give the poem a new title, what would it be?');
+      freeChoice(b, { prompt: 'e. Pick a new title for the poem', options: ['Colours in the Sky', 'The Sky Bridge', 'Prettier Far', 'The Road to the Sky'], onPick: o => { b.append(fact(`“${o}”`, 'A great title! A title tells us what the poem is about in a few words.')); api.done(); } });
+    });
+  }
+}
+
+/* Stop 4 · page 10 question 3b */
+function playRhyme(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 10 · Question 3b'));
+    teach(b, { title: 'Rhyming words', body: ['Rhyming words end with the same sound. Listen: seas, these, please, trees. They all end with the sound “-eez”, even though they are spelt in different ways!'], ex: [h('span', { class: 'exchip' }, 's', h('span', { class: 'hl2' }, 'eas')), h('span', { class: 'exchip' }, 'th', h('span', { class: 'hl2' }, 'ese')), h('span', { class: 'exchip' }, 'pl', h('span', { class: 'hl2' }, 'ease')), h('span', { class: 'exchip' }, 'tr', h('span', { class: 'hl2' }, 'ees'))] }, () => {
+      api.guide('Find the rhyming words at the ends of the lines. Tap seas, these, please and trees every time you see them.');
+      tapWords(b, { lines: POEM, targets: ['seas', 'these', 'please', 'trees'], hint: () => 'The rhyming words sit at the ends of lines 2, 4, 6, 8 and 10.', onDone: () => { skill('rhyme'); api.done(); } });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Rhyme match'));
+    const Q = [['seas', 'these', ['ships', 'sky', 'boats']], ['trees', 'please', ['rivers', 'road', 'earth']], ['sky', 'high', ['cloud', 'bow', 'sea']], ['boat', 'coat', ['bridge', 'ship', 'rain']]];
+    askSeq(api, b, Q.map(([w, a, d]) => ({ guide: `Which word rhymes with ${w}?`, prompt: `Which word rhymes with “${w}”?`, options: shuffle([a, ...d]), answer: a, hint: () => hintP(`Say “${w}”, then say each word. Which one ends with the same sound?`) })), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Odd one out'));
+    const Q = [['seas', 'trees', 'these', 'sky'], ['rain', 'train', 'plain', 'cloud'], ['bow', 'snow', 'grow', 'tree'], ['day', 'play', 'stay', 'night']];
+    askSeq(api, b, Q.map(g => ({ guide: 'Three words rhyme. Which one does NOT rhyme?', prompt: 'Which word does NOT rhyme?', options: shuffle(g.slice()), answer: g[3], hint: () => hintP(`${g[0]}, ${g[1]}, ${g[2]} all sound the same at the end. Which one is different?`) })), api.done);
+  } else {
+    b.append(srctag('Finish the rhyme'));
+    const Q = [['I saw a bee', 'sitting on a ___.', 'tree', ['bus', 'cloud', 'river']], ['The rain came down', 'all over the ___.', 'town', ['field', 'sky', 'house']], ['A rainbow so bright', 'is a beautiful ___.', 'sight', ['colour', 'day', 'bow']], ['My little boat', 'can bob and ___.', 'float', ['sail', 'swim', 'sink']]];
+    askSeq(api, b, Q.map(([l1, l2, a, d]) => ({ guide: `${l1}, ${l2.replace('___', 'blank')} Which word rhymes and finishes it?`, before: h('p', { class: 'story' }, l1, h('br'), l2), prompt: 'Which word finishes the rhyme?', options: shuffle([a, ...d]), answer: a, hint: () => hintP(`It must rhyme with “${l1.split(' ').pop()}”.`) })), api.done);
+  }
+}
+
+/* =================================================================
+   PART 2 · OUT AND ABOUT (pages 11–13)
+   ================================================================= */
+const PARK = { tree: '🌳', butterfly: '🦋', flower: '🌼', snail: '🐌', bird: '🐦', leaves: '🍂', mushroom: '🍄', bee: '🐝' };
+function playWalk(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 11 · I spy'));
+    api.guide('You are a Nature Detective! Listen to each clue and find the thing in the park.');
+    const C = [['something that has a shell on its back', 'snail'], ['something with colourful wings that flutters from flower to flower', 'butterfly'], ['something with a tall trunk and green leaves', 'tree'], ['something that buzzes and makes honey', 'bee']];
+    askSeq(api, b, C.map(([c, a]) => ({ guide: `I spy with my little eye ${c}.`, prompt: `I spy… ${c}`, options: shuffle(Object.keys(PARK)), answer: a, cls: 'pic', render: picOpt(PARK), hint: () => hintP('Read the clue again slowly, and look at each picture.') })), api.done);
+  } else if (r === 1) {
+    b.append(srctag('Page 12 · I hear'));
+    const HEAR = { k: 'hear', label: 'I can hear it', e: '👂', c: 'var(--blue-soft)' }, QUIET = { k: 'quiet', label: 'It is quiet', e: '🤫', c: 'var(--violet-soft)' };
+    const why = { hear: 'It makes a sound you can hear.', quiet: 'It does not make a sound. You can see it, but not hear it.' };
+    sortGame(b, { bins: [HEAR, QUIET], ask: it => `${it.t}. Can you hear it?`, items: shuffle([
+      { e: '🐦', t: 'a bird singing', bin: 'hear' }, { e: '🐝', t: 'a bee buzzing', bin: 'hear' }, { e: '🍂', t: 'dry leaves crunching under your feet', short: 'crunchy leaves', bin: 'hear' },
+      { e: '🌼', t: 'a flower', bin: 'quiet' }, { e: '🍄', t: 'a mushroom', bin: 'quiet' }, { e: '💧', t: 'a stream splashing', bin: 'hear' }, { e: '☁️', t: 'a cloud', bin: 'quiet' },
+    ]).map(x => ({ ...x, why: why[x.bin] === why.hear ? 'Listen: does it make a sound? A bird sings, a bee buzzes, water splashes.' : 'Can a flower or a cloud make a sound by itself?' })), onDone: api.done });
+  } else if (r === 2) {
+    b.append(srctag('Page 12 · I touch'));
+    const F = ['rough and bumpy', 'soft and smooth', 'wet and cool', 'sharp and pointy'];
+    const Q = [['🌳', 'tree bark', 'rough and bumpy'], ['🌸', 'a flower petal', 'soft and smooth'], ['💧', 'water in a stream', 'wet and cool'], ['🌹', 'a thorn on a rose stem', 'sharp and pointy']];
+    askSeq(api, b, Q.map(([e, t, a]) => ({ guide: `I touch ${t}. How does it feel?`, before: h('div', { class: 'cluepic', 'aria-hidden': 'true' }, e), prompt: `How does ${t} feel?`, options: F.slice(), answer: a, hint: () => hintP(a === 'sharp and pointy' ? 'Careful! Thorns can prick your finger.' : 'Imagine your fingers on it. 🖐️') })), api.done);
+  } else {
+    b.append(srctag('Page 12 · I wonder'));
+    teach(b, { title: 'I wonder…', body: ['An “I wonder” is a question about something you are curious about. Wondering questions often start with Why, How, What or Where, and end with a question mark.'], ex: ['Why…?', 'How…?', 'What…?', 'Where…?'] }, () => {
+      askSeq(api, b, [
+        { guide: 'Which one is an I wonder question?', prompt: 'Which one is an “I wonder” question?', options: shuffle(['Why do leaves change colour?', 'The leaf is green.', 'I see a bird.', 'Trees are tall.']), answer: 'Why do leaves change colour?', hint: () => hintP('Look for a question word and a question mark ?') },
+        { guide: 'Which one is an I wonder question?', prompt: 'Which one is an “I wonder” question?', options: shuffle(['How do bees make honey?', 'Bees are yellow.', 'I hear a bee.', 'The bee is small.']), answer: 'How do bees make honey?', hint: () => hintP('Look for a question word and a question mark ?') },
+      ], () => {
+        api.guide('Detective’s discovery! What was your favourite find?');
+        freeChoice(b, { prompt: '5. Detective’s discovery! My favourite find is…', options: Object.keys(PARK).map(k => `${PARK[k]} ${k}`), onPick: o => { b.append(fact(`Great find: ${o}!`, 'Now go on a real walk with a grown-up and write what you see, hear, touch and wonder on pages 11 and 12.')); api.done(); } });
+      });
+    });
+  }
+}
+
+/* Stop 6 · page 13 Eco Route */
+const ECO = [{ k: 'rec', label: 'Recycled', e: '♻️', c: 'var(--green-soft)' }, { k: 'reu', label: 'Reused', e: '🔁', c: 'var(--blue-soft)' }, { k: 'ref', label: 'Refused', e: '🚫', c: 'var(--red-soft)' }];
+const ECO_WHY = { rec: 'It is broken down and made into something NEW. That is recycled.', reu: 'The same thing is used again, without breaking it down. That is reused.', ref: 'We say “no” to it, so there is no waste at all. That is refused.' };
+const ECO_ITEMS = [
+  [{ e: '🥫', t: 'a red tin can melted and made into a new can', bin: 'rec' }, { e: '👕', t: 'an old orange T-shirt used again as a duster', bin: 'reu' }, { e: '🛍️', t: 'saying no to a yellow plastic bag at the shop', bin: 'ref' }, { e: '🧴', t: 'green plastic bottles melted and made into a new bench', bin: 'rec' }, { e: '📦', t: 'a blue box used again to keep toys', bin: 'reu' }, { e: '🥤', t: 'saying no to a purple plastic straw', bin: 'ref' }],
+  [{ e: '🖍️', t: 'broken crayons melted into a new rainbow crayon', bin: 'rec' }, { e: '🍦', t: 'an ice-cream tub used again as a lunch box', bin: 'reu' }, { e: '🧃', t: 'saying no to a juice box and carrying your own bottle', bin: 'ref' }, { e: '📰', t: 'old newspapers made into new paper', bin: 'rec' }, { e: '🫙', t: 'a glass jar used again as a pencil holder', bin: 'reu' }, { e: '🎈', t: 'saying no to balloons that will become waste', bin: 'ref' }],
+];
+function playTrash(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Page 13 · Eco Route · Trash to Treasure Trail'));
+  if (r === 0) {
+    teach(b, { title: 'Three ways to stop waste', body: [h('p', {}, h('b', {}, '♻️ Recycled: '), 'something old is broken down and made into something new.'), h('p', {}, h('b', {}, '🔁 Reused: '), 'we use something again instead of throwing it away.'), h('p', {}, h('b', {}, '🚫 Refused: '), 'we say “no” to something that creates waste.')] }, () => {
+      askSeq(api, b, [
+        { guide: 'Old newspapers are broken down and made into new paper. That is…', prompt: 'Old newspapers are broken down and made into new paper. That is…', options: ECO.map(x => x.label), answer: 'Recycled', hint: () => hintP(ECO_WHY.rec) },
+        { guide: 'You keep a glass jar and use it again as a pencil holder. That is…', prompt: 'You use a glass jar again as a pencil holder. That is…', options: ECO.map(x => x.label), answer: 'Reused', hint: () => hintP(ECO_WHY.reu) },
+        { guide: 'You say no thank you to a plastic straw. That is…', prompt: 'You say “No, thank you” to a plastic straw. That is…', options: ECO.map(x => x.label), answer: 'Refused', hint: () => hintP(ECO_WHY.ref) },
+      ], api.done);
+    });
+  } else {
+    sortGame(b, { bins: ECO, ask: it => `${it.t}. Recycled, reused or refused?`, items: shuffle(ECO_ITEMS[r - 1].map(x => ({ ...x, why: ECO_WHY[x.bin] }))), onDone: api.done });
+  }
+}
+
+/* =================================================================
+   PART 3 · NOUNS (pages 13–27)
+   ================================================================= */
+const PC = [{ k: 'proper', label: 'Proper noun', e: '👑', c: 'var(--gold-soft)' }, { k: 'common', label: 'Common noun', e: '📦', c: 'var(--blue-soft)' }];
+function playNouns(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 13 · What is a noun?'));
+    teach(b, { title: 'A noun is a naming word', body: ['A noun is a word that names a person, a place, an animal or a thing.'], ex: ['🧑‍🏫 teacher: person', '🏞️ park: place', '🐕 dog: animal', '⚽ ball: thing'] }, () => {
+      const bins = [{ k: 'person', label: 'Person', e: '🧑' }, { k: 'place', label: 'Place', e: '🏞️' }, { k: 'animal', label: 'Animal', e: '🐾' }, { k: 'thing', label: 'Thing', e: '📦' }];
+      const why = { person: 'It names a person.', place: 'It names a place you can go to.', animal: 'It names an animal.', thing: 'It names a thing.' };
+      sortGame(b, { bins, ask: it => `${it.t}: is it a person, a place, an animal or a thing?`, items: shuffle([
+        { e: '👨', t: 'father', bin: 'person' }, { e: '🏙️', t: 'city', bin: 'place' }, { e: '🐈', t: 'cat', bin: 'animal' }, { e: '🏏', t: 'bat', bin: 'thing' },
+        { e: '🧑‍🎓', t: 'student', bin: 'person' }, { e: '🏫', t: 'school', bin: 'place' }, { e: '🐇', t: 'rabbit', bin: 'animal' }, { e: '📕', t: 'book', bin: 'thing' },
+      ]).map(x => ({ ...x, why: why[x.bin] })), onDone: () => { skill('noun'); api.done(); } });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 13 · Common and proper nouns'));
+    teach(b, { title: 'Common nouns and proper nouns', body: ['Proper nouns are special names of people, places, animals or things. They always start with a capital letter: Tina, Raj, Delhi, Italy, January, August.', 'Common nouns are general names. They do not start with a capital letter: student, father, mother, dog, city, park, ball.'], ex: ['girl → Tina', 'city → Delhi', 'country → Italy', 'month → January'] }, () => {
+      sortGame(b, { bins: PC, ask: it => `${it.t}: common noun or proper noun?`, items: shuffle([['Tina', 'proper'], ['student', 'common'], ['Delhi', 'proper'], ['park', 'common'], ['Italy', 'proper'], ['father', 'common'], ['January', 'proper'], ['dog', 'common'], ['Raj', 'proper'], ['ball', 'common']]).map(([t, bin]) => ({ t, bin, why: bin === 'proper' ? 'It is the special name of one person, place or month, and it starts with a capital letter.' : 'It is a general name, not the name of one special person or place.' })), onDone: api.done });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 14 · Question 1 · The circus poster'));
+    b.append(h('div', { class: 'poster', role: 'img', 'aria-label': 'Circus poster' }, h('div', { class: 'ph1' }, 'CIRCUS'), h('div', { 'aria-hidden': 'true', style: 'font-size:36px' }, '🤸 🐘 🏋️'), h('div', { class: 'row' }, 'THE GRAND ARENA'), h('div', { class: 'row' }, 'APRIL 7 · ₹350 / ₹500'), h('div', { class: 'feat' }, 'FEATURING', h('br'), 'THE FABULOUS FLYERS', h('br'), 'TITAN THE STRONGMAN', h('br'), 'FLAMES OF FURY')));
+    api.guide('Read the circus poster. Is each word a common noun or a proper noun?');
+    setTimeout(() => sortGame(b, { bins: PC, ask: it => `${it.t}: common noun or proper noun?`, items: shuffle([
+      { t: 'circus', bin: 'common', why: 'There are lots of circuses. “Circus” is a general name.' },
+      { t: 'April', bin: 'proper', why: 'April is the name of one special month. It starts with a capital letter.' },
+      { t: 'Titan', bin: 'proper', why: 'Titan is the special name of the strongman.' },
+      { t: 'strongman', bin: 'common', why: '“Strongman” could be any strong man. It is a general name.' },
+      { t: 'The Grand Arena', bin: 'proper', why: 'The Grand Arena is the name of one special place.' },
+      { t: 'flyers', bin: 'common', why: '“Flyers” is a general word for people who fly on the trapeze.' },
+    ]), onDone: api.done }), 600);
+  } else if (r === 3) {
+    b.append(srctag('Page 14 · Question 2'));
+    const Q = [['During our visit to the zoo, we spotted a ___ munching on leaves.', 'monkey', 'Rahul', 'Rahul is a boy’s name. Who would munch leaves at the zoo?'], ['___ always shares her lunch with me.', 'Ananya', 'table', 'Can a table share lunch? Who can?'], ['We went to ___ to see the beautiful flowers.', 'Hanging garden', 'orange', 'Which one is a place where flowers grow?'], ['My ___ gave me a bright yellow kite for my birthday.', 'uncle', 'sweater', 'Can a sweater give a present? Who can?'], ['On Sunday, ___ baked yummy cupcakes with her mom.', 'Zara', 'eraser', 'Can an eraser bake? Who can?']];
+    askSeq(api, b, Q.map(([s, a, d, hnt]) => ({ guide: `Pick the noun that makes sense. ${s}`, before: h('p', { class: 'story' }, s), prompt: 'Which noun makes sense?', options: shuffle([a, d]), answer: a, hint: () => hintP(hnt) })), api.done);
+  } else {
+    b.append(srctag('Page 15 · Question 3 · Make sentences'));
+    api.guide('Make a sentence with a proper noun and a common noun. Remember: proper nouns start with capital letters!');
+    chain([
+      { tiles: ['Professor Bloom', 'looked', 'through', 'his', 'telescope', '.'], decoys: ['professor bloom'] },
+      { tiles: ['We', 'saw', 'footprints', 'near', 'the', 'Amazon River', '.'], decoys: ['amazon river'] },
+    ], (s, next) => {
+      const box = h('div', { class: 'below' }); b.replaceChildren(srctag('Page 15 · Question 3 · Make sentences'), box);
+      buildSentence(box, { ...s, decoyWhy: 'Proper nouns always start with capital letters. Find the one with capitals!', onDone: () => setTimeout(next, 1400) });
+    }, () => {
+      b.replaceChildren(srctag('Capital letters'));
+      api.guide('Which word should start with a capital letter?');
+      askChoice(b, { prompt: 'Which word should start with a capital letter?', options: shuffle(['mumbai', 'river', 'city', 'boy']), answer: 'mumbai', hint: () => hintP('Which one is the special name of one place?'), onDone: () => { b.append(fact('Mumbai', 'The name of a city is a proper noun, so it starts with a capital M.')); api.done(); } });
+    });
+  }
+}
+
+/* Stop 8 · pages 15–17 */
+function playPlurals(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 16–17 · Singular and plural'));
+    teach(b, { title: 'One or more than one?', body: ['A bird is sitting on the branch. Birds are sitting on the branches.', 'A singular noun names only one. A plural noun names more than one.'], ex: ['🦎 a chameleon', '🦎🦎🦎 chameleons', '🐶 a puppy', '🐶🐶🐶 puppies'] }, () => {
+      const Q = [['🧑‍🚀', 'astronaut', 'astronauts', 'astronaut'], ['🐦🐦🐦', 'quail', 'quails', 'quails'], ['🧚🧚🧚', 'fairy', 'fairies', 'fairies'], ['🌋', 'volcano', 'volcanoes', 'volcano']];
+      askSeq(api, b, Q.map(([e, s, p, a]) => ({ guide: 'Which word matches the picture?', before: h('div', { class: 'cluepic', 'aria-hidden': 'true' }, e), prompt: 'Which word matches the picture?', options: [s, p], answer: a, hint: () => hintP('Count them. One is singular. More than one is plural.') })), api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 17 · Add s or es'));
+    teach(b, { title: 'Add s, or add es', body: ['Most nouns just add s: astronaut → astronauts, bicycle → bicycles, quail → quails.', 'If a noun ends in s, ss, sh, ch or x, add es: cactus → cactuses, princess → princesses, wish → wishes, match → matches, fox → foxes.', 'Why? Try saying “foxs”. Hard! The e makes it easy to say.'], ex: [h('span', { class: 'exchip a' }, 'fo', h('span', { class: 'hl2' }, 'x'), ' → foxes'), h('span', { class: 'exchip a' }, 'wi', h('span', { class: 'hl2' }, 'sh'), ' → wishes'), h('span', { class: 'exchip a' }, 'ma', h('span', { class: 'hl2' }, 'tch'), ' → matches')] }, () => {
+      const W = [['bicycle', 's'], ['wish', 'es'], ['fox', 'es'], ['book', 's'], ['princess', 'es']];
+      askSeq(api, b, W.map(([w, e]) => ({ guide: `Make ${w} plural.`, prompt: `One ${w}, many…`, options: shuffle([w + 's', w + 'es']), answer: w + e, hint: () => hintP(e === 'es' ? `“${w}” ends in ${w.endsWith('ss') ? 'ss' : w.endsWith('sh') ? 'sh' : w.slice(-1)}. Those words add es.` : `“${w}” does not end in s, ss, sh, ch or x. Just add s.`) })), api.done);
+    });
+  } else if (r === 2) {
+    b.append(srctag('Pages 15–16 · y → ies, o → oes, and special plurals'));
+    teach(b, { title: 'Some plurals change more', body: ['Ends in a consonant + y? Change y to i and add es: baby → babies, puppy → puppies, fairy → fairies.', 'Some nouns ending in o add es: potato → potatoes, hero → heroes, volcano → volcanoes.', 'Some nouns are special and change inside: man → men, mouse → mice, child → children.'], ex: ['baby → babies', 'potato → potatoes', 'man → men', 'mouse → mice'] }, () => {
+      const Q = [['puppy', 'puppies', ['puppys', 'puppyes', 'puppy’s']], ['potato', 'potatoes', ['potatos', 'potatoies', 'potato’s']], ['man', 'men', ['mans', 'mens', 'manes']], ['mouse', 'mice', ['mouses', 'mices', 'mouse’s']]];
+      askSeq(api, b, Q.map(([s, p, d]) => ({ guide: `One ${s}, many what?`, prompt: `One ${s}, many…`, options: shuffle([p, ...d]), answer: p, hint: () => hintP(s.endsWith('y') ? 'Change y to i, then add es.' : s.endsWith('o') ? 'This o word adds es.' : 'This is a special word. It changes inside!') })), api.done);
+    });
+  } else if (r === 3) {
+    b.append(srctag('Page 15 · Detour · Common mistakes'));
+    api.guide('Detour! Page 15 shows mistakes people often make. Can you fix them?');
+    const Q = [['mans', 'men', ['mens', 'manes', 'man’s'], 'Man is a special word: one man, many men.'], ['babys', 'babies', ['babyes', 'baby’s', 'babis'], 'Baby ends in y: change y to i and add es.'], ['boxs', 'boxes', ['boxies', 'box’s', 'boxxs'], 'Box ends in x, so add es.'], ['cat’s', 'cats', ['cat’s', 'cates', 'catz'], 'An apostrophe ( ’ ) does not make a plural. Just add s.'], ['mouses', 'mice', ['mouse', 'mices', 'meese'], 'Mouse is a special word: one mouse, many mice.']];
+    askSeq(api, b, Q.map(([w, a, d, hnt]) => ({ guide: `Someone wrote ${w.replace('’', '')}. What is the correct plural?`, before: h('p', { class: 'story' }, '❌ ', h('s', {}, w)), prompt: 'What is the correct plural?', options: shuffle([a, ...d.filter(x => x !== w)]), answer: a, hint: () => hintP(hnt) })), api.done);
+  } else {
+    b.append(srctag('Spell the plural'));
+    api.guide('Spell the plural yourself! Tap the letters to finish each word.');
+    const Q = [{ word: 'boxes', prefix: 'box', letters: shuffle(['e', 's', 'i', 'x']), pic: '📦📦📦', prompt: 'One box, many…', hint: () => 'Box ends in x, so add e, then s.' }, { word: 'babies', prefix: 'bab', letters: shuffle(['i', 'e', 's', 'y']), pic: '👶👶👶', prompt: 'One baby, many…', hint: n => n === 0 ? 'The y has changed to i.' : 'i, then e, then s.' }, { word: 'wishes', prefix: 'wish', letters: shuffle(['e', 's', 'h', 'i']), pic: '🌠🌠', prompt: 'One wish, many…', hint: () => 'Wish ends in sh, so add e, then s.' }, { word: 'stars', prefix: 'star', letters: shuffle(['s', 'e', 'i']), pic: '⭐⭐⭐', prompt: 'One star, many…', hint: () => 'Most words just add s.' }];
+    chain(Q, (q, next) => { const box = h('div', { class: 'below' }); b.replaceChildren(srctag('Spell the plural'), box); spellTiles(box, { ...q, onDone: () => setTimeout(next, 1300) }); }, () => { skill('plural'); b.append(fact('Plural Patrol complete! 🚓')); api.done(); });
+  }
+}
+
+/* Stop 9 · pages 18–21 */
+const SNACKS = [{ e: '🍟', s: 'fry', p: 'fries', d: ['frys', 'fryes', 'fry’s'] }, { e: '🥪', s: 'sandwich', p: 'sandwiches', d: ['sandwichs', 'sandwichies', 'sandwich’s'] }, { e: '🍪', s: 'cookie', p: 'cookies', d: ['cookiees', 'cookie’s', 'cookys'] }, { e: '🧁', s: 'cupcake', p: 'cupcakes', d: ['cupcakees', 'cupcake’s', 'cupcakies'] }, { e: '🍒', s: 'cherry', p: 'cherries', d: ['cherrys', 'cherryes', 'cherry’s'] }, { e: '🍅', s: 'tomato', p: 'tomatoes', d: ['tomatos', 'tomatoies', 'tomato’s'] }];
+function playTray(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 18 · Question 2 · The snack tray'));
+    const tray = h('div', { class: 'tray', role: 'group', 'aria-label': 'Snack tray' });
+    const out = h('div', { class: 'below' });
+    let picked = 0;
+    const btns = SNACKS.map(sn => { const x = h('button', { type: 'button', class: 'trayitem', onclick: () => {
+      if (x.disabled || out.querySelector('.choice:not(:disabled)')) return;
+      btns.forEach(y => y.disabled = true); sfx.pop();
+      api.guide(`One ${sn.s}. Many what?`);
+      out.replaceChildren();
+      askChoice(out, { prompt: `Singular: ${sn.s}. Plural: ?`, options: shuffle([sn.p, ...sn.d]), answer: sn.p, hint: () => hintP(sn.s.endsWith('y') ? 'Ends in a consonant + y: change y to i and add es.' : /(ch|sh|s|x)$/.test(sn.s) ? `It ends in ${sn.s.slice(-2)}: add es.` : sn.s.endsWith('o') ? 'This o word adds es.' : 'Most words just add s.'), onDone: () => {
+        picked++; x.classList.add('done');
+        setTimeout(() => {
+          if (picked >= 4) { out.replaceChildren(fact('4 snacks done! 🍽️', 'Write your four on the plates on page 18.')); return api.done(); }
+          btns.forEach(y => { if (!y.classList.contains('done')) y.disabled = false; }); out.replaceChildren(); api.guide(`Great! Pick another snack. ${4 - picked} to go.`);
+        }, 900);
+      } });
+    } }, sn.e, h('small', {}, sn.s)); return x; });
+    tray.append(...btns);
+    api.guide('Look at the snack tray. Pick any 4 snacks, one at a time, and give the plural of each.');
+    b.append(tray, out);
+  } else if (r === 1) {
+    b.append(srctag('Page 19 · Question 3 · The laundry basket'));
+    b.append(h('div', { class: 'basket', role: 'img', 'aria-label': 'A laundry basket with a teddy bear, a T-shirt, boxes, a brush, socks and towels' }, '📦', '🧸', '👕', '🪮', '🧦', '🟩'));
+    const rows = [['purple', 't-shirt', null], [null, null, 'boxes'], [null, 'brush', null], [null, 'sock', null], ['brown', 'basket', null], [null, 'teddy bear', null], ['green', null, 'towels']];
+    const COLS = ['purple', 'grey', 'pink', 'blue', 'brown', 'brown', 'green'];
+    const tds = [];
+    const tbl = h('table', { class: 'tbl' }, h('thead', {}, h('tr', {}, h('th', {}, 'Colour'), h('th', {}, 'Singular object'), h('th', {}, 'Plural objects'))),
+      h('tbody', {}, rows.map((row, i) => { const cs = [h('td', {}, COLS[i]), h('td', { class: row[1] ? '' : 'blank' }, row[1] || '?'), h('td', { class: row[2] ? '' : 'blank' }, row[2] || '?')]; tds.push(cs); return h('tr', {}, cs); })));
+    b.append(tbl);
+    const Q = [[0, 2, 't-shirts', ['t-shirtes', 't-shirt’s', 't-shirties']], [1, 1, 'box', ['boxe', 'boxs', 'boxes']], [2, 2, 'brushes', ['brushs', 'brushies', 'brush’s']], [3, 2, 'socks', ['sockes', 'sock’s', 'sockies']], [4, 2, 'baskets', ['basketes', 'basket’s', 'baskies']], [5, 2, 'teddy bears', ['teddy beares', 'teddies bear', 'teddy bear’s']], [6, 1, 'towel', ['towele', 'towels', 'towl']]];
+    askSeq(api, b, Q.map(([ri, ci, a, d]) => ({ guide: ci === 1 ? `The plural is ${rows[ri][2]}. What is the singular?` : `One ${rows[ri][1]}. What is the plural?`, prompt: ci === 1 ? `Plural: ${rows[ri][2]}. Singular: ?` : `Singular: ${rows[ri][1]}. Plural: ?`, onShow: () => { tds.flat().forEach(t => t.classList.remove('now')); tds[ri][ci].classList.add('now'); }, options: shuffle([a, ...d]), answer: a, onDone: () => { const c = tds[ri][ci]; c.textContent = a; c.className = 'fresh'; }, hint: () => hintP(ci === 1 ? 'Singular means just one. Take the plural ending off.' : a.endsWith('es') ? 'Brush ends in sh: add es.' : 'Most words just add s.') })), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Pages 20–21 · Question 4 · The national park'));
+    b.append(scene(['🦅', '☁️', '🏔️', '☁️'], ['🌳', h('span', { class: 'small' }, '🐒'), '🦒', '🦒', '🐆', '🐺', h('span', { class: 'small' }, '🐘'), '🐘', '🐃', '🐻', '🐇', '🦊', '🦌'], { label: 'A national park with animals' }));
+    askSeq(api, b, [
+      { guide: 'a. How many bears do you see in the picture?', prompt: 'a. How many 🐻 bears do you see?', options: ['1', '2', '3', '4'], answer: '1', cls: '', hint: () => hintP('Look carefully and count every bear.') },
+      { guide: 'b. Write the plural form of giraffe.', prompt: 'b. One giraffe, many…', options: shuffle(['giraffes', 'giraffies', 'giraffe’s', 'giraffs']), answer: 'giraffes', hint: () => hintP('Giraffe just adds s.') },
+      { guide: 'e. Look at the animals. Can you see more than one monkey?', prompt: 'e. Can you see more than one 🐒 monkey?', options: ['Yes', 'No'], answer: 'No', hint: () => hintP('Look up in the tree. Count the monkeys.') },
+    ], api.done);
+  } else {
+    b.append(srctag('Page 20 · Questions 4c and 4d'));
+    api.guide('“The children saw elephants and giraffes at the zoo.” Write it with singular nouns: only ONE of each!');
+    b.append(h('p', { class: 'story' }, 'The children saw elephants and giraffes at the zoo.'));
+    const box = h('div', { class: 'below' }); b.append(box);
+    buildSentence(box, { tiles: ['The', 'child', 'saw', 'an', 'elephant', 'and', 'a', 'giraffe', 'at', 'the', 'zoo', '.'], decoys: ['children', 'elephants', 'giraffes'], decoyWhy: 'That word is plural. We want only one!', onDone: () => setTimeout(() => {
+      const A = { '🦓 zebra': ['zebras', ['zebraes', 'zebra’s', 'zebries']], '🦁 lion': ['lions', ['liones', 'lion’s', 'lionies']], '🦚 peacock': ['peacocks', ['peacockes', 'peacock’s', 'peacockies']], '🦊 fox': ['foxes', ['foxs', 'fox’s', 'foxies']] };
+      api.guide('d. Imagine one more animal is added to the zoo. Which one?');
+      freeChoice(box, { prompt: 'd. Add one more animal to the zoo!', options: Object.keys(A), onPick: o => {
+        const [p, d] = A[o], s = o.split(' ')[1];
+        api.guide(`Singular: ${s}. What is the plural?`);
+        askChoice(box, { prompt: `Singular: ${s}. Plural: ?`, options: shuffle([p, ...d]), answer: p, hint: () => hintP(s === 'fox' ? 'Fox ends in x: add es.' : 'Most words just add s.'), onDone: api.done });
+      } });
+    }, 1200) });
+  }
+}
+
+/* Stop 10 · pages 21–23 */
+const CU = [{ k: 'c', label: 'Countable', e: '🔢', c: 'var(--green-soft)' }, { k: 'u', label: 'Uncountable', e: '🫗', c: 'var(--orange-soft)' }];
+function playCount(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 21 · Countable and uncountable'));
+    teach(b, { title: 'Can you count it?', body: ['There are three balloons floating in the sky. 🎈🎈🎈 We can count them: one, two, three!', 'There is some fine dust on the table. We cannot count dust. There are too many tiny bits!', 'A noun we can count is countable: apple, car, book, toy, bird. We use numbers: two books, five birds.', 'A noun we cannot count is uncountable: milk, sugar, water, rice, sand. We use some, much, a little: some rice, a little water.'], ex: ['🍎 3 apples', '🥛 some milk'] }, () => {
+      askSeq(api, b, [
+        { guide: 'Which one is countable?', prompt: 'Which one is countable?', options: shuffle(['apples', 'milk', 'sugar', 'water']), answer: 'apples', hint: () => hintP('Can you say “three ___”? Try each one.') },
+        { guide: 'Which one is uncountable?', prompt: 'Which one is uncountable?', options: shuffle(['rice', 'books', 'toys', 'birds']), answer: 'rice', hint: () => hintP('Which one has too many tiny bits to count?') },
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 22 · Question 1 · Sort the kitchen'));
+    const why = { c: 'You can count it: one, two, three…', u: 'You cannot count it. You say “some” or “a little”.' };
+    sortGame(b, { bins: CU, ask: it => `${it.t}: countable or uncountable?`, items: shuffle([['🍓', 'strawberries', 'c'], ['🥛', 'milk', 'u'], ['🍎', 'apples', 'c'], ['🍚', 'sugar', 'u'], ['🧃', 'juice', 'u'], ['🥚', 'eggs', 'c'], ['🧈', 'butter', 'u'], ['🍊', 'oranges', 'c'], ['🍌', 'banana', 'c'], ['🧂', 'salt', 'u']]).map(([e, t, bin]) => ({ e, t, bin, why: why[bin] })), onDone: () => { skill('count'); api.done(); } });
+  } else if (r === 2) {
+    b.append(srctag('Page 21 · Numbers or some?'));
+    const Q = [['I drank ___ water.', 'a little', ['three', 'two', 'many'], 'Water is uncountable.'], ['There are ___ birds on the tree.', 'five', ['much', 'a little'], 'Birds are countable, so use a number.'], ['Please add ___ sugar to the tea.', 'some', ['four', 'two', 'many'], 'Sugar is uncountable.'], ['I have ___ books in my bag.', 'two', ['much', 'a little'], 'Books are countable, so use a number.']];
+    askSeq(api, b, Q.map(([s, a, d, hnt]) => ({ guide: s, before: h('p', { class: 'story' }, s), prompt: 'Which word fits?', options: shuffle([a, ...d]), answer: a, hint: () => hintP(hnt + (a === 'five' || a === 'two' ? '' : ' Use some, much or a little.')) })), api.done);
+  } else {
+    b.append(srctag('Page 23 · Question 2 · My shopping list'));
+    const SHOP = [['🍌', 'bananas', 'c', '3 bananas'], ['🥛', 'milk', 'u', 'some milk'], ['🥚', 'eggs', 'c', '6 eggs'], ['🍚', 'rice', 'u', 'some rice'], ['🍎', 'apples', 'c', '4 apples'], ['🧂', 'salt', 'u', 'a little salt'], ['🥕', 'carrots', 'c', '5 carrots'], ['🍯', 'honey', 'u', 'some honey'], ['🍊', 'oranges', 'c', '2 oranges'], ['🧃', 'juice', 'u', 'some juice'], ['🧅', 'onions', 'c', '3 onions'], ['🧈', 'butter', 'u', 'a little butter']];
+    const lists = { c: h('ol'), u: h('ol') };
+    const shelf = h('div', { class: 'shelf' });
+    const ask = h('div', { class: 'below' });
+    let wrongs = 0;
+    const doneCheck = () => { if (lists.c.children.length >= 4 && lists.u.children.length >= 4) { shelf.querySelectorAll('button').forEach(x => x.disabled = true); ask.replaceChildren(fact('Shopping list ready! 🛒', 'Numbers for countable things, and some or a little for uncountable things.')); api.done(); } };
+    SHOP.forEach(([e, t, k, use]) => {
+      const x = h('button', { type: 'button', class: 'shelfitem', onclick: () => {
+        if (x.classList.contains('in')) return;
+        sfx.pop(); api.guide(`${t}: which list does it go on?`);
+        const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+        ask.replaceChildren(h('p', { class: 'q' }, `${e} ${t}: which list?`), h('div', { class: 'choices' }, CU.map(bn => h('button', { type: 'button', class: 'choice words', 'data-ok': bn.k === k ? '1' : null, onclick: ev => {
+          if (bn.k === k) { x.classList.add('in'); x.disabled = true; lists[k].append(h('li', { class: 'pop' }, use)); sfx.good(); ask.replaceChildren(h('p', { class: 'fb good' }, `${praise()} We write “${use}”.`)); doneCheck(); }
+          else { ev.currentTarget.classList.add('wrong'); ev.currentTarget.disabled = true; sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops'; fb.textContent = (!run.solo || wrongs >= 2) ? (k === 'c' ? `You can count ${t}: one, two, three…` : `You cannot count ${t}. We say some ${t}.`) : 'Not quite. Have a think!'; }
+        } }, `${bn.e} ${bn.label}`))), fb);
+      } }, e, h('small', {}, t));
+      shelf.append(x);
+    });
+    api.guide('Make a shopping list! Tap a thing on the shelf, then choose its list. Put at least 4 countable and 4 uncountable things on your lists.');
+    b.append(shelf, ask, h('div', { class: 'lists' }, h('div', { class: 'list' }, h('h3', {}, '🔢 Countables'), lists.c), h('div', { class: 'list' }, h('h3', {}, '🫗 Uncountables'), lists.u)));
+  }
+}
+
+/* Stop 11 · pages 24–25 */
+function playSenses(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 24 · Concrete nouns'));
+    teach(b, { title: 'Nouns you can sense', body: ['A concrete noun names a person, place, animal or thing that we can see, hear, touch, taste or smell.', 'The loud bell is ringing: we hear the bell. I can smell the warm cookie: we smell the cookie.'], ex: ['👀 see', '👂 hear', '✋ touch', '👅 taste', '👃 smell'] }, () => {
+      askSeq(api, b, [
+        { guide: 'The loud bell is ringing down the hall. Which sense tells you about the bell?', before: h('p', { class: 'story' }, 'The loud 🔔 bell is ringing down the hall.'), prompt: 'Which sense tells you about the bell?', options: shuffle(['hear', 'smell', 'taste', 'touch']), answer: 'hear', hint: () => hintP('A bell is ringing. Which part of you catches sounds? 👂') },
+        { guide: 'I can smell the warm cookie baking in the oven. Which sense?', before: h('p', { class: 'story' }, 'I can smell the warm 🍪 cookie baking in the oven.'), prompt: 'Which sense is in this sentence?', options: shuffle(['smell', 'hear', 'touch', 'taste']), answer: 'smell', hint: () => hintP('Read the sentence again: “I can ___ the warm cookie.”') },
+      ], api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 24 · Question 1 · Match the senses'));
+    const items = [{ e: '✏️', t: 'pencil', ok: ['touch', 'see'] }, { e: '🔔', t: 'bell', ok: ['hear'] }, { e: '🌸', t: 'flower', ok: ['smell'] }, { e: '🍎', t: 'apple', ok: ['see', 'touch'] }, { e: '👗', t: 'dress', ok: ['touch', 'see'] }];
+    const tags = ['smell', 'touch', 'see', 'hear', 'touch'];
+    const now = h('div', { class: 'sortnow' }), row = h('div', { class: 'choices' }), fb = h('p', { class: 'fb', 'aria-live': 'polite' }), done = h('div', { class: 'bins' });
+    let i = 0, wrongs = 0;
+    const left = () => { const c = {}; tags.forEach(t => c[t] = (c[t] || 0) + 1); return c; };
+    const show = () => {
+      if (i >= items.length) { row.replaceChildren(); now.replaceChildren(fact('All matched! ✓')); return api.done(); }
+      const it = items[i]; wrongs = 0;
+      now.replaceChildren(h('div', { class: 'sortcard pop' }, h('span', { class: 'se', 'aria-hidden': 'true' }, it.e), h('span', { class: 'st' }, it.t)));
+      api.guide(`${it.t}: which sense label goes with it?`);
+      const c = left();
+      row.replaceChildren(...Object.keys(c).map(t => h('button', { type: 'button', class: 'choice words', 'data-ok': it.ok.includes(t) ? '1' : null, onclick: e => {
+        if (it.ok.includes(t)) { tags.splice(tags.indexOf(t), 1); sfx.good(); fb.className = 'fb good'; fb.textContent = `Yes! You can ${t} a ${it.t}.`; done.append(h('span', { class: 'chip pop' }, `${it.e} ${it.t} → ${t}`)); i++; setTimeout(show, 900); }
+        else { e.currentTarget.classList.add('wrong'); e.currentTarget.disabled = true; sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops'; fb.textContent = `Can you really ${t} a ${it.t}? Try again.`; }
+      } }, `${t}${c[t] > 1 ? ` (×${c[t]})` : ''}`)));
+    };
+    api.guide('Match each noun to a sense label from the book. Each label is used once.');
+    b.append(h('p', { class: 'note' }, 'Labels from the book: smell, touch, see, hear, touch'), now, row, fb, done);
+    show();
+  } else {
+    b.append(srctag('Page 25 · Question 2 · What’s in my bag?'));
+    const ITEMS = [['📕', 'book', 1, ['book', 'buk', 'boook', 'bok']], ['✏️', 'pencil', 1, ['pencil', 'pensil', 'pencel', 'pencle']], ['📏', 'ruler', 1, ['ruler', 'rular', 'rooler', 'ruller']], ['🍱', 'tiffin box', 1, ['tiffin box', 'tifin box', 'tiffen box', 'tiffin boks']], ['✂️', 'scissors', 1, ['scissors', 'sissors', 'scisors', 'sizzors']], ['🖍️', 'crayons', 1, ['crayons', 'crayens', 'crayones', 'creyons']], ['☀️', 'sun', 0], ['🌈', 'rainbow', 0], ['🐘', 'elephant', 0], ['🌙', 'moon', 0]];
+    const bag = h('div', { class: 'bagbox', 'aria-live': 'polite' });
+    const shelf = h('div', { class: 'shelf' });
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    const chosen = []; let wrongs = 0;
+    ITEMS.forEach(it => {
+      const x = h('button', { type: 'button', class: 'shelfitem', onclick: () => {
+        if (chosen.length >= 4 || x.disabled) return;
+        if (it[2]) { x.disabled = true; x.classList.add('in'); chosen.push(it); bag.append(h('span', { class: 'pop' }, it[0])); sfx.good(); fb.className = 'fb good'; fb.textContent = `${it[1]} is in your bag! ${4 - chosen.length ? `${4 - chosen.length} more.` : ''}`; if (chosen.length === 4) setTimeout(label, 900); }
+        else { x.classList.add('no'); setTimeout(() => x.classList.remove('no'), 500); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops'; fb.textContent = it[1] === 'elephant' ? 'An elephant in your school bag? Too big! 🐘' : `You can see the ${it[1]}, but you can’t touch it or put it in a bag!`; }
+      } }, it[0], h('small', {}, it[1]));
+      shelf.append(x);
+    });
+    api.guide('Pack your school bag! Choose 4 things you can touch and use every day.');
+    b.append(h('div', { class: 'bag' }, h('span', { class: 'note' }, '🎒 My school bag'), bag), shelf, fb);
+    function label() {
+      b.replaceChildren(srctag('Label your things'), h('div', { class: 'bag' }, h('span', { class: 'note' }, '🎒 My school bag'), bag));
+      api.guide('Now label each thing. Pick the right spelling.');
+      askSeq(api, b, chosen.map(([e, w, , opts]) => ({ guide: `How do you spell ${w}?`, before: h('div', { class: 'cluepic', 'aria-hidden': 'true' }, e), prompt: 'Pick the right label', options: shuffle(opts.slice()), answer: w, hint: () => hintP('Say the word slowly and listen to each sound.') })), () => { b.append(fact('These are all concrete nouns!', 'You can see them and touch them.')); api.done(); });
+    }
+  }
+}
+
+/* Stop 12 · pages 25–27 */
+const GROUPS = { 'class': ['students', '🧑‍🎓'], crew: ['sailors', '⛵'], family: ['people', '👨‍👩‍👧'], herd: ['cows', '🐄'], pack: ['wolves', '🐺'], swarm: ['bees', '🐝'], bunch: ['keys', '🔑'], pile: ['books', '📚'], bouquet: ['flowers', '💐'], parliament: ['owls', '🦉'], school: ['fish', '🐟'], flock: ['birds', '🐦'] };
+const groupQ = (g, n = 4) => ({ guide: `A blank of ${GROUPS[g][0]}. Which collective noun fits?`, before: h('div', { class: 'cluepic', 'aria-hidden': 'true' }, GROUPS[g][1].repeat(3)), prompt: `a ___ of ${GROUPS[g][0]}`, options: shuffle([g, ...shuffle(Object.keys(GROUPS).filter(x => x !== g)).slice(0, n - 1)]), answer: g, hint: () => hintP(`Think: a group of ${GROUPS[g][0]} is called a… (it starts with “${g[0]}”)`) });
+const WS_GRID = ['FLOCKFHQP', 'BMDAHGEVA', 'NSWARMRGC', 'SDZWKLDIK', 'BTEAMWERT', 'YUIOPZXCV', 'SCHOOLBMQ'];
+const WS_WHERE = { FLOCK: [0, 0, 'goes across the top row'], HERD: [0, 6, 'goes down'], PACK: [0, 8, 'goes down the right edge'], SWARM: [2, 1, 'goes across'], TEAM: [4, 1, 'goes across'], SCHOOL: [6, 0, 'goes across the bottom row'] };
+function playGroups(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 25–26 · Collective nouns'));
+    teach(b, { title: 'Names for groups', body: ['The team is playing football. A flock of birds is flying in the sky.', 'A collective noun is the name of a group of people, animals or things. It looks like one word, but it stands for many together.'], ex: ['👥 a team of players', '🐦🐦🐦 a flock of birds'] }, () => {
+      askSeq(api, b, ['herd', 'pack', 'swarm'].map(g => groupQ(g)), api.done);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 26 · More groups'));
+    b.append(info('🦉', 'Funny ones!', 'A group of owls is a parliament, and a group of fish is a school!'));
+    askSeq(api, b, ['parliament', 'school', ...shuffle(['class', 'crew', 'family', 'bunch', 'pile', 'bouquet']).slice(0, 4)].map(g => groupQ(g)), () => { skill('group'); api.done(); });
+  } else if (r === 2) {
+    b.append(srctag('Page 26 · Question 1 · Underline'));
+    api.guide('Tap the collective noun in each sentence. Tip: look at the word just before “of”.');
+    tapWords(b, { lines: ['a. A flock of birds is flying in the sky.', 'b. A colony of ants is marching on the ground.', 'c. A group of friends is playing hide and seek.', 'd. A stack of books is on the shelf.', 'e. A bouquet of flowers is on the dining table.'], targets: ['flock', 'colony', 'group', 'stack', 'bouquet'], hint: () => 'The collective noun comes just before the word “of”.', onDone: api.done });
+  } else {
+    b.append(srctag('Page 27 · Question 2 · Word search'));
+    api.guide('Find the six collective nouns in the word search. Tap the first letter of a word, then its last letter.');
+    wordSearch(b, { grid: WS_GRID, words: ['FLOCK', 'HERD', 'PACK', 'SWARM', 'TEAM', 'SCHOOL'], where: WS_WHERE, onDone: api.done });
+  }
+}
+
+/* =================================================================
+   PART 4 · SOUNDS, STORY AND WRITING (pages 27–32)
+   ================================================================= */
+const TRI = [['igh', 'night, high, bright'], ['tch', 'catch, match, stitch'], ['dge', 'fudge, badge, hedge'], ['sch', 'school, scholar, schedule'], ['shr', 'shrink, shrub, shrimp'], ['spl', 'splash, split, splendid'], ['spr', 'spring, spread, spray'], ['str', 'street, strong, string'], ['thr', 'three, throw, throne'], ['squ', 'square, squid, squeeze']];
+const TRI_Q = [['🌙', 'night', 'n', 't', 'igh'], ['⚾', 'catch', 'ca', '', 'tch'], ['🌸', 'spring', '', 'ing', 'spr'], ['🏫', 'school', '', 'ool', 'sch'], ['3️⃣', 'three', '', 'ee', 'thr'], ['🦐', 'shrimp', '', 'imp', 'shr'], ['💦', 'splash', '', 'ash', 'spl'], ['🛣️', 'street', '', 'eet', 'str'], ['🦑', 'squid', '', 'id', 'squ'], ['🏅', 'badge', 'ba', '', 'dge']];
+const triQ = ([e, w, pre, post, t]) => ({ guide: `Listen: ${w}. Which letter team is missing?`, before: h('div', { class: 'story', style: 'font-size:32px;text-align:center' }, e, ' ', pre, h('span', { class: 'hl' }, '___'), post), prompt: 'Which trigraph is missing?', options: shuffle([t, ...shuffle(TRI.map(x => x[0]).filter(x => x !== t)).slice(0, 3)]), answer: t, cls: 'chunk', hint: () => hintP(`Say “${w}” slowly. The word is ${w}: ${pre}${t}${post}.`) });
+function playTrigraphs(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 27 · Trigraphs'));
+    teach(b, { title: 'Three friends, one sound', body: ['A trigraph is a group of three letters that come together to make one sound. It is like three friends holding hands to make one sound!'], ex: [h('span', { class: 'exchip' }, 'n', h('span', { class: 'hl2' }, 'igh'), 't'), h('span', { class: 'exchip' }, 'ca', h('span', { class: 'hl2' }, 'tch')), h('span', { class: 'exchip' }, h('span', { class: 'hl2' }, 'thr'), 'ee')] }, () => {
+      api.guide('Tap each letter team to hear its words.');
+      const heard = new Set();
+      b.append(h('div', { class: 'flips' }, TRI.map(([t, ws]) => { const c = h('button', { type: 'button', class: 'tcard', onclick: () => { c.classList.add('heard'); sayNow(ws); heard.add(t); if (heard.size === TRI.length && !b.dataset.done) { b.dataset.done = '1'; setTimeout(api.done, 600); } } }, h('b', {}, t), h('span', {}, ws)); return c; })));
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 27 · Which team?'));
+    askSeq(api, b, shuffle(TRI_Q.slice()).slice(0, 6).map(triQ), api.done);
+  } else if (r === 2) {
+    b.append(srctag('Page 27 · Question 1 · Tongue twisters'));
+    api.guide('Tongue twisters! Read each one slowly, then say it quickly.');
+    echoRead(b, { lines: ['Silly snake slithers slowly.', 'Bouncy bunny bakes big blueberry buns.', 'Sandy sweeps seven small steps swiftly.', 'Catch the kitten in the kitchen.'], what: 'all four tongue twisters', onDone: () => setTimeout(() => {
+      b.replaceChildren(srctag('Spot the trigraph'));
+      api.guide('One tongue twister has the trigraph t c h. Tap the two words with t c h. Careful: kitten has double t, not t c h!');
+      tapWords(b, { lines: ['Catch the kitten in the kitchen.'], targets: ['catch', 'kitchen'], hint: () => 'Look for the letters t, c, h together.', onDone: () => { b.append(fact('ca·tch · ki·tch·en', 'Kitten has tt, not tch!')); api.done(); } });
+    }, 900) });
+  } else {
+    b.append(srctag('Page 28 · Question 2 · Secret Trigraph Code'));
+    api.guide('Secret Trigraph Code! Unscramble the letters to find a word with a trigraph.');
+    const Q = [['splash', 'LPSAHS', '💦', 'spl'], ['spring', 'PRSING', '🌸', 'spr'], ['squid', 'UQSID', '🦑', 'squ'], ['shrub', 'RBHUS', '🌿', 'shr'], ['square', 'QUSRAE', '🟥', 'squ']];
+    chain(Q, ([w, code, e, t], next) => {
+      const box = h('div', { class: 'below' }); b.replaceChildren(srctag('Page 28 · Question 2 · Secret Trigraph Code'), h('p', { class: 'story' }, `Code: ${code.split('').join(' ')}`), box);
+      spellTiles(box, { word: w, letters: code.split(''), pic: e, prompt: 'Unscramble it!', hint: n => n < 3 ? `It starts with the trigraph “${t}”.` : `The word is ${w}.`, onDone: () => setTimeout(next, 1300) });
+    }, () => { skill('sounds'); b.append(fact('Code cracked! 🔓')); api.done(); });
+  }
+}
+
+/* Stop 14 · page 28 */
+function playTwins(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 28 · Double consonants'));
+    teach(b, { title: 'Letter twins', body: ['A double consonant is when the same consonant letter is written two times in a word. It is like the letter has a twin!'], ex: ['bb', 'll', 'pp', 'dd', 'gg'] }, () => {
+      api.guide('Tap each picture to hear the word and see the twins.');
+      const T = [['🐇', 'rabbit', 'bb'], ['🔔', 'bell', 'll'], ['😊', 'happy', 'pp'], ['🪜', 'ladder', 'dd'], ['🥚', 'egg', 'gg']];
+      const heard = new Set();
+      b.append(h('div', { class: 'twins' }, T.map(([e, w, t]) => { const c = h('button', { type: 'button', class: 'twin', onclick: () => { c.classList.add('heard'); sayNow(w); heard.add(w); if (heard.size === T.length && !b.dataset.q) { b.dataset.q = '1'; setTimeout(() => askSeq(api, b, [
+        { guide: 'Which twins are in ladder?', prompt: 'Which twins are in “ladder”?', options: shuffle(['dd', 'll', 'pp', 'bb']), answer: 'dd', cls: 'chunk', hint: () => hintP('Spell it: l, a, d, d, e, r.') },
+        { guide: 'Which twins are in rabbit?', prompt: 'Which twins are in “rabbit”?', options: shuffle(['bb', 'tt', 'gg', 'dd']), answer: 'bb', cls: 'chunk', hint: () => hintP('Spell it: r, a, b, b, i, t.') },
+      ], api.done), 500); } } }, h('span', { class: 'te', 'aria-hidden': 'true' }, e), h('span', { class: 'tw' }, hiWord(w, t))); return c; })));
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 28 · Circle the words'));
+    api.guide('Tap every word that has a double consonant. There are eight!');
+    tapWords(b, { grid: true, lines: ['apple', 'glass', 'running', 'net', 'hop', 'bat', 'map', 'hopping', 'pillow', 'bell', 'dress', 'hill'], targets: ['apple', 'glass', 'running', 'hopping', 'pillow', 'bell', 'dress', 'hill'], hint: w => w === 'hop' ? '“hop” has only one p. Look for two letters the same side by side.' : 'Look for two letters the same, side by side.', onDone: () => { b.append(info('🐸', 'Look!', 'hop has one p, but hopping has two: hop → hopping.')); api.done(); } });
+  } else {
+    b.append(srctag('Fill the twins'));
+    const Q = [['🐇', 'ra', 'it', 'bb'], ['🔔', 'be', '', 'll'], ['😊', 'ha', 'y', 'pp'], ['🥚', 'e', '', 'gg'], ['👗', 'dre', '', 'ss'], ['🏃', 'ru', 'ing', 'nn']];
+    const pool = ['bb', 'll', 'pp', 'gg', 'ss', 'nn', 'dd', 'tt', 'mm'];
+    askSeq(api, b, Q.map(([e, pre, post, t]) => ({ guide: `Listen: ${pre + t + post}. Which twins are missing?`, before: h('div', { class: 'story', style: 'font-size:32px;text-align:center' }, e, ' ', pre, h('span', { class: 'hl' }, '__'), post), prompt: 'Which twins are missing?', options: shuffle([t, ...shuffle(pool.filter(x => x !== t)).slice(0, 3)]), answer: t, cls: 'chunk', hint: () => hintP(`The word is ${pre + t + post}.`) })), api.done);
+  }
+}
+
+/* Stop 15 · pages 29–30 (the story is retold in our own words) */
+const STORY = ['Max loved to run. Everyone at the park knew his name.', 'One sunny day, he found a new place to play.', 'Children were lining up for a big race!', 'Max looked in his little mirror and saw a happy face.', '“I can do it!” he said.', 'He zoomed through the space between the trees.', 'He hopped over a tiny flame by the campfire.', 'At the end, a shiny frame held the winner’s photo.', 'Max did not win, but he was proud that he tried.', '“Next time, I will play the game even better!” he smiled.'];
+const ACE = ['place', 'race', 'face', 'space'], AME = ['name', 'game', 'flame', 'frame'];
+function playMax(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 29 · Listening and speaking'));
+    api.guide('Listen to the story, Max’s Amazing Race, and read along.');
+    reader(b, { lines: STORY, title: 'Max’s Amazing Race', rate: 0.9, onDone: () => setTimeout(() => {
+      askChoice(b, { prompt: 'Did Max win the race?', options: shuffle(['No, but he was proud that he tried', 'Yes, he won the prize', 'He did not run at all', 'He fell into the campfire']), answer: 'No, but he was proud that he tried', hint: () => hintP('Listen to line 9 again.'), onDone: api.done });
+    }, 500) });
+  } else if (r === 1) {
+    b.append(srctag('Page 29 · Question 1 · ace and ame'));
+    teach(b, { title: 'Word families: -ace and -ame', body: ['Words in a family share the same ending sound. Race and face end with “-ace”. Name and game end with “-ame”.'], ex: [h('span', { class: 'exchip a' }, 'r', h('span', { class: 'hl2' }, 'ace')), h('span', { class: 'exchip a' }, 'f', h('span', { class: 'hl2' }, 'ace')), h('span', { class: 'exchip b' }, 'n', h('span', { class: 'hl2' }, 'ame')), h('span', { class: 'exchip b' }, 'g', h('span', { class: 'hl2' }, 'ame'))] }, () => {
+      api.guide('Find all eight ace and ame words in the story. Tap each one.');
+      tapWords(b, { lines: STORY, targets: [...ACE, ...AME], hint: () => 'Look for words that end in a, c, e or a, m, e.', onDone: () => { skill('family'); api.done(); } });
+    });
+  } else if (r === 2) {
+    b.append(srctag('Page 29 · Sort the words'));
+    const bins = [{ k: 'ace', label: '-ace words', e: '📘', c: 'var(--blue-soft)' }, { k: 'ame', label: '-ame words', e: '📗', c: 'var(--green-soft)' }];
+    sortGame(b, { bins, ask: it => `${it.t}. Does it end with ace or ame?`, items: shuffle([...ACE.map(t => ({ t, bin: 'ace' })), ...AME.map(t => ({ t, bin: 'ame' })), { t: 'lace', bin: 'ace' }, { t: 'same', bin: 'ame' }]).map(x => ({ ...x, why: `Look at the last three letters of “${x.t}”.` })), onDone: api.done });
+  } else {
+    b.append(srctag('Page 30 · Question 2 · Use the words'));
+    const Q = [['Wash your ___ with soap.', 'face'], ['My ___ is Ayansh.', 'name'], ['Put the photo in a ___.', 'frame'], ['Rockets fly into ___.', 'space']];
+    const pool = [...ACE, ...AME];
+    askSeq(api, b, Q.map(([s, a]) => ({ guide: s, before: h('p', { class: 'story' }, s), prompt: 'Which word fits?', options: shuffle([a, ...shuffle(pool.filter(x => x !== a)).slice(0, 3)]), answer: a, hint: () => hintP('Read the sentence with each word. Which one makes sense?') })), () => {
+      b.replaceChildren(srctag('Page 30 · Question 2 · Make a sentence'));
+      api.guide('Now build a sentence with an ame word.');
+      buildSentence(b, { tiles: ['We', 'played', 'a', 'fun', 'game', 'in', 'the', 'park', '.'], onDone: () => api.done() });
+    });
+  }
+}
+
+/* Stop 16 · pages 30–32 */
+const WRITE = [
+  { start: 'If I could touch a rainbow, I would', opts: ['slide down it like a slide', 'take a piece home', 'eat it like a candy', 'hug it gently'], silly: ['eat it like a candy'] },
+  { start: 'The rainbow would feel', opts: ['soft and cool', 'rough like sandpaper', 'hot and sticky', 'wet like raindrops'], silly: ['rough like sandpaper', 'hot and sticky'] },
+  { start: 'The rainbow would smell like', opts: ['fresh flowers', 'my school bag', 'wet socks', 'sweet candy'], silly: ['my school bag', 'wet socks'] },
+  { start: 'I would make a wish for', opts: ['a world full of colors', 'more homework', 'a flying elephant', 'a pet dragon'], silly: ['more homework'] },
+  { start: 'The rainbow would make me feel', opts: ['happy and excited', 'scared and angry', 'sleepy and bored', 'calm and peaceful'], silly: ['scared and angry', 'sleepy and bored'] },
+];
+function playWriting(api) {
+  const b = below(), r = run.round, W = WRITE[r], letter = 'abcde'[r];
+  if (!run.writing) run.writing = [];
+  b.append(srctag(`Pages ${r < 2 ? 30 : 31} · Writing · ${letter}`));
+  if (r === 0) b.append(learnCard('Writing a sentence', ['A sentence starts with a capital letter and ends with a full stop ( . ). It tells a whole idea.']));
+  api.guide(`If I could touch a rainbow! ${letter}. ${W.start}… Pick the ending you like best.`);
+  freeChoice(b, { prompt: `${letter}. ${W.start}…`, options: W.opts, onPick: o => {
+    const silly = W.silly.includes(o);
+    b.append(info(silly ? '😄' : '🌈', silly ? 'Ha ha! What a funny rainbow!' : 'Lovely choice!', silly ? 'That one is silly, but writers can be silly too. Let’s write it!' : 'Now let’s write it as a sentence.'));
+    api.guide('Now build your sentence. Start with the capital letter, and finish with the full stop.');
+    const first = W.start.split(' ')[0];
+    const box = h('div', { class: 'below' }); b.append(box);
+    buildSentence(box, { tiles: [...W.start.split(' '), o, '.'], decoys: [first === 'I' ? 'i' : first.toLowerCase()], decoyWhy: first === 'I' ? 'When “I” means me, it is always a capital letter!' : 'A sentence starts with a capital letter.', onDone: s => {
+      run.writing[r] = s; skill('write');
+      if (r === 4) {
+        b.append(h('div', { class: 'mywriting' }, h('h3', {}, 'If I Could Touch a Rainbow… by Ayansh'), run.writing.filter(Boolean).map(x => h('p', {}, x))), h('p', { class: 'note' }, 'Copy your sentences onto page 32 of your book.'));
+        api.guide('Here is your rainbow writing! Copy your sentences onto page 32 of your book.');
+      }
+      api.done();
+    } });
+  } });
+}
+
+/* =================================================================
+   GRAND REVIEW
+   ================================================================= */
+const REVIEW_QS = [
+  { part: 1, from: 'Page 8', play: (b, done) => { const w = pickOne(Object.keys(GLOSS)), all = Object.keys(GLOSS); api.guide(`What does ${w} mean?`); askChoice(b, { prompt: `In the poem, what does “${w}” mean?`, options: shuffle([GLOSS[w].m, ...shuffle(all.filter(x => x !== w)).slice(0, 3).map(x => GLOSS[x].m)]), answer: GLOSS[w].m, hint: () => hintP(`“${GLOSS[w].line}” Think of ${GLOSS[w].e}.`), onDone: done }); } },
+  { part: 1, from: 'Page 10', play: (b, done) => { const [w, a, d] = pickOne([['seas', 'these', ['ships', 'sky', 'road']], ['trees', 'please', ['earth', 'river', 'bow']], ['sky', 'high', ['cloud', 'sea', 'tree']], ['rain', 'train', ['cloud', 'sun', 'boat']]]); api.guide(`Which word rhymes with ${w}?`); askChoice(b, { prompt: `Which word rhymes with “${w}”?`, options: shuffle([a, ...d]), answer: a, hint: () => hintP('Rhyming words end with the same sound.'), onDone: done }); } },
+  { part: 1, from: 'Pages 8–10', play: (b, done) => { const q = pickOne([['Where do the boats sail?', 'On the rivers', ['On the seas', 'Across the sky', 'Under the trees']], ['What is “the bow that bridges heaven”?', 'The rainbow', ['A boat', 'A bridge', 'A tree']], ['What does “overtops the trees” mean?', 'goes higher than the trees', ['stands next to the trees', 'grows from the trees', 'hides behind the trees']]]); api.guide(q[0]); askChoice(b, { prompt: q[0], options: shuffle([q[1], ...q[2]]), answer: q[1], hint: () => hintP('Think back to the poem, The Rainbow.'), onDone: done }); } },
+  { part: 2, from: 'Page 13', play: (b, done) => { const it = pickOne(ECO_ITEMS.flat()); api.guide(`${it.t}. Recycled, reused or refused?`); b.append(h('p', { class: 'story' }, `${it.e} ${it.t}`)); askChoice(b, { prompt: 'Recycled, reused or refused?', options: ECO.map(x => x.label), answer: ECO.find(x => x.k === it.bin).label, hint: () => hintP(ECO_WHY[it.bin]), onDone: done }); } },
+  { part: 3, from: 'Page 13', play: (b, done) => { const p = pickOne(['Tina', 'Delhi', 'Italy', 'January', 'Raj', 'August', 'Zara']); api.guide('Which one is a proper noun?'); askChoice(b, { prompt: 'Which one is a proper noun?', options: shuffle([p, ...shuffle(['student', 'city', 'dog', 'park', 'ball', 'mother', 'teacher']).slice(0, 3)]), answer: p, hint: () => hintP('A proper noun is a special name. It starts with a capital letter.'), onDone: done }); } },
+  { part: 3, from: 'Pages 15–17', play: (b, done) => { const [s, p, d] = pickOne([['fox', 'foxes', ['foxs', 'foxies', 'fox’s']], ['baby', 'babies', ['babys', 'babyes', 'baby’s']], ['mouse', 'mice', ['mouses', 'mices', 'meese']], ['wish', 'wishes', ['wishs', 'wishies', 'wish’s']], ['man', 'men', ['mans', 'mens', 'manes']], ['potato', 'potatoes', ['potatos', 'potatoies', 'potato’s']]]); api.guide(`One ${s}, many what?`); askChoice(b, { prompt: `One ${s}, many…`, options: shuffle([p, ...d]), answer: p, hint: () => hintP('Remember the plural rules: s, es, y → ies, or a special word.'), onDone: done }); } },
+  { part: 3, from: 'Page 21', play: (b, done) => { const u = pickOne(['milk', 'sugar', 'water', 'rice', 'sand', 'butter']); api.guide('Which one is uncountable?'); askChoice(b, { prompt: 'Which one is uncountable?', options: shuffle([u, ...shuffle(['apples', 'eggs', 'books', 'birds', 'toys', 'cars']).slice(0, 3)]), answer: u, hint: () => hintP('Which one can you NOT count one, two, three?'), onDone: done }); } },
+  { part: 3, from: 'Page 26', play: (b, done) => { const g = pickOne(['herd', 'pack', 'swarm', 'flock', 'bouquet', 'school', 'crew']), q = groupQ(g); api.guide(q.guide); b.append(q.before); askChoice(b, { prompt: q.prompt, options: q.options, answer: q.answer, hint: q.hint, onDone: done }); } },
+  { part: 4, from: 'Pages 27–28', play: (b, done) => { const q = triQ(pickOne(TRI_Q)); api.guide(q.guide); b.append(q.before); askChoice(b, { prompt: q.prompt, options: q.options, answer: q.answer, cls: 'chunk', hint: q.hint, onDone: done }); } },
+  { part: 4, from: 'Pages 28–29', play: (b, done) => {
+    if (Math.random() < 0.5) { const [s, a] = pickOne([['Wash your ___ with soap.', 'face'], ['My ___ is Ayansh.', 'name'], ['Put the photo in a ___.', 'frame'], ['Rockets fly into ___.', 'space'], ['Let’s play a ___!', 'game']]); api.guide(s); b.append(h('p', { class: 'story' }, s)); askChoice(b, { prompt: 'Which word fits?', options: shuffle([a, ...shuffle([...ACE, ...AME].filter(x => x !== a)).slice(0, 3)]), answer: a, hint: () => hintP('Read the sentence with each word.'), onDone: done }); }
+    else { const w = pickOne(['rabbit', 'bell', 'happy', 'ladder', 'egg', 'pillow', 'dress']); api.guide('Which word has a double consonant?'); askChoice(b, { prompt: 'Which word has a double consonant?', options: shuffle([w, ...shuffle(['net', 'hop', 'bat', 'map', 'sun', 'cat']).slice(0, 3)]), answer: w, hint: () => hintP('Look for the same letter twice, side by side.'), onDone: done }); }
+  } },
+];
+function playReview(api) {
+  if (!run.qs) run.qs = shuffle(REVIEW_QS.slice());
+  if (!run.firstTry) run.firstTry = {};
+  const q = run.qs[run.round % run.qs.length], before = run.mistakes;
+  const b = h('div', { class: 'below' });
+  api.stage.append(srctag(`Part ${q.part} · ${q.from}`), b);
+  q.play(b, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'The poem', 2: 'Out and about', 3: 'Nouns', 4: 'Sounds, story, writing' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🌈'),
+    h('h3', {}, 'Chapter 1 Word Wizard'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [rr, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${rr} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < rr ? '' : 'off' }, '⭐'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Where Do Clouds Go?', idea: 'Embark', page: 'Book page 7', rounds: 3, cut: [0, 2], icon: '☁️', play: playClouds },
+  { id: 2, part: 1, name: 'Read the Poem', idea: 'The Rainbow', page: 'Book page 8', rounds: 4, cut: [1, 3], icon: '📖', play: playPoem },
+  { id: 3, part: 1, name: 'What the Poem Means', idea: 'The poet and the questions', page: 'Book pages 9–10', rounds: 5, cut: [1, 3], icon: '🤔', play: playMeaning },
+  { id: 4, part: 1, name: 'Rhyme Time', idea: 'seas, these, please, trees', page: 'Book page 10', rounds: 4, cut: [1, 3], icon: '🎵', play: playRhyme },
+  { id: 5, part: 2, name: 'Nature Detective Walk', idea: 'I spy, hear, touch, wonder', page: 'Book pages 11–12', rounds: 4, cut: [1, 3], icon: '🔍', play: playWalk },
+  { id: 6, part: 2, name: 'Trash to Treasure Trail', idea: 'Eco Route', page: 'Book page 13', rounds: 3, cut: [1, 3], icon: '♻️', play: playTrash },
+  { id: 7, part: 3, name: 'Common and Proper Nouns', idea: 'Naming words', page: 'Book pages 13–15', rounds: 5, cut: [2, 4], icon: '🏷️', play: playNouns },
+  { id: 8, part: 3, name: 'Plural Patrol', idea: 'One or more than one', page: 'Book pages 15–17', rounds: 5, cut: [2, 5], icon: '🚓', play: playPlurals },
+  { id: 9, part: 3, name: 'Snack Tray, Basket and Zoo', idea: 'Plurals all around', page: 'Book pages 18–21', rounds: 4, cut: [2, 4], icon: '🧺', play: playTray },
+  { id: 10, part: 3, name: 'Count It or Not?', idea: 'Countable and uncountable', page: 'Book pages 21–23', rounds: 4, cut: [2, 4], icon: '🥛', play: playCount },
+  { id: 11, part: 3, name: 'Five-Senses Nouns', idea: 'Concrete nouns', page: 'Book pages 24–25', rounds: 3, cut: [1, 3], icon: '👃', play: playSenses },
+  { id: 12, part: 3, name: 'Collective Nouns', idea: 'Names for groups', page: 'Book pages 25–27', rounds: 4, cut: [2, 5], icon: '🐦', play: playGroups },
+  { id: 13, part: 4, name: 'Trigraph Tongue Twisters', idea: 'Three letters, one sound', page: 'Book pages 27–28', rounds: 4, cut: [2, 5], icon: '🔤', play: playTrigraphs },
+  { id: 14, part: 4, name: 'Double Letter Twins', idea: 'Double consonants', page: 'Book page 28', rounds: 3, cut: [1, 3], icon: '👯', play: playTwins },
+  { id: 15, part: 4, name: 'Max’s Amazing Race', idea: 'Listening · ace and ame', page: 'Book pages 29–30', rounds: 4, cut: [2, 4], icon: '🏃', play: playMax },
+  { id: 16, part: 4, name: 'If I Could Touch a Rainbow', idea: 'Writing', page: 'Book pages 30–32', rounds: 5, cut: [1, 3], icon: '✍️', play: playWriting },
+  { id: 17, part: 5, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 1 · pages 7–32', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'poem', e: '📖', t: 'Poem reader' },
+  { k: 'rhyme', e: '🎵', t: 'Rhyme catcher' },
+  { k: 'noun', e: '🏷️', t: 'Noun namer' },
+  { k: 'plural', e: '➕', t: 'Plural maker' },
+  { k: 'count', e: '🔢', t: 'Count checker' },
+  { k: 'group', e: '🐦', t: 'Group namer' },
+  { k: 'sounds', e: '🔤', t: 'Sound teams' },
+  { k: 'family', e: '🏁', t: 'Word families' },
+  { k: 'write', e: '✍️', t: 'Sentence writer' },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups(); hush();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups(); hush();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren(); delete stageEl.dataset.done;
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run || foot.querySelector('#nextBtn')) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 4 ? 'You finished Part 1, the poem! Part 2 takes you outdoors.'
+    : L.id === 6 ? 'You finished Part 2! Part 3 is all about nouns.'
+    : L.id === 12 ? 'You finished Part 3! Part 4 has sound teams, a story and your own writing.'
+    : L.id === 16 ? 'You finished Part 4! One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You crossed the whole Rainbow Bridge, Ayansh! Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to Rainbow Bridge'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = RB.map(x => x[1]).concat(['#FFFFFF']);
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 5; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null; hush();
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: Badal's rainbow */
+$('heroRainbow').innerHTML = rainbowSvg(0);
+$('showHow').addEventListener('click', async () => {
+  const btn = $('showHow'), svg = $('heroRainbow').querySelector('svg'), line = $('colourLine');
+  btn.disabled = true; RB.forEach((_, i) => paintArc(svg, i, false));
+  for (let i = 0; i < RB.length; i++) { paintArc(svg, i, true); line.textContent = RB[i][0]; line.style.color = RB[i][1]; sfx.tap(i); await wait(420); }
+  line.textContent = '🌈 Rainbow!'; line.style.color = '';
+  $('reveal').hidden = false; sfx.good();
+  if (voiceOn) say('A rainbow! It is a curved bow of colours that seems to join the earth to the sky. Our poem, The Rainbow, is all about it.');
+  btn.disabled = false; btn.textContent = '↻ Show me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) hush(); else if (run) speakGuide(guideText); });
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
