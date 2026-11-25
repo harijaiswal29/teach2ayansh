@@ -398,6 +398,16 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+/* teaching upgrade: on-your-own rounds and number pad */
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.npad-show{font-family:var(--display);font-weight:800;font-size:36px;min-width:150px;min-height:62px;margin:4px auto 10px;display:flex;align-items:center;justify-content:center;border:3px dashed var(--ink);border-radius:16px;background:var(--board);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:2px}
+.npad-show.right{border-style:solid;background:#DDF3E4}
+.npad{display:grid;grid-template-columns:repeat(3,minmax(0,72px));gap:8px;justify-content:center}
+.npad button{font-family:var(--display);font-weight:800;font-size:28px;height:58px;border:3px solid var(--ink);border-radius:14px;background:var(--board);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.npad button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.npad button.ok{background:var(--gold)}
+.npad button:disabled{opacity:.45;cursor:default}
+.npad-note{text-align:center;font-weight:700;color:var(--ink-soft);margin:4px 0 0;font-size:15px}
 </style>
 
 <div class="app">
@@ -406,6 +416,7 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
     <div class="tools">
       <span class="pill" id="total" aria-label="Stars collected">★ 0 / 51</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
     </div>
   </header>
 
@@ -495,6 +506,7 @@ table.rec{border-collapse:collapse;width:100%;min-width:420px;font-variant-numer
       <button class="btn small" id="back" type="button">← Fair map</button>
       <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
       <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
     </div>
     <div class="guide">
       <div class="mascot sm" aria-hidden="true">🐘</div>
@@ -516,6 +528,11 @@ const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Ma
 const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
 const $ = id => document.getElementById(id);
 const skip = (n, by) => Array.from({ length: n }, (_, i) => (i + 1) * by).join(', ');
+// First clue is a nudge (how to count), a later clue shows the whole count
+let hintTry = 1;
+const countOn = (n, by) => hintTry <= 1 && n > 2
+  ? `${by}, ${2 * by}, … Hold up one finger for each group and keep counting in ${by}s until you have ${n} fingers up`
+  : skip(n, by);
 const rep = (g, s) => Array(g).fill(s).join(' + ');
 
 function h(tag, props, ...kids) {
@@ -684,12 +701,82 @@ function opts3(ans, cands) {
 }
 const choices = (ans, g, s) => opts3(ans, [g + s, ...shuffle([ans + s, ans - s, ans + 1, ans - 1, ans + g])]);
 
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { hintTry = wrongs - 1; const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
 function askChoice(parent, { prompt, options, answer, onDone, hint, cls = '' }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
   const wrap = h('div', { class: 'ask' });
   if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
   const row = h('div', { class: 'choices' });
   const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
-  const btns = []; let over = false;
+  const btns = []; let over = false, wrongs = 0;
   options.forEach(opt => {
     const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
       if (over) return;
@@ -699,7 +786,7 @@ function askChoice(parent, { prompt, options, answer, onDone, hint, cls = '' }) 
       } else {
         b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
         fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
-        hint && hint();
+        if (++wrongs >= 2 || !run || !run.solo) { hintTry = run && run.solo ? wrongs - 1 : wrongs; hint && hint(); } else fb.textContent = 'Not quite. Have a think and try again!';
       }
     } }, String(opt));
     btns.push(b); row.append(b);
@@ -735,7 +822,7 @@ function factSequence(api, below, facts, onAll) {
     const f = facts[i++], ans = f.a * f.b;
     api.guide(`Fact ${i} of ${facts.length}: what is ${f.a} × ${f.b}?`);
     askChoice(below, { prompt: `${f.a} × ${f.b} = ?`, options: f.opts || choices(ans, f.a, f.b), answer: ans,
-      hint: () => api.guide(f.hint || `${f.a} groups of ${f.b}. Count on: ${skip(f.a, f.b)}.`),
+      hint: () => api.guide(f.hint || `${f.a} groups of ${f.b}. Count on: ${countOn(f.a, f.b)}.`),
       onDone: () => { learned(f.a, f.b); setTimeout(next, 700); } });
   };
   next();
@@ -785,7 +872,7 @@ function playTrays(api) {
     below.replaceChildren();
     api.guide(`Every tray has ${s}. These are equal groups! Add them: ${rep(g, s)} = ?`);
     askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(g * s, g, s), answer: g * s,
-      hint: () => api.guide(`Count on: ${skip(g, s)}.`), onDone: () => {
+      hint: () => api.guide(`Count on: ${countOn(g, s)}.`), onDone: () => {
         below.append(factCard(g, s, r === 0
           ? 'Adding equal groups again and again is called repeated addition. Equal groups help us count quickly!'
           : `${g} trays of ${s} cupcakes make ${g * s}.`));
@@ -1073,7 +1160,7 @@ function beads(api) {
   function ask() {
     api.guide(`Now fill the blanks. ${rep(g, s)} = ?`);
     askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(g * s, g, s), answer: g * s,
-      hint: () => api.guide(`Count on: ${skip(g, s)}.`),
+      hint: () => api.guide(`Count on: ${countOn(g, s)}.`),
       onDone: () => {
         below.append(h('div', { class: 'blanks' },
           h('span', {}, `${rep(g, s)} = ${g * s}`), h('span', {}, `${g} groups of ${s} = ${g * s}`), h('span', {}, `${g} × ${s} = ${g * s}`)));
@@ -1092,7 +1179,7 @@ function tableRow(api) {
     h('thead', {}, h('tr', {}, h('th', {}, 'Equal groups'), h('th', {}, 'Repeated addition'), h('th', {}, 'Multiplication fact'))),
     h('tbody', {}, h('tr', {}, h('td', {}, `${g} groups of ${s} items`), sumCell, factCell)))), below);
   askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(total, g, s), answer: total,
-    hint: () => api.guide(s === 10 ? `${g} groups of 10: say ${g}, then put a zero.` : `Count in ${s}s: ${skip(g, s)}.`),
+    hint: () => api.guide(s === 10 ? `${g} groups of 10: say ${g}, then put a zero.` : `Count in ${s}s: ${countOn(g, s)}.`),
     onDone: () => {
       sumCell.lastChild.textContent = total; factCell.lastChild.textContent = total;
       below.append(factCard(g, s, 'The repeated addition and the multiplication fact give the same answer.'));
@@ -1457,7 +1544,7 @@ function xGrid(api, active, pre) {
     td.classList.add('cur');
     api.guide(`Row ${r}, column ${c}: multiply the row number by the column number. What is ${r} × ${c}?`);
     askChoice(below, { prompt: `${r} × ${c} = ?`, options: choices(r * c, r, c), answer: r * c,
-      hint: () => api.guide(`${r} groups of ${c}: ${skip(r, c)}.`),
+      hint: () => api.guide(`${r} groups of ${c}: ${countOn(r, c)}.`),
       onDone: () => { td.textContent = r * c; td.classList.remove('cur'); td.classList.add('done'); learned(r, c); setTimeout(next, 500); } });
   };
   next();
@@ -1541,7 +1628,7 @@ function colourTask(api, g, s, first) {
     locked = true; doneBtn.remove(); boxes.forEach(b => b.disabled = true); sfx.good();
     api.guide(`${g} boxes of ${s}. Now add them: ${rep(g, s)} = ?`);
     askChoice(below, { prompt: `${rep(g, s)} = ?`, options: choices(g * s, g, s), answer: g * s,
-      hint: () => api.guide(`Count on in ${s}s: ${skip(g, s)}.`),
+      hint: () => api.guide(`Count on in ${s}s: ${countOn(g, s)}.`),
       onDone: () => { tail.textContent = `= ${rep(g, s)} = ${g * s}`; below.append(factCard(g, s)); learned(g, s); api.done(); } });
   } }, '✔ Done colouring');
   if (first) {
@@ -1581,7 +1668,7 @@ function playVertical(api) {
   const below = h('div', { class: 'below' });
   api.stage.append(h('p', { class: 'q' }, `Vertical format: ${a} × ${b}`), vt.el, below);
   api.guide(`Step 1: ${a} × ${b} is written in vertical format, ones under ones. Step 2: multiply the ones.`);
-  askChoice(below, { prompt: `${a} ones × ${b} ones = ? ones`, options: choices(p, a, b), answer: p, hint: () => api.guide(`Count on: ${skip(a, b)}.`), onDone: () => {
+  askChoice(below, { prompt: `${a} ones × ${b} ones = ? ones`, options: choices(p, a, b), answer: p, hint: () => api.guide(`Count on: ${countOn(a, b)}.`), onDone: () => {
     if (p < 10) place('ones', o, finish); else regroup();
   } });
   function regroup() {
@@ -1671,7 +1758,7 @@ function playRide(api) {
     const vt = vtable(g, s, pr.labels);
     area.append(vt.el);
     api.guide(`E is for Evaluate: write the multiplication sentence and solve. ${g} × ${s} = ?`);
-    askChoice(area, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on in ${s}s: ${skip(g, s)}.`), onDone: () => {
+    askChoice(area, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on in ${s}s: ${countOn(g, s)}.`), onDone: () => {
       vt.setAll(total); bm.whole(`? = ${total}`); strip.set(4);
       area.append(factCard(g, s, `${total} ${pr.unit} in all.`));
       api.guide(`Solved with RIDE! ${g} × ${s} = ${total} ${pr.unit}.`);
@@ -1723,7 +1810,7 @@ function toyTask(api, kid, askMost) {
       const bm = barModel(g, s, '?'); const vt = vtable(g, s, ['Number of boxes', 'Toys in each box', 'Total toys']);
       below.append(bm.el, vt.el);
       api.guide(`Here is the bar model: ${g} boxes with ${s} in each. ${g} × ${s} = ?`);
-      askChoice(below, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on: ${skip(g, s)}.`), onDone: () => {
+      askChoice(below, { prompt: `${g} × ${s} = ?`, options: choices(total, g, s), answer: total, hint: () => api.guide(`Count on: ${countOn(g, s)}.`), onDone: () => {
         bm.whole(`? = ${total}`); vt.setAll(total); learned(g, s);
         if (!askMost) { below.append(factCard(g, s, `${kid.who} will have ${total} toys.`)); return api.done(); }
         const totals = KIDS.map(k => k.n * TOYBOX[k.box].toys);
@@ -1748,7 +1835,7 @@ function milkTask(api) {
   const doneBtn = h('button', { class: 'btn go', type: 'button', onclick: () => {
     locked = true; doneBtn.remove(); minus.disabled = plus.disabled = true;
     api.guide(`If you drink ${n} ${n === 1 ? 'glass' : 'glasses'} every day for 7 days: ${rep(7, n)} = ?`);
-    askChoice(below, { prompt: `${rep(7, n)} = ?`, options: choices(7 * n, 7, n), answer: 7 * n, hint: () => api.guide(`Count on in ${n}s: ${skip(7, n)}.`), onDone: () => {
+    askChoice(below, { prompt: `${rep(7, n)} = ?`, options: choices(7 * n, 7, n), answer: 7 * n, hint: () => api.guide(`Count on in ${n}s: ${countOn(7, n)}.`), onDone: () => {
       below.append(factCard(7, n, `I drank ${7 * n} glasses of milk in 7 days.`)); learned(7, n); api.done();
     } });
   } }, '✔ That is me');
@@ -1782,7 +1869,7 @@ const REVIEW_QS = [
     const b = pickOne([2, 5, 10]), a = rand(3, 10);
     api.guide(`Quick fact from the tables of 2, 5 and 10. What is ${a} × ${b}?`);
     askChoice(below, { prompt: `${a} × ${b} = ?`, options: choices(a * b, a, b), answer: a * b,
-      hint: () => api.guide(b === 10 ? `${a} groups of 10: say ${a}, then put a zero.` : `Count in ${b}s: ${skip(a, b)}.`),
+      hint: () => api.guide(b === 10 ? `${a} groups of 10: say ${a}, then put a zero.` : `Count in ${b}s: ${countOn(a, b)}.`),
       onDone: () => { below.append(factCard(a, b)); learned(a, b); ok(); } });
   } },
   { key: 'tens', part: 1, from: 'Lantern Lights', play: (api, below, ok) => {
@@ -1798,7 +1885,7 @@ const REVIEW_QS = [
     const b = pickOne([3, 4, 6]), a = rand(2, 10);
     api.guide(`Quick fact from the tables of 3, 4 and 6. What is ${a} × ${b}?`);
     askChoice(below, { prompt: `${a} × ${b} = ?`, options: choices(a * b, a, b), answer: a * b,
-      hint: () => api.guide(`Count in ${b}s: ${skip(a, b)}.`),
+      hint: () => api.guide(`Count in ${b}s: ${countOn(a, b)}.`),
       onDone: () => { below.append(factCard(a, b)); learned(a, b); ok(); } });
   } },
   { key: 'hops', part: 2, from: 'Hopscotch Lane', play: (api, below, ok) => {
@@ -1863,7 +1950,7 @@ const REVIEW_QS = [
     api.stage.insertBefore(bm.el, below);
     api.guide(`${st.text} The bar model has ${st.g} boxes with ${st.s} in each.`);
     askChoice(below, { prompt: `${st.g} × ${st.s} = ?`, options: choices(total, st.g, st.s), answer: total,
-      hint: () => api.guide(`Count on in ${st.s}s: ${skip(st.g, st.s)}.`),
+      hint: () => api.guide(`Count on in ${st.s}s: ${countOn(st.g, st.s)}.`),
       onDone: () => { bm.whole(`? = ${total}`); below.append(factCard(st.g, st.s, `${total} ${st.unit} in all.`)); learned(st.g, st.s); ok(); } });
   } },
 ];
@@ -1918,7 +2005,7 @@ let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
 const api = {
   get stage() { return stageEl; },
-  guide: t => { guideText = t; bubble.textContent = t; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
   done: roundDone,
   cleanup: fn => cleanups.push(fn),
 };
@@ -1940,6 +2027,8 @@ function nextRound() {
   $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
   $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
   if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
   run.lvl.play(api);
 }
 function roundDone() {
@@ -2021,7 +2110,7 @@ function renderMap() {
 }
 function showMap() {
   runCleanups(); run = null;
-  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
   $('level').hidden = true; $('map').hidden = false;
   renderMap(); window.scrollTo(0, 0);
 }
@@ -2042,6 +2131,7 @@ $('showHow').addEventListener('click', async () => {
 
 /* ---------- wiring ---------- */
 function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
 $('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
 $('back').addEventListener('click', showMap);
 if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
@@ -2055,12 +2145,11 @@ $('resetAll').addEventListener('click', () => {
   b.textContent = 'Progress cleared';
 });
 
-function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { facts: [...factSet] }) })); } catch (e) {} }
 if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
-
 </body>
 </html>

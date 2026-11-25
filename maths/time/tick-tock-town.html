@@ -184,6 +184,11 @@ button{font:inherit;color:var(--ink)}
 .clock .hit:focus-visible{fill:rgba(255,194,61,.45)}
 .clock .handhit{stroke:transparent;stroke-width:26;stroke-linecap:round;cursor:pointer;pointer-events:stroke}
 .clock .half{fill:var(--gold);opacity:.45}
+.clock.drag{touch-action:none;cursor:grab}
+.clock.drag.dragging{cursor:grabbing}
+.clock.drag.dragging .hand{transition:none}
+.turnread{font-family:var(--display);font-weight:800;font-size:30px;text-align:center;margin:4px 0 0;font-variant-numeric:tabular-nums}
+.turnbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .clock.shake{animation:shake .4s}
 .digital{font-family:var(--display);font-weight:800;font-size:clamp(34px,9vw,46px);line-height:1;color:var(--lcd-ink);background:var(--lcd);border:4px solid var(--ink);border-radius:14px;padding:8px 18px 4px;letter-spacing:2px;font-variant-numeric:tabular-nums;box-shadow:0 4px 0 var(--shadow)}
 .digital.sm{font-size:24px;padding:4px 10px 1px;border-width:3px}
@@ -363,6 +368,17 @@ button{font:inherit;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* teaching upgrade: on-your-own rounds and number pad */
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.npad-show{font-family:var(--display);font-weight:800;font-size:36px;min-width:150px;min-height:62px;margin:4px auto 10px;display:flex;align-items:center;justify-content:center;border:3px dashed var(--ink);border-radius:16px;background:var(--board);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:2px}
+.npad-show.right{border-style:solid;background:#DDF3E4}
+.npad{display:grid;grid-template-columns:repeat(3,minmax(0,72px));gap:8px;justify-content:center}
+.npad button{font-family:var(--display);font-weight:800;font-size:28px;height:58px;border:3px solid var(--ink);border-radius:14px;background:var(--board);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.npad button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.npad button.ok{background:var(--gold)}
+.npad button:disabled{opacity:.45;cursor:default}
+.npad-note{text-align:center;font-weight:700;color:var(--ink-soft);margin:4px 0 0;font-size:15px}
 </style>
 
 <div class="app">
@@ -371,6 +387,7 @@ button{font:inherit;color:var(--ink)}
     <div class="tools">
       <span class="pill" id="total" aria-label="Stars collected">★ 0 / 51</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
     </div>
   </header>
 
@@ -476,6 +493,7 @@ button{font:inherit;color:var(--ink)}
       <button class="btn small" id="back" type="button">← Town map</button>
       <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
       <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
     </div>
     <div class="guide">
       <div class="mascot sm" aria-hidden="true">🐓</div>
@@ -714,12 +732,82 @@ function clockFace({ hr = 12, m = 0, size, tap, handTap, label } = {}) {
 }
 
 /* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
 function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words' }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
   const wrap = h('div', { class: 'ask' });
   if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
   const row = h('div', { class: 'choices' });
   const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
-  const btns = []; let over = false;
+  const btns = []; let over = false, wrongs = 0;
   options.forEach(opt => {
     const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
       if (over) return;
@@ -729,7 +817,7 @@ function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words
       } else {
         b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
         fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
-        hint && hint(opt);
+        if (++wrongs >= 2 || !run || !run.solo) { hint && hint(opt); } else fb.textContent = 'Not quite. Have a think and try again!';
       }
     } }, String(opt));
     btns.push(b); row.append(b);
@@ -983,8 +1071,68 @@ function playSetClock(api) {
     intro: t.label ? 'You have football practice at 5 o\'clock. Set the clock! First tap where the LONG red hand goes.' : `Show ${digi(t.hr, 0)} on the clock. First tap where the LONG red hand goes.` });
 }
 
+// Turn the clock yourself: drag the long hand and watch the short hand creep along
+function playTurn(api) {
+  const s = api.stage;
+  const c = clockFace({ hr: 4, m: 0 }); c.el.style.width = 'min(100%,280px)'; c.el.classList.add('drag');
+  c.el.setAttribute('aria-label', 'A clock you can turn. Drag the long red hand.');
+  let hr = 4, m = 0, passed = 0, step = 0, dragging = false;
+  const read = h('p', { class: 'turnread', 'aria-live': 'polite' });
+  const sub = h('p', { class: 'counter', 'aria-live': 'polite' });
+  const below = h('div', { class: 'below' });
+  const show = () => { c.set(hr, m); read.textContent = digi(hr, m); if (step === 0) sub.textContent = passed > 0 ? `${passed} minutes have passed` : 'Drag the long red hand'; };
+  const turnTo = m2 => {
+    if (m2 === m) return;
+    let d = m2 - m; if (d > 30) d -= 60; if (d < -30) d += 60;
+    const before = m; m = m2;
+    if (d > 0 && m < before) hr = hr % 12 + 1;
+    if (d < 0 && m > before) hr = hr === 1 ? 12 : hr - 1;
+    passed += d; sfx.tick(Math.abs(m / 5));
+    show(); check();
+  };
+  const angleMin = e => {
+    const r = c.el.getBoundingClientRect();
+    const x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+    const deg = (Math.atan2(x, -y) * 180 / Math.PI + 360) % 360;
+    return (Math.round(deg / 30) * 5) % 60;
+  };
+  c.el.addEventListener('pointerdown', e => { dragging = true; c.el.classList.add('dragging'); try { c.el.setPointerCapture(e.pointerId); } catch (x) {} turnTo(angleMin(e)); e.preventDefault(); });
+  c.el.addEventListener('pointermove', e => { if (dragging) turnTo(angleMin(e)); });
+  const end = () => { dragging = false; c.el.classList.remove('dragging'); };
+  c.el.addEventListener('pointerup', end); c.el.addEventListener('pointercancel', end);
+  const back = h('button', { type: 'button', class: 'btn', onclick: () => turnTo((m + 55) % 60) }, '◀ 5 minutes back');
+  const fwd = h('button', { type: 'button', class: 'btn', onclick: () => turnTo((m + 5) % 60) }, '5 minutes on ▶');
+  const goals = [
+    { say: 'Turn the clock yourself! Drag the long red hand slowly all the way round, from 12 back to 12. Keep your eyes on the short blue hand.', hr: 5, m: 0, need: 60 },
+    { say: 'Now turn the hands to show half past 5.', hr: 5, m: 30 },
+    { say: 'Last one. Turn the hands to show 7 o\'clock.', hr: 7, m: 0 },
+  ];
+  let wrongT = null;
+  function check() {
+    const g = goals[step]; if (!g) return;
+    clearTimeout(wrongT);
+    if (g.need ? passed >= g.need && hr === g.hr && m === g.m : hr === g.hr && m === g.m) {
+      sfx.good(); gotTime(g.hr, g.m);
+      if (step === 0) below.append(fact('60 minutes = 1 hour', 'The long hand went all the way round once. In that time the short hand crept from 4 to 5.'));
+      else below.append(fact(digi(g.hr, g.m), g.m === 30 ? 'The long hand is on 6 and the short hand is halfway between 5 and 6.' : 'The long hand is on 12 and the short hand points right at 7.'));
+      step++;
+      if (step < goals.length) setTimeout(() => { sub.textContent = ''; api.guide(goals[step].say); }, 900);
+      else { sub.textContent = ''; setTimeout(() => api.guide('You can turn a clock like a real clockmaker!'), 600); api.done(); }
+    } else if (step > 0 && !dragging) {
+      wrongT = setTimeout(() => {
+        const g2 = goals[step];
+        if (hr !== g2.hr && m === g2.m) sub.textContent = `The long hand is right. Keep turning it round until the short hand gets to ${g2.hr}.`;
+        else sub.textContent = '';
+      }, 1500);
+    }
+  }
+  s.append(c.el, read, sub, h('div', { class: 'turnbtns' }, back, fwd), below);
+  show();
+  api.guide(goals[0].say);
+}
 function playStraw(api) {
   const s = api.stage;
+  if (run.round === 2) { playTurn(api); return; }
   if (run.round === 1) {
     const c = clockFace({ hr: 4, m: 30 }); c.el.style.width = 'min(100%,240px)'; s.append(c.el);
     api.guide('When the long hand went from 12 to 6, the short hand moved a little too. Look at the short hand.');
@@ -1529,7 +1677,7 @@ function reviewCert() {
 const LEVELS = [
   { id: 1, part: 1, name: 'Clock Hands', idea: 'Hour hand and minute hand', page: 'Book pages 58–59', rounds: 5, cut: [1, 3], icon: '🕙', play: playHands },
   { id: 2, part: 1, name: 'Set the Clock', idea: 'O\'clock and 10:00', page: 'Book page 60', rounds: 4, cut: [1, 3], icon: '⏰', play: playSetClock },
-  { id: 3, part: 1, name: 'Straw Clock', idea: 'Counting minutes in 5s', page: 'Book page 61', rounds: 3, cut: [1, 2], icon: '🥤', play: playStraw },
+  { id: 3, part: 1, name: 'Straw Clock', idea: 'Counting minutes in 5s', page: 'Book page 61', rounds: 4, cut: [1, 2], icon: '🥤', play: playStraw },
   { id: 4, part: 1, name: 'Half Past Pizza', idea: 'Half past', page: 'Book pages 60–62', rounds: 5, cut: [1, 3], icon: '🍕', play: playPizza },
   { id: 5, part: 1, name: 'Train to Sunnyside', idea: 'GRIP-2', page: 'Book page 63', rounds: 4, cut: [1, 3], icon: '🚂', play: playTrain },
   { id: 6, part: 1, name: 'Clock Doctor', idea: 'Spot the mistake', page: 'Book pages 64–65', rounds: 4, cut: [1, 3], icon: '🩺', play: playDoctor },
@@ -1549,7 +1697,7 @@ let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
 const api = {
   get stage() { return stageEl; },
-  guide: t => { guideText = t; bubble.textContent = t; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
   done: roundDone,
   cleanup: fn => cleanups.push(fn),
 };
@@ -1571,6 +1719,8 @@ function nextRound() {
   $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
   $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
   if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
   run.lvl.play(api);
 }
 function roundDone() {
@@ -1652,7 +1802,7 @@ function renderMap() {
 }
 function showMap() {
   runCleanups(); run = null;
-  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
   $('level').hidden = true; $('map').hidden = false;
   renderMap(); window.scrollTo(0, 0);
 }
@@ -1675,6 +1825,7 @@ $('showHow').addEventListener('click', async () => {
 
 /* ---------- wiring ---------- */
 function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
 $('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
 $('back').addEventListener('click', showMap);
 if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
@@ -1688,12 +1839,11 @@ $('resetAll').addEventListener('click', () => {
   b.textContent = 'Progress cleared';
 });
 
-function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { times: [...timeSet] }) })); } catch (e) {} }
 if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
-
 </body>
 </html>

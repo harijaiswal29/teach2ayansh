@@ -316,6 +316,20 @@ button{font:inherit;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* teaching upgrade: on-your-own rounds and number pad */
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.npad-show{font-family:var(--display);font-weight:800;font-size:36px;min-width:150px;min-height:62px;margin:4px auto 10px;display:flex;align-items:center;justify-content:center;border:3px dashed var(--ink);border-radius:16px;background:var(--board);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:2px}
+.npad-show.right{border-style:solid;background:#DDF3E4}
+.npad{display:grid;grid-template-columns:repeat(3,minmax(0,72px));gap:8px;justify-content:center}
+.npad button{font-family:var(--display);font-weight:800;font-size:28px;height:58px;border:3px solid var(--ink);border-radius:14px;background:var(--board);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.npad button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.npad button.ok{background:var(--gold)}
+.npad button:disabled{opacity:.45;cursor:default}
+.tappable{cursor:pointer}
+.tile.tappable:hover,.stone.tappable:hover{box-shadow:0 0 0 3px var(--gold)}
+.tappable:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.npad-note{text-align:center;font-weight:700;color:var(--ink-soft);margin:4px 0 0;font-size:15px}
 </style>
 
 <div class="app">
@@ -324,6 +338,7 @@ button{font:inherit;color:var(--ink)}
     <div class="tools">
       <span class="pill" id="total" aria-label="Stars collected">★ 0 / 36</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
     </div>
   </header>
 
@@ -423,6 +438,7 @@ button{font:inherit;color:var(--ink)}
       <button class="btn small" id="back" type="button">← Rangoli Lane</button>
       <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
       <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
     </div>
     <div class="guide">
       <div class="mascot sm" aria-hidden="true">🦚</div>
@@ -652,13 +668,83 @@ const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Bril
 const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
 
 /* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
 function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
   const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
   if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
   const row = h('div', { class: 'choices' });
   const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
   const hintBox = h('div', { class: 'below' });
-  const btns = []; let over = false;
+  const btns = []; let over = false, wrongs = 0;
   options.forEach(opt => {
     const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
       if (over) return;
@@ -668,7 +754,7 @@ function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words
       } else {
         b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
         fb.textContent = oopsLine(); fb.className = 'fb oops';
-        if (hint) { const x = hint(opt); if (x) hintBox.replaceChildren(x); }
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
       }
     } }, render ? render(opt) : String(opt));
     btns.push(b); row.append(b);
@@ -1042,7 +1128,8 @@ function playMyPattern(api) {
 }
 /* Stop 4 · page 50, GRIP-1 */
 function playMissing(api) {
-  const R = run.round, below = h('div', { class: 'below' });
+  if (run.round === 2) return playSpotShape(api);
+  const R = run.round === 3 ? 2 : run.round, below = h('div', { class: 'below' });
   const Q = [
     { tag: 'GRIP-1 · a', items: ['ball:yellow', 'triangle:green', 'ball:red', 'ball:yellow', 'triangle:green', 'ball:red'], blanks: [3] },
     { tag: 'GRIP-1 · b', items: ['triangle:green', 'ball:red', 'ball:red', 'triangle:green', 'ball:red', 'ball:red'], blanks: [3] },
@@ -1104,6 +1191,7 @@ function playThumbs(api) {
 /* Stop 6 · pages 51–52 */
 const HOPS = [[2, 4, 6, 8, 10], [5, 10, 15, 20, 25], [10, 20, 30, 40, 50], [20, 18, 16, 14, 12], [25, 20, 15, 10, 5]];
 function playHops(api) {
+  if (run.round === 5) return playOwnPattern(api);
   const R = run.round, seq = HOPS[R], s = seq[1] - seq[0], below = h('div', { class: 'below' });
   api.stage.append(srctag(`Pattern ${R + 1} · ${s > 0 ? 'Adding' : 'Subtracting'} ${Math.abs(s)}`), below);
   if (R === 0) below.append(info('🔢', 'Numbers make patterns too', 'When you add or take away the same number each time, you get a number pattern.'));
@@ -1112,6 +1200,7 @@ function playHops(api) {
 /* Stop 7 · page 52, GRIP-2 */
 const GAPS = [{ seq: [3, 6, 9, 12, 15, 18], blanks: [3, 4] }, { seq: [30, 25, 20, 15, 10], blanks: [3, 4] }, { seq: [4, 8, 12, 16, 20, 24], blanks: [2, 4] }, { seq: [50, 40, 30, 20, 10], blanks: [2, 4] }];
 function playGaps(api) {
+  if (run.round === 4) return playBrokenNumbers(api);
   const G = GAPS[run.round], below = h('div', { class: 'below' });
   api.stage.append(srctag(`GRIP-2 · ${'abcd'[run.round]}`), below);
   numPattern(api, below, { seq: G.seq, blanks: G.blanks, onDone: api.done });
@@ -1197,6 +1286,95 @@ function playMadhubani(api) {
   }
 }
 
+/* ---------- teaching upgrade: spot a broken pattern, make your own ---------- */
+function tapTiles(els, onTap) {
+  els.forEach((t, i) => {
+    t.setAttribute('role', 'button'); t.tabIndex = 0; t.classList.add('tappable');
+    t.addEventListener('click', () => onTap(i, t));
+    t.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTap(i, t); } });
+  });
+}
+function playSpotShape(api) {
+  const items = ['circle:yellow', 'triangle:green', 'square:blue', 'circle:yellow', 'square:blue', 'square:blue'], bad = 4, fix = 'triangle:green';
+  const below = h('div', { class: 'below' });
+  api.stage.append(srctag('Spot the mistake'), below);
+  api.guide('Oh no! Someone made a mistake in this pattern. One shape breaks it. Tap the shape that is wrong.');
+  const S = strip(items); below.append(S.el);
+  const box = h('div', { class: 'below' }), fb = h('p', { class: 'fb', 'aria-live': 'polite' }); box.append(fb); below.append(box);
+  let over = false, wrongs = 0;
+  tapTiles(S.tiles, (i, t) => {
+    if (over) return;
+    if (i !== bad) {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(t);
+      fb.textContent = wrongs >= 2 || !run.solo ? 'That one fits. Read the first group: yellow circle, green triangle, blue square. Does the next group match it?' : 'That one fits. Look again!';
+      fb.className = 'fb oops'; speakGuide(fb.textContent); return;
+    }
+    over = true; sfx.good(); S.look(bad); S.tiles.forEach(x => { x.classList.remove('tappable'); x.removeAttribute('role'); x.tabIndex = -1; });
+    fb.textContent = 'Yes! That blue square breaks the pattern.'; fb.className = 'fb good';
+    const ask = h('div', { class: 'below' }); box.append(ask);
+    api.guide('What should go there instead?');
+    askChoice(ask, { prompt: 'What should go in that box?', options: shuffle(['circle:yellow', 'triangle:green', 'square:blue']), answer: fix, render: k => itemEl(k),
+      hint: () => hintP('Say the pattern out loud: yellow circle, green triangle, blue square, yellow circle, …'),
+      onDone: () => { S.set(bad, fix); S.look(-1); S.group(3); ask.append(fact('A B C A B C', 'Now every group is the same. The pattern is fixed!')); api.done(); } });
+  });
+}
+function playBrokenNumbers(api) {
+  const seq = [4, 8, 12, 15, 20, 24], bad = 3, right = 16;
+  const below = h('div', { class: 'below' });
+  api.stage.append(srctag('A broken number pattern'), below);
+  api.guide('This pattern adds 4 each time, but one number is wrong. Tap the wrong number.');
+  const row = h('div', { class: 'stones', role: 'group', 'aria-label': 'Number pattern' });
+  const st = seq.map((n, i) => { const s = h('span', { class: 'stone' }, String(n)); if (i) row.append(h('span', { class: 'hop on', 'aria-hidden': 'true' }, h('i', {}, '+4'))); row.append(s); return s; });
+  below.append(row);
+  const box = h('div', { class: 'below' }), fb = h('p', { class: 'fb', 'aria-live': 'polite' }); box.append(fb); below.append(box);
+  let over = false, wrongs = 0;
+  tapTiles(st, (i, t) => {
+    if (over) return;
+    if (i !== bad) {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(t);
+      fb.textContent = wrongs >= 2 || !run.solo ? `${seq[i]} fits. Check each hop: 4 + 4 = 8, 8 + 4 = 12, 12 + 4 = ?` : 'That one fits. Check each hop!';
+      fb.className = 'fb oops'; speakGuide(fb.textContent); return;
+    }
+    over = true; sfx.good(); t.classList.add('now'); st.forEach(x => { x.classList.remove('tappable'); x.removeAttribute('role'); x.tabIndex = -1; });
+    fb.textContent = '12 + 4 is not 15. Good detective work!'; fb.className = 'fb good';
+    const ask = h('div', { class: 'below' }); box.append(ask);
+    api.guide('What number should be there?');
+    askChoice(ask, { prompt: '12 + 4 = ?', options: numOpts(right, [15, 17, 14]), answer: right, cls: '', hint: () => hintP('Start at 12 and count on 4: 13, 14, 15, 16.'),
+      onDone: () => { t.textContent = String(right); t.classList.remove('now'); t.classList.add('fresh'); ask.append(fact('4, 8, 12, 16, 20, 24', 'Add 4 each time. Now the pattern works!')); api.done(); } });
+  });
+}
+function playOwnPattern(api) {
+  const below = h('div', { class: 'below' });
+  api.stage.append(srctag('Make your own number pattern'), below);
+  api.guide('Make your own number pattern! First choose what happens each time.');
+  freeChoice(below, { prompt: 'What will your pattern do each time?', options: ['Add 2', 'Add 3', 'Add 5', 'Add 10', 'Take away 2', 'Take away 5'], onPick: o => {
+    const n = +o.split(' ').pop(), step = o.startsWith('Add') ? n : -n;
+    setTimeout(() => {
+      below.replaceChildren();
+      api.guide('Now choose the number to start from.');
+      freeChoice(below, { prompt: 'Start at…', options: (step > 0 ? [1, 3, 4, 10, 20] : [30, 40, 50]).map(String), onPick: st => {
+        const start = +st, seq = Array.from({ length: 5 }, (_, i) => start + step * i);
+        setTimeout(() => {
+          below.replaceChildren();
+          const S = stones(seq, [1, 2, 3, 4]); below.append(S.el); S.showHops(step);
+          const box = h('div', { class: 'below' }); below.append(box);
+          let i = 1;
+          const next = () => {
+            box.replaceChildren();
+            if (i > 4) { S.focus(-1); skill('rule'); box.append(fact(seq.join(', ') + ', …', `Your very own pattern! ${ruleText(step)}.`)); api.guide(`You made a number pattern: ${seq.join(', ')}!`); return api.done(); }
+            const prev = seq[i - 1], want = seq[i]; S.focus(i);
+            api.guide(`${prev} ${step > 0 ? '+' : '−'} ${Math.abs(step)} = ?`);
+            askChoice(box, { prompt: `What comes after ${prev}?`, options: numOpts(want, [prev + (step > 0 ? 1 : -1), want + (step > 0 ? 1 : -1), prev - step]), answer: want, cls: '',
+              hint: () => hintP(`Start at ${prev} and count ${step > 0 ? 'on' : 'back'} ${Math.abs(step)}.`),
+              onDone: () => { S.set(i); i++; setTimeout(next, 600); } });
+          };
+          next();
+        }, 600);
+      } });
+    }, 600);
+  } });
+}
+
 /* ---------- Grand Review ---------- */
 const KINDS = ['circle', 'triangle', 'square', 'oval', 'diamond', 'star', 'rect'];
 const COLS = ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink'];
@@ -1264,10 +1442,10 @@ const LEVELS = [
   { id: 1, part: 1, name: 'Patterns Everywhere', idea: 'What is a pattern?', page: 'Book pages 47–48', rounds: 3, cut: [0, 1], icon: '🌸', play: playEverywhere },
   { id: 2, part: 1, name: 'Name It with Letters', idea: 'ABAB, AABB and ABC', page: 'Book pages 48–49', rounds: 3, cut: [1, 3], icon: '🔤', play: playNameIt },
   { id: 3, part: 1, name: 'What\'s My Pattern?', idea: 'Discovery Route', page: 'Book page 49', rounds: 3, cut: [1, 3], icon: '🧩', play: playMyPattern },
-  { id: 4, part: 1, name: 'Missing Shape', idea: 'GRIP-1', page: 'Book page 50', rounds: 3, cut: [1, 2], icon: '🔍', play: playMissing },
+  { id: 4, part: 1, name: 'Missing Shape', idea: 'GRIP-1 and spot the mistake', page: 'Book page 50', rounds: 4, cut: [1, 2], icon: '🔍', play: playMissing },
   { id: 5, part: 2, name: 'Thumb-print Parade', idea: 'Ruhi\'s stamps', page: 'Book pages 50–51', rounds: 3, cut: [0, 2], icon: '👍', play: playThumbs },
-  { id: 6, part: 3, name: 'Number Hops', idea: 'Add or take away the same', page: 'Book pages 51–52', rounds: 5, cut: [1, 3], icon: '🐸', play: playHops },
-  { id: 7, part: 3, name: 'Fill the Gaps', idea: 'GRIP-2', page: 'Book page 52', rounds: 4, cut: [1, 3], icon: '✏️', play: playGaps },
+  { id: 6, part: 3, name: 'Number Hops', idea: 'Add or take away the same', page: 'Book pages 51–52', rounds: 6, cut: [1, 3], icon: '🐸', play: playHops },
+  { id: 7, part: 3, name: 'Fill the Gaps', idea: 'GRIP-2 and a broken pattern', page: 'Book page 52', rounds: 5, cut: [1, 3], icon: '✏️', play: playGaps },
   { id: 8, part: 3, name: 'Pattern Hunt', idea: 'Real Route', page: 'Book page 52', rounds: 2, cut: [0, 1], icon: '🏠', play: playHunt },
   { id: 9, part: 4, name: 'Colour the Grid', idea: 'Checkpoint 1', page: 'Book page 52', rounds: 3, cut: [1, 2], icon: '🟪', play: playGrid },
   { id: 10, part: 4, name: 'Sam\'s Tower', idea: 'Checkpoint 2', page: 'Book page 53', rounds: 3, cut: [1, 2], icon: '🧱', play: playTower },
@@ -1286,7 +1464,7 @@ let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
 const api = {
   get stage() { return stageEl; },
-  guide: t => { guideText = t; bubble.textContent = t; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
   done: roundDone,
   cleanup: fn => cleanups.push(fn),
 };
@@ -1325,6 +1503,8 @@ function nextRound() {
   $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
   $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
   if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
   run.lvl.play(api);
 }
 function roundDone() {
@@ -1405,7 +1585,7 @@ function renderMap() {
 }
 function showMap() {
   runCleanups(); run = null;
-  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
   $('level').hidden = true; $('map').hidden = false;
   renderMap(); window.scrollTo(0, 0);
 }
@@ -1422,6 +1602,7 @@ $('showHow').addEventListener('click', async () => {
 
 /* ---------- wiring ---------- */
 function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
 $('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
 $('back').addEventListener('click', showMap);
 if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
@@ -1435,12 +1616,11 @@ $('resetAll').addEventListener('click', () => {
   b.textContent = 'Progress cleared';
 });
 
-function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
 if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
-
 </body>
 </html>

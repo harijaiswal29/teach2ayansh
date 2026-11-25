@@ -323,6 +323,17 @@ button{font:inherit;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* teaching upgrade: on-your-own rounds and number pad */
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.npad-show{font-family:var(--display);font-weight:800;font-size:36px;min-width:150px;min-height:62px;margin:4px auto 10px;display:flex;align-items:center;justify-content:center;border:3px dashed var(--ink);border-radius:16px;background:var(--board);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:2px}
+.npad-show.right{border-style:solid;background:#DDF3E4}
+.npad{display:grid;grid-template-columns:repeat(3,minmax(0,72px));gap:8px;justify-content:center}
+.npad button{font-family:var(--display);font-weight:800;font-size:28px;height:58px;border:3px solid var(--ink);border-radius:14px;background:var(--board);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.npad button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.npad button.ok{background:var(--gold)}
+.npad button:disabled{opacity:.45;cursor:default}
+.npad-note{text-align:center;font-weight:700;color:var(--ink-soft);margin:4px 0 0;font-size:15px}
 </style>
 
 <div class="app">
@@ -331,6 +342,7 @@ button{font:inherit;color:var(--ink)}
     <div class="tools">
       <span class="pill" id="total" aria-label="Stars collected">★ 0 / 54</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
     </div>
   </header>
 
@@ -437,6 +449,7 @@ button{font:inherit;color:var(--ink)}
       <button class="btn small" id="back" type="button">← Bazaar map</button>
       <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
       <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
     </div>
     <div class="guide">
       <div class="mascot sm" aria-hidden="true">🐿️</div>
@@ -642,13 +655,83 @@ const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Bril
 const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
 
 /* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
 function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', big }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
   const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
   if (prompt) wrap.append(h('p', { class: 'q' + (big ? ' big' : '') }, prompt));
   const row = h('div', { class: 'choices' });
   const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
   const hintBox = h('div', { class: 'hintbox' });
-  const btns = []; let over = false;
+  const btns = []; let over = false, wrongs = 0;
   options.forEach(opt => {
     const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
       if (over) return;
@@ -658,7 +741,7 @@ function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words
       } else {
         b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
         fb.textContent = oopsLine(); fb.className = 'fb oops';
-        if (hint) { const x = hint(opt); if (x) hintBox.replaceChildren(x); }
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
       }
     } }, String(opt));
     btns.push(b); row.append(b);
@@ -857,9 +940,10 @@ function columnSub(api, parent, { a, b, onDone, check, ring }) {
   grid.append(h('span', { class: 'br sg' }));
   ci.forEach((c, i) => { const x = h('span', { class: 'br' }); cells.br.push(x); grid.append(x); });
   grid.append(h('span', { class: 'sg tps' }));
-  let tapTarget = -1, tapThen = null;
+  let tapTarget = -1, tapThen = null, soloTap = null;
   ci.forEach((c, i) => {
     const x = h('button', { type: 'button', class: 'tp', 'aria-label': `${NAME[c]} digit ${top[i]}`, onclick: () => {
+      if (soloTap) { soloTap(i, x); return; }
       if (tapTarget < 0) return;
       if (i === tapTarget) { x.classList.remove('tapme'); tapTarget = -1; const f = tapThen; tapThen = null; sfx.crack(); f(); }
       else shakeEl(x);
@@ -882,6 +966,7 @@ function columnSub(api, parent, { a, b, onDone, check, ring }) {
   function col() {
     if (i < 0) return finish();
     curCol(i); panel.replaceChildren();
+    if (run && run.solo) { soloCol(); scrollTo(panel); return; }
     const c = ci[i], tv = top[i], bv = bot[i];
     if (tv < bv) {
       api.guide(`Look at the ${PL[c]}: ${tv} − ${bv}. Is ${tv} big enough to take away ${bv}?`);
@@ -906,6 +991,62 @@ function columnSub(api, parent, { a, b, onDone, check, ring }) {
         setTimeout(then, 900);
       });
     }
+  }
+  // On-your-own column: he decides whether to borrow, taps the digit next door himself, then types the answer
+  function soloCol() {
+    const c = ci[i], bv = bot[i];
+    let wrongs = 0, over = false;
+    cells.an[i].textContent = '?'; cells.an[i].classList.add('now');
+    api.guide(i === 2 ? 'On your own! Start with the ones. If there are not enough, tap the digit next door to borrow.' : i === 1 ? 'Now the tens. Borrow if you need to.' : 'Last, the hundreds.');
+    const q = h('p', { class: 'q big' });
+    const paintQ = () => { q.textContent = `${NAME[c]}: ${top[i]} − ${bv} = ?`; };
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    const hintBox = h('div', { class: 'hintbox' });
+    const say2 = (t, good) => { fb.textContent = t; fb.className = 'fb ' + (good ? 'good' : 'oops'); speakGuide(t); };
+    soloTap = (k, el) => {
+      if (over) return;
+      if (k === i - 1 && top[i] < bv && top[k] > 0) {
+        top[k]--; top[i] += 10; showBorrow(k); showBorrow(i); sfx.crack(); skill(k === 1 ? 'ten' : 'hundred');
+        cells.tp.forEach(x => x.classList.remove('tapme')); paintQ();
+        say2(`1 ${ONE[ci[k]]} = 10 ${PL[c]}. Now you have ${top[i]} ${PL[c]}.`, true); return;
+      }
+      if (k === i - 2 && top[i] < bv && top[i - 1] === 0 && top[k] > 0) {
+        top[k]--; top[i - 1] += 10; showBorrow(k); showBorrow(i - 1); sfx.crack(); skill('zero');
+        cells.tp.forEach(x => x.classList.remove('tapme'));
+        say2('1 hundred = 10 tens. Now borrow 1 ten from the tens.', true); return;
+      }
+      shakeEl(el); sfx.oops();
+      if (top[i] >= bv) say2(`You have ${top[i]} ${PL[c]}. That is enough to take away ${bv}, so no borrowing here.`);
+      else if (k === i - 1 && top[k] === 0) say2(`There are 0 ${PL[ci[k]]} to borrow. Borrow from the hundreds first.`);
+      else say2('Borrow from the place just next door, on the left.');
+    };
+    const pad = h('div', { class: 'keypad', role: 'group', 'aria-label': 'Number keys' });
+    for (let d = 1; d <= 10; d++) {
+      const n = d % 10;
+      const k = h('button', { type: 'button', class: 'key', 'data-key': String(n), onclick: () => {
+        if (over) return;
+        if (top[i] < bv) {
+          wrongs++; run.mistakes++; sfx.oops();
+          say2(`Can you take ${bv} from ${top[i]}? Not enough ${PL[c]}! Tap the digit next door to borrow first.`);
+          if (wrongs >= 2) { const kk = top[i - 1] === 0 ? i - 2 : i - 1; if (kk >= 0) cells.tp[kk].classList.add('tapme'); }
+          return;
+        }
+        const r = top[i] - bv;
+        if (n === r) {
+          over = true; soloTap = null; k.classList.add('right'); sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+          cells.an[i].textContent = String(r); cells.an[i].classList.remove('now');
+          i--; setTimeout(col, 450);
+        } else {
+          wrongs++; run.mistakes++; sfx.oops(); k.classList.add('wrong');
+          setTimeout(() => k.classList.remove('wrong'), 700);
+          fb.textContent = oopsLine(); fb.className = 'fb oops';
+          if (wrongs >= 2) hintBox.replaceChildren(dotsHint(top[i], bv));
+        }
+      } }, String(n));
+      pad.append(k);
+    }
+    paintQ();
+    panel.append(h('div', { class: 'ask' }, q, pad, fb, hintBox));
   }
   function answerCol() {
     const c = ci[i], tv = top[i], bv = bot[i], r = tv - bv;
@@ -1407,7 +1548,7 @@ let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
 const api = {
   get stage() { return stageEl; },
-  guide: t => { guideText = t; bubble.textContent = t; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
   done: roundDone,
   cleanup: fn => cleanups.push(fn),
   quiet: false,
@@ -1447,6 +1588,8 @@ function nextRound() {
   $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
   $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
   if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
   run.lvl.play(api);
 }
 function roundDone() {
@@ -1528,7 +1671,7 @@ function renderMap() {
 }
 function showMap() {
   runCleanups(); run = null;
-  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
   $('level').hidden = true; $('map').hidden = false;
   renderMap(); window.scrollTo(0, 0);
 }
@@ -1548,6 +1691,7 @@ $('showHow').addEventListener('click', async () => {
 
 /* ---------- wiring ---------- */
 function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
 $('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
 $('back').addEventListener('click', showMap);
 if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
@@ -1561,12 +1705,11 @@ $('resetAll').addEventListener('click', () => {
   b.textContent = 'Progress cleared';
 });
 
-function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
 if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
-
 </body>
 </html>
