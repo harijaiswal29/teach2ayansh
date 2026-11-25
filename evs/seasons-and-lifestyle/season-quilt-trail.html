@@ -1,0 +1,2295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Season Quilt Trail</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column on a warm patchwork background, from morning cream down to a deep green evening; white cards hold the play. Follows EVS Chapter 8, "Seasons and Lifestyle" (pages 29–44), page by page. The six season colours of the ritus wheel are the accents. A single-look game page (light only), like the other chapter games. */
+:root{
+  --sky1:#FFF4DE; --sky2:#FFE3B8; --sky3:#F5C68C; --sky4:#5E8C7E; --night:#2E4F4A;
+  --board:#FFFFFF; --paper:#FFFBF3; --ink:#1E2A44; --ink-soft:#56627A; --shadow:#1C3330;
+  --gold:#FFC93D; --gold-soft:#FFF3CC;
+  --red:#E5484D; --orange:#F28C28; --yellow:#F7C623; --green:#2E9E5B; --blue:#2F6FD0; --indigo:#4B3FB5; --violet:#8B5BC8;
+  --red-soft:#FFE1E1; --green-soft:#D6F2E1; --blue-soft:#DDE9FB; --violet-soft:#EEE6FA; --orange-soft:#FFE8D2;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC; --muted:#C9D3E0;
+  --on-dark:#FFFFFF; --on-dark-soft:#D8E6FA; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--night)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);margin:0;
+  background-color:var(--night);
+  background-image:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 20%,var(--sky3) 46%,var(--sky4) 74%,var(--night) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with a stripe of the six season colours */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:26px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:linear-gradient(90deg,#F9C6D3 0 16.6%,#FFE08A 16.6% 33.3%,#A9D8F5 33.3% 50%,#F7C99A 50% 66.6%,#C5E6A6 66.6% 83.3%,#DDEBFA 83.3%);border-bottom:2px dashed rgba(255,255,255,.7)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--sky4);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.herorow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.rbox{display:grid;place-items:center}
+.rbox svg,.rbsvg{width:min(260px,72vw);height:auto;display:block}
+.colourline{font-family:var(--display);font-weight:800;font-size:22px;min-height:1.4em}
+.herorow .colourline{flex:1;min-width:150px}
+.reveal{font-family:var(--display);font-size:21px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--green-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#E3E9F1;border-color:#93A0B5}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(4n+1) .stopicon{background:var(--red-soft)}
+.stop:nth-child(4n+2) .stopicon{background:var(--blue-soft)}
+.stop:nth-child(4n+3) .stopicon{background:var(--green-soft)}
+.stop:nth-child(4n) .stopicon{background:var(--violet-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--blue)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--red);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--green);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--paper);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:68ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--blue);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--green)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:30px;min-width:96px;min-height:70px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:320px}
+.choice.pic{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--body);font-size:15px;min-width:92px;padding:6px 10px}
+.choice.pic .pe{font-size:40px;line-height:1.1}
+.choice.chunk{font-family:var(--display);font-size:24px;min-width:84px;letter-spacing:1px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(22px,6vw,32px);line-height:1.15}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--blue-soft);border:3px dashed var(--blue);border-radius:16px;padding:10px 14px;font-weight:700;max-width:540px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:16px;text-align:center;max-width:44ch}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.story{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px 16px;font-weight:800;font-size:18px;max-width:560px;line-height:1.5}
+
+/* learn card: the idea first, before any question */
+.learn{width:100%;max-width:580px;background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;animation:pop .4s}
+.learn h3{font-size:22px;display:flex;gap:8px;align-items:center}
+.learn h3::before{content:"💡"}
+.learn p{font-weight:700}
+.learn .ex{display:flex;flex-wrap:wrap;gap:8px}
+.exchip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800}
+.exchip.a{background:var(--blue-soft)}.exchip.b{background:var(--green-soft)}.exchip.c{background:var(--violet-soft)}
+.hl{background:var(--gold);border-radius:6px;padding:0 3px;font-weight:800}
+.hl2{color:var(--red);font-weight:800;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+
+/* poem and story reader */
+.poem{width:100%;max-width:560px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.ptitle{font-size:26px;text-align:center;margin-bottom:6px}
+.pby{text-align:right;font-style:italic;font-weight:700;color:var(--ink-soft);margin-top:6px}
+.pline{display:flex;flex-wrap:wrap;align-items:center;gap:0 .3em;text-align:left;width:100%;border:none;background:none;border-radius:10px;padding:5px 10px 5px 34px;font-size:clamp(18px,4.4vw,22px);font-weight:700;line-height:1.35;cursor:pointer;position:relative}
+.pline::before{content:"🔈";position:absolute;left:6px;top:7px;font-size:16px;opacity:.5}
+.pline:hover{background:var(--blue-soft)}
+.pline.now{background:var(--gold);box-shadow:0 0 0 3px var(--ink)}
+.pline.heard::before{content:"✓";color:var(--good);opacity:1;font-weight:800}
+.pgap{height:12px}
+mark.gl{background:none;color:var(--indigo);font-weight:800;text-decoration:underline dotted 3px;text-underline-offset:4px}
+.readbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.glossrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:560px}
+.glossbtn{font-weight:800;border:3px solid var(--indigo);color:var(--indigo);background:var(--board);border-radius:999px;padding:4px 14px;min-height:42px;cursor:pointer}
+.glossbtn.seen{background:var(--violet-soft)}
+.echo{width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.echoline{font-family:var(--display);font-weight:800;font-size:clamp(24px,6vw,32px);line-height:1.2;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;width:100%}
+.echocount{font-weight:800;color:var(--ink-soft)}
+
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;width:100%;max-width:600px}
+.flip{min-height:118px;border:3px solid var(--ink);border-radius:16px;background:var(--violet-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.flip .fw{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1}
+.flip .fe{font-size:30px;line-height:1}
+.flip .fm{font-weight:700;font-size:15px;line-height:1.25}
+.flip.open{background:var(--board);animation:pop .35s}
+
+/* sorting */
+.sorter{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.sortnow{min-height:96px;display:grid;place-items:center;margin-bottom:6px}
+.sortcard{display:flex;align-items:center;gap:12px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:10px 20px;box-shadow:0 4px 0 var(--ink);max-width:520px}
+.sortcard .se{font-size:46px;line-height:1}
+.sortcard .st{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,30px);line-height:1.15}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;margin-top:10px}
+.bin{border:3px solid var(--ink);border-radius:16px;background:var(--paper);min-height:90px;display:flex;flex-direction:column;overflow:hidden}
+.binhead{font-family:var(--display);font-weight:800;font-size:18px;padding:4px 10px;background:var(--bc,var(--blue-soft));border-bottom:3px solid var(--ink);display:flex;gap:6px;align-items:center}
+.binlist{display:flex;flex-wrap:wrap;gap:6px;padding:8px}
+.chip{background:var(--board);border:2px solid var(--ink);border-radius:999px;padding:1px 10px;font-weight:800;font-size:15px}
+
+/* tap the words */
+.tapbox{width:100%;max-width:600px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tapline{display:flex;flex-wrap:wrap;gap:4px 2px;line-height:1.2}
+.w{font-weight:800;font-size:clamp(18px,4.4vw,22px);border:2px solid transparent;background:none;border-radius:10px;padding:4px 6px;cursor:pointer;min-height:44px}
+.w:hover{border-color:var(--muted)}
+.w.hit{background:var(--good);color:var(--on-color);border-color:var(--ink);animation:pop .3s}
+.w.miss{background:var(--oops-soft);animation:shake .4s}
+.w.show{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.counter{font-weight:800;color:var(--ink-soft)}
+.wordgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;width:100%;max-width:560px}
+.wordgrid .w{border:3px solid var(--ink);background:var(--board);box-shadow:0 4px 0 var(--ink);font-size:21px}
+
+/* letter tiles and sentence building */
+.slots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end;min-height:66px}
+.slots .given{font-family:var(--display);font-weight:800;font-size:38px;letter-spacing:2px;padding:0 4px}
+.slot{width:48px;height:58px;border-bottom:4px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:38px;line-height:1}
+.slot.fill{color:var(--blue);animation:pop .3s}
+.slots.right .slot{color:var(--good)}
+.ltray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:520px}
+.ltile{width:60px;height:62px;font-family:var(--display);font-weight:800;font-size:32px;border:3px solid var(--ink);border-radius:14px;background:var(--gold-soft);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.ltile:disabled{opacity:.25;cursor:default}
+.ltile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.cluepic{font-size:56px;line-height:1}
+.sline{min-height:64px;width:100%;max-width:600px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:10px;border:3px dashed var(--ink-soft);border-radius:16px;background:var(--paper)}
+.sline.right{border-style:solid;border-color:var(--good);background:var(--green-soft)}
+.sline .ph{color:var(--ink-soft);font-weight:700}
+.wput{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);line-height:1.2}
+.stray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px}
+.wtile{font-family:var(--display);font-weight:800;font-size:clamp(19px,4.8vw,24px);min-height:52px;min-width:52px;padding:2px 14px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.wtile.used{visibility:hidden}
+.wtile:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+
+/* word search */
+.ws{display:grid;grid-template-columns:repeat(var(--c),minmax(0,46px));gap:3px;padding:8px;background:var(--paper);border:3px solid var(--ink);border-radius:14px;max-width:100%}
+.wsc{aspect-ratio:1;min-width:0;font-family:var(--display);font-weight:800;font-size:clamp(17px,4.6vw,24px);border:2px solid var(--muted);border-radius:8px;background:var(--board);cursor:pointer;padding:0}
+.wsc.sel{background:var(--gold);border-color:var(--ink)}
+.wsc.got{background:var(--green-soft);border-color:var(--good);color:var(--good)}
+.wsc.look{box-shadow:0 0 0 3px var(--red)}
+.wslist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.wsw{font-weight:800;border:2px solid var(--ink);border-radius:999px;padding:2px 12px;background:var(--board)}
+.wsw.got{background:var(--good);color:var(--on-color);text-decoration:line-through}
+
+/* scenes, pictures and tables */
+.scene{width:100%;max-width:560px;border:3px solid var(--ink);border-radius:18px;padding:12px;background:linear-gradient(180deg,#CFEAFF 0%,#EAF6FF 55%,#BFE3A8 56%,#9ED38A 100%);display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:center;align-items:flex-end;font-size:40px;line-height:1.1;position:relative;overflow:hidden}
+.scene .small{font-size:26px}
+.scene .rbover{position:absolute;inset:4px 0 auto 0;display:grid;place-items:center;opacity:0;transition:opacity 1s}
+.scene .rbover.on{opacity:.9}
+.scene .rbover svg{width:min(320px,80%)}
+.ctrls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.toggle{font-weight:800;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);min-height:56px;padding:4px 16px;cursor:pointer;font-size:18px}
+.toggle[aria-pressed="true"]{background:var(--gold)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-weight:800;font-size:14px}
+.swatch i{width:40px;height:28px;border-radius:8px;border:2px solid var(--ink)}
+.swatch:disabled{opacity:.3;cursor:default}
+.tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%;max-width:420px;background:#E9C98F;border:3px solid var(--ink);border-radius:22px;padding:12px}
+.trayitem{display:flex;flex-direction:column;align-items:center;gap:2px;background:#F6E2B8;border:3px solid var(--ink);border-radius:14px;padding:6px;font-size:40px;line-height:1.1;cursor:pointer;box-shadow:0 3px 0 var(--ink)}
+.trayitem small{font-size:14px;font-weight:800}
+.trayitem:disabled{opacity:.35;cursor:default}
+.tbl{border-collapse:collapse;width:100%;max-width:520px;background:var(--board);border:3px solid var(--ink);font-weight:800}
+.tbl th,.tbl td{border:2px solid var(--ink);padding:6px 10px;text-align:left}
+.tbl th{background:var(--blue-soft);font-family:var(--display);font-size:18px}
+.tbl td.blank{color:var(--ink-soft)}
+.tbl td.now{background:var(--gold-soft);box-shadow:inset 0 0 0 3px var(--gold)}
+.tbl td.fresh{color:var(--good);animation:pop .35s}
+.poster{width:min(300px,100%);background:repeating-conic-gradient(from 0deg at 50% 100%,#F28C28 0 10deg,#F7B35C 10deg 20deg);border:3px solid var(--ink);border-radius:16px;padding:12px;text-align:center;color:#1E2A44;display:flex;flex-direction:column;gap:6px}
+.poster .ph1{font-family:var(--display);font-weight:800;font-size:44px;color:#C62C2C;-webkit-text-stroke:1px var(--ink);line-height:1}
+.poster .row{background:#123B5C;color:#FFF;font-family:var(--display);font-weight:800;font-size:20px;border-radius:8px;padding:2px 8px}
+.poster .feat{background:#FFF3CC;border-radius:8px;padding:4px 8px;font-weight:800;font-size:14px;line-height:1.3}
+.basket{font-size:42px;line-height:1.15;background:#F3E2C4;border:3px solid var(--ink);border-radius:22px 22px 40px 40px;padding:10px 16px;display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;max-width:360px}
+.bag{display:flex;flex-direction:column;align-items:center;gap:6px}
+.bagbox{min-width:220px;min-height:90px;border:3px solid var(--ink);border-radius:26px 26px 18px 18px;background:#5DA9E9;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;padding:10px;font-size:38px}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;width:100%;max-width:560px}
+.shelfitem{display:flex;flex-direction:column;align-items:center;gap:2px;border:3px solid var(--ink);border-radius:14px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;padding:6px;font-size:36px;line-height:1.1}
+.shelfitem small{font-size:14px;font-weight:800}
+.shelfitem.in{background:var(--green-soft);opacity:.6}
+.shelfitem.no{background:var(--oops-soft);animation:shake .4s}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;max-width:560px}
+.list{background:#FFFDF2;border:3px solid var(--ink);border-radius:8px;padding:10px 14px;min-height:150px;box-shadow:3px 3px 0 var(--shadow)}
+.list h3{font-size:19px;border-bottom:2px solid var(--muted);padding-bottom:4px;margin-bottom:6px}
+.list ol{margin:0;padding-left:22px;font-weight:800}
+.twins{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%;max-width:600px}
+.twin{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px;cursor:pointer}
+.twin .te{font-size:40px;line-height:1}
+.twin .tw{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:1px}
+.twin.heard{background:var(--green-soft)}
+.tcard{display:flex;flex-direction:column;gap:2px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px 10px;cursor:pointer;text-align:left}
+.tcard b{font-family:var(--display);font-size:28px;color:var(--indigo);letter-spacing:2px}
+.tcard span{font-weight:700;font-size:15px}
+.tcard.heard{background:var(--violet-soft)}
+.mywriting{width:100%;max-width:560px;background:#FFFDF2;border:3px solid var(--ink);border-radius:12px;padding:14px 18px;background-image:repeating-linear-gradient(180deg,transparent 0 34px,#BFD8F2 34px 36px);display:flex;flex-direction:column;gap:6px}
+.mywriting h3{font-size:22px;color:var(--violet)}
+.mywriting p{font-family:var(--display);font-weight:600;font-size:21px;line-height:1.5}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(20,32,56,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D5DDE8;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--violet);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+.pop{animation:pop .35s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:26px}
+  .choice.pic{min-width:78px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .ltile{width:50px;height:54px;font-size:28px}
+  .slot{width:38px;height:50px;font-size:32px}
+  .slots .given{font-size:32px}
+  .scene{font-size:32px}
+  .wsc{border-width:1.5px}
+  .ws{gap:2px;padding:5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+.scene{flex-direction:column;align-items:stretch}
+.srow{display:flex;justify-content:space-around;align-items:flex-end;flex-wrap:wrap;gap:4px 8px;width:100%;position:relative}
+.srow.sky{min-height:56px}
+.trayitem.done{background:var(--green-soft)}
+/* ---------- Season Quilt additions ---------- */
+.quilt{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding:8px;background:#8A5A35;border:3px solid var(--ink);border-radius:16px;width:min(100%,320px);box-shadow:3px 4px 0 var(--shadow)}
+.patch{aspect-ratio:1;border:2px dashed rgba(255,255,255,.75);border-radius:8px;display:grid;place-items:center;font-size:clamp(18px,5vw,26px);line-height:1;background:#E9DCC7}
+.patch span{filter:grayscale(1);opacity:.35}
+.patch.sewn{background:var(--pc)}
+.patch.sewn span{filter:none;opacity:1}
+.herorow .note{flex:1;min-width:150px}
+.tiplist{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:700}
+.tips{background:var(--gold-soft)}
+.qbig{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;max-width:440px;padding:10px;background:#8A5A35;border:3px solid var(--ink);border-radius:18px}
+.qpatch{aspect-ratio:1;border:3px dashed rgba(255,255,255,.85);border-radius:12px;background:var(--pc);font-size:clamp(28px,8vw,42px);line-height:1;cursor:pointer;display:grid;place-items:center;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.qpatch.seen{border-style:solid;border-color:var(--ink)}
+.qpatch:active{transform:translateY(2px)}
+.story.big{font-size:22px;text-align:center}
+.story.ok{border-color:var(--good);background:var(--green-soft)}
+.choice.tf{min-width:140px;font-size:21px}
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;width:100%;max-width:600px}
+.pk{display:flex;flex-direction:column;align-items:center;gap:4px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);padding:8px;cursor:pointer;font-weight:800;font-size:16px;line-height:1.2;min-height:96px;justify-content:center;text-align:center}
+.pk .pe{font-size:34px;line-height:1}
+.pk.on{background:var(--good);color:var(--on-color);opacity:1;animation:pop .3s}
+.pk.no{background:var(--oops-soft);opacity:.6;animation:shake .4s}
+.pk:disabled{cursor:default}
+.mtable{width:100%;max-width:560px;display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}
+.mrow .ml,.mrow .mr{border:3px solid var(--ink);border-radius:12px;padding:6px 10px;font-weight:800;background:var(--paper);display:flex;align-items:center}
+.mrow .mr{color:var(--ink-soft);border-style:dashed}
+.mrow.mhead .ml,.mrow.mhead .mr{background:var(--ink);color:var(--on-dark);border-style:solid;font-family:var(--display);font-size:17px}
+.mrow.now .ml{background:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.mrow.done .ml,.mrow.done .mr{background:var(--mc);color:var(--ink);border-style:solid}
+.wheel{width:min(320px,86vw);height:auto;display:block}
+.wheel text{font-family:var(--body);font-weight:800;fill:#1E2A44}
+.wheel .wem{font-size:24px}
+.wheel .wname{font-size:15px}
+.wheel .wnum{font-size:13px;fill:#56627A}
+.wheel .wpart{cursor:pointer;outline:none}
+.wheel .wpart:hover path,.wheel .wpart:focus-visible path{stroke:#FFC93D;stroke-width:5}
+.windows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;max-width:460px}
+.win1{border:4px solid #8A5A35;border-radius:12px;background:var(--wc);display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px}
+.win1 .we{font-size:40px;line-height:1}
+.lab{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;width:100%;max-width:620px}
+.fab{border:3px solid var(--ink);border-radius:16px;background:var(--fc);padding:10px;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
+.fabtop{display:flex;flex-direction:column;align-items:center}
+.fabtop .fe{font-size:44px;line-height:1}
+.fabtop b{font-family:var(--display);font-size:20px}
+.labout{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px;background:var(--board);border-radius:10px;padding:0 6px}
+.labout p{padding:4px 0}
+.housebox{width:min(300px,82vw)}
+.house{width:100%;height:auto;display:block;border:3px solid var(--ink);border-radius:14px}
+.scene2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%;max-width:560px}
+.scard{border:3px solid var(--ink);border-radius:16px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.scard.hot{background:linear-gradient(180deg,#FFE7A8,#F2C77A)}
+.scard.wet{background:linear-gradient(180deg,#B9C6D3,#9ED38A)}
+.scard .sem{font-size:40px;line-height:1.1}
+.scard .cap{font-weight:700;font-size:14px}
+.myquilt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px;background:#8A5A35;border:3px solid var(--ink);border-radius:16px;width:min(100%,360px)}
+.mq{background:var(--pc);border:2px dashed rgba(255,255,255,.9);border-radius:10px;display:flex;flex-direction:column;align-items:center;padding:8px 4px}
+.mqe{font-size:44px;line-height:1.1}
+.mq small{font-weight:800}
+.sechead{width:100%;max-width:600px;display:flex;flex-direction:column;gap:2px;border-bottom:3px solid var(--ink);padding-bottom:6px}
+.sechead b{font-family:var(--display);font-size:24px}
+.sechead span{font-weight:800;color:var(--ink-soft);font-size:14px}
+.revision{display:flex;flex-direction:column;gap:8px}
+.revision ol,.revision ul{font-size:15px}
+@media (max-width:480px){
+  .qbig{gap:6px;padding:8px}
+  .mrow .ml,.mrow .mr{font-size:15px;padding:5px 8px}
+  .pk{min-height:84px;font-size:15px}
+}
+
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Season Quilt Trail<small>Ayansh's EVS · Chapter 8 · Seasons and Lifestyle</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 45</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🐦</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Ritu the sparrow.</h2>
+        <p>My name, <b>Ritu</b>, means <b>season</b>! Every day I look at the sky and find nature's clues. Someone made this big quilt by watching the sky. Every patch tells a story about how <b>nature changes, and we change too</b>.</p>
+        <div class="herorow">
+          <div class="quilt" id="heroQuilt" aria-label="The Season Quilt"></div>
+          <p class="note" id="quiltNote">Finish a stop to sew its patch onto the quilt.</p>
+        </div>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You sewed the whole Season Quilt! You are ready for your EVS exam on Chapter 8.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Nature's clues</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · One season, many places</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · We change too</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Checkpoints and changing clues</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Part 5 · Exam practice</h2>
+    <ol class="stops finale" id="stops5"></ol>
+
+    <section class="skillcard card tips">
+      <h2>✏️ Ritu's exam tips</h2>
+      <ul class="tiplist">
+        <li><b>Read the question twice.</b> Look for the key word: why, which, where, true or false.</li>
+        <li><b>Use the book's words.</b> “Cotton lets air pass through.” “Wool keeps warm air near the body.”</li>
+        <li><b>Answer in a full sentence.</b> Start with a capital letter and end with a full stop.</li>
+        <li><b>False?</b> Write the correct sentence too. Teachers love that!</li>
+        <li><b>Learn the six ritus in order:</b> Vasant, Grishma, Varsha, Sharad, Hemanta, Shishira.</li>
+      </ul>
+    </section>
+
+    <section class="skillcard card">
+      <h2>My season badges</h2>
+      <p class="note">Each badge lights up the first time you earn it in a game.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body" id="grownups">
+        <p>This follows EVS Chapter 8, “Seasons and Lifestyle”, in Ayansh's book (pages 29–44), in the same order as the book. Because EVS was hard last term, every stop <b>teaches first</b>: a “💡” idea card with a real-life example, read aloud, before any question. Every stop then ends with an <b>✏️ Exam corner</b> in the formats exams use: fill in the blanks, true or false (with the correct sentence when false), match the following, one-word answers spelt with letter tiles, and answers built as a full sentence. The exam corner is <b>on your own</b>: no clue until his second try. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Nature's clues (pages 29–31)</h3>
+        <ol>
+          <li><b>The Season Quilt</b> (pages 29–30): the 12 quilt patches and the story in each, “nature changes, we change too” (food, clothes, festivals, homes), and nature's signs.</li>
+          <li><b>Weather or Season?</b> (pages 30, 32): weather can change in one day, a season stays for many weeks; the morning/afternoon/evening window; sorting; and the rain clues from Wonder Junction (clouds, wind, smell of wet soil, ants, birds).</li>
+          <li><b>India's Six Seasons</b> (page 31): the ritus wheel, Vasant (spring), Grishma (summer), Varsha (rainy), Sharad (autumn), Hemanta (early winter), Shishira (winter), with each season's sign; matching, putting them in order, and spelling.</li>
+        </ol>
+        <h3>Part 2 · One season, many places (pages 32–33)</h3>
+        <ol start="4">
+          <li><b>Season Trail Across India</b> (page 32): hot Rajasthan (cotton, chaas, aam panna, thick walls), rainy Kerala and Meghalaya (umbrellas, raincoats, sloping roofs, hot fresh food), cold Kashmir and Himachal (woollens, warm food, warm homes); Holi with spring, Pongal, Lohri, Bihu and Makar Sankranti at harvest.</li>
+          <li><b>Meet a Climatologist</b> (page 33): what a climatologist is; Dr. Roxy Mathew Koll, the ocean and the monsoon; satellites, ocean buoys and weather stations; the Indian Ocean is warming.</li>
+        </ol>
+        <h3>Part 3 · We change too (pages 33–39)</h3>
+        <ol start="6">
+          <li><b>The Fabric Lab</b> (pages 33–35): touch and water tests on cotton, wool and waterproof cloth (from the page 34 picture), which is best for hot, cold and rain, and dressing for the fog, rain and strong-Sun patches.</li>
+          <li><b>Seasons Café</b> (pages 35–36): our body feels the season; summer and winter foods; the café menus; fresh hot food in the rains because food spoils faster; seasons decide what grows.</li>
+          <li><b>Festivals Say Thank You</b> (pages 36–37): Holi, Onam, Pongal, Lohri, Bihu, Makar Sankranti; a festival as a thank-you to nature; his own family festival (Think Route).</li>
+          <li><b>Homes for Every Weather</b> (pages 38–39): sloping roofs, stilts, thick walls/courtyards/verandas, fireplaces, steep roofs, strong houses; a house builder for rainy Meghalaya and hot Rajasthan; the six homes in the pictures.</li>
+        </ol>
+        <h3>Part 4 · Checkpoints and changing clues (pages 39–44)</h3>
+        <ol start="10">
+          <li><b>Read the Quilt</b> (pages 39–40, Checkpoint 1): all five questions: clue to season, Finland and Chennai, very little rain, a patch's clue and people's response, and Picture A and B.</li>
+          <li><b>When Nature's Clues Change</b> (pages 41–42, Eco Route and Checkpoint 2): hotter summers, late or uneven rain, melting snow, Dharnai solar village, and how we can help. Checkpoint 2 asks him to talk to an elder.</li>
+          <li><b>The Last Patch</b> (pages 42–44): reading the quilt (mango = summer, sesame laddoo = winter, sloping roof = ready for rain), “that is wisdom”, and his own Quilt of Nature to draw on pages 43–44.</li>
+        </ol>
+        <h3>Part 5 · Exam practice</h3>
+        <ol start="13">
+          <li><b>Key Words</b>: 14 key words with meanings, a “which word means…” quiz, a word search and spelling.</li>
+          <li><b>Practice Paper</b>: a mini exam in five sections (A fill in the blanks, B true or false, C match, D one-word answers, E answer in one sentence). Every question is on his own. The questions change each time.</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all four parts, new each time, and a Season Quilt Master certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Revision sheet with answers</h3>
+        <p>Every question the game uses, with its answer. Use it for a quick oral quiz before the exam.</p>
+        <div id="revision" class="revision"></div>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>The book spells two seasons both ways: “Grishm” and “Shishir” in the text, “Grishma” and “Shishira” on the chart. The game uses Grishma and Shishira. Either should be fine in the exam; check with his teacher.</li>
+          <li>Open questions (I notice, I wonder, the café menu, his family festival, Ask an elder, My Quilt of Nature) accept any answer and then explain the book's idea.</li>
+          <li>Added to help understanding, not in the book's words: the December morning in Kashmir and Chennai, the report-card example for a climatologist, what each tool (satellite, buoy, weather station) does, the touch test results, the season and clues for each family festival, the Dharnai sentence (the book only shows its picture), the meaning of monsoon, and the house builder.</li>
+          <li>Checkpoint 1, question 2 (Finland and Chennai) and question 3 (very little rain) are open in the book. The game's answers are reasonable model answers, not the only ones.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Be a nature detective: look out of the window in the morning, afternoon and evening, and fill in page 30 together.</li>
+          <li>Do the fabric test (page 33): a cotton handkerchief, a woollen sweater and a raincoat. Drop a few drops of water on each.</li>
+          <li>At dinner, ask: “Can you find a season clue on your plate?”</li>
+          <li>Let him ask Nani, Dadi or you the Checkpoint 2 question and write the answer on page 42.</li>
+          <li>Before the exam, ask him the revision sheet out loud and let him answer in full sentences.</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Season Quilt</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐦</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+function numOpts(ans, extra = [], n = 3) {
+  const s = new Set([ans]);
+  extra.forEach(x => { if (s.size < n && Number.isInteger(x) && x >= 0 && x !== ans) s.add(x); });
+  const steps = [1, 2, 10, 5];
+  let i = 0;
+  while (s.size < n && i < 40) { const d = steps[i % steps.length] * (1 + Math.floor(i / 8)); const c = ans + (i % 2 ? -d : d); if (c >= 0) s.add(c); i++; }
+  return shuffle([...s]);
+}
+
+
+const KEY = 'ayansh-season-quilt-trail-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-4]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, queue) {
+  try {
+    if (!canSpeak) return;
+    if (!queue) speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ' to ').replace(/=/g, ' equals ').replace(/…/g, ' and so on');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+
+/* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words', render }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false, wrongs = 0;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, 'data-ok': opt === answer ? '1' : null, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = oopsLine(); fb.className = 'fb oops';
+        if (++wrongs >= 2 || !run || !run.solo) { if (hint) { const x = hint(opt); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); } } } else fb.textContent = 'Not quite. Have a think and try again!';
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own choices
+function freeChoice(parent, { prompt, options, onPick }) {
+  const wrap = h('div', { class: 'ask' }, h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' }); let over = false;
+  options.forEach(opt => row.append(h('button', { type: 'button', class: 'choice words', 'data-ok': '1', onclick: e => { if (over) return; over = true; const me = e.currentTarget; row.querySelectorAll('button').forEach(x => { if (x !== me) x.disabled = true; }); me.classList.add('right'); sfx.good(); onPick(opt); } }, opt)));
+  wrap.append(row); parent.append(wrap);
+}
+// several asks one after the other
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (q.before) holder.append(q.before);
+    if (q.onShow) q.onShow();
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 750); } });
+  };
+  next();
+}
+const hintP = t => h('p', { class: 'hintcap' }, t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const scrollIn = el => setTimeout(() => el.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 60);
+const srctag = t => h('span', { class: 'srctag' }, t);
+
+/* ---------- speaking helpers ---------- */
+const speakClean = t => String(t).replace(/[“”"]/g, '').replace(/_{2,}/g, ' blank ').replace(/…/g, '. ').replace(/→/g, ' becomes ').replace(/✓/g, '');
+function hush() { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} }
+// speak one line and call done when it ends (with a timer in case the browser never says it ended)
+function speakLine(text, done, rate = 0.85) {
+  let fin = false, t = null;
+  const end = () => { if (fin) return; fin = true; clearTimeout(t); done && done(); };
+  if (!canSpeak || !voiceOn) { t = setTimeout(end, 80); return () => { fin = true; clearTimeout(t); }; }
+  try {
+    const u = new SpeechSynthesisUtterance(speakClean(text));
+    u.lang = 'en-IN'; u.rate = rate; u.pitch = 1.05; u.onend = end; u.onerror = end;
+    speechSynthesis.speak(u);
+  } catch (e) { end(); }
+  t = setTimeout(end, 1600 + String(text).split(/\s+/).length * 620);
+  return () => { fin = true; clearTimeout(t); };
+}
+function sayNow(text) { if (!voiceOn || !canSpeak) return; hush(); setTimeout(() => say(speakClean(text)), 60); }
+
+/* ---------- small builders ---------- */
+const below = () => { const b = h('div', { class: 'below' }); api.stage.append(b); return b; };
+function chain(list, step, onAll) { let i = 0; const next = () => { if (i >= list.length) return onAll && onAll(); const it = list[i++]; step(it, next, i - 1); }; next(); }
+const picOpt = map => o => [h('span', { class: 'pe', 'aria-hidden': 'true' }, map[o] || ''), o];
+function learnCard(title, body, ex) {
+  return h('div', { class: 'learn' }, h('h3', {}, title),
+    [].concat(body).map(b => typeof b === 'string' ? h('p', {}, b) : b),
+    ex ? h('div', { class: 'ex' }, ex.map(x => typeof x === 'string' ? h('span', { class: 'exchip' }, x) : x)) : null);
+}
+const textOf = x => typeof x === 'string' ? x : (x && x.textContent) || '';
+// a "💡" idea card, read aloud, with a button to go on
+function teach(parent, { title, body, ex, read, btn = 'Got it! ➜' }, then) {
+  const card = learnCard(title, body, ex);
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.remove(); hush(); then(); } }, btn);
+  parent.append(card, go);
+  api.guide(read || [title].concat([].concat(body).map(textOf)).join(' '));
+  bubble.textContent = `💡 ${title}: listen, read the card, then tap “Got it!”`;
+  return card;
+}
+function hiWord(word, part) { // a word with one part highlighted
+  const i = word.indexOf(part);
+  return i < 0 ? word : [word.slice(0, i), h('span', { class: 'hl2' }, part), word.slice(i + part.length)];
+}
+function scene(sky, ground, extra) {
+  return h('div', { class: 'scene', role: 'img', 'aria-label': extra && extra.label || 'A picture' },
+    extra && extra.over ? extra.over : null,
+    h('div', { class: 'srow sky' }, sky.map(x => typeof x === 'string' ? h('span', {}, x) : x)),
+    h('div', { class: 'srow' }, ground.map(x => typeof x === 'string' ? h('span', {}, x) : x)));
+}
+
+/* ---------- sorting things into boxes ---------- */
+function sortGame(parent, { bins, items, ask, onDone }) {
+  const wrap = h('div', { class: 'sorter' });
+  const now = h('div', { class: 'sortnow' });
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const lists = {};
+  const binsEl = h('div', { class: 'bins' }, bins.map(b => { const l = h('div', { class: 'binlist' }); lists[b.k] = l; return h('div', { class: 'bin', style: `--bc:${b.c || 'var(--blue-soft)'}` }, h('div', { class: 'binhead' }, h('span', { 'aria-hidden': 'true' }, b.e || ''), b.label), l); }));
+  let i = 0, wrongs = 0, busy = false;
+  const show = () => {
+    hintBox.replaceChildren(); fb.textContent = ''; fb.className = 'fb';
+    if (i >= items.length) { now.replaceChildren(fact('All sorted! ✓')); row.replaceChildren(); return onDone && onDone(); }
+    const it = items[i]; wrongs = 0;
+    now.replaceChildren(h('div', { class: 'sortcard pop' }, it.e ? h('span', { class: 'se', 'aria-hidden': 'true' }, it.e) : null, h('span', { class: 'st' }, it.t)));
+    api.guide(ask ? ask(it) : it.t);
+    row.replaceChildren(...bins.map(b => h('button', { type: 'button', class: 'choice words', 'data-ok': b.k === it.bin ? '1' : null, onclick: e => pick(b, e.currentTarget) }, (b.e ? b.e + ' ' : '') + b.label)));
+  };
+  const pick = (b, el) => {
+    if (busy) return;
+    const it = items[i];
+    if (b.k === it.bin) {
+      busy = true; el.classList.add('right'); [...row.children].forEach(x => x.disabled = true); sfx.good();
+      fb.textContent = it.ok || praise(); fb.className = 'fb good';
+      if (it.ok) sayNow(it.ok);
+      lists[b.k].append(h('span', { class: 'chip pop' }, (it.e ? it.e + ' ' : '') + (it.short || it.t)));
+      setTimeout(() => { busy = false; i++; show(); }, it.ok ? 2600 : 900);
+    } else {
+      el.classList.add('wrong'); el.disabled = true; sfx.oops(); run.mistakes++; wrongs++;
+      fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) { fb.textContent = oopsLine(); if (it.why) { hintBox.replaceChildren(hintP(it.why)); speakGuide(it.why); } }
+      else fb.textContent = 'Not quite. Have a think and try again!';
+    }
+  };
+  wrap.append(now, row, fb, hintBox, binsEl); parent.append(wrap); show();
+}
+
+/* ---------- tap the right words ---------- */
+function tapWords(parent, { lines, targets, grid, onDone, hint, after }) {
+  const T = new Set(targets.map(x => x.toLowerCase()));
+  const clean = w => w.replace(/[^A-Za-z'’-]/g, '').replace(/’/g, "'").toLowerCase();
+  const box = h('div', { class: grid ? 'wordgrid' : 'tapbox' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let need = 0, got = 0, wrongs = 0, over = false;
+  const counter = h('p', { class: 'counter' });
+  const btn = w => {
+    const c = clean(w), ok = T.has(c); if (ok) need++;
+    const b = h('button', { type: 'button', class: 'w', 'data-ok': ok ? '1' : null, onclick: () => {
+      if (over || b.classList.contains('hit')) return;
+      if (ok) {
+        b.classList.add('hit'); sfx.tap(got); got++; counter.textContent = `Found ${got} of ${need}`;
+        after && after(c, b);
+        if (got >= need) { over = true; sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+      } else {
+        shakeEl(b); b.classList.add('miss'); setTimeout(() => b.classList.remove('miss'), 600);
+        sfx.oops(); run.mistakes++; wrongs++;
+        fb.textContent = `“${w.replace(/[^A-Za-z'’ -]/g, '')}” is not one of them. Try another word.`; fb.className = 'fb oops';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(c); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, w);
+    return b;
+  };
+  if (grid) lines.forEach(w => box.append(btn(w)));
+  else lines.forEach(ln => { const row = h('p', { class: 'tapline' }); ln.split(' ').forEach(w => row.append(btn(w))); box.append(row); });
+  counter.textContent = `Found 0 of ${need}`;
+  parent.append(box, counter, fb, hintBox);
+}
+
+/* ---------- the poem / story reader ---------- */
+function glossify(line, gloss) {
+  if (!gloss) return line;
+  return line.split(' ').map((w, i) => { const c = w.replace(/[^A-Za-z]/g, '').toLowerCase(); return [i ? ' ' : '', gloss[c] ? h('mark', { class: 'gl' }, w) : w]; }).flat();
+}
+function reader(parent, { lines, title, by, gloss, breaks = [], onDone, rate }) {
+  const box = h('div', { class: 'poem' });
+  if (title) box.append(h('h3', { class: 'ptitle' }, title));
+  const heard = new Set(); let stop = null, finished = false;
+  let self = null;
+  const finish = () => { if (finished) return; finished = true; if (self) { self.disabled = true; self.textContent = '✓ All read'; } onDone && onDone(); };
+  const mark = i => { heard.add(i); els[i].classList.add('heard'); if (heard.size === lines.length) finish(); };
+  function halt() { if (stop) stop(); stop = null; hush(); els.forEach(e => e.classList.remove('now')); }
+  function play(i, chainOn) {
+    els.forEach((e, j) => e.classList.toggle('now', j === i));
+    stop = speakLine(lines[i], () => { els[i].classList.remove('now'); mark(i); if (chainOn && i + 1 < lines.length) setTimeout(() => { if (box.isConnected) play(i + 1, true); }, 300); }, rate);
+  }
+  const els = lines.map((ln, i) => {
+    const b = h('button', { type: 'button', class: 'pline', 'aria-label': 'Hear this line: ' + ln, onclick: () => { halt(); setTimeout(() => play(i, false), 80); } }, glossify(ln, gloss));
+    box.append(b); if (breaks.includes(i)) box.append(h('div', { class: 'pgap' }));
+    return b;
+  });
+  if (by) box.append(h('p', { class: 'pby' }, by));
+  const playAll = h('button', { class: 'btn primary', type: 'button', onclick: () => { halt(); setTimeout(() => play(0, true), 80); } }, '▶ Read it to me');
+  self = h('button', { class: 'btn', type: 'button', onclick: () => { halt(); lines.forEach((_, i) => mark(i)); } }, '📖 I read it myself');
+  api.cleanup(halt);
+  parent.append(box, h('div', { class: 'readbtns' }, canSpeak && voiceOn ? playAll : null, self));
+}
+// he reads each line out loud himself
+function echoRead(parent, { lines, onDone, what = 'the whole poem' }) {
+  let i = 0; const box = h('div', { class: 'echo' }); parent.append(box);
+  const show = () => {
+    if (i >= lines.length) { box.replaceChildren(fact('🎤 Super reading!', `You read ${what} aloud by yourself.`)); return onDone && onDone(); }
+    const ln = lines[i];
+    const hear = h('button', { class: 'btn', type: 'button', onclick: () => sayNow(ln) }, '🔊 Hear it first');
+    const said = h('button', { class: 'btn primary', type: 'button', onclick: () => { hush(); sfx.good(); i++; show(); } }, '🎤 I said it!');
+    box.replaceChildren(h('p', { class: 'echocount' }, `Line ${i + 1} of ${lines.length}`), h('p', { class: 'echoline' }, ln), h('div', { class: 'readbtns' }, canSpeak ? hear : null, said));
+  };
+  show();
+}
+
+/* ---------- letter tiles: spell a word ---------- */
+function spellTiles(parent, { word, prefix = '', letters, pic, prompt, onDone, hint }) {
+  const need = word.slice(prefix.length).split('');
+  const wrap = h('div', { class: 'ask' });
+  if (pic) wrap.append(h('div', { class: 'cluepic', 'aria-hidden': 'true' }, pic));
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'slots', 'aria-live': 'polite' }, prefix ? h('span', { class: 'given' }, prefix) : null, need.map(() => h('span', { class: 'slot' }, '')));
+  const slots = [...show.querySelectorAll('.slot')];
+  const tray = h('div', { class: 'ltray', role: 'group', 'aria-label': 'Letters' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  letters.forEach(L => {
+    const b = h('button', { type: 'button', class: 'ltile', 'aria-label': 'Letter ' + L, onclick: () => {
+      if (over || b.disabled) return;
+      if (L.toLowerCase() === need[n]) {
+        slots[n].textContent = L.toLowerCase(); slots[n].classList.add('fill'); b.disabled = true; sfx.tap(n); n++;
+        if (n >= need.length) { over = true; show.classList.add('right'); sfx.good(); fb.textContent = `${praise()} ${word}!`; fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(word); onDone && onDone(); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = (!run.solo || wrongs >= 2) ? oopsLine() : 'Not that letter. Have a think and try again!';
+        if ((!run.solo || wrongs >= 2) && hint) { const x = hint(n); if (x) { hintBox.replaceChildren(hintP(x)); speakGuide(x); } }
+      }
+    } }, L.toUpperCase());
+    tray.append(b);
+  });
+  wrap.append(show, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word tiles: build a sentence ---------- */
+const joinWords = tiles => tiles.join(' ').replace(/ ([.,!?])/g, '$1');
+function buildSentence(parent, { tiles, decoys = [], decoyWhy, onDone, prompt }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const line = h('div', { class: 'sline', 'aria-live': 'polite' }, h('span', { class: 'ph' }, 'Tap the words in order…'));
+  const tray = h('div', { class: 'stray' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0, over = false;
+  const all = shuffle([...tiles.map(t => ({ t, real: true })), ...decoys.map(t => ({ t, real: false }))]);
+  all.forEach(o => {
+    const b = h('button', { type: 'button', class: 'wtile', onclick: () => {
+      if (over || b.disabled) return;
+      if (o.t === tiles[n]) {
+        if (n === 0) line.replaceChildren();
+        line.append(h('span', { class: 'wput pop' }, o.t)); b.disabled = true; b.classList.add('used'); sfx.tap(n); n++;
+        if (n >= tiles.length) { over = true; line.classList.add('right'); sfx.good(); const s = joinWords(tiles); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); sayNow(s); onDone && onDone(s); }
+      } else {
+        shakeEl(b); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = !o.real && decoyWhy ? decoyWhy : n === 0 ? 'A sentence starts with a capital letter. Which word comes first?' : o.t === '.' ? 'The full stop comes at the very end.' : 'Not that word yet. Read what you have and think what comes next.';
+        if (!run.solo || wrongs >= 2) { const x = `Next word: “${tiles[n]}”`; hintBox.replaceChildren(hintP(x)); }
+      }
+    } }, o.t);
+    tray.append(b);
+  });
+  wrap.append(line, tray, fb, hintBox); parent.append(wrap);
+}
+
+/* ---------- word search (book page 27) ---------- */
+function wordSearch(parent, { grid, words, where, onDone }) {
+  const C = grid[0].length;
+  const g = h('div', { class: 'ws', style: `--c:${C}`, role: 'group', 'aria-label': 'Word search' });
+  const cells = [];
+  grid.forEach((row, r) => row.split('').forEach((ch, c) => { const b = h('button', { type: 'button', class: 'wsc', 'aria-label': `${ch}, row ${r + 1}, column ${c + 1}`, onclick: () => tap(r, c) }, ch); cells.push(b); g.append(b); }));
+  const cell = (r, c) => cells[r * C + c];
+  const list = h('div', { class: 'wslist' }, words.map(w => h('span', { class: 'wsw', 'data-w': w }, w)));
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' }, 'Tap the first letter of a word, then its last letter.');
+  const found = new Set(); let first = null, wrongs = 0;
+  function tap(r, c) {
+    if (found.size === words.length) return;
+    if (!first) { first = [r, c]; cell(r, c).classList.add('sel'); sfx.pop(); return; }
+    const [r0, c0] = first; cell(r0, c0).classList.remove('sel'); first = null;
+    if (r0 === r && c0 === c) return;
+    const dr = Math.sign(r - r0), dc = Math.sign(c - c0), len = Math.max(Math.abs(r - r0), Math.abs(c - c0)) + 1;
+    const straight = r0 === r || c0 === c || Math.abs(r - r0) === Math.abs(c - c0);
+    let s = ''; const path = [];
+    if (straight) for (let k = 0; k < len; k++) { s += grid[r0 + dr * k][c0 + dc * k]; path.push(cell(r0 + dr * k, c0 + dc * k)); }
+    const w = words.find(x => !found.has(x) && (x === s || x === [...s].reverse().join('')));
+    cells.forEach(x => x.classList.remove('look'));
+    if (w) {
+      found.add(w); path.forEach(p => p.classList.add('got')); list.querySelector(`[data-w="${w}"]`).classList.add('got');
+      sfx.good(); fb.textContent = `${w}! ${found.size} of ${words.length} found.`; fb.className = 'fb good'; sayNow(w.toLowerCase());
+      if (found.size === words.length) { fb.textContent = 'You found them all! ' + praise(); onDone && onDone(); }
+    } else {
+      sfx.oops(); run.mistakes++; wrongs++; cell(r, c).classList.add('shake'); setTimeout(() => cell(r, c).classList.remove('shake'), 450);
+      fb.className = 'fb oops'; fb.textContent = 'That is not one of the words. Tap the first letter, then the last letter.';
+      if (!run.solo || wrongs >= 2) {
+        const left = words.find(x => !found.has(x)), [rr, cc, tip] = where[left];
+        cell(rr, cc).classList.add('look'); fb.textContent = `Clue: ${left} ${tip}. It starts at the letter with the red ring.`; speakGuide(`Clue: ${left.toLowerCase()} ${tip}.`);
+      }
+    }
+  }
+  parent.append(list, g, fb);
+}
+
+
+/* =================================================================
+   SEASONS AND LIFESTYLE · EVS Chapter 8 (book pages 29–44)
+   ================================================================= */
+const PATCH_COL = ['#F9C6D3', '#FFE08A', '#A9D8F5', '#F7C99A', '#C5E6A6', '#DDEBFA'];
+
+/* ---------- new widgets ---------- */
+const soloHint = wrongs => !run || !run.solo || wrongs >= 2;
+const plain = t => String(t).replace(/[✓✗]/g, '').trim();
+const optsLine = opts => 'Is it: ' + opts.map(plain).join('? or ') + '?';
+
+// tap every right one
+function pickAll(parent, { items, prompt, onDone, doneText }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const grid = h('div', { class: 'picks' });
+  const counter = h('p', { class: 'counter' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const need = items.filter(x => x.ok).length; let got = 0, wrongs = 0, over = false;
+  const paint = () => { counter.textContent = `Found ${got} of ${need}`; };
+  shuffle(items.slice()).forEach(it => {
+    const b = h('button', { type: 'button', class: 'pk', 'data-ok': it.ok ? '1' : null, onclick: () => {
+      if (over || b.disabled) return;
+      b.disabled = true;
+      if (it.ok) {
+        b.classList.add('on'); sfx.tap(got); got++; paint();
+        fb.textContent = it.why || praise(); fb.className = 'fb good'; if (it.why) sayNow(it.why);
+        if (got >= need) { over = true; grid.querySelectorAll('button').forEach(x => x.disabled = true); sfx.good(); fb.textContent = doneText || 'You found them all! ' + praise(); onDone && onDone(); }
+      } else {
+        b.classList.add('no'); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+        fb.textContent = soloHint(wrongs) && it.why ? it.why : 'Not that one. Have a think!';
+        if (soloHint(wrongs) && it.why) speakGuide(it.why);
+      }
+    } }, it.e ? h('span', { class: 'pe', 'aria-hidden': 'true' }, it.e) : null, h('span', {}, it.t));
+    grid.append(b);
+  });
+  paint();
+  wrap.append(grid, counter, fb); parent.append(wrap);
+}
+
+// match the following: [left, right, clue]; he matches the left items one by one
+function matchPairs(parent, { pairs, prompt, onDone, heads }) {
+  const wrap = h('div', { class: 'ask' });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const table = h('div', { class: 'mtable' });
+  if (heads) table.append(h('div', { class: 'mrow mhead' }, h('span', { class: 'ml' }, heads[0]), h('span', { class: 'mr' }, heads[1])));
+  const rows = pairs.map(([l]) => { const r = h('div', { class: 'mrow' }, h('span', { class: 'ml' }, l), h('span', { class: 'mr' }, '?')); table.append(r); return r; });
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let i = 0, wrongs = 0;
+  const focus = () => {
+    rows.forEach((r, j) => r.classList.toggle('now', j === i));
+    if (i < pairs.length) api.guide(`Match the following. ${pairs[i][0]}: which one goes with it?`);
+  };
+  const pick = (rt, el) => {
+    if (i >= pairs.length) return;
+    if (rt === pairs[i][1]) {
+      el.disabled = true; el.classList.add('right'); sfx.good(); wrongs = 0; hintBox.replaceChildren();
+      const r = rows[i]; r.classList.add('done'); r.querySelector('.mr').textContent = rt; r.style.setProperty('--mc', PATCH_COL[i % PATCH_COL.length]);
+      fb.textContent = `${pairs[i][0]} ➜ ${rt}`; fb.className = 'fb good';
+      i++;
+      if (i >= pairs.length) { rows.forEach(x => x.classList.remove('now')); fb.textContent = 'All matched! ' + praise(); onDone && onDone(); }
+      else focus();
+    } else {
+      shakeEl(el); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops';
+      fb.textContent = soloHint(wrongs) ? `Not “${rt}”. Try another one.` : 'Not quite. Have a think and try again!';
+      if (soloHint(wrongs) && pairs[i][2]) { hintBox.replaceChildren(hintP(pairs[i][2])); speakGuide(pairs[i][2]); }
+    }
+  };
+  shuffle(pairs.map(p => p[1])).forEach(rt => row.append(h('button', { type: 'button', class: 'choice words', onclick: e => pick(rt, e.currentTarget) }, rt)));
+  wrap.append(table, row, fb, hintBox); parent.append(wrap); focus();
+}
+
+// spell a word with letter tiles (a few spare letters mixed in)
+function spellQ(parent, { word, prompt, pic, onDone }) {
+  const w = word.toLowerCase().replace(/[^a-z]/g, '');
+  const pool = shuffle('abdeghiklmnoprstuvw'.split('').filter(c => !w.includes(c)));
+  const letters = shuffle([...w.split(''), ...pool.slice(0, w.length > 6 ? 2 : 3)]);
+  spellTiles(parent, { word: w, letters, pic, prompt, onDone, hint: n => `The next letter is “${w[n].toUpperCase()}”.` });
+}
+
+// fill in the blank and true/false, in exam style
+const fillParts = (s, a) => { const [x, y] = s.split('___'); return [x, h('span', { class: 'hl' }, a), y]; };
+function fillQ([s, a, d, tip]) {
+  return { guide: 'Fill in the blank. ' + s.replace('___', 'blank'), before: h('p', { class: 'story fillq' }, s.replace('___', '______')), prompt: 'Which word fills the blank?', options: shuffle([a, ...d]), answer: a, pause: 1500,
+    hint: () => hintP(tip || 'Read the sentence again with each word. Which one makes it true?'),
+    onDone: holder => { const st = holder.querySelector('.story'); if (st) { st.replaceChildren(...fillParts(s, a)); st.classList.add('ok'); } } };
+}
+function tfQ([s, ok, fix]) {
+  return { guide: 'True or false? ' + s, sayOpts: false, before: h('p', { class: 'story' }, s), prompt: 'True or false?', options: ['True ✓', 'False ✗'], answer: ok ? 'True ✓' : 'False ✗', cls: 'words tf', pause: ok ? 1100 : 3200,
+    hint: () => hintP(ok ? 'This one matches what we learnt. Read it again slowly.' : `Look again. ${fix}`),
+    onDone: holder => { if (!ok && fix) { holder.append(fact('✏️ ' + fix, 'This is the correct sentence.')); sayNow('False! The correct sentence is: ' + fix); } } };
+}
+
+/* ---------- one step after another ---------- */
+const T = {
+  ask: q => (holder, next) => {
+    if (q.guide) { api.guide(q.guide); if (q.sayOpts !== false && q.options) speakGuide(q.guide + ' ' + optsLine(q.options)); }
+    if (q.before) holder.append(q.before);
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, q.pause || 1000); } });
+  },
+  fill: it => T.ask(fillQ(it)),
+  tf: it => T.ask(tfQ(it)),
+  spell: ([word, prompt, pic]) => (holder, next) => {
+    api.guide(`One-word answer. ${prompt.replace('___', 'blank')} Spell it with the letter tiles.`);
+    spellQ(holder, { word, prompt, pic, onDone: () => { skill('spell'); setTimeout(next, 1400); } });
+  },
+  sent: ([q, a]) => (holder, next) => {
+    api.guide(`Answer in a sentence. ${q} Build the answer word by word.`);
+    holder.append(h('p', { class: 'story' }, '✍️ ' + q));
+    buildSentence(holder, { tiles: a.replace(/([.,])/g, ' $1').split(' ').filter(Boolean).map((w, i, arr) => w === ',' ? null : (arr[i + 1] === ',' ? w + ',' : w)).filter(Boolean), onDone: () => {
+      skill('write');
+      const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.disabled = true; next(); } }, '✅ I said it aloud ➜');
+      holder.append(info('📓', 'Now say it and write it!', 'Read your answer aloud, then copy it into your notebook. That is how to answer in the exam.'), go);
+      speakGuide('Well done! Read your answer aloud, then copy it into your notebook. That is how to answer in the exam.');
+    } });
+  },
+  match: ({ pairs, prompt, heads }) => (holder, next) => matchPairs(holder, { pairs: shuffle(pairs.slice()), prompt: prompt || 'Match the following.', heads, onDone: () => setTimeout(next, 1600) }),
+  pick: o => (holder, next) => { if (o.guide) api.guide(o.guide); pickAll(holder, { ...o, onDone: () => setTimeout(next, 1700) }); },
+  teach: o => (holder, next) => teach(holder, o, next),
+  free: ({ guide, prompt, options, after }) => (holder, next) => {
+    api.guide(guide || prompt);
+    freeChoice(holder, { prompt, options, onPick: o => { const x = after && after(o); if (x) { holder.append(x); speakGuide(x.textContent); } const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.disabled = true; hush(); next(); } }, 'Next question ➜'); holder.append(go); } });
+  },
+  show: (el, guide, btn = 'Next ➜') => (holder, next) => { holder.append(el); if (guide) api.guide(guide); const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { go.disabled = true; hush(); next(); } }, btn); holder.append(go); },
+};
+function steps(parent, list, onAll) {
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const todo = list.filter(Boolean);
+  const count = h('p', { class: 'counter' });
+  chain(todo, (fn, next, i) => {
+    const holder = h('div', { class: 'below' });
+    box.replaceChildren(todo.length > 1 ? (count.textContent = `Question ${i + 1} of ${todo.length}`, count) : '', holder);
+    fn(holder, next);
+  }, onAll);
+}
+function examCorner(b, list) {
+  b.append(srctag('✏️ Exam corner · on your own'));
+  steps(b, list, () => { skill('exam'); api.done(); });
+}
+
+/* ---------- the chapter's facts, used by every stop, the paper and the review ---------- */
+const RITUS = [
+  { n: 'Vasant', en: 'Spring', e: '🌸', sign: 'Flowers bloom and the air feels fresh.', c: '#F9C6D3' },
+  { n: 'Grishma', en: 'Summer', e: '☀️', sign: 'The Sun is strong, so people look for shade and water.', c: '#FFE08A' },
+  { n: 'Varsha', en: 'Rainy season', e: '🌧️', sign: 'Clouds bring rain and the land turns green.', c: '#A9D8F5' },
+  { n: 'Sharad', en: 'Autumn', e: '🍂', sign: 'The sky becomes clearer after the rains.', c: '#F7C99A' },
+  { n: 'Hemanta', en: 'Early winter', e: '🍃', sign: 'The air begins to feel cool.', c: '#C5E6A6' },
+  { n: 'Shishira', en: 'Winter', e: '❄️', sign: 'Mornings may be cold or foggy.', c: '#DDEBFA' },
+];
+// [sentence with ___, answer, wrong choices, clue, part]
+const FILL = [
+  ['Weather can change in one ___.', 'day', ['year', 'month', 'week'], 'Think of one school day: a sunny morning, then a cloudy afternoon.', 1],
+  ['A season stays for many ___.', 'weeks', ['minutes', 'hours', 'seconds'], 'Summer does not end after lunch!', 1],
+  ['India has ___ seasons.', 'six', ['four', 'two', 'ten'], 'Count the parts of the season wheel.', 1],
+  ['The six seasons of India are called ___.', 'ritus', ['patches', 'clues', 'menus'], 'It sounds like Ritu, our sparrow’s name!', 1],
+  ['Vasant is ___. Flowers bloom.', 'spring', ['winter', 'summer', 'autumn'], 'When do flowers bloom and butterflies come?', 1],
+  ['Varsha is the ___ season.', 'rainy', ['hot', 'cold', 'dry'], 'In Varsha, clouds bring rain and the land turns green.', 1],
+  ['In Grishma, the ___ is strong.', 'Sun', ['fog', 'snow', 'rain'], 'Grishma is summer.', 1],
+  ['In Sharad, the sky becomes ___ after the rains.', 'clearer', ['darker', 'foggier', 'greener'], 'Sharad is autumn. The rain clouds go away.', 1],
+  ['In hot places like Rajasthan, people wear loose ___ clothes.', 'cotton', ['woollen', 'rubber', 'plastic'], 'Which cloth lets air pass through?', 2],
+  ['In cold places like Kashmir, people wear ___ clothes.', 'woollen', ['cotton', 'paper', 'wet'], 'Which cloth keeps warm air near the body?', 2],
+  ['In rainy places like Kerala, houses have ___ roofs.', 'sloping', ['flat', 'glass', 'paper'], 'Rainwater must slide off the roof.', 2],
+  ['A ___ studies seasons and weather patterns over many years.', 'climatologist', ['dentist', 'farmer', 'pilot'], 'Remember Dr. Roxy Mathew Koll.', 2],
+  ['Dr. Roxy Mathew Koll studies how the ocean and the ___ are connected.', 'monsoon', ['mountains', 'moon', 'desert'], 'The monsoon brings our rains.', 2],
+  ['___ lets air pass through.', 'Cotton', ['Wool', 'Rubber', 'Plastic'], 'It is the cloth for hot days.', 3],
+  ['Wool keeps warm ___ near the body.', 'air', ['water', 'sand', 'rain'], 'That is why a sweater feels warm.', 3],
+  ['___ material stops rainwater from soaking in.', 'Waterproof', ['Cotton', 'Woollen', 'Paper'], 'Think of a raincoat.', 3],
+  ['In winter, many families eat sesame laddoos and ___.', 'jaggery', ['ice cream', 'watermelon', 'cold drinks'], 'A warm, sweet, filling winter food.', 3],
+  ['During the rains, food can ___ faster.', 'spoil', ['grow', 'freeze', 'cool'], 'That is why families eat fresh, hot food in the rains.', 3],
+  ['Pongal, Lohri, Bihu and Makar Sankranti come around ___ time.', 'harvest', ['school', 'bed', 'exam'], 'The time when the crops are ready.', 3],
+  ['A festival can be a way of saying ___ to nature.', 'thank you', ['sorry', 'goodbye', 'hurry up'], 'Harvest festivals thank nature and farmers.', 3],
+  ['___ roofs help rainwater slide off.', 'Sloping', ['Flat', 'Paper', 'Open'], 'Water slides down a slope, like you on a slide in the park.', 3],
+  ['Houses on ___ stay above floodwater.', 'stilts', ['wheels', 'rocks', 'carpets'], 'Tall poles that lift the house up.', 3],
+  ['Steep roofs stop ___ from piling up.', 'snow', ['sunlight', 'birds', 'dust'], 'This is for very cold, snowy places.', 3],
+  ['Mangoes and a strong Sun are signs of ___.', 'summer', ['winter', 'spring', 'autumn'], 'When do mangoes come to the market?', 4],
+  ['Fog and woollen clothes are signs of ___.', 'winter', ['summer', 'spring', 'autumn'], 'When do we need a sweater?', 4],
+  ['We can help by planting trees, saving water and not wasting ___.', 'electricity', ['time', 'friends', 'books'], 'Switch off fans and lights you are not using.', 4],
+];
+// [sentence, true?, the correct sentence when false, part]
+const TF = [
+  ['Weather can change in one day.', true, '', 1],
+  ['A season lasts for only one hour.', false, 'A season stays for many weeks.', 1],
+  ['India has six seasons called ritus.', true, '', 1],
+  ['Vasant is winter.', false, 'Vasant is spring. Flowers bloom and the air feels fresh.', 1],
+  ['Varsha is the rainy season.', true, '', 1],
+  ['Ants, birds and dark clouds can give clues before rain.', true, '', 1],
+  ['The same season feels the same everywhere in India.', false, 'The same season can feel different in different places.', 2],
+  ['In rainy places like Kerala, people use umbrellas and raincoats.', true, '', 2],
+  ['A climatologist studies the weather for just one day.', false, 'A climatologist studies seasons and weather patterns over many years.', 2],
+  ['Dr. Roxy Mathew Koll found that the Indian Ocean is warming.', true, '', 2],
+  ['Cotton clothes are best for very cold weather.', false, 'Woollen clothes are best for cold weather. Cotton is best for hot weather.', 3],
+  ['Waterproof material lets rainwater soak in.', false, 'Waterproof material stops rainwater from soaking in.', 3],
+  ['In summer, many families enjoy watermelon and coconut water.', true, '', 3],
+  ['Food can spoil faster in wet weather.', true, '', 3],
+  ['Holi comes in the cold, foggy winter.', false, 'Holi comes when spring brings flowers and colour.', 3],
+  ['Onam is celebrated when the land is green after the rains.', true, '', 3],
+  ['Homes in hot places have thick walls, courtyards and shaded verandas.', true, '', 3],
+  ['Fireplaces help keep homes cool in hot places.', false, 'Fireplaces help keep people warm in cold places.', 3],
+  ['A Kashmir houseboat floats on a lake.', true, '', 3],
+  ['Some summers now feel hotter than before.', true, '', 4],
+  ['Nature’s clues never change.', false, 'Nature’s clues are changing. Some summers are hotter and rain can come late.', 4],
+  ['Planting trees and saving water help nature.', true, '', 4],
+];
+const MATCH = {
+  ritus: { part: 1, heads: ['Ritu', 'Season'], pairs: RITUS.map(r => [`${r.e} ${r.n}`, r.en, r.sign]) },
+  places: { part: 2, heads: ['Place', 'Weather'], pairs: [['🐪 Rajasthan', 'Hot and dry', 'Desert sand, strong Sun, chaas and aam panna.'], ['☔ Meghalaya', 'Very rainy', 'Umbrellas, raincoats and sloping roofs.'], ['🏔️ Kashmir', 'Cold and snowy', 'Woollen clothes and warm homes.']] },
+  tools: { part: 2, heads: ['Tool', 'What it does'], pairs: [['🛰️ Satellite', 'Watches clouds from space', 'It goes round the Earth, high above the sky.'], ['🛟 Ocean buoy', 'Floats on the sea and checks the water', 'It bobs on the ocean.'], ['🌡️ Weather station', 'Checks heat, wind and rain on land', 'It stands on the ground.']] },
+  fabrics: { part: 3, heads: ['Cloth', 'Best for'], pairs: [['👕 Cotton', 'Hot weather', 'Cotton lets air pass through.'], ['🧶 Wool', 'Cold weather', 'Wool keeps warm air near the body.'], ['🧥 Waterproof cloth', 'Rainy weather', 'It stops rainwater from soaking in.']] },
+  homes: { part: 3, heads: ['Home feature', 'Helps in'], pairs: [['Sloping roof', 'Rainy places', 'Rainwater slides off.'], ['Stilts', 'Flood areas', 'The house stays above floodwater.'], ['Thick walls and courtyard', 'Hot places', 'They keep the home cool.'], ['Fireplace and cosy rooms', 'Cold places', 'They keep people warm.'], ['Steep roof', 'Snowy places', 'Snow cannot pile up.'], ['Strong walls', 'Windy coasts', 'They stand up to strong winds.']] },
+  houses: { part: 3, heads: ['Home', 'Why it is special'], pairs: [['Rajasthan haveli', 'Thick walls and a courtyard keep it cool', 'Rajasthan is hot.'], ['Kashmir houseboat', 'Floats on a lake', 'Kashmir has big lakes.'], ['Meghalaya bamboo house', 'Raised up above heavy rain and damp ground', 'Meghalaya is very rainy.'], ['City apartment', 'Many families live in one building', 'Lots of homes, one on top of another.']] },
+  festivals: { part: 3, heads: ['Festival', 'Nature’s clue'], pairs: [['🎨 Holi', 'Spring flowers and colour', 'Holi is the festival of colours.'], ['🌼 Onam', 'Green land after the rains', 'Onam comes after the rainy season.'], ['🪁 Pongal and Lohri', 'Harvest time', 'They thank nature and farmers for the crops.']] },
+  clues: { part: 4, heads: ['Clue', 'Season'], pairs: [['🥭 Mangoes and strong Sun', 'Summer', 'Hot days and mangoes.'], ['⛈️ Dark clouds and puddles', 'Rainy season', 'Rain makes puddles.'], ['🌫️ Fog and woollen clothes', 'Winter', 'Cold, foggy mornings.'], ['🌸 Flowers and butterflies', 'Spring', 'Flowers bloom.']] },
+};
+// one-word answers: [word, question, picture, part]
+const WORDS = [
+  ['ritus', 'India’s six seasons are called…', '🎡', 1],
+  ['varsha', 'The rainy season is called…', '🌧️', 1],
+  ['vasant', 'Spring is called…', '🌸', 1],
+  ['cotton', 'Which cloth is best for hot weather?', '👕', 3],
+  ['wool', 'Which cloth keeps warm air near the body?', '🧶', 3],
+  ['holi', 'Which festival comes with spring colours?', '🎨', 3],
+  ['stilts', 'Houses that stay above floodwater stand on…', '🛖', 3],
+  ['harvest', 'Pongal and Lohri are festivals of the…', '🌾', 3],
+  ['mango', 'Which fruit is a sign of summer?', '🥭', 4],
+  ['trees', 'To help nature, we can plant…', '🌳', 4],
+];
+// answer in a sentence: [question, answer, part]
+const SENTS = [
+  ['What is the difference between weather and a season?', 'Weather can change in one day, but a season stays for many weeks.', 1],
+  ['What does a climatologist do?', 'A climatologist studies seasons and weather patterns.', 2],
+  ['Why do we wear cotton clothes in summer?', 'Cotton lets air pass through.', 3],
+  ['Why do we wear woollen clothes in winter?', 'Wool keeps warm air near the body.', 3],
+  ['Why do families eat fresh, hot food during the rains?', 'Food can spoil faster in wet weather.', 3],
+  ['Why do people celebrate harvest festivals?', 'They thank nature and farmers for the harvest.', 3],
+  ['Why do houses in rainy places have sloping roofs?', 'Sloping roofs help rainwater slide off.', 3],
+  ['Why are some houses built on stilts?', 'Houses on stilts stay above floodwater.', 3],
+  ['How can we help nature?', 'We can plant trees and save water.', 4],
+];
+const GLOSSARY = [
+  ['Weather', '🌤️', 'What the sky is like right now. It can change in one day.'],
+  ['Season', '📅', 'A part of the year that stays for many weeks, like summer.'],
+  ['Ritus', '🎡', 'The six seasons of India: Vasant, Grishma, Varsha, Sharad, Hemanta, Shishira.'],
+  ['Climatologist', '🔭', 'A scientist who studies seasons and weather patterns over many years.'],
+  ['Monsoon', '🌧️', 'The rain-bringing winds that give India its rainy season.'],
+  ['Harvest', '🌾', 'The time when ripe crops are cut and collected.'],
+  ['Waterproof', '🧥', 'Does not let water soak in, like a raincoat.'],
+  ['Stilts', '🛖', 'Tall poles that lift a house above floodwater or wet ground.'],
+  ['Courtyard', '🏛️', 'An open space in the middle of a house. It keeps the home airy and cool.'],
+  ['Veranda', '🏡', 'A shaded, open porch along the side of a house.'],
+  ['Chaas', '🥛', 'Buttermilk: a cool summer drink.'],
+  ['Aam panna', '🥭', 'A cool summer drink made from raw mangoes.'],
+  ['Jaggery', '🍯', 'A brown sweet made from sugarcane. A warming winter food.'],
+  ['Houseboat', '🛶', 'A boat that people live in, on the lakes of Kashmir.'],
+];
+const byPart = (list, i, p) => list.filter(x => x[i] === p);
+const findIn = (list, start) => list.find(x => x[0].startsWith(start));
+const F = s => findIn(FILL, s), TFx = s => findIn(TF, s), S = s => findIn(SENTS, s), W = w => findIn(WORDS, w);
+
+/* ---------- pictures ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs, text) { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text != null) el.textContent = text; return el; }
+// the six-season wheel, like the chart on page 31
+function ritusWheel({ lit = null, onTap, hideNames = false } = {}) {
+  const R = 140, cx = 150, cy = 150;
+  const svg = svgEl('svg', { viewBox: '0 0 300 300', class: 'wheel', role: onTap ? 'group' : 'img', 'aria-label': 'The six Indian seasons, the ritus' });
+  const parts = RITUS.map((r, i) => {
+    const a0 = (-90 + 60 * i) * Math.PI / 180, a1 = (-30 + 60 * i) * Math.PI / 180, am = (a0 + a1) / 2;
+    const g = svgEl('g', {});
+    const p = svgEl('path', { d: `M ${cx} ${cy} L ${(cx + R * Math.cos(a0)).toFixed(1)} ${(cy + R * Math.sin(a0)).toFixed(1)} A ${R} ${R} 0 0 1 ${(cx + R * Math.cos(a1)).toFixed(1)} ${(cy + R * Math.sin(a1)).toFixed(1)} Z`, stroke: '#1E2A44', 'stroke-width': 3 });
+    const x = cx + 92 * Math.cos(am), y = cy + 92 * Math.sin(am);
+    const num = svgEl('text', { x: (cx + 118 * Math.cos(am)).toFixed(1), y: (cy + 118 * Math.sin(am) + 5).toFixed(1), 'text-anchor': 'middle', class: 'wnum' }, String(i + 1));
+    const em = svgEl('text', { x: x.toFixed(1), y: (y - 4).toFixed(1), 'text-anchor': 'middle', class: 'wem' }, r.e);
+    const nm = svgEl('text', { x: x.toFixed(1), y: (y + 18).toFixed(1), 'text-anchor': 'middle', class: 'wname' }, r.n);
+    g.append(p, num, em, nm);
+    if (onTap) {
+      g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('aria-label', `${i + 1}. ${r.n}, ${r.en}`); g.setAttribute('class', 'wpart');
+      g.addEventListener('click', () => onTap(i));
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onTap(i); } });
+    }
+    svg.append(g);
+    return { p, em, nm };
+  });
+  svg.append(svgEl('circle', { cx, cy, r: 30, fill: '#FFC93D', stroke: '#1E2A44', 'stroke-width': 3 }), svgEl('text', { x: cx, y: cy + 10, 'text-anchor': 'middle', class: 'wem' }, '🌞'));
+  svg.light = (i, on) => { const x = parts[i]; x.p.setAttribute('fill', on ? RITUS[i].c : '#EEF1F5'); x.em.style.opacity = on ? 1 : 0.25; x.nm.textContent = on || !hideNames ? RITUS[i].n : '?'; };
+  RITUS.forEach((_, i) => svg.light(i, !lit || lit.has(i)));
+  return svg;
+}
+// a little house that changes as he chooses its parts
+function houseSvg(s = {}) {
+  const lift = s.base === 'stilts' ? 42 : 0, wy = 120 - lift, wall = s.walls === 'thick' ? 12 : 4;
+  const wallFill = s.walls === 'thick' ? '#D9A066' : s.walls === 'bamboo' ? '#D8B766' : '#F3E6CF';
+  let g = `<rect x="0" y="0" width="300" height="220" fill="${s.rain ? '#B9C6D3' : '#CFEAFF'}"/>`;
+  if (s.sun) g += '<circle cx="252" cy="38" r="22" fill="#FFC93D" stroke="#E89B1A" stroke-width="3"/>';
+  g += s.rain && s.base ? '<rect x="0" y="188" width="300" height="32" fill="#6FA8DC"/>' : `<rect x="0" y="200" width="300" height="20" fill="${s.sun ? '#E8C27A' : '#8CC56B'}"/>`;
+  if (lift) [78, 118, 182, 222].forEach(x => { g += `<rect x="${x}" y="${wy + 80}" width="7" height="${lift + 4}" fill="#8A5A2B" stroke="#1E2A44" stroke-width="2"/>`; });
+  if (s.shade) g += `<rect x="22" y="${wy + 26}" width="56" height="8" fill="#9C6B3C" stroke="#1E2A44" stroke-width="2"/><rect x="26" y="${wy + 34}" width="5" height="${46}" fill="#9C6B3C"/><text x="262" y="${wy + 78}" font-size="34" text-anchor="middle">🌳</text>`;
+  g += `<rect x="${70 + wall / 2}" y="${wy + wall / 2}" width="${160 - wall}" height="${80 - wall / 2}" fill="${wallFill}" stroke="#1E2A44" stroke-width="${wall}"/>`;
+  g += `<rect x="137" y="${wy + 34}" width="26" height="46" fill="#7A4E2D" stroke="#1E2A44" stroke-width="2"/><rect x="92" y="${wy + 26}" width="24" height="20" fill="#BFE3FF" stroke="#1E2A44" stroke-width="2"/><rect x="184" y="${wy + 26}" width="24" height="20" fill="#BFE3FF" stroke="#1E2A44" stroke-width="2"/>`;
+  if (s.roof === 'sloping') g += `<polygon points="52,${wy + 4} 150,${wy - 58} 248,${wy + 4}" fill="#C0533A" stroke="#1E2A44" stroke-width="3"/>`;
+  else if (s.roof === 'flat') g += `<rect x="62" y="${wy - 12}" width="176" height="14" fill="#B07A4A" stroke="#1E2A44" stroke-width="3"/>`;
+  else g += `<polygon points="52,${wy + 4} 150,${wy - 58} 248,${wy + 4}" fill="none" stroke="#56627A" stroke-width="2" stroke-dasharray="6 6"/>`;
+  if (s.rain) {
+    for (let i = 0; i < 22; i++) { const x = 8 + (i * 37) % 290, y = 8 + (i * 53) % 90; g += `<line x1="${x}" y1="${y}" x2="${x - 4}" y2="${y + 12}" stroke="#2F6FD0" stroke-width="2.5" stroke-linecap="round"/>`; }
+    if (s.roof === 'sloping') g += `<circle cx="48" cy="${wy + 12}" r="4" fill="#2F6FD0"/><circle cx="252" cy="${wy + 12}" r="4" fill="#2F6FD0"/><circle cx="46" cy="${wy + 24}" r="3" fill="#2F6FD0"/><circle cx="254" cy="${wy + 24}" r="3" fill="#2F6FD0"/>`;
+    if (s.roof === 'flat') g += `<ellipse cx="150" cy="${wy - 14}" rx="60" ry="5" fill="#2F6FD0" opacity=".8"/>`;
+  }
+  const box = h('div', { class: 'housebox', role: 'img', 'aria-label': 'A house' });
+  box.innerHTML = `<svg viewBox="0 0 300 220" class="house">${g}</svg>`;
+  return box;
+}
+const picPick = map => o => [h('span', { class: 'pe', 'aria-hidden': 'true' }, map[o] || ''), o];
+
+/* =================================================================
+   PART 1 · NATURE'S CLUES (pages 29–31)
+   ================================================================= */
+const QUILT = [
+  { e: '☀️', t: 'Strong Sun', s: 'A hot summer day. Time to find shade and drink water!', c: '#FFE08A' },
+  { e: '👕', t: 'Cotton kurta', s: 'In summer, people wear loose cotton clothes and drink cool drinks.', c: '#FFF1C2' },
+  { e: '🥭', t: 'Mangoes', s: 'Mangoes come to the market in summer, at about the same time every year.', c: '#FFD8A8' },
+  { e: '⛈️', t: 'Dark clouds', s: 'Dark clouds are a clue that rain may come soon.', c: '#A9B8C8' },
+  { e: '☂️', t: 'Umbrella', s: 'The rainy season! Umbrellas, raincoats and paper boats in puddles.', c: '#A9D8F5' },
+  { e: '🌸', t: 'Flowers', s: 'Spring: flowers bloom, butterflies come, and the air feels fresh.', c: '#F9C6D3' },
+  { e: '🌾', t: 'Golden wheat', s: 'Harvest time: the crops in the fields are ready.', c: '#F3D58A' },
+  { e: '🪁', t: 'Kites', s: 'Kites fly at Makar Sankranti, a festival at harvest time.', c: '#D7C8F2' },
+  { e: '🌫️', t: 'Fog', s: 'Foggy, cold mornings come in winter.', c: '#DDE3EA' },
+  { e: '🧣', t: 'Woollens and soup', s: 'In winter, people wear woollen clothes and eat warm food.', c: '#F4B8B0' },
+  { e: '🛖', t: 'House on stilts', s: 'A house raised on stilts stays above floodwater.', c: '#C5E6A6' },
+  { e: '🏔️', t: 'Snowy mountain home', s: 'In cold, snowy places, homes are made to keep people warm.', c: '#DDEBFA' },
+];
+function playQuilt(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 29 · Embark · The Season Quilt'));
+    api.guide('Someone made this quilt by watching the sky every day. Tap each patch to hear the story hiding inside it.');
+    const seen = new Set();
+    const cap = h('div', { class: 'below' });
+    const grid = h('div', { class: 'qbig' }, QUILT.map((q, i) => {
+      const p = h('button', { type: 'button', class: 'qpatch', style: `--pc:${q.c}`, 'aria-label': q.t, onclick: () => {
+        seen.add(i); p.classList.add('seen'); sfx.tap(i);
+        cap.replaceChildren(info(q.e, q.t, q.s)); sayNow(`${q.t}. ${q.s}`);
+        count.textContent = `Patches read: ${seen.size} of ${QUILT.length}`;
+        if (seen.size === QUILT.length && !grid.dataset.done) {
+          grid.dataset.done = '1';
+          setTimeout(() => {
+            const after = h('div', { class: 'below' }); b.append(after);
+            teach(after, { title: 'Nature changes. We change too.', body: ['Dark clouds, mangoes, soup, kites and fog all look different, but they tell one story. Nature changes, and people change with it.', 'As the seasons change, people change their food, clothes, festivals and homes.'], ex: ['🍲 food', '👕 clothes', '🪁 festivals', '🏠 homes'] }, () => {
+              steps(after, [T.ask({ guide: 'As the seasons change, what do people change?', prompt: 'As the seasons change, what do people change?', options: shuffle(['Their food, clothes, festivals and homes', 'Their names', 'Their teeth and hair', 'Nothing at all']), answer: 'Their food, clothes, festivals and homes', hint: () => hintP('Look at the four chips on the idea card.') })], () => { skill('clue'); api.done(); });
+            });
+            scrollIn(after);
+          }, 1800);
+        }
+      } }, h('span', { 'aria-hidden': 'true' }, q.e));
+      return p;
+    }));
+    const count = h('p', { class: 'counter' }, `Patches read: 0 of ${QUILT.length}`);
+    b.append(grid, count, cap);
+  } else if (r === 1) {
+    b.append(srctag('Page 30 · Nature gives us clues'));
+    const opts = ['⛈️ Dark clouds', '🥭 Mangoes', '🪁 Kites', '🌫️ Fog'];
+    steps(b, [
+      T.teach({ title: 'Nature sends us signs', body: ['Have you seen that mangoes come to the market at about the same time every year? Or that ants, birds and clouds give clues before rain?', 'These are nature’s signs. A nature detective looks for them!'], ex: ['🥭 mangoes in summer', '🐜 ants before rain', '⛈️ dark clouds'] }),
+      T.ask({ guide: 'Which patch tells you it may rain soon?', prompt: 'Which patch tells you it may rain soon?', options: shuffle(opts.slice()), answer: '⛈️ Dark clouds', hint: () => hintP('Rain falls from clouds. What colour are rain clouds?') }),
+      T.ask({ guide: 'Which patch is a sign of summer?', prompt: 'Which patch is a sign of summer?', options: shuffle(opts.slice()), answer: '🥭 Mangoes', hint: () => hintP('Which fruit comes in the hot months?') }),
+      T.ask({ guide: 'Which patch shows a cold winter morning?', prompt: 'Which patch shows a cold winter morning?', options: shuffle(opts.slice()), answer: '🌫️ Fog', hint: () => hintP('On cold mornings you can hardly see the road.') }),
+      T.ask({ guide: 'Which patch shows a festival?', prompt: 'Which patch shows a festival?', options: shuffle(opts.slice()), answer: '🪁 Kites', hint: () => hintP('At Makar Sankranti the sky is full of them!') }),
+    ], api.done);
+  } else {
+    examCorner(b, [
+      T.tf(['Mangoes come to the market at about the same time every year.', true, '']),
+      T.tf(['Nature never gives us any clues.', false, 'Nature sends us signs, like dark clouds, ants and birds before rain.']),
+      T.fill(['As the seasons change, people change their food, clothes, festivals and ___.', 'homes', ['shoes', 'names', 'teeth'], 'Where do people live?']),
+    ]);
+  }
+}
+
+function playWeather(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 30 · Weather or season?'));
+    teach(b, { title: 'Weather or season?', body: [h('p', {}, h('b', {}, 'Weather '), 'is what the sky is like right now: sunny, cloudy, windy or rainy. Weather can change in ', h('span', { class: 'hl' }, 'one day'), '.'), h('p', {}, 'A ', h('b', {}, 'season '), 'stays for ', h('span', { class: 'hl' }, 'many weeks'), '. Summer does not end after lunch!')], ex: ['☀️ morning: sunny', '☁️ afternoon: cloudy', '💨 evening: windy'], read: 'Weather or season? Weather is what the sky is like right now: sunny, cloudy, windy or rainy. Weather can change in one day. A season stays for many weeks. Summer does not end after lunch!' }, () => {
+      b.replaceChildren(srctag('Page 30 · Real Route · Be a nature detective'));
+      const win = h('div', { class: 'windows' }, [['Morning', '☀️', '#FFF1C2'], ['Afternoon', '☁️', '#DDE3EA'], ['Evening', '💨', '#F7C99A']].map(([t, e, c]) => h('div', { class: 'win1', style: `--wc:${c}` }, h('span', { class: 'we', 'aria-hidden': 'true' }, e), h('b', {}, t))));
+      b.append(win);
+      steps(b, [
+        T.ask({ guide: 'A girl looked out of her window three times in one day. Morning: sunny. Afternoon: cloudy. Evening: windy. Did the weather change?', prompt: 'Did the weather change in that one day?', options: ['Yes, it changed', 'No, it stayed the same'], answer: 'Yes, it changed', hint: () => hintP('Sunny, then cloudy, then windy. Is that the same?') }),
+        T.fill(F('Weather can change in one')),
+        T.ask({ guide: 'Summer stays for many weeks. Is summer weather or a season?', prompt: 'Summer stays for many weeks. Summer is a…', options: ['Season', 'Weather'], answer: 'Season', hint: () => hintP('Something that stays for many weeks is a season.') }),
+      ], () => { skill('clue'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Weather or season? Sort them'));
+    sortGame(b, { bins: [{ k: 'w', label: 'Weather (changes in a day)', e: '🌤️', c: 'var(--blue-soft)' }, { k: 's', label: 'Season (stays for weeks)', e: '📅', c: 'var(--green-soft)' }],
+      ask: it => `${it.t}. Weather or season?`,
+      items: shuffle([
+        { e: '🌧️', t: 'It is raining right now', bin: 'w', why: 'Right now = weather.' },
+        { e: '☁️', t: 'This afternoon it became cloudy', bin: 'w', why: 'It changed in one afternoon, so it is weather.' },
+        { e: '💨', t: 'A windy evening', bin: 'w', why: 'Just one evening = weather.' },
+        { e: '🥭', t: 'Many weeks of hot days with mangoes', bin: 's', why: 'Many weeks = a season (summer).' },
+        { e: '🧣', t: 'Many weeks of cold, when woollens come out', bin: 's', why: 'Many weeks = a season (winter).' },
+        { e: '🌱', t: 'Many weeks of rain when the land turns green', bin: 's', why: 'Many weeks = a season (the rainy season).' },
+      ]), onDone: api.done });
+  } else if (r === 2) {
+    b.append(srctag('Page 32 · Wonder Junction'));
+    steps(b, [T.pick({ guide: 'Without a phone, how could you guess that it may rain? Tap all the clues that tell you rain may come.', prompt: 'How could you guess that it may rain? Tap ALL the rain clues.', items: [
+      { e: '⛈️', t: 'Dark clouds', ok: true, why: 'Yes! Dark, heavy clouds often bring rain.' },
+      { e: '💨', t: 'A cool wind starts to blow', ok: true, why: 'Yes! A cool wind often comes before rain.' },
+      { e: '🌱', t: 'Smell of wet soil', ok: true, why: 'Yes! You can smell rain coming.' },
+      { e: '🐜', t: 'Ants carrying food to a new home', ok: true, why: 'Yes! Ants can give a clue before rain.' },
+      { e: '🐦', t: 'Birds flying home early', ok: true, why: 'Yes! Birds give clues too.' },
+      { e: '🌞', t: 'A clear blue sky with no clouds', ok: false, why: 'No clouds means no rain right now.' },
+      { e: '🔔', t: 'The school bell ringing', ok: false, why: 'The school bell rings every day. It is not a weather clue.' },
+    ] })], () => { skill('clue'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.fill(F('Weather can change in one')),
+      T.fill(F('A season stays for many')),
+      T.tf(TFx('A season lasts for only')),
+      T.tf(TFx('Ants, birds and dark clouds')),
+    ]);
+  }
+}
+
+function playRitus(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 31 · India’s six seasons'));
+    teach(b, { title: 'Ritus: India’s six seasons', body: ['Long before weather apps, people in India watched the sky, birds, flowers, winds and fruits.', 'They divided the year into six seasons called ritus. One season is called a ritu, just like my name!'], ex: ['6 seasons', 'called ritus'] }, () => {
+      b.replaceChildren(srctag('Page 31 · The 6 Indian Seasons'));
+      const heard = new Set();
+      const out = h('div', { class: 'below' });
+      const count = h('p', { class: 'counter' }, 'Seasons heard: 0 of 6');
+      const svg = ritusWheel({ onTap: i => {
+        const x = RITUS[i]; heard.add(i); sfx.tap(i);
+        out.replaceChildren(info(x.e, `${i + 1}. ${x.n} = ${x.en}`, x.sign)); sayNow(`${x.n} is ${x.en.toLowerCase()}. ${x.sign}`);
+        count.textContent = `Seasons heard: ${heard.size} of 6`;
+        if (heard.size === 6 && !svg.dataset.done) { svg.dataset.done = '1'; setTimeout(() => { out.append(fact('6 ritus!', 'Vasant, Grishma, Varsha, Sharad, Hemanta and Shishira. Each season has its own signs and mood.')); skill('ritu'); api.done(); }, 2600); }
+      } });
+      api.guide('Here is the season wheel from page 31. It goes round like a clock, starting with Vasant at the top. Tap each season to hear its sign.');
+      b.append(svg, count, out);
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 31 · Ritu and season'));
+    steps(b, [T.match({ ...MATCH.ritus, prompt: 'Match each ritu to its season.' })], api.done);
+  } else if (r === 2) {
+    b.append(srctag('Page 31 · Build the wheel'));
+    const svg = ritusWheel({ lit: new Set(), hideNames: true });
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hintBox = h('div', { class: 'below' });
+    let n = 0, wrongs = 0;
+    api.guide('Build the season wheel in order. Start with Vasant, spring, then go round like a clock. Which season comes next?');
+    const btns = h('div', { class: 'choices' }, shuffle(RITUS.map((x, i) => i)).map(i => {
+      const x = RITUS[i];
+      const bt = h('button', { type: 'button', class: 'choice words', onclick: () => {
+        if (n >= 6) return;
+        if (i === n) { svg.light(i, true); bt.disabled = true; bt.classList.add('right'); sfx.tap(n); n++; wrongs = 0; hintBox.replaceChildren(); fb.className = 'fb good'; fb.textContent = n < 6 ? `${x.n} is number ${n}. What comes after ${x.n}?` : 'Your season wheel is complete! 🎡'; sayNow(n < 6 ? `${x.n}. What comes next?` : 'Your season wheel is complete!'); if (n >= 6) { sfx.good(); api.done(); } }
+        else { shakeEl(bt); sfx.oops(); run.mistakes++; wrongs++; fb.className = 'fb oops'; fb.textContent = 'Not that one yet. Try again!'; if (wrongs >= 2) { const t = n === 0 ? 'The wheel starts with spring, when flowers bloom: Vasant.' : `After ${RITUS[n - 1].en.toLowerCase()} comes ${RITUS[n].en.toLowerCase()}: ${RITUS[n].n}.`; hintBox.replaceChildren(hintP(t)); speakGuide(t); } }
+      } }, `${x.e} ${x.n}`);
+      return bt;
+    }));
+    b.append(svg, btns, fb, hintBox);
+  } else if (r === 3) {
+    b.append(srctag('Page 31 · Read the signs'));
+    steps(b, shuffle(RITUS.slice()).slice(0, 4).map(x => T.ask({ guide: `${x.sign} Which ritu is it?`, before: h('p', { class: 'story' }, `${x.e} ${x.sign}`), prompt: 'Which ritu is it?', options: shuffle([x.n, ...shuffle(RITUS.filter(y => y !== x)).slice(0, 2).map(y => y.n)]), answer: x.n, hint: () => hintP(`${x.n} is ${x.en.toLowerCase()}.`) })), () => { skill('ritu'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.spell(W('ritus')),
+      T.fill(F('Varsha is the')),
+      T.fill(F('In Sharad')),
+      T.tf(TFx('Vasant is winter')),
+    ]);
+  }
+}
+
+/* =================================================================
+   PART 2 · ONE SEASON, MANY PLACES (pages 32–33)
+   ================================================================= */
+const TRAIL = { hot: { label: 'Hot place (Rajasthan)', e: '🐪', c: 'var(--orange-soft)' }, rain: { label: 'Rainy place (Kerala, Meghalaya)', e: '☔', c: 'var(--blue-soft)' }, cold: { label: 'Cold place (Kashmir, Himachal)', e: '🏔️', c: 'var(--violet-soft)' } };
+function playTrail(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Page 32 · Heritage Route · A Season Trail Across India'));
+  if (r === 0) {
+    teach(b, { title: 'One season, many places', body: ['India is a big country. The same season can feel different in different places.', 'On the same December morning, a child in Kashmir needs a thick sweater and a cap, but a child in Chennai is fine in a T-shirt!'], ex: ['🐪 Rajasthan: hot', '☔ Kerala, Meghalaya: rainy', '🏔️ Kashmir, Himachal: cold'] }, () => {
+      b.append(info('🐪', 'Hot places like Rajasthan', 'Loose cotton clothes. Water, chaas (buttermilk) or aam panna (raw-mango drink) to stay cool. Homes with shade and thick walls.'),
+        info('☔', 'Rainy places like Kerala or Meghalaya', 'Umbrellas, raincoats and sloping roofs. Hot, freshly cooked food during the rains.'),
+        info('🏔️', 'Cold places like Kashmir or Himachal Pradesh', 'Woollen clothes, warm food and drinks, and homes made to keep people warm.'));
+      steps(b, [T.ask({ guide: 'Does the same season feel the same everywhere in India?', prompt: 'Does the same season feel the same everywhere in India?', options: ['No, it can feel different in different places', 'Yes, it is the same everywhere'], answer: 'No, it can feel different in different places', hint: () => hintP('Think of Kashmir and Chennai on the same December morning.') })], () => { skill('place'); api.done(); });
+    });
+  } else if (r === 1) {
+    sortGame(b, { bins: Object.entries(TRAIL).map(([k, v]) => ({ k, ...v })), ask: it => `${it.t}. Where would you see this?`,
+      items: shuffle([
+        { e: '👕', t: 'Loose cotton clothes', bin: 'hot', why: 'Cotton keeps you cool in the heat.' },
+        { e: '🥛', t: 'Chaas and aam panna', bin: 'hot', why: 'Cool drinks for hot days in Rajasthan.' },
+        { e: '🧱', t: 'Thick walls and shade', bin: 'hot', why: 'Thick walls keep a home cool.' },
+        { e: '☂️', t: 'Umbrellas and raincoats', bin: 'rain', why: 'For lots of rain.' },
+        { e: '🏠', t: 'Sloping roofs', bin: 'rain', why: 'Rainwater slides off a sloping roof.' },
+        { e: '🧶', t: 'Woollen clothes', bin: 'cold', why: 'Wool keeps you warm in the cold.' },
+        { e: '🍵', t: 'Warm food and drinks', bin: 'cold', why: 'Warm food helps in cold places.' },
+      ]), onDone: () => { skill('place'); api.done(); } });
+  } else if (r === 2) {
+    const P3 = ['Rajasthan', 'Meghalaya', 'Kashmir'];
+    steps(b, [
+      T.ask({ guide: 'Where would people drink chaas and aam panna to stay cool?', prompt: 'Where would people drink chaas and aam panna to stay cool?', options: P3, answer: 'Rajasthan', hint: () => hintP('Which place is hot and dry?') }),
+      T.ask({ guide: 'Where would you see sloping roofs, umbrellas and raincoats?', prompt: 'Where would you see sloping roofs, umbrellas and raincoats?', options: P3, answer: 'Meghalaya', hint: () => hintP('Which place gets a lot of rain?') }),
+      T.ask({ guide: 'Where do people wear woollen clothes and keep their homes warm?', prompt: 'Where do people wear woollen clothes and keep homes warm?', options: P3, answer: 'Kashmir', hint: () => hintP('Which place is cold and snowy?') }),
+      T.match({ ...MATCH.places, prompt: 'Match each place to its weather.' }),
+    ], api.done);
+  } else if (r === 3) {
+    teach(b, { title: 'Festivals follow the seasons too', body: ['Holi comes with spring colours.', 'Pongal, Lohri, Bihu and Makar Sankranti come around harvest time, when the crops are ready.'], ex: ['🎨 Holi: spring', '🌾 Pongal, Lohri, Bihu, Makar Sankranti: harvest'] }, () => {
+      steps(b, [
+        T.ask({ guide: 'Holi comes with which season’s colours?', prompt: 'Holi comes with…', options: shuffle(['spring colours', 'winter fog', 'rainy-season puddles']), answer: 'spring colours', hint: () => hintP('When do flowers bloom?') }),
+        T.ask({ guide: 'Which festivals come around harvest time?', prompt: 'Which festivals come around harvest time?', options: shuffle(['Pongal, Lohri, Bihu and Makar Sankranti', 'Independence Day and Republic Day', 'Children’s Day and Teachers’ Day']), answer: 'Pongal, Lohri, Bihu and Makar Sankranti', hint: () => hintP('These festivals thank farmers for their crops.') }),
+      ], api.done);
+    });
+  } else {
+    examCorner(b, [
+      T.fill(F('In hot places like Rajasthan')),
+      T.fill(F('In rainy places like Kerala')),
+      T.tf(TFx('The same season feels the same')),
+      T.tf(TFx('In rainy places like Kerala, people use')),
+    ]);
+  }
+}
+
+function playScientist(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Page 33 · Meet a Climatologist'));
+  if (r === 0) {
+    teach(b, { title: 'What is a climatologist?', body: ['A climatologist is a scientist who studies seasons and weather patterns over many years.', 'A weather report tells you about today. A climatologist looks at many, many years, like reading all your old report cards to see how you have changed!'], ex: ['🔭 scientist', '📅 many years', '🌦️ seasons and weather'] }, () => {
+      b.append(info('👨‍🔬', 'Dr. Roxy Mathew Koll', 'He is an Indian climatologist. He studies how the ocean and the monsoon (the rainy season winds) are connected.'));
+      steps(b, [
+        T.ask({ guide: 'What does a climatologist study?', prompt: 'What does a climatologist study?', options: shuffle(['Seasons and weather over many years', 'Teeth and bones', 'Cars and trains', 'Only today’s weather']), answer: 'Seasons and weather over many years', hint: () => hintP('Climate scientists look at many, many years.') }),
+        T.fill(F('Dr. Roxy Mathew Koll studies')),
+      ], () => { skill('science'); api.done(); });
+    });
+  } else if (r === 1) {
+    teach(b, { title: 'How did he find out?', body: ['Dr. Koll studied ocean temperatures, winds and rains over many years. He used data from three tools:', '🛰️ satellites high above the Earth, 🛟 ocean buoys that float on the sea, and 🌡️ weather stations on land.', 'He found that the Indian Ocean is warming. This changes how the monsoon behaves: rains can be stronger or weaker in different places.'], ex: ['🛰️ satellites', '🛟 ocean buoys', '🌡️ weather stations'] }, () => {
+      steps(b, [
+        T.match({ ...MATCH.tools, prompt: 'Match each tool to what it does.' }),
+        T.ask({ guide: 'What did Dr. Koll discover about the Indian Ocean?', prompt: 'What did Dr. Koll discover about the Indian Ocean?', options: shuffle(['It is warming', 'It is freezing', 'It is drying up']), answer: 'It is warming', hint: () => hintP('Look at the map picture on page 33: earlier years were cooler, recent years are red.') }),
+        T.ask({ guide: 'A warmer ocean changes how the monsoon behaves. What happens to the rains?', prompt: 'A warmer ocean changes the monsoon. Then the rains can be…', options: shuffle(['stronger or weaker in different places', 'made of chocolate', 'gone for ever']), answer: 'stronger or weaker in different places', hint: () => hintP('Some places get more rain, some get less.') }),
+      ], () => { skill('science'); api.done(); });
+    });
+  } else {
+    examCorner(b, [
+      T.fill(F('A ___ studies seasons')),
+      T.tf(TFx('A climatologist studies the weather for just')),
+      T.tf(TFx('Dr. Roxy Mathew Koll found')),
+      T.sent(S('What does a climatologist do')),
+    ]);
+  }
+}
+
+/* =================================================================
+   PART 3 · WE CHANGE TOO (pages 33–39)
+   ================================================================= */
+const FABRICS = [
+  { k: 'cotton', n: 'Cotton', e: '👕', c: '#FFFFFF', touch: 'Soft, thin and airy. Air passes through it easily.', water: 'Water soaks in.', best: 'Hot weather' },
+  { k: 'wool', n: 'Wool', e: '🧶', c: '#F4B8B0', touch: 'Thick and fuzzy. It keeps warm air near your body.', water: 'Water sits a bit, then does not soak in.', best: 'Cold weather' },
+  { k: 'wp', n: 'Waterproof cloth', e: '🧥', c: '#A9D8F5', touch: 'Smooth and shiny.', water: 'Water beads up and does not soak in.', best: 'Rainy weather' },
+];
+function playFabric(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Pages 33–34 · Discovery Route · Testing fabrics'));
+    api.guide('Let us test three cloths, like on page 34. For each cloth, tap Touch it, and tap Drop water. Watch what happens!');
+    const done = new Set();
+    const lab = h('div', { class: 'lab' }, FABRICS.map(f => {
+      const out = h('div', { class: 'labout' });
+      const res = (what, txt, el) => { done.add(f.k + what); el.disabled = true; out.append(h('p', { class: 'pop' }, txt)); sayNow(`${f.n}. ${txt}`); sfx.pop(); check(); };
+      const t = h('button', { type: 'button', class: 'btn small', onclick: e => res('t', '✋ ' + f.touch, e.currentTarget) }, '✋ Touch it');
+      const w = h('button', { type: 'button', class: 'btn small', onclick: e => res('w', '💧 ' + f.water, e.currentTarget) }, '💧 Drop water');
+      return h('div', { class: 'fab', style: `--fc:${f.c}` }, h('div', { class: 'fabtop' }, h('span', { class: 'fe', 'aria-hidden': 'true' }, f.e), h('b', {}, f.n)), h('div', { class: 'readbtns' }, t, w), out);
+    }));
+    const after = h('div', { class: 'below' });
+    function check() {
+      if (done.size < 6 || after.childNodes.length) return;
+      setTimeout(() => {
+        teach(after, { title: 'What we found', body: [h('p', {}, '👕 ', h('b', {}, 'Cotton '), 'lets air pass through. It keeps us cool in summer.'), h('p', {}, '🧶 ', h('b', {}, 'Wool '), 'keeps warm air near the body. It keeps us warm in winter.'), h('p', {}, '🧥 ', h('b', {}, 'Waterproof '), 'material stops rainwater from soaking in. It keeps us dry in the rain.')], read: 'What we found. Cotton lets air pass through. It keeps us cool in summer. Wool keeps warm air near the body. It keeps us warm in winter. Waterproof material stops rainwater from soaking in. It keeps us dry in the rain.' }, () => { skill('fabric'); api.done(); });
+        scrollIn(after);
+      }, 1800);
+    }
+    b.append(lab, after);
+  } else if (r === 1) {
+    b.append(srctag('Page 33 · Which cloth is best?'));
+    const opts = FABRICS.map(f => f.n);
+    const pic = picPick(Object.fromEntries(FABRICS.map(f => [f.n, f.e])));
+    steps(b, [
+      T.ask({ guide: 'Which cloth feels best for hot weather?', prompt: 'Which feels best for hot weather?', options: opts, answer: 'Cotton', cls: 'pic', render: pic, hint: () => hintP('Which cloth lets air pass through?'), onDone: h2 => h2.append(fact('👕 Cotton', 'It lets air pass through, so we feel cool.')), pause: 1800 }),
+      T.ask({ guide: 'Which cloth feels best for cold weather?', prompt: 'Which feels best for cold weather?', options: opts, answer: 'Wool', cls: 'pic', render: pic, hint: () => hintP('Which cloth keeps warm air near your body?'), onDone: h2 => h2.append(fact('🧶 Wool', 'It keeps warm air near the body.')), pause: 1800 }),
+      T.ask({ guide: 'Which one will help during rain?', prompt: 'Which one will help during rain?', options: opts, answer: 'Waterproof cloth', cls: 'pic', render: pic, hint: () => hintP('On which cloth did the water bead up?'), onDone: h2 => h2.append(fact('🧥 Waterproof cloth', 'Rainwater cannot soak in.')), pause: 1800 }),
+    ], api.done);
+  } else if (r === 2) {
+    b.append(srctag('Pages 34–35 · When nature changes, clothes change'));
+    const OUT = { 'Woollen sweater and cap': '🧶', 'Raincoat and gumboots': '🧥', 'Loose cotton kurta and a sun hat': '👕' };
+    const opts = Object.keys(OUT), pic = picPick(OUT);
+    steps(b, [
+      T.teach({ title: 'What is the weather telling me to wear?', body: ['A cotton kurta and a woollen sweater are both cloth, but they help in different seasons. People made different fabrics for different weather.', 'Find the fog patch, the rain patch and the strong Sun patch. Each one shows a weather problem. Clothes are one way people solve it.'] }),
+      T.ask({ guide: 'Fog patch: a cold, foggy winter morning. What should Ayansh wear?', before: h('p', { class: 'story' }, '🌫️ A cold, foggy winter morning'), prompt: 'What should Ayansh wear?', options: shuffle(opts.slice()), answer: 'Woollen sweater and cap', cls: 'pic', render: pic, hint: () => hintP('Wool keeps warm air near the body.') }),
+      T.ask({ guide: 'Rain patch: heavy rain and puddles. What should Ayansh wear?', before: h('p', { class: 'story' }, '🌧️ Heavy rain and puddles'), prompt: 'What should Ayansh wear?', options: shuffle(opts.slice()), answer: 'Raincoat and gumboots', cls: 'pic', render: pic, hint: () => hintP('Waterproof clothes stop rain from soaking in.') }),
+      T.ask({ guide: 'Strong Sun patch: a hot summer afternoon. What should Ayansh wear?', before: h('p', { class: 'story' }, '☀️ A hot summer afternoon'), prompt: 'What should Ayansh wear?', options: shuffle(opts.slice()), answer: 'Loose cotton kurta and a sun hat', cls: 'pic', render: pic, hint: () => hintP('Cotton lets air pass through.') }),
+    ], () => { skill('fabric'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.match(MATCH.fabrics),
+      T.fill(F('Wool keeps warm')),
+      T.tf(TFx('Waterproof material lets')),
+      T.sent(S('Why do we wear cotton')),
+    ]);
+  }
+}
+
+const FOODS = [
+  { e: '🥭', t: 'Mangoes', bin: 's' }, { e: '🍉', t: 'Watermelon', bin: 's' }, { e: '🥛', t: 'Buttermilk (chaas)', bin: 's' }, { e: '🥥', t: 'Coconut water', bin: 's' }, { e: '🍹', t: 'Aam panna', bin: 's' }, { e: '🍨', t: 'Ice cream', bin: 's' },
+  { e: '🟤', t: 'Sesame laddoos', bin: 'w' }, { e: '🍯', t: 'Jaggery', bin: 'w' }, { e: '🍲', t: 'Hot tomato soup', bin: 'w' }, { e: '🫚', t: 'Ginger tea', bin: 'w' }, { e: '🌽', t: 'Roasted corn', bin: 'w' }, { e: '🍠', t: 'Sweet potato', bin: 'w' },
+];
+function playFood(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 35 · When nature changes, food changes'));
+    teach(b, { title: 'Our body feels the season', body: ['Why do we want cold drinks in summer and hot soup in winter? Our body feels the season!', 'In summer we need to cool down: mangoes, watermelon, buttermilk, coconut water and aam panna.', 'In winter, many families eat sesame laddoos and jaggery. They are filling and warming foods.'], ex: ['🥭 🍉 🥥 summer', '🟤 🍯 winter'] }, () => {
+      steps(b, [
+        T.ask({ guide: 'On a hot summer afternoon, what will cool you down best?', prompt: 'On a hot summer afternoon, what will cool you down best?', options: shuffle(['🥥 Coconut water', '🍲 Hot soup', '🫚 Ginger tea']), answer: '🥥 Coconut water', hint: () => hintP('In summer our body needs to cool down.') }),
+        T.ask({ guide: 'Which food is a filling, warming winter food?', prompt: 'Which is a filling, warming winter food?', options: shuffle(['🟤 Sesame laddoos', '🍉 Watermelon', '🍨 Ice cream']), answer: '🟤 Sesame laddoos', hint: () => hintP('Sesame and jaggery warm us up in winter.') }),
+      ], () => { skill('food'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Pages 35–36 · Seasons Café'));
+    sortGame(b, { bins: [{ k: 's', label: 'Summer menu (cool)', e: '☀️', c: 'var(--orange-soft)' }, { k: 'w', label: 'Winter menu (warm)', e: '❄️', c: 'var(--blue-soft)' }], ask: it => `${it.t}. Summer menu or winter menu?`,
+      items: shuffle(FOODS.slice()).slice(0, 8).map(x => ({ ...x, why: x.bin === 's' ? 'This cools us down. It goes on the summer menu.' : 'This warms us up. It goes on the winter menu.' })), onDone: () => { skill('food'); api.done(); } });
+  } else if (r === 2) {
+    b.append(srctag('Pages 35–36 · Why does food change?'));
+    steps(b, [
+      T.free({ guide: 'Look at the Seasons Café menus on page 36. Who helps decide what is on the menu: the chef, the customers, or the weather? Pick what you think.', prompt: 'Who decides what is on the menu?', options: ['👨‍🍳 The chef', '🧑‍🤝‍🧑 The customers', '🌦️ The weather'], after: () => info('🌦️', 'All three help, but the weather is a big clue!', 'In summer, people ask for cool drinks, so the chef puts mango shake and lemonade on the menu. In winter, people want hot soup and masala chai.') }),
+      T.ask({ guide: 'During the rains, why do families often eat fresh, hot food?', prompt: 'Why do families eat fresh, hot food during the rains?', options: shuffle(['Food can spoil faster in wet weather', 'Cold food is not allowed', 'Shops are closed']), answer: 'Food can spoil faster in wet weather', hint: () => hintP('Wet weather makes food go bad quickly.') }),
+      T.teach({ title: 'Seasons decide what grows', body: ['Seasons help decide what grows. What grows helps decide what we eat.', 'Mangoes grow in summer, so we eat mangoes in summer! Look at your plate tonight. Can you find a season clue?'] }),
+    ], () => { skill('food'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.fill(F('In winter, many families eat')),
+      T.fill(F('During the rains')),
+      T.tf(TFx('In summer, many families enjoy')),
+      T.sent(S('Why do families eat fresh')),
+    ]);
+  }
+}
+
+const FEST_MINE = {
+  'Holi': ['Spring (Vasant)', 'Flowers bloom and the cold days end. People play with colours.'],
+  'Makar Sankranti': ['Winter, in January (Shishira)', 'The cold days are ending and new crops like sugarcane and sesame are ready. Kites fill the sky!'],
+  'Pongal': ['Winter harvest, in January', 'Rice and sugarcane are harvested. Families cook sweet pongal to thank the Sun, nature and farmers.'],
+  'Lohri': ['Winter, in January', 'People sit around a bonfire at the end of the coldest days and thank nature for the harvest.'],
+  'Onam': ['After the rains (Varsha ending)', 'The land is green and harvest time is near. People make flower rangoli called pookalam.'],
+  'Diwali': ['Autumn (Sharad)', 'The rains are over, the sky is clear, and new crops are ready. Lamps light up the dark nights.'],
+  'Ganesh Chaturthi': ['The rainy season (Varsha)', 'The land is green and fresh after the rain.'],
+};
+function playFestivals(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Pages 36–37 · When nature changes, celebrations change'));
+  if (r === 0) {
+    teach(b, { title: 'Festivals are linked to nature', body: ['Why do we celebrate? Many festivals are linked to nature: a harvest, the first rains, spring colours, or the end of cold days.', '🎨 Holi comes when spring brings flowers and colour.', '🌼 Onam is celebrated when the land is green after the rains and harvest time is near.', '🌾 Pongal, Lohri, Bihu and Makar Sankranti thank nature and farmers for the harvest.'], ex: ['A festival = a way of saying thank you to nature'] }, () => {
+      steps(b, [
+        T.ask({ guide: 'Pongal, Lohri, Bihu and Makar Sankranti thank whom?', prompt: 'Pongal, Lohri, Bihu and Makar Sankranti thank…', options: shuffle(['nature and farmers, for the harvest', 'the teachers, for homework', 'the shopkeepers, for toys']), answer: 'nature and farmers, for the harvest', hint: () => hintP('Who grows our crops?') }),
+        T.ask({ guide: 'When is Onam celebrated?', prompt: 'When is Onam celebrated?', options: shuffle(['When the land is green after the rains', 'When it snows', 'In the middle of a hot, dry summer']), answer: 'When the land is green after the rains', hint: () => hintP('Onam comes after the rainy season, near harvest time.') }),
+      ], () => { skill('fest'); api.done(); });
+    });
+  } else if (r === 1) {
+    steps(b, [T.match({ ...MATCH.festivals, prompt: 'Match each festival to nature’s clue.' }), T.tf(TFx('Holi comes in the cold'))], api.done);
+  } else if (r === 2) {
+    b.append(srctag('Page 37 · Think Route'));
+    steps(b, [
+      T.free({ guide: 'Think of one festival your family celebrates. Be a detective and find the nature clue in it! Pick your festival.', prompt: 'My festival is…', options: Object.keys(FEST_MINE), after: o => { const [s, c] = FEST_MINE[o]; return h('div', { class: 'below' }, h('div', { class: 'list' }, h('h3', {}, `🔎 My festival: ${o}`), h('p', {}, h('b', {}, 'The season is: '), s), h('p', {}, h('b', {}, 'Nature’s clues are: '), c)), h('p', { class: 'note' }, 'Write this on page 37 of your book.')); } }),
+      T.ask({ guide: 'Why do people celebrate harvest festivals?', prompt: 'Why do people celebrate harvest festivals?', options: shuffle(['To thank nature and farmers for the crops', 'Because school is closed', 'To make the rain stop']), answer: 'To thank nature and farmers for the crops', hint: () => hintP('A festival can be a way of saying thank you to nature.') }),
+    ], () => { skill('fest'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.fill(F('A festival can be a way')),
+      T.fill(F('Pongal, Lohri, Bihu')),
+      T.tf(TFx('Onam is celebrated')),
+      T.spell(W('holi')),
+      T.sent(S('Why do people celebrate harvest')),
+    ]);
+  }
+}
+
+const HOMES = [
+  ['Rajasthan haveli', '🏰', 'Thick walls and a courtyard keep the home cool in hot weather.'],
+  ['Kashmir houseboat', '🛶', 'A home that floats on a lake in Kashmir.'],
+  ['City apartment', '🏢', 'Many families live together in one building. Balconies and windows let in light and air.'],
+  ['Meghalaya bamboo house', '🛖', 'Raised bamboo houses protect homes from heavy rain and damp ground.'],
+  ['Kerala coastal home', '🏡', 'Sloping roofs help rainwater flow away during heavy rains.'],
+  ['Himachal mountain house', '🏔️', 'Sloping roofs and strong walls keep the home comfortable in cold mountain weather.'],
+];
+function playHomes(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 38 · When weather changes, homes change'));
+    steps(b, [
+      T.ask({ guide: 'Two families want safe homes. One lives in hot Rajasthan. One lives in rainy Meghalaya. Would they build the same kind of house?', prompt: 'Would a family in hot Rajasthan and a family in rainy Meghalaya build the same house?', options: ['No, each home suits its own weather', 'Yes, all houses are the same'], answer: 'No, each home suits its own weather', hint: () => hintP('One place is hot and dry, the other is very wet.') }),
+      T.teach({ title: 'Homes are made for the weather', body: [h('p', {}, '🌧️ ', h('b', {}, 'Sloping roofs'), ' help rainwater slide off in rainy places.'), h('p', {}, '🌊 ', h('b', {}, 'Houses on stilts'), ' stay above floodwater in flood areas.'), h('p', {}, '☀️ ', h('b', {}, 'Thick walls, courtyards and shaded verandas'), ' keep homes cool in hot places.'), h('p', {}, '❄️ ', h('b', {}, 'Small cosy rooms and fireplaces'), ' keep people warm in cold places.'), h('p', {}, '🏔️ ', h('b', {}, 'Steep roofs'), ' stop snow from piling up.'), h('p', {}, '🌬️ ', h('b', {}, 'Strong houses'), ' stand up to strong winds on windy coasts.')], read: 'Homes are made for the weather. Sloping roofs help rainwater slide off in rainy places. Houses on stilts stay above floodwater in flood areas. Thick walls, courtyards and shaded verandas keep homes cool in hot places. Small cosy rooms and fireplaces keep people warm in cold places. Steep roofs stop snow from piling up. Strong houses stand up to strong winds on windy coasts. A home is not just a shelter. It is made to suit the weather.' }),
+    ], () => { skill('home'); api.done(); });
+  } else if (r === 1) {
+    b.append(srctag('Page 38 · Match the home to the weather'));
+    steps(b, [T.match({ ...MATCH.homes, prompt: 'Match each home feature to where it helps.' })], api.done);
+  } else if (r === 2) {
+    b.append(srctag('Pages 38–40 · Be a good builder'));
+    const st = { rain: true };
+    const pic = h('div', { class: 'below' }, houseSvg(st));
+    const redraw = () => pic.replaceChildren(houseSvg(st));
+    b.append(pic);
+    steps(b, [
+      T.ask({ guide: 'Build a house in rainy Meghalaya. Which roof will you choose?', before: h('p', { class: 'story' }, '☔ Mission 1: a house in rainy Meghalaya'), prompt: 'Which roof?', options: ['Sloping roof', 'Flat roof'], answer: 'Sloping roof', hint: () => { st.roof = 'flat'; redraw(); return hintP('Look! On a flat roof the rainwater stays and makes a pool.'); }, onDone: () => { st.roof = 'sloping'; redraw(); sayNow('The rainwater slides off!'); }, pause: 1800 }),
+      T.ask({ guide: 'The ground gets wet and damp. Should the house sit on the ground or be raised on stilts?', prompt: 'Where should the house stand?', options: ['Raised on stilts', 'Right on the wet ground'], answer: 'Raised on stilts', hint: () => hintP('Raised bamboo houses keep away from heavy rain and damp ground.'), onDone: () => { st.base = 'stilts'; st.walls = 'bamboo'; redraw(); }, pause: 2200 }),
+      T.ask({ guide: 'Mission 2: now build a house in hot Rajasthan. Which walls will keep it cool?', before: h('p', { class: 'story' }, '🐪 Mission 2: a house in hot Rajasthan'), onShow: null, prompt: 'Which walls keep it cool?', options: ['Thick walls', 'Thin walls'], answer: 'Thick walls', hint: () => hintP('Thick walls keep the heat out.'), onDone: () => { Object.assign(st, { rain: false, sun: true, base: 'ground', walls: 'thick', roof: 'flat' }); redraw(); }, pause: 1800 }),
+      T.ask({ guide: 'What else will keep the Rajasthan home cool?', prompt: 'What else keeps it cool?', options: shuffle(['A courtyard and a shaded veranda', 'A fireplace', 'No shade at all']), answer: 'A courtyard and a shaded veranda', hint: () => hintP('Fireplaces are for cold places.'), onDone: () => { st.shade = true; redraw(); }, pause: 2000 }),
+    ], () => { pic.append(fact('Good builders listen to the place!', 'A home is not just a shelter. It is made to suit the weather.')); skill('home'); api.done(); });
+  } else if (r === 3) {
+    b.append(srctag('Pages 38–39 · Homes from different places'));
+    const names = HOMES.map(x => x[0]);
+    steps(b, shuffle(HOMES.slice()).slice(0, 4).map(([n, e, s]) => T.ask({ guide: `${s} Which home is it?`, before: h('p', { class: 'story' }, s), prompt: 'Which home is it?', options: shuffle([n, ...shuffle(names.filter(x => x !== n)).slice(0, 2)]), answer: n, cls: 'pic', render: picPick(Object.fromEntries(HOMES.map(x => [x[0], x[1]]))), hint: () => hintP(`It is the ${n}.`) })), api.done);
+  } else {
+    examCorner(b, [
+      T.fill(F('Houses on ___ stay')),
+      T.tf(TFx('Fireplaces help keep homes cool')),
+      T.tf(TFx('A Kashmir houseboat')),
+      T.spell(W('stilts')),
+      T.sent(S('Why do houses in rainy places')),
+    ]);
+  }
+}
+
+/* =================================================================
+   PART 4 · CHECKPOINTS AND CHANGING CLUES (pages 39–43)
+   ================================================================= */
+const SEASON4 = ['Summer (Grishma)', 'Rainy season (Varsha)', 'Winter (Shishira)', 'Spring (Vasant)'];
+function playCheck1(api) {
+  const b = below(), r = run.round;
+  b.append(srctag(r < 1 ? 'Page 39 · Checkpoint 1 · Read the Quilt' : 'Page 40 · Checkpoint 1'));
+  if (r === 0) {
+    const Q = [['🥭☀️', 'Mangoes and strong Sun', 0], ['⛈️💧', 'Dark clouds and puddles', 1], ['🌫️🧣', 'Fog and woollen clothes', 2], ['🌸🦋', 'Flowers and butterflies', 3]];
+    steps(b, shuffle(Q.slice()).map(([e, t, a]) => T.ask({ guide: `Look at the clue: ${t}. Which season may it belong to?`, before: h('p', { class: 'story big' }, `${e} ${t}`), prompt: 'Which season?', options: SEASON4, answer: SEASON4[a], hint: () => hintP(['Hot days and mangoes!', 'Rain makes puddles.', 'Cold, foggy mornings.', 'Flowers bloom.'][a]) })), () => { skill('clue'); api.done(); });
+  } else if (r === 1) {
+    steps(b, [
+      T.ask({ guide: 'Question 2. A child in Finland and a child in Chennai both say: it is a cold morning! Would they wear the same clothes?', before: h('p', { class: 'story' }, '🇫🇮 A child in Finland and 🌴 a child in Chennai both say, “It is a cold morning!”'), prompt: 'Would they wear the same clothes?', options: shuffle(['No. Cold in Finland is snowy and freezing, so a thick coat. Cold in Chennai is mild, so a light sweater.', 'Yes. Cold is the same everywhere.', 'No. Both wear swimming costumes.']), answer: 'No. Cold in Finland is snowy and freezing, so a thick coat. Cold in Chennai is mild, so a light sweater.', hint: () => hintP('The same word, “cold”, can feel very different in different places.'), pause: 1800 }),
+      T.pick({ guide: 'Question 3. If very little rain falls in your town one year, what might change first? Tap all that could happen.', prompt: 'Very little rain this year. What might change? Tap ALL that could happen.', items: [
+        { e: '🚰', t: 'Less water at home to drink and use', ok: true, why: 'Yes! Rain fills our lakes, wells and tanks.' },
+        { e: '🌾', t: 'Crops in the fields dry up', ok: true, why: 'Yes! Plants need rain to grow.' },
+        { e: '🥕', t: 'Vegetables and food cost more', ok: true, why: 'Yes! Fewer crops means food costs more.' },
+        { e: '🏞️', t: 'Lakes and wells get low', ok: true, why: 'Yes! Less rain, less water in lakes and wells.' },
+        { e: '🌊', t: 'Floods everywhere', ok: false, why: 'Floods come from too much rain, not too little.' },
+        { e: '☂️', t: 'Everyone needs more umbrellas', ok: false, why: 'Without rain, we need fewer umbrellas!' },
+      ] }),
+    ], api.done);
+  } else if (r === 2) {
+    const A = h('div', { class: 'scene2' },
+      h('div', { class: 'scard hot' }, h('b', {}, 'Picture A'), h('span', { class: 'sem', 'aria-hidden': 'true' }, '☀️'), h('span', { class: 'sem', 'aria-hidden': 'true' }, '🧱🏠🌵'), h('span', { class: 'cap' }, 'Mud house, thick walls, small windows, shady veranda, cactus, boy in white cotton')),
+      h('div', { class: 'scard wet' }, h('b', {}, 'Picture B'), h('span', { class: 'sem', 'aria-hidden': 'true' }, '🌧️'), h('span', { class: 'sem', 'aria-hidden': 'true' }, '🛖☂️🥾'), h('span', { class: 'cap' }, 'Sloping roof, house raised on stilts, green hills, girl in raincoat and gumboots')));
+    b.append(A);
+    steps(b, [
+      T.ask({ guide: 'Question 5. Look at Picture A. What is the weather like there?', prompt: 'Picture A: what is the weather like?', options: shuffle(['Hot and dry', 'Rainy and wet', 'Snowy']), answer: 'Hot and dry', hint: () => hintP('Strong Sun, cactus and cotton clothes.') }),
+      T.ask({ guide: 'Look at Picture B. What is the weather like there?', prompt: 'Picture B: what is the weather like?', options: shuffle(['Hot and dry', 'Rainy and wet', 'Snowy']), answer: 'Rainy and wet', hint: () => hintP('Raincoat, umbrella and gumboots.') }),
+      T.ask({ guide: 'Which clue in the home in Picture B tells you it rains a lot?', prompt: 'Which home clue in Picture B tells you it rains a lot?', options: shuffle(['Sloping roof and a raised house', 'Thick mud walls', 'A big open courtyard']), answer: 'Sloping roof and a raised house', hint: () => hintP('Rain slides off the roof, and the house stays above wet ground.') }),
+      T.ask({ guide: 'Which clue in the home in Picture A tells you it is hot?', prompt: 'Which home clue in Picture A tells you it is hot?', options: shuffle(['Thick mud walls and a shady veranda', 'A raised house on stilts', 'A fireplace']), answer: 'Thick mud walls and a shady veranda', hint: () => hintP('These keep a home cool.') }),
+    ], api.done);
+  } else {
+    examCorner(b, [
+      T.match(MATCH.clues),
+      T.ask({ guide: 'Question 4. A patch shows dark clouds. How do people respond?', before: h('p', { class: 'story' }, '⛈️ Nature’s clue: dark clouds'), prompt: 'How do people respond?', options: shuffle(['They carry umbrellas and raincoats', 'They wear woollen caps', 'They fly kites']), answer: 'They carry umbrellas and raincoats', hint: () => hintP('Dark clouds mean rain.') }),
+      T.spell(W('varsha')),
+    ]);
+  }
+}
+
+function playEco(api) {
+  const b = below(), r = run.round;
+  if (r === 0) {
+    b.append(srctag('Page 41 · Eco Route · When nature’s clues change'));
+    teach(b, { title: 'Nature has a rhythm', body: ['Rains come. Flowers bloom. Mangoes ripen. Birds return. Year after year, nature follows a rhythm.', 'But in some places, this rhythm is changing: some summers feel hotter, sometimes too much rain comes and sometimes too little, and in cold places snow and ice may melt faster.', 'Farmers may find that the rain comes late. You may feel hotter summers than your grandparents did!'], ex: ['🥵 hotter summers', '🌧️ too much or too little rain', '🧊 snow melting faster', '⏰ rain coming late'] }, () => {
+      steps(b, [T.pick({ guide: 'Which of these are ways that nature’s clues are changing? Tap all of them.', prompt: 'How are nature’s clues changing? Tap ALL that the book tells us.', items: [
+        { e: '🥵', t: 'Some summers feel hotter', ok: true, why: 'Yes! Summers can feel hotter now.' },
+        { e: '⏰', t: 'Rain sometimes comes late', ok: true, why: 'Yes! Farmers wait longer for the rain.' },
+        { e: '🧊', t: 'Snow and ice melt faster', ok: true, why: 'Yes! In cold places, snow melts faster.' },
+        { e: '🌧️', t: 'Sometimes too much rain, sometimes too little', ok: true, why: 'Yes! The rain is less even now.' },
+        { e: '🌙', t: 'The Moon has stopped shining', ok: false, why: 'No, the Moon is fine!' },
+        { e: '🐘', t: 'Elephants have learnt to fly', ok: false, why: 'Ha ha! No.' },
+      ] })], () => { skill('eco'); api.done(); });
+    });
+  } else if (r === 1) {
+    b.append(srctag('Page 41 · We can help'));
+    steps(b, [
+      T.show(h('div', { class: 'below' }, info('☀️', 'Dharnai Solar Village', 'The pictures on page 41 show Dharnai, a solar village in Bihar. Solar panels turn sunlight into electricity for homes and street lights.'), info('🌳', 'We can help!', 'We can help by planting trees, saving water, reducing waste, and not wasting electricity. Every patch in the quilt matters.')), 'Look at the pictures on page 41. Dharnai is a solar village in Bihar. Solar panels turn sunlight into electricity. We can help by planting trees, saving water, reducing waste, and not wasting electricity.'),
+      (holder, next) => sortGame(holder, { bins: [{ k: 'y', label: 'Helps nature', e: '💚', c: 'var(--green-soft)' }, { k: 'n', label: 'Hurts nature', e: '💔', c: 'var(--oops-soft)' }], ask: it => `${it.t}. Does it help or hurt nature?`, items: shuffle([
+        { e: '🌳', t: 'Planting a tree', bin: 'y', why: 'Trees give shade and help bring rain.' },
+        { e: '🚰', t: 'Closing the tap while brushing', bin: 'y', why: 'That saves water.' },
+        { e: '💡', t: 'Switching off lights and fans when you leave', bin: 'y', why: 'That saves electricity.' },
+        { e: '🛍️', t: 'Carrying a cloth bag to the shop', bin: 'y', why: 'That reduces waste.' },
+        { e: '🔆', t: 'Leaving lights on all day', bin: 'n', why: 'That wastes electricity.' },
+        { e: '🪓', t: 'Cutting down trees', bin: 'n', why: 'We need trees!' },
+        { e: '🗑️', t: 'Throwing plastic into a river', bin: 'n', why: 'That makes the water dirty.' },
+      ]), onDone: () => setTimeout(next, 1200) }),
+    ], () => { skill('eco'); api.done(); });
+  } else if (r === 2) {
+    b.append(srctag('Page 42 · Checkpoint 2 · Ask an elder'));
+    steps(b, [
+      T.free({ guide: 'Ask an elder at home, like Nani, Dadi or your parents: does any season feel different now? Pick what they say.', prompt: 'The change I notice:', options: ['🥵 Summers are hotter', '⏰ The rain comes late', '🌧️ Too much rain at once', '🧣 Winters are less cold'], after: () => info('📝', 'Write it on page 42', 'Write what your elder said on page 42 of your book.') }),
+      T.free({ guide: 'What might have caused it? Pick what you and your elder think.', prompt: 'What might have caused it?', options: ['🪓 Fewer trees', '🚗 More cars and smoke', '🏭 More factories', '💡 Wasting electricity'], after: () => info('🌍', 'Good thinking!', 'Cutting trees, smoke and wasting electricity can all make our weather change.') }),
+      T.ask({ guide: 'What can you do to help?', prompt: 'What can YOU do to help?', options: shuffle(['Plant a tree and save water', 'Leave the fan on in an empty room', 'Throw wrappers on the road']), answer: 'Plant a tree and save water', hint: () => hintP('Which one is kind to nature?') }),
+    ], () => { skill('eco'); api.done(); });
+  } else {
+    examCorner(b, [
+      T.fill(F('We can help by planting')),
+      T.tf(TFx('Nature’s clues never')),
+      T.tf(TFx('Some summers now')),
+      T.spell(W('trees')),
+      T.sent(S('How can we help')),
+    ]);
+  }
+}
+
+function playLastPatch(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Pages 42–43 · The Last Patch'));
+  if (r === 0) {
+    const P6 = [['🥭', 'Mango', 'A sign of summer'], ['🟤', 'Sesame laddoo', 'A winter food'], ['🏠', 'Sloping roof', 'A family ready for rain'], ['🪁', 'Kites', 'A harvest festival'], ['🌸', 'Flowers and butterflies', 'Spring is here'], ['🧣', 'Woollen scarf', 'A cold winter day']];
+    const ans = P6.map(x => x[2]);
+    api.guide('Come back to the quilt one last time. At first the patches looked like separate pictures. Now you can read them!');
+    steps(b, shuffle(P6.slice()).slice(0, 4).map(([e, t, a]) => T.ask({ guide: `The ${t} patch. What does it tell us?`, before: h('p', { class: 'story big' }, `${e} ${t}`), prompt: 'What does this patch tell us?', options: shuffle([a, ...shuffle(ans.filter(x => x !== a)).slice(0, 2)]), answer: a, hint: () => hintP(`Think about when we see a ${t.toLowerCase()}.`) })), api.done);
+  } else if (r === 1) {
+    steps(b, [
+      T.teach({ title: 'That is wisdom', body: ['Every patch shows a conversation between nature and people.', 'Nature changes. People notice and respond with care. That is wisdom.', 'The quilt is made of people who looked up at the sky and asked: What is nature telling me today? Now that person is you!'] }),
+      T.match({ part: 4, heads: ['Nature changes', 'People respond'], prompt: 'Nature changes, people respond. Match them.', pairs: [['☀️ Strong Sun', 'Cotton clothes and cool drinks', 'Stay cool!'], ['🌧️ Heavy rain', 'Sloping roofs and umbrellas', 'Stay dry!'], ['🌫️ Cold fog', 'Woollens and warm food', 'Stay warm!'], ['🌾 Crops are ready', 'A festival to say thank you', 'Harvest festivals!']] }),
+    ], api.done);
+  } else {
+    b.append(srctag('Page 43 · My Quilt of Nature'));
+    const mine = [];
+    const SP = [['Vasant · spring', ['🌸', '🦋', '🌷']], ['Grishma · summer', ['🥭', '🍉', '☀️']], ['Varsha · rainy season', ['☔', '⛈️', '🐸']], ['Sharad · autumn', ['🍂', '🪔', '🌤️']], ['Hemanta · early winter', ['🌾', '🍃', '🧥']], ['Shishira · winter', ['❄️', '🧣', '🔥']]];
+    const show = h('div', { class: 'below' });
+    steps(b, SP.map(([s, opts], i) => (holder, next) => {
+        api.guide(`Make your own quilt! Pick a patch for ${s}. There is no wrong answer.`);
+        freeChoice(holder, { prompt: `A patch for ${s}`, options: opts, onPick: o => { mine[i] = o; sfx.tap(i); setTimeout(next, 700); } });
+      }), () => {
+        show.append(h('div', { class: 'myquilt' }, SP.map(([s], i) => h('div', { class: 'mq', style: `--pc:${RITUS[i].c}` }, h('span', { class: 'mqe', 'aria-hidden': 'true' }, mine[i] || RITUS[i].e), h('small', {}, s.split(' · ')[0])))), h('p', { class: 'note' }, 'This is your Quilt of Nature! Draw these patches on pages 43–44 of your book.'));
+        api.guide('Here is your Quilt of Nature! Draw these patches on pages 43 and 44 of your book.');
+        steps(show, [T.ask({ guide: 'One last check. A sloping roof shows a family ready for what?', prompt: 'A sloping roof shows a family ready for…', options: shuffle(['rain', 'a party', 'a race']), answer: 'rain', hint: () => hintP('Rainwater slides off a sloping roof.') })], () => { skill('clue'); api.done(); });
+      });
+    b.append(show);
+  }
+}
+
+/* =================================================================
+   PART 5 · EXAM PRACTICE
+   ================================================================= */
+function wsGrid(words, size = 8) {
+  for (let attempt = 0; attempt < 200; attempt++) {
+    const g = Array.from({ length: size }, () => Array(size).fill(''));
+    const where = {}; let ok = true;
+    for (const w of words) {
+      let placed = false;
+      for (let t = 0; t < 100 && !placed; t++) {
+        const down = Math.random() < 0.5, r = rand(0, down ? size - w.length : size - 1), c = rand(0, down ? size - 1 : size - w.length);
+        if ([...w].every((ch, k) => { const x = g[r + (down ? k : 0)][c + (down ? 0 : k)]; return !x || x === ch; })) {
+          [...w].forEach((ch, k) => { g[r + (down ? k : 0)][c + (down ? 0 : k)] = ch; });
+          where[w] = [r, c, down ? 'goes down' : 'goes across']; placed = true;
+        }
+      }
+      if (!placed) { ok = false; break; }
+    }
+    if (!ok) continue;
+    const AZ = 'ABCDEFGHIKLMNOPRSTUVWY';
+    return { grid: g.map(row => row.map(ch => ch || AZ[rand(0, AZ.length - 1)]).join('')), where };
+  }
+  return null;
+}
+function playWords(api) {
+  const b = below(), r = run.round;
+  b.append(srctag('Key words of Chapter 8'));
+  if (r === 0) {
+    api.guide('These are the key words of the chapter. Tap each card to see what it means. Learn them well. They come in the exam!');
+    const seen = new Set();
+    const count = h('p', { class: 'counter' }, `Cards opened: 0 of ${GLOSSARY.length}`);
+    const cards = h('div', { class: 'flips' }, GLOSSARY.map(([w, e, m], i) => {
+      const c = h('button', { type: 'button', class: 'flip', onclick: () => {
+        c.classList.add('open'); c.replaceChildren(h('span', { class: 'fw' }, w), h('span', { class: 'fm' }, m)); sayNow(`${w}. ${m}`);
+        seen.add(i); count.textContent = `Cards opened: ${seen.size} of ${GLOSSARY.length}`;
+        if (seen.size === GLOSSARY.length && !cards.dataset.done) { cards.dataset.done = '1'; skill('words'); api.done(); }
+      } }, h('span', { class: 'fe', 'aria-hidden': 'true' }, e), h('span', { class: 'fw' }, w));
+      return c;
+    }));
+    b.append(cards, count);
+  } else if (r === 1) {
+    const qs = shuffle(GLOSSARY.slice()).slice(0, 5);
+    steps(b, qs.map(([w, e, m]) => T.ask({ guide: `Which word means: ${m}`, before: h('p', { class: 'story' }, `“${m}”`), prompt: 'Which word is it?', options: shuffle([w, ...shuffle(GLOSSARY.filter(x => x[0] !== w)).slice(0, 2).map(x => x[0])]), answer: w, hint: () => hintP(`It is the word with the picture ${e}.`) })), () => { skill('words'); api.done(); });
+  } else if (r === 2) {
+    const words = ['RITUS', 'WOOL', 'COTTON', 'HOLI', 'STILTS', 'MANGO'];
+    const ws = wsGrid(words);
+    api.guide('Find the six words hiding in the grid. They go across or down. Tap the first letter, then the last letter.');
+    if (ws) wordSearch(b, { grid: ws.grid, words, where: ws.where, onDone: api.done });
+    else api.done();
+  } else {
+    examCorner(b, shuffle(WORDS.slice()).slice(0, 3).map(T.spell));
+  }
+}
+
+const pickN = (list, n) => shuffle(list.slice()).slice(0, n);
+function playPaper(api) {
+  const b = below(), r = run.round;
+  const SEC = ['A · Fill in the blanks', 'B · True or false', 'C · Match the following', 'D · One-word answers', 'E · Answer in one sentence'];
+  b.append(h('div', { class: 'sechead' }, h('b', {}, `Section ${SEC[r]}`), h('span', {}, 'Practice paper · Chapter 8 · on your own')));
+  if (r === 0) steps(b, pickN(FILL, 5).map(T.fill), api.done);
+  else if (r === 1) { const f = pickN(TF.filter(x => !x[1]), 2), t = pickN(TF.filter(x => x[1]), 3); steps(b, shuffle([...f, ...t]).map(T.tf), api.done); }
+  else if (r === 2) { const set = MATCH[pickOne(['ritus', 'homes', 'clues', 'houses'])]; steps(b, [T.match(set)], api.done); }
+  else if (r === 3) steps(b, pickN(WORDS, 3).map(T.spell), api.done);
+  else steps(b, pickN(SENTS, 2).map(T.sent), () => { skill('exam'); api.done(); });
+}
+
+/* ---------- Grand Review ---------- */
+const SPECIAL = {
+  1: () => { const x = pickOne(RITUS); return T.ask({ guide: `${x.sign} Which ritu is it?`, before: h('p', { class: 'story' }, `${x.e} ${x.sign}`), prompt: 'Which ritu is it?', options: shuffle([x.n, ...pickN(RITUS.filter(y => y !== x), 2).map(y => y.n)]), answer: x.n, hint: () => hintP(`${x.n} is ${x.en.toLowerCase()}.`) }); },
+  2: () => { const q = pickOne([['Where would people drink chaas and aam panna to stay cool?', 'Rajasthan'], ['Where would you see sloping roofs, umbrellas and raincoats?', 'Meghalaya'], ['Where do people wear woollen clothes to stay warm?', 'Kashmir']]); return T.ask({ guide: q[0], prompt: q[0], options: ['Rajasthan', 'Meghalaya', 'Kashmir'], answer: q[1], hint: () => hintP('Rajasthan is hot, Meghalaya is rainy, Kashmir is cold.') }); },
+  3: () => { const [l, rr, tip] = pickOne(MATCH.homes.pairs); return T.ask({ guide: `${l}. Where does it help?`, before: h('p', { class: 'story' }, `🏠 ${l}`), prompt: 'Where does it help?', options: shuffle([rr, ...pickN(MATCH.homes.pairs.filter(x => x[1] !== rr), 2).map(x => x[1])]), answer: rr, hint: () => hintP(tip) }); },
+  4: () => { const [l, rr, tip] = pickOne(MATCH.clues.pairs); return T.ask({ guide: `${l}. Which season is it?`, before: h('p', { class: 'story' }, l), prompt: 'Which season?', options: shuffle(['Summer', 'Rainy season', 'Winter', 'Spring']), answer: rr, hint: () => hintP(tip) }); },
+};
+function reviewTask(p) {
+  const kinds = ['fill', 'tf', 'special'];
+  if (byPart(WORDS, 3, p).length) kinds.push('spell');
+  const k = pickOne(kinds);
+  if (k === 'fill') return T.fill(pickOne(byPart(FILL, 4, p)));
+  if (k === 'tf') return T.tf(pickOne(byPart(TF, 3, p)));
+  if (k === 'spell') return T.spell(pickOne(byPart(WORDS, 3, p)));
+  return SPECIAL[p]();
+}
+function playReview(api) {
+  if (!run.parts) run.parts = shuffle([1, 1, 2, 2, 3, 3, 3, 4, 4, pickOne([1, 3, 4])]);
+  if (!run.firstTry) run.firstTry = {};
+  const p = run.parts[run.round % run.parts.length], before = run.mistakes;
+  const b = below();
+  b.append(srctag(`Part ${p} · ${PART_NAMES[p]}`));
+  steps(b, [reviewTask(p)], () => {
+    const t = run.firstTry[p] || (run.firstTry[p] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Nature’s clues', 2: 'One season, many places', 3: 'We change too', 4: 'Checkpoints and changing clues' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🧵'),
+    h('h3', {}, 'Season Quilt Master'),
+    h('span', { class: 'who' }, `EVS Chapter 8 · Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [rr, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${rr} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < rr ? '' : 'off' }, '⭐'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- revision sheet for grown-ups (built from the same facts) ---------- */
+function renderRevision() {
+  const el = $('revision'); if (!el) return;
+  const li = (...k) => h('li', {}, ...k);
+  el.replaceChildren(
+    h('h3', {}, 'A · Fill in the blanks'), h('ol', {}, FILL.map(([s, a]) => li(...fillParts(s, a)))),
+    h('h3', {}, 'B · True or false'), h('ol', {}, TF.map(([s, ok, fix]) => li(s, ' ', h('b', {}, ok ? 'True.' : 'False.'), ok ? '' : ` Correct: ${fix}`))),
+    h('h3', {}, 'C · Match the following'), h('ul', {}, Object.values(MATCH).map(m => li(m.pairs.map(p => `${p[0]} ➜ ${p[1]}`).join(' · ')))),
+    h('h3', {}, 'D · One-word answers'), h('ol', {}, WORDS.map(([w, q]) => li(q, ' ', h('b', {}, w.charAt(0).toUpperCase() + w.slice(1))))),
+    h('h3', {}, 'E · Answer in one sentence'), h('ol', {}, SENTS.map(([q, a]) => li(h('b', {}, q), ' ', a))),
+    h('h3', {}, 'Key words'), h('ul', {}, GLOSSARY.map(([w, , m]) => li(h('b', {}, w), ': ', m))));
+}
+
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'The Season Quilt', idea: 'Embark · Nature gives us clues', page: 'Book pages 29–30', rounds: 3, cut: [0, 2], icon: '🧵', play: playQuilt },
+  { id: 2, part: 1, name: 'Weather or Season?', idea: 'Be a nature detective', page: 'Book pages 30, 32', rounds: 4, cut: [1, 3], icon: '🌤️', play: playWeather },
+  { id: 3, part: 1, name: 'India’s Six Seasons', idea: 'The ritus', page: 'Book page 31', rounds: 5, cut: [2, 5], icon: '🎡', play: playRitus },
+  { id: 4, part: 2, name: 'Season Trail Across India', idea: 'Heritage Route', page: 'Book page 32', rounds: 5, cut: [2, 5], icon: '🗺️', play: playTrail },
+  { id: 5, part: 2, name: 'Meet a Climatologist', idea: 'Dr. Roxy Mathew Koll', page: 'Book page 33', rounds: 3, cut: [1, 3], icon: '🔭', play: playScientist },
+  { id: 6, part: 3, name: 'The Fabric Lab', idea: 'Clothes change', page: 'Book pages 33–35', rounds: 4, cut: [1, 4], icon: '🧶', play: playFabric },
+  { id: 7, part: 3, name: 'Seasons Café', idea: 'Food changes', page: 'Book pages 35–36', rounds: 4, cut: [1, 4], icon: '🥭', play: playFood },
+  { id: 8, part: 3, name: 'Festivals Say Thank You', idea: 'Celebrations change', page: 'Book pages 36–37', rounds: 4, cut: [1, 4], icon: '🪁', play: playFestivals },
+  { id: 9, part: 3, name: 'Homes for Every Weather', idea: 'Homes change', page: 'Book pages 38–39', rounds: 5, cut: [2, 5], icon: '🏠', play: playHomes },
+  { id: 10, part: 4, name: 'Read the Quilt', idea: 'Checkpoint 1', page: 'Book pages 39–40', rounds: 4, cut: [1, 4], icon: '✅', play: playCheck1 },
+  { id: 11, part: 4, name: 'When Nature’s Clues Change', idea: 'Eco Route · Checkpoint 2', page: 'Book pages 41–42', rounds: 4, cut: [1, 4], icon: '🌍', play: playEco },
+  { id: 12, part: 4, name: 'The Last Patch', idea: 'My Quilt of Nature', page: 'Book pages 42–44', rounds: 3, cut: [1, 3], icon: '🪡', play: playLastPatch },
+  { id: 13, part: 5, name: 'Key Words', idea: 'Learn the exam words', page: 'Whole chapter', rounds: 4, cut: [2, 5], icon: '📚', play: playWords },
+  { id: 14, part: 5, name: 'Practice Paper', idea: 'Like a real exam', page: 'Whole chapter · sections A–E', rounds: 5, cut: [3, 7], icon: '✏️', play: playPaper, exam: true },
+  { id: 15, part: 5, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 8 · pages 29–44', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'clue', e: '🔎', t: 'Nature detective' },
+  { k: 'ritu', e: '🎡', t: 'Ritu reader' },
+  { k: 'place', e: '🗺️', t: 'India traveller' },
+  { k: 'science', e: '🔭', t: 'Young climatologist' },
+  { k: 'fabric', e: '🧶', t: 'Fabric tester' },
+  { k: 'food', e: '🥭', t: 'Season chef' },
+  { k: 'fest', e: '🪁', t: 'Festival friend' },
+  { k: 'home', e: '🏠', t: 'Weather builder' },
+  { k: 'eco', e: '🌳', t: 'Nature helper' },
+  { k: 'words', e: '📚', t: 'Word keeper' },
+  { k: 'spell', e: '🔤', t: 'Speller' },
+  { k: 'write', e: '✍️', t: 'Answer writer' },
+  { k: 'exam', e: '✏️', t: 'Exam ready' },
+];
+
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups(); hush();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups(); hush();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren(); delete stageEl.dataset.done;
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || !!run.lvl.exam || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run || foot.querySelector('#nextBtn')) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 3 ? 'You finished Part 1, nature’s clues! Part 2 takes you on a trail across India.'
+    : L.id === 5 ? 'You finished Part 2! In Part 3 you will see how clothes, food, festivals and homes change with the seasons.'
+    : L.id === 9 ? 'You finished Part 3! Part 4 has the book’s checkpoints and how nature’s clues are changing.'
+    : L.id === 12 ? 'You finished Part 4 and the whole chapter! Now practise for the exam: Key Words, the Practice Paper and the Grand Review.'
+    : L.id === 14 ? 'You finished the Practice Paper! One last stop: the Grand Review.'
+    : L.id === LEVELS.length ? 'You sewed the whole Season Quilt, Ayansh! You are ready for your EVS exam. Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the Season Quilt'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = PATCH_COL.concat(['#FFFFFF', '#FFC93D']);
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 5; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  renderQuilt();
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null; hush();
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) hush(); else if (run) speakGuide(guideText); });
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function renderQuilt() {
+  const sewn = LEVELS.filter(L => P.stars[L.id]).length;
+  $('heroQuilt').replaceChildren(...LEVELS.map((L, i) => h('span', { class: 'patch' + (P.stars[L.id] ? ' sewn' : ''), style: `--pc:${PATCH_COL[i % PATCH_COL.length]}`, title: L.name }, h('span', { 'aria-hidden': 'true' }, L.icon))));
+  $('heroQuilt').setAttribute('aria-label', `The Season Quilt: ${sewn} of ${LEVELS.length} patches sewn`);
+  $('quiltNote').textContent = sewn ? `${sewn} of ${LEVELS.length} patches sewn. Finish a stop to sew its patch onto the quilt.` : 'Finish a stop to sew its patch onto the quilt. Start with Stop 1!';
+}
+function boot(data) { load(data); syncSound(); syncVoice(); renderRevision(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+</body>
+</html>
