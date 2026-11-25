@@ -201,6 +201,9 @@ button{font:inherit;color:var(--ink)}
 .grp{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:74px;min-height:96px;padding:6px 8px 8px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
 .grp:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
 .grp.on{background:var(--fwd-soft);cursor:default}
+.grp.asking{outline:4px dashed var(--gold);outline-offset:2px}
+.coin{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:#F2C14E;border:3px solid var(--ink);font-family:var(--display);font-weight:800;font-size:19px;color:#2A211D;box-shadow:inset 0 0 0 4px #FBDF94}
+.coin.note{width:78px;height:44px;border-radius:8px;background:#E6B3D3;box-shadow:inset 0 0 0 4px #F5D9EA}
 .grp .ct{font-family:var(--display);font-weight:800;font-size:22px;line-height:1;min-height:22px;color:var(--fwd);font-variant-numeric:tabular-nums}
 .grp .gbig{font-size:34px;line-height:1.1;white-space:nowrap}
 .grp .gdots{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:60px}
@@ -289,6 +292,17 @@ button{font:inherit;color:var(--ink)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* teaching upgrade: on-your-own rounds and number pad */
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.npad-show{font-family:var(--display);font-weight:800;font-size:36px;min-width:150px;min-height:62px;margin:4px auto 10px;display:flex;align-items:center;justify-content:center;border:3px dashed var(--ink);border-radius:16px;background:var(--board);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:2px}
+.npad-show.right{border-style:solid;background:#DDF3E4}
+.npad{display:grid;grid-template-columns:repeat(3,minmax(0,72px));gap:8px;justify-content:center}
+.npad button{font-family:var(--display);font-weight:800;font-size:28px;height:58px;border:3px solid var(--ink);border-radius:14px;background:var(--board);color:var(--ink);box-shadow:0 4px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.npad button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.npad button.ok{background:var(--gold)}
+.npad button:disabled{opacity:.45;cursor:default}
+.npad-note{text-align:center;font-weight:700;color:var(--ink-soft);margin:4px 0 0;font-size:15px}
 </style>
 
 <div class="app">
@@ -297,6 +311,7 @@ button{font:inherit;color:var(--ink)}
     <div class="tools">
       <span class="pill" id="total" aria-label="Stars collected">★ 0 / 48</span>
       <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
     </div>
   </header>
 
@@ -398,6 +413,7 @@ button{font:inherit;color:var(--ink)}
       <button class="btn small" id="back" type="button">← Park map</button>
       <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
       <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
     </div>
     <div class="guide">
       <div class="mascot sm" aria-hidden="true">🐸</div>
@@ -573,12 +589,82 @@ function say(text) {
 const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
 
 /* ---------- shared pieces ---------- */
+/* ---------- teaching upgrade: read-aloud and on-your-own rounds ---------- */
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+const isNumLike = v => (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && /^\d{1,4}$/.test(v));
+// On-your-own rounds: type the number instead of picking from three, unless the question is about choosing from a list
+function usePad(prompt, options, answer) {
+  if (!run || !run.solo || !isNumLike(answer) || !options || options.length < 2 || !options.every(isNumLike)) return false;
+  const words = `${prompt || ''} ${guideText || ''}`;
+  return !/\bnot\b|which|odd|tap|circle|pick|choose|most|least|fastest/i.test(words);
+}
+function numPad(parent, { prompt, answer, onDone, hint }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const show = h('div', { class: 'npad-show', 'aria-live': 'polite' }, '?');
+  const pad = h('div', { class: 'npad', role: 'group', 'aria-label': 'Number keys' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const want = String(Number(answer));
+  let typed = '', over = false, wrongs = 0;
+  const keys = [];
+  const paint = () => { show.textContent = typed || '?'; };
+  const submit = () => {
+    if (over || !typed) return;
+    if (typed === want) {
+      over = true; keys.forEach(k => k.disabled = true); show.classList.add('right');
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren();
+      onDone && onDone();
+    } else {
+      wrongs++; run.mistakes++; sfx.oops(); shakeEl(show);
+      fb.textContent = wrongs < 2 ? `Not ${typed}. Have a think and try again!` : `Not ${typed}. Here is a clue.`;
+      fb.className = 'fb oops'; typed = ''; paint();
+      if (wrongs >= 2 && hint) { const x = hint(); if (x && x.nodeType) { hintBox.replaceChildren(x); speakGuide(x.textContent); } }
+    }
+  };
+  const press = k => {
+    if (over) return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'ok') return submit();
+    else if (typed.length < 4) typed = (typed === '0' ? '' : typed) + k;
+    sfx.pop();
+    paint();
+  };
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'back', '0', 'ok'].forEach(k => {
+    const b = h('button', { type: 'button', 'data-key': k, 'aria-label': k === 'back' ? 'Rub out' : k === 'ok' ? 'Check my answer' : k, class: k === 'ok' ? 'ok' : '', onclick: () => press(k) }, k === 'back' ? '⌫' : k === 'ok' ? '✓' : k);
+    keys.push(b); pad.append(b);
+  });
+  const onKey = e => {
+    if (over || !wrap.isConnected) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') press('back');
+    else if (e.key === 'Enter') press('ok');
+  };
+  document.addEventListener('keydown', onKey);
+  api.cleanup(() => document.removeEventListener('keydown', onKey));
+  wrap.append(show, pad, h('p', { class: 'npad-note' }, 'Type your answer, then tap ✓'), fb, hintBox);
+  parent.append(wrap);
+  return wrap;
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
 function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words' }) {
+  if (usePad(prompt, options, answer)) return numPad(parent, { prompt, answer, onDone, hint });
   const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
   if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
   const row = h('div', { class: 'choices' });
   const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
-  const btns = []; let over = false;
+  const btns = []; let over = false, wrongs = 0;
   options.forEach(opt => {
     const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
       if (over) return;
@@ -588,7 +674,7 @@ function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words
       } else {
         b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
         fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
-        hint && hint(opt);
+        if (++wrongs >= 2 || !run || !run.solo) { hint && hint(opt); } else fb.textContent = 'Not quite. Have a think and try again!';
       }
     } }, String(opt));
     btns.push(b); row.append(b);
@@ -714,7 +800,7 @@ function jumpGame(api, parent, { from, to, start, step, jumps, who, name, onDone
       if (miss >= 2) nl.hint(cur + step);
       const tip = s === 10 ? `Jumping ${dw} by 10 makes the tens digit ${step > 0 ? 'one more' : 'one less'}. The ones digit stays the same.`
         : `Start at ${cur} and count ${s} little steps ${dw}. Say 1, 2${s > 2 ? ', 3' : ''}… as you go.`;
-      api.guide(`Not there. ${tip}${miss >= 2 ? ' Look for the gold dotted circle.' : ''}`);
+      api.guide(run.solo && miss < 2 ? 'Not there. Have a think and try again!' : `Not there. ${tip}${miss >= 2 ? ' Look for the gold dotted circle.' : ''}`);
     }
   };
   return nl;
@@ -725,28 +811,44 @@ function groupCount(api, parent, { n, k, look, noun, intro, onDone, total = true
   const box = h('div', { class: 'below' }); parent.append(box);
   const counter = h('div', { class: 'counter', 'aria-live': 'polite' }, ' ');
   const row = h('div', { class: 'grps' });
-  let c = 0;
+  const qbox = h('div', { class: 'below' });
+  let c = 0, waiting = false;
+  const said = [];
+  const finishAll = () => {
+    badge(k);
+    const q = h('div', { class: 'below' }); box.append(q);
+    if (!total) return onDone && onDone();
+    api.guide(`You skip counted by ${k}s! How many ${noun} are there in all?`);
+    askChoice(q, { prompt: `How many ${noun} in all?`, options: numOpts(n * k, [(n - 1) * k, (n + 1) * k, n * k + 1, n + k]), answer: n * k, cls: '',
+      hint: () => api.guide(`Look at the last number you said when you counted: ${said.join(', ')}.`),
+      onDone: () => { q.append(fact(`${n * k} ${noun}`, `${said.join(', ')}. We counted in ${k}s!`)); onDone && onDone(); } });
+    setTimeout(() => q.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 100);
+  };
+  const light = (b, ct) => {
+    said.push(c * k); b.classList.remove('asking'); b.classList.add('on'); ct.textContent = c * k; sfx.hop(c);
+    counter.textContent = said.join(', ');
+    if (c === n) finishAll();
+    else api.guide(c === 1 ? `${k}! Tap the next one. Add ${k} more and say the number.` : pickOne(['Yes! Tap the next one.', `Right! Keep counting in ${k}s.`, 'Good counting! Next one.']));
+  };
   for (let i = 0; i < n; i++) {
     const ct = h('span', { class: 'ct' });
     const b = h('button', { type: 'button', class: 'grp', 'aria-label': `Group ${i + 1} of ${k} ${noun}` }, ct, look());
     b.addEventListener('click', () => {
-      if (b.classList.contains('on')) return;
-      c++; b.classList.add('on'); ct.textContent = c * k; sfx.hop(c);
-      counter.textContent = range(k, k, c).join(', ');
-      if (c === n) {
-        badge(k);
-        const q = h('div', { class: 'below' }); box.append(q);
-        if (!total) return onDone && onDone();
-        api.guide(`You skip counted by ${k}s! How many ${noun} are there in all?`);
-        askChoice(q, { prompt: `How many ${noun} in all?`, options: numOpts(n * k, [(n - 1) * k, (n + 1) * k, n * k + 1, n + k]), answer: n * k, cls: '',
-          hint: () => api.guide(`Look at the last number you said when you counted: ${range(k, k, n).join(', ')}.`),
-          onDone: () => { q.append(fact(`${n * k} ${noun}`, `${range(k, k, n).join(', ')}. We counted in ${k}s!`)); onDone && onDone(); } });
-        setTimeout(() => q.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 100);
-      } else if (c === 1) api.guide(`${k}! Tap the next one and add ${k} more.`);
+      if (b.classList.contains('on') || waiting) return;
+      c++;
+      if (c === 1) return light(b, ct);
+      waiting = true; b.classList.add('asking');
+      const prev = (c - 1) * k, want = c * k;
+      api.guide(`${prev} and ${k} more. What do you say now?`);
+      qbox.replaceChildren();
+      askChoice(qbox, { prompt: `${prev} and ${k} more is…`, options: numOpts(want, [want + 1, want - 1, prev + 1, want + k]), answer: want, cls: '',
+        hint: () => api.guide(`Start at ${prev} and count ${k} little steps on: ${Array.from({ length: Math.min(k, 3) }, (_, j) => prev + j + 1).join(', ')}${k > 3 ? ' …' : ''}`),
+        onDone: () => setTimeout(() => { qbox.replaceChildren(); waiting = false; light(b, ct); }, 350) });
+      setTimeout(() => qbox.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 80);
     });
     row.append(b);
   }
-  box.append(row, counter);
+  box.append(row, counter, qbox);
   api.guide(intro || `Each group has ${k} ${noun}. Tap the groups one by one and count in ${k}s!`);
 }
 const lookDots = (e, k) => () => h('span', {}, h('span', { class: 'gbig', 'aria-hidden': 'true' }, e), h('span', { class: 'gdots', 'aria-hidden': 'true' }, Array.from({ length: k }, () => h('i'))));
@@ -839,11 +941,15 @@ function playLine(api) {
   ], api.done);
 }
 
+const lookCoin = v => () => h('span', { class: 'coin' + (v === 10 ? ' note' : ''), 'aria-hidden': 'true' }, `₹${v}`);
 function playGroups(api) {
-  const s = api.stage;
-  if (run.round === 0) groupCount(api, s, { n: 5, k: 2, look: lookEmoji('🏀⚽'), noun: 'balls', intro: 'Let\'s count the balls in 2s! Each group has 2 balls. Tap each group.', onDone: api.done });
-  else if (run.round === 1) groupCount(api, s, { n: 5, k: 5, look: lookDots('🍇', 5), noun: 'grapes', intro: 'Let\'s count the grapes in 5s! Each bunch has 5 grapes. Tap each bunch.', onDone: api.done });
-  else groupCount(api, s, { n: 10, k: 10, look: lookBundle(), noun: 'sticks', intro: 'Let\'s count the sticks in 10s! Each bundle has 10 sticks. Tap each bundle.', onDone: api.done });
+  const s = api.stage, R = run.round;
+  if (R === 0) groupCount(api, s, { n: 5, k: 2, look: lookEmoji('🏀⚽'), noun: 'balls', intro: 'Let\'s count the balls in 2s! Each group has 2 balls. Tap each group.', onDone: api.done });
+  else if (R === 1) groupCount(api, s, { n: 6, k: 2, look: lookEmoji('👟👟'), noun: 'shoes', intro: 'Skip counting at home! There are 6 pairs of shoes by the door. Each pair has 2 shoes. Tap each pair and count in 2s.', onDone: api.done });
+  else if (R === 2) groupCount(api, s, { n: 5, k: 5, look: lookDots('🍇', 5), noun: 'grapes', intro: 'Let\'s count the grapes in 5s! Each bunch has 5 grapes. Tap each bunch.', onDone: api.done });
+  else if (R === 3) groupCount(api, s, { n: 7, k: 5, look: lookCoin(5), noun: 'rupees', intro: 'Your piggy bank has 7 coins of ₹5. Tap each coin and count in 5s to find how many rupees you have.', onDone: api.done });
+  else if (R === 4) groupCount(api, s, { n: 10, k: 10, look: lookBundle(), noun: 'sticks', intro: 'Let\'s count the sticks in 10s! Each bundle has 10 sticks. Tap each bundle.', onDone: api.done });
+  else groupCount(api, s, { n: 6, k: 10, look: lookCoin(10), noun: 'rupees', intro: 'You have 6 notes of ₹10 to spend at the school fair. Tap each note and count in 10s. How much money is that?', onDone: api.done });
 }
 
 function playFarina(api) {
@@ -1170,7 +1276,7 @@ function reviewCert() {
 /* ---------- level engine ---------- */
 const LEVELS = [
   { id: 1, part: 1, name: 'Number Line Game', idea: 'Forward in 2s, 5s, 10s', page: 'Book pages 7–9', rounds: 4, cut: [1, 3], icon: '🦘', play: playLine },
-  { id: 2, part: 1, name: 'Count in Groups', idea: 'Balls, grapes and sticks', page: 'Book pages 9–10', rounds: 3, cut: [0, 2], icon: '🍇', play: playGroups },
+  { id: 2, part: 1, name: 'Count in Groups', idea: 'Balls, shoes, grapes, coins and sticks', page: 'Book pages 9–10', rounds: 6, cut: [1, 3], icon: '🍇', play: playGroups },
   { id: 3, part: 1, name: 'Farina & Jacob', idea: 'GRIP-1 number lines', page: 'Book page 10', rounds: 2, cut: [1, 3], icon: '👧', play: playFarina },
   { id: 4, part: 1, name: 'Wings & Bulbs', idea: 'GRIP-1 missing numbers', page: 'Book page 11', rounds: 4, cut: [1, 3], icon: '💡', play: playWings },
   { id: 5, part: 2, name: 'Jump Back Game', idea: 'Backward in 2s, 5s, 10s', page: 'Book pages 11–13', rounds: 4, cut: [1, 3], icon: '↩️', play: playBackLine },
@@ -1190,7 +1296,7 @@ let run = null, cleanups = [], guideText = '';
 const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
 const api = {
   get stage() { return stageEl; },
-  guide: t => { guideText = t; bubble.textContent = t; },
+  guide: t => { guideText = t; bubble.textContent = t; speakGuide(t); },
   done: roundDone,
   cleanup: fn => cleanups.push(fn),
 };
@@ -1212,6 +1318,8 @@ function nextRound() {
   $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
   $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
   if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
   run.lvl.play(api);
 }
 function roundDone() {
@@ -1294,7 +1402,7 @@ function renderMap() {
 }
 function showMap() {
   runCleanups(); run = null;
-  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
   $('level').hidden = true; $('map').hidden = false;
   renderMap(); window.scrollTo(0, 0);
 }
@@ -1322,6 +1430,7 @@ $('showHow').addEventListener('click', async () => {
 
 /* ---------- wiring ---------- */
 function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
 $('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
 $('back').addEventListener('click', showMap);
 if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
@@ -1335,12 +1444,11 @@ $('resetAll').addEventListener('click', () => {
   b.textContent = 'Progress cleared';
 });
 
-function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { badges: [...badgeSet] }) })); } catch (e) {} }
 if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
 })();
 </script>
-
 </body>
 </html>
