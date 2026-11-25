@@ -1,0 +1,26 @@
+# Maths Chapter 8 "Subtraction of 3-digit Numbers" — page notes (Lighthouse flipbook, pages 7–27)
+Read 2026-11-24. Path: Curriculum → Mathematics → "Subtraction of 3-digit Numbers" flipbook (flipbook/87893/70079/164/2/all). 21 page images on ik.imagekit.io, ids 64241791262770596 … 64241791262777665. Chrome screenshots froze, so images were read in the built-in browser at a 1000x1300 viewport, two zooms per page.
+
+p7 Opener (Embark): shopkeeper in a grocery shop. "Customers come and go all day. How does the shopkeeper know what is still on the shelves?"
+p8 Comic "New Year Party": Aman & Sara invited 350 people; 186 have checked in; how many still waiting? (164). Section "Subtraction without Regrouping". Discovery Route (UTH kit + place value table): Task 1 subtract 1-digit from 3-digit, 138 − 4 (=134).
+p9 Steps: do we show the 2nd number with blocks? Start subtracting from ones, then tens, then hundreds; count what's left. Task 2 (2-digit from 3-digit), Task 3 (3-digit from 3-digit) with teacher's numbers.
+p10 Guidepost a. 586 − 4: blocks (5 flats, 8 rods, 6 cubes, cross out 4 cubes); expand 500+80+6 − 4 = 500+80+2 = 582; column method ones→tens→hundreds. b. Difference between 790 and 50: expand 700+90+0 − 50+0 = 700+40+0 = 740.
+p11 790−50 column. c. Subtract 221 from 687: 600+80+7 − 200+20+1 = 400+60+6 = 466. Spotlight: "Always start subtracting from the ones, then the tens and finally the hundreds place."
+p12 GRIP-1: 1. Cross out flats/rods/cubes: a. 446 − 5 = 441; b. 357 − 23 = 334. 2. Expand & subtract: a. 295 − 22 = 273; b. 954 − 623 = 331. 3. Columns: a. 668 − 27 = 641; b. 702 − 102 = 600; c. 368 − 113 = 255.
+p13 Checkpoint 1 "Detective Thomas and the Secret Vault": six museum items, solve, write circled digit into vault boxes a–f. a crown 864−321=543 (ones circled → 3); b diamond 955−253=702 (tens → 0); c key 791−140=651 (hundreds → 6); d trophy 582−241=341 (tens → 4); e bust 864−422=442 (hundreds → 4); f clock 945−312=633 (ones → 3). Vault code 306443.
+p14 "Regrouping (By Breaking)": 1 ten = 10 ones; 1 hundred = 10 tens. Discovery Route tasks: show 10 as 1 ten or 10 ones; regroup 1 hundred into 10 tens.
+p15 Task 3 Regrouping by drawing (square = hundred, line = ten, small square = one): a. regroup 1 ten in 3 tens 2 ones → 2 tens 12 ones. b. regroup 1 hundred in 5 hundreds 4 tens → 4 hundreds 14 tens 0 ones. Spotlight: "Regrouping doesn't change the value of the number, it only changes its form."
+p16 Guidepost: a. 2 hundreds 3 tens = 1 hundred 13 tens. b. 4 hundreds 5 ones = 3 hundreds 10 tens 5 ones. c. 4 hundreds 5 tens = 3 hundreds 15 tens = 3 hundreds 14 tens 10 ones.
+p17 GRIP-2 fill blanks: a. 7 hundreds = 70 tens; b. 4 hundreds = 3 hundreds 10 tens; c. 9 hundreds = 8 hundreds 10 tens; d. 6 hundreds 3 tens = 5 hundreds 13 tens; e. 5 hundreds 6 tens = 4 hundreds 16 tens = 4 hundreds 15 tens 10 ones; f. 4 hundreds 5 tens = 3 hundreds 15 tens = 3 hundreds 14 tens 10 ones; g. 7 hundreds 2 tens 6 ones = 6 hundreds 12 tens 6 ones. Section "Subtraction with Regrouping", Discovery Task 1: 462 − 8 (=454): which place first? need to regroup?
+p18 Task 2: 356 − 78 (=278). Task 3: subtract 348 from 526 (=178). Task 4 subtraction by drawing.
+p19 "When there are not enough ones or tens, we regroup and continue subtracting." Guidepost a. 643 − 9: 6h 4t 3o → 6h 3t 13o; 13−9=4 → 634. Expand: 600+40+3 → 600+30+13. [Book typo: last column table shows "389" as the number subtracted; should be 9.]
+p20 b. 530 − 19: 5h 3t 0o → 5h 2t 10o; = 511.
+p21 c. 425 − 253: ones 5−3=2; tens 2<5 so regroup a hundred → 3h 12t; 12−5=7; 3−2=1 → 172. GRIP-3 1. Expand: a. 595 − 287 = 308; b. 890 − 476 = 414. 2. Columns: a. 587 − 59 = 528; b. 921 − 234 = 687; c. 903 − 98 = 805 (zero in tens).
+p22 Wonder Junction: 423 notebooks = 4 cartons of 100, 2 boxes of 10, 3 loose. Send 156. Left = 267 (must open a box and a carton). Skill Trail "magic number": opposite numbers 800/500 and 700/400; top−bottom = 300, left−right = 300 → 300.
+p23 Checkpoint 2 riddles then subtract: a. smallest 3-digit (100) − greatest 1-digit (9) = 91. b. before 650 (649) − after 287 (288) = 361. c. >700 <730 and after 715 (716) − >20 <40 and before 31 (30) = 686. d. 800–840, 2 ones, 3 tens (832) − 450–460, 8 ones (458) = 374.
+p24 Word Problems: a word problem is a short story with numbers. Ask: what is happening, what is given, what to find. 4 steps (gears): 1 Read carefully; 2 Underline keywords: left, fewer, remain, take away, difference; 3 Analyse: how many in all? how many take away? how many left?; 4 Place the numbers (HTO) and subtract.
+p25 Guidepost: Rio had 504 old coins, lost 6 → 498 (bar: total 504 = lost 6 + remaining 498; regroup across zero 5,0,4 → 4,9,14). GRIP-4 1. Train 216 passengers, 196 got off → 20 left.
+p26 2. Library 329 books, 245 borrowed → 84. Checkpoint 3 comic (future fair): Robot Arena 684 robots; Drone Race Zone (no number given); Digital Pet Zone 625 pets; Digital Music Zone 842 instruments; Magic Screen Studio 936 drawing pads.
+p27 1. 38 pets adopted → 625−38 = 587. 2. Drones are 178 fewer than drawing pads → 936−178 = 758. 3. Difference between instruments and robots → 842−684 = 158.
+(Chapter ends p27; Chapter 9 Multiplication starts p28.)
+Not in book: checking a subtraction answer by adding back. Added in the game as an extra, marked for Hari.

@@ -1,0 +1,1346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Skip-Hop Park</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column on a park that runs from sky to meadow to pond as you scroll down the chapter; white cards hold the play. Follows Chapter 4 (Skip Counting) of Ayansh's maths book, page by page. */
+:root{
+  --sky:#A9DDF6; --meadow:#A6DC7E; --grass:#5DB15A; --pond:#3C97B5; --deep:#173F52;
+  --board:#FFFFFF; --ink:#1E2A33; --ink-soft:#55636E; --shadow:#0D2733;
+  --gold:#FFC23D; --gold-soft:#FFF2CC;
+  --fwd:#1C8A55; --fwd-soft:#D3F1E0;
+  --back:#D9572B; --back-soft:#FFE2D5;
+  --sea:#2F6FD0; --sea-soft:#DDE8FA;
+  --lilac:#ECE9F8; --wood:#E3B377;
+  --on-dark:#FFFFFF; --on-dark-soft:#CFE6EE; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--deep)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);
+  background-color:var(--deep);
+  background-image:linear-gradient(180deg,var(--sky) 0%,var(--meadow) 22%,var(--grass) 48%,var(--pond) 76%,var(--deep) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.hello-text,.badgecard,.badgewrap{min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 16px;box-shadow:5px 6px 0 var(--shadow)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--fwd-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero: the chapter opener */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.stairs{position:relative;display:grid;grid-template-columns:repeat(11,minmax(0,1fr));align-items:end;gap:3px;height:170px;width:min(100%,440px);padding-top:40px}
+.step{background:var(--wood);border:2px solid var(--ink);border-bottom-width:4px;border-radius:6px 6px 0 0;display:flex;justify-content:center;padding-top:2px;font-family:var(--display);font-weight:800;font-size:14px;line-height:1.1;transition:background .2s}
+.step.on{background:var(--gold)}
+.step.was{background:var(--fwd-soft)}
+.climber{position:absolute;font-size:34px;line-height:1;transform:translateX(-50%);transition:left .45s cubic-bezier(.34,1.3,.5,1),bottom .45s cubic-bezier(.34,1.3,.5,1);pointer-events:none}
+.reveal{font-family:var(--display);font-size:22px;font-weight:800}
+.reveal b{background:var(--gold);padding:0 8px;border-radius:8px}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#D9E3E6;border-color:#8BA0A8}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(3n+1) .stopicon{background:var(--fwd-soft)}
+.stop:nth-child(3n+2) .stopicon{background:var(--sea-soft)}
+.stop:nth-child(3n) .stopicon{background:var(--back-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--back)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:#C3CED3}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:-6px;top:-14px;background:var(--back);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+
+/* jump badges */
+.badgecard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.badgecard h2{font-size:24px}
+.badgewrap{width:100%;overflow-x:auto}
+.badges{display:grid;grid-template-columns:minmax(64px,92px) repeat(6,minmax(28px,52px));gap:5px;align-items:center;justify-content:start}
+.bd{aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:var(--lilac);border:2px solid #C6CCD6;font-family:var(--display);font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.bd.hd{background:transparent;border:none;aspect-ratio:auto;color:var(--ink-soft);font-size:14px}
+.bd.rowhd{background:transparent;border:none;aspect-ratio:auto;justify-items:start;font-family:var(--body);font-size:12px;line-height:1.15}
+@media (max-width:480px){.bd{font-size:13px}}
+.bd.got.f{background:var(--fwd);color:var(--on-color);border-color:var(--ink)}
+.bd.got.b{background:var(--back);color:var(--on-color);border-color:var(--ink)}
+.badgecount{font-weight:800}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-body a{color:var(--sea);font-weight:800}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--fwd)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:19px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choice{font-family:var(--display);font-weight:800;font-size:32px;min-width:96px;min-height:74px;padding:4px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.choice.words{font-family:var(--body);font-size:19px;min-height:60px;max-width:300px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--fwd);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--back-soft);animation:shake .4s}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center}
+.fb.good{color:var(--fwd)}
+.fb.oops{color:var(--back)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(26px,7vw,40px);line-height:1.05;font-variant-numeric:tabular-nums}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--sea-soft);border:3px dashed var(--sea);border-radius:16px;padding:10px 14px;font-weight:700;max-width:520px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.counter{font-family:var(--display);font-weight:800;font-size:clamp(20px,5vw,26px);min-height:1.4em;text-align:center;color:var(--fwd);font-variant-numeric:tabular-nums;max-width:100%;overflow-wrap:anywhere}
+.counter.b{color:var(--back)}
+.who-says{display:flex;gap:10px;align-items:center;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800;font-size:19px;max-width:520px}
+.who-says .e{font-size:38px;line-height:1;flex:none}
+
+/* number line */
+.nlwrap{width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.nl{display:block;margin:0 auto}
+.nl .axis{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.nl .tk{stroke:var(--ink);stroke-width:2}
+.nl .lab{font-family:var(--display);font-weight:800;font-size:15px;fill:var(--ink);text-anchor:middle;pointer-events:none;font-variant-numeric:tabular-nums}
+.nl .lab.no{fill:var(--back)}
+.nl .ring{fill:var(--gold-soft);stroke:var(--ink);stroke-width:2}
+.nl .ring.start{fill:var(--sea-soft)}
+.nl .ring.end{fill:var(--gold)}
+.nl .ring.hint{fill:none;stroke:var(--gold);stroke-width:4;stroke-dasharray:4 3}
+.nl .arc{fill:none;stroke-width:2.5;stroke-dasharray:6 4}
+.nl .arc.f{stroke:var(--fwd)}
+.nl .arc.b{stroke:var(--back)}
+.nl .arrow.f{fill:var(--fwd)}
+.nl .arrow.b{fill:var(--back)}
+.nl .alab{font-family:var(--body);font-weight:800;font-size:13px;text-anchor:middle}
+.nl .alab.f{fill:var(--fwd)}
+.nl .alab.b{fill:var(--back)}
+.nl .whog{transition:transform .45s cubic-bezier(.34,1.3,.5,1)}
+.nl .who{font-size:30px;text-anchor:middle;pointer-events:none}
+.nl .who.hop{animation:hop .45s ease-out}
+.nl .who{transform-box:fill-box;transform-origin:50% 100%}
+.nl .hit{fill:transparent;cursor:pointer}
+.nl .hit:hover{fill:rgba(28,138,85,.10)}
+.nl .hit:focus{outline:none}
+.nl .hit:focus-visible{fill:rgba(255,194,61,.4)}
+.trail{font-family:var(--display);font-weight:800;font-size:clamp(19px,5vw,24px);text-align:center;font-variant-numeric:tabular-nums;max-width:100%;overflow-wrap:anywhere}
+.swipe{font-size:13px;font-weight:800;color:var(--ink-soft);margin-top:-8px}
+
+/* groups to count */
+.grps{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px}
+.grp{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:74px;min-height:96px;padding:6px 8px 8px;border:3px solid var(--ink);border-radius:16px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer}
+.grp:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.grp.on{background:var(--fwd-soft);cursor:default}
+.grp .ct{font-family:var(--display);font-weight:800;font-size:22px;line-height:1;min-height:22px;color:var(--fwd);font-variant-numeric:tabular-nums}
+.grp .gbig{font-size:34px;line-height:1.1;white-space:nowrap}
+.grp .gdots{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:60px}
+.grp .gdots i{width:9px;height:9px;border-radius:50%;background:var(--sea);border:1px solid var(--ink)}
+.bundle{display:flex;gap:2px;align-items:center;padding:2px 4px;position:relative}
+.bundle i{width:4px;height:36px;background:#9A6233;border-radius:2px}
+.bundle::after{content:"";position:absolute;left:0;right:0;top:15px;height:5px;background:var(--back);border-radius:3px}
+
+/* number strings: bulbs, flags, beads, lily pads */
+.seq{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:640px}
+.slot{display:grid;place-items:center;min-width:54px;height:62px;padding:0 6px;font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums;border:3px solid var(--ink);background:var(--lilac);border-radius:14px}
+.slot.empty{color:var(--ink-soft)}
+.slot.now{box-shadow:0 0 0 5px var(--gold);animation:bob 1.2s ease-in-out infinite}
+.slot.filled{color:var(--fwd);animation:pop .35s}
+.slot.bulb{border-radius:50% 50% 42% 42% / 62% 62% 38% 38%;height:66px;min-width:54px;background:#E4D2F5;border-bottom-width:9px}
+.slot.bulb.c1,.slot.bulb.c3{background:#D2E9FA}
+.slot.flag{border:none;border-radius:4px 4px 0 0;clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%);padding-bottom:12px;height:70px;background:#F7C6D6}
+.slot.flag.c1{background:#C9E6F7}.slot.flag.c2{background:#D9C3EE}.slot.flag.c3{background:#FCEBA7}.slot.flag.c4{background:#C6EBC9}
+.slot.bead{border-radius:50%;width:62px;height:62px;min-width:0;background:var(--board);border:5px solid #4E3FA6;box-shadow:3px 3px 0 #4E3FA6}
+.slot.pad{border-radius:50%;width:64px;height:56px;min-width:0;background:#86C964;border-color:#2E6B22}
+.slot.stone{border-radius:16px;background:var(--sea-soft)}
+.slot.flag.now{box-shadow:none;outline:5px solid var(--gold);outline-offset:2px}
+
+/* colour grid */
+.ctask{display:flex;gap:10px;align-items:center;background:var(--lilac);border:3px solid var(--ink);border-radius:16px;padding:8px 14px;font-weight:800;max-width:480px}
+.swatch{flex:none;width:34px;height:34px;border-radius:10px;border:3px solid var(--ink)}
+.cgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:min(100%,380px)}
+.cnum{min-height:58px;border:3px solid var(--ink);border-radius:12px;background:var(--board);font-family:var(--display);font-weight:800;font-size:26px;cursor:pointer;font-variant-numeric:tabular-nums}
+.cnum:disabled{cursor:default}
+.purple{background:#B98BE0!important}.blue{background:#86B8F2!important}.yellow{background:#FFD84D!important}.green{background:#7ED3A3!important}
+
+/* odd one out */
+.otiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.otile{min-width:64px;min-height:62px;border:3px solid var(--ink);border-radius:14px;background:var(--fwd-soft);font-family:var(--display);font-weight:800;font-size:26px;cursor:pointer;box-shadow:0 4px 0 var(--ink);font-variant-numeric:tabular-nums}
+.otile:nth-child(2n){background:var(--sea-soft)}
+.otile.odd{background:var(--back-soft);outline:4px solid var(--back);outline-offset:2px}
+.otile.fixed{background:var(--gold)!important;outline:none;animation:pop .35s}
+.otile:disabled{cursor:default}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(13,39,51,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:34px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D3DCE0;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+.cert{width:100%;border:3px dashed var(--fwd);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-22px)}100%{transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:84px;font-size:28px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .slot{min-width:46px;height:56px;font-size:19px;padding:0 4px}
+  .slot.bead{width:54px;height:54px}
+  .slot.pad{width:56px;height:50px}
+  .grp{min-width:64px}
+  .grp .gbig{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Skip-Hop Park<small>Ayansh's Chapter 4 · Skip Counting</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 48</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🐸</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Hoppy, and I love to jump.</h2>
+        <p>Look at this boy on the stairs. <b>What is he planning to do?</b></p>
+        <div class="stairs" id="stairs" role="img" aria-label="A staircase with steps numbered 0 to 10"></div>
+        <button class="btn primary" id="showHow" type="button">✨ Show me</button>
+        <p class="reveal" id="reveal" hidden>He skips steps! He jumps <b>2 steps</b> each time: 2, 4, 6, 8, 10. That is <b>skip counting</b>.</p>
+        <p class="donebanner" id="allDone" hidden>🎉 You hopped all the way through Skip-Hop Park! You finished Chapter 4.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Forward in 2s, 5s and 10s</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Backward in 2s, 5s and 10s</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Forward in 3s, 4s and 6s</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Backward in 3s, 4s and 6s</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Part 5 · Checkpoint 2</h2>
+    <ol class="stops" id="stops5"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 4</h2>
+    <ol class="stops finale" id="stops6"></ol>
+
+    <section class="badgecard card">
+      <h2>My jump badges</h2>
+      <p class="note">Finish a number line, a number string or a counting game with a jump size, and its badge lights up. Green means forward (add). Orange means backward (take away).</p>
+      <div class="badgewrap"><div class="badges" id="badges" role="img" aria-label="Badges for jumping forward and backward by 2, 3, 4, 5, 6 and 10"></div></div>
+      <p class="badgecount" id="badgeCount"></p>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>This follows Chapter 4, “Skip Counting”, in Ayansh's maths book (pages 7–23). Each stop uses the book's own examples and numbers, in the same order. A wrong tap costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Forward in 2s, 5s and 10s (pages 7–11)</h3>
+        <ol>
+          <li><b>Number Line Game</b> (pages 7–9): Lisa jumps in 2s, Frank in 5s and Joy in 10s on the 0–20 line. He taps where each child lands, says how much was added each time, and learns the words “skip counting”.</li>
+          <li><b>Count in Groups</b> (pages 9–10): the Guidepost balls in 2s (10), grapes in 5s (25) and bundles of sticks in 10s (100). He taps each group to skip count, then picks the total.</li>
+          <li><b>Farina &amp; Jacob</b> (page 10): GRIP-1 question 1. Farina starts at 45 and jumps forward in 5s four times (65). Jacob starts at 67 and jumps in 10s three times (97).</li>
+          <li><b>Wings &amp; Bulbs</b> (page 11): GRIP-1 questions 2 and 3. Wings on 6 birds (12), fingers on 7 hands (35), and the light-bulb strings: 34, 36, 40, 42 and 57, 62, 72, 82.</li>
+        </ol>
+        <h3>Part 2 · Backward in 2s, 5s and 10s (pages 11–15)</h3>
+        <ol start="5">
+          <li><b>Jump Back Game</b> (pages 11–13): the same three children jump back from 20 (Lisa to 12, Frank to 5, Joy to 0), then the Spotlight: forward makes numbers bigger, backward makes them smaller.</li>
+          <li><b>Sara &amp; Azra</b> (page 13): the Guidepost lines (10 to 0 in 2s, 25 to 0 in 5s, 50 to 0 in 10s), then GRIP-2: Sara 44 back in 2s four times (36), Azra 90 back in 5s three times (75).</li>
+          <li><b>Bunting Flags</b> (page 14): GRIP-2 question 2, all three flag strings.</li>
+          <li><b>Checkpoint 1</b> (pages 14–15): the colour grid (purple 12, blue 28, yellow 45, green 40), “which is not counted” (20), Rohan's mistake (15 should be 14) and the Skill Trail riddle (20).</li>
+        </ol>
+        <h3>Part 3 · Forward in 3s, 4s and 6s (pages 15–19)</h3>
+        <ol start="9">
+          <li><b>Floor Number Line</b> (pages 15–16): the Wonder Junction tasks on a 0–24 line (3, 6, 9, 12 · 4 to 20 · 6 to 24) and the Think and Tell questions.</li>
+          <li><b>Bunches &amp; Bags</b> (pages 17–18): Ria's cherries (24), Ruhi's balloons (32), Shyam's shells (48), then GRIP-3 question 1: apples (18), ice cream scoops (16), bananas (30).</li>
+          <li><b>Zahra's Beads</b> (page 19): Zahra 15 forward in 3s seven times (36), Sachin 6 forward in 6s three times (24), and the three bead strings.</li>
+        </ol>
+        <h3>Part 4 · Backward in 3s, 4s and 6s (pages 20–22)</h3>
+        <ol start="12">
+          <li><b>Busy Bee</b> (pages 20–21): the Think Route (which reaches 50 fastest), the bee jumping back in 3s from 20, its questions, and the Guidepost lines from 21, 44 and 72.</li>
+          <li><b>Emma's Lily Pads</b> (pages 21–22): GRIP-4. Emma 21 back in 3s five times (6), Emily 90 back in 4s three times (78), and the three lily-pad strings.</li>
+        </ol>
+        <h3>Part 5 · Checkpoint 2 (pages 22–23)</h3>
+        <ol start="14">
+          <li><b>Odd One Out</b> (page 22): 25 should be 26, 27 should be 28, 50 should be 54.</li>
+          <li><b>Farm Visit</b> (page 23): “which is not counted” (46 and 22), then the Skill Trail farm: 6 cows have 24 legs, and with 2 more cows, 8 cows have 32 legs.</li>
+          <li><b>Grand Review</b>: 10 mixed questions from all five parts, with new numbers each time, and a Chapter 4 Skip Counting Champion certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Checkpoint 1 on page 14 says “colour the number that comes while skip counting”. The game reads this as the very next number, which gives one number for each colour.</li>
+          <li>A few blank lines in the book don't match the pictures. Page 11 has 6 birds but 5 blanks and 7 hands but 6 blanks, and the farm on page 23 has 6 cows but 5 blanks. The game counts everything in the picture.</li>
+          <li>The open “Think and Tell” and “Think Route” questions (longest jump, 6s versus 3s, reaching 50 fastest) are turned into simple choices. Ask him to explain his answer out loud.</li>
+          <li>On long number lines, he can swipe the line sideways on a phone.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Page 15, Wonder Junction: draw a 0–24 number line on the floor with chalk or tape and jump it in 3s, 4s and 6s.</li>
+          <li>Count real things in groups: pairs of shoes in 2s, fingers in 5s, coins in 10s.</li>
+          <li>On the stairs at home, skip steps and count in 2s going up, and back in 2s coming down.</li>
+        </ul>
+        <p>The other chapter games are <a href="https://claude.ai/artifact/EbV8m1UeehzinGfn1Ud28X" target="_blank" rel="noopener">Tick-Tock Town</a> (Time) and the <a href="https://claude.ai/artifact/2Li63gCKb2RbZiu7umGiWY" target="_blank" rel="noopener">Multiplication Fair</a>.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Park map</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐸</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const wait = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 60) : ms));
+const $ = id => document.getElementById(id);
+const range = (a, step, n) => Array.from({ length: n }, (_, i) => a + i * step);
+const dirWord = step => step > 0 ? 'forward' : 'back';
+const op = step => step > 0 ? '+' : '−';
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, text) { const el = document.createElementNS(SVGNS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text != null) el.textContent = text; return el; }
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-skip-hop-park-v1';
+let P = { stars: {}, unlocked: 1, badges: [], sound: true, resetAt: 0 };
+let badgeSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock and every collected item, so nothing already earned is ever lost.
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    badges: Array.isArray(saved.badges) ? saved.badges.filter(x => typeof x === 'string' && x.length < 12) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0 };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  badgeSet = new Set(P.badges);
+  // stops added later unlock for anyone who already finished the stop before them
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), badges: [...new Set([...a.badges, ...b.badges])], sound: a.sound, resetAt: a.resetAt };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.badges.slice().sort(), x.resetAt]);
+function current() { P.badges = [...badgeSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function badge(step) { const k = (step > 0 ? 'f' : 'b') + Math.abs(step); if ([2, 3, 4, 5, 6, 10].includes(Math.abs(step))) { badgeSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  hop: i => tone(420 + (i % 8) * 60, 0.12, 'triangle', 0, 0.11, 700 + (i % 8) * 60),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const t = text.replace(/−/g, ' minus ').replace(/\+/g, ' plus ').replace(/→/g, ', ').replace(/\?/g, '?');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.9; u.pitch = 1.1; u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+
+/* ---------- shared pieces ---------- */
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = 'words' }) {
+  const wrap = h('div', { class: 'ask', 'data-answer': String(answer) });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const btns = []; let over = false;
+  options.forEach(opt => {
+    const b = h('button', { type: 'button', class: 'choice ' + cls, onclick: () => {
+      if (over) return;
+      if (opt === answer) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; onDone && onDone();
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++;
+        fb.textContent = pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']); fb.className = 'fb oops';
+        hint && hint(opt);
+      }
+    } }, String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb); parent.append(wrap);
+  return wrap;
+}
+// run several asks one after the other in the same box
+function askSeq(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const q = list[i++];
+    if (q.guide) api.guide(q.guide);
+    const holder = h('div', { class: 'below' }); box.append(holder);
+    if (q.before) holder.append(q.before);
+    askChoice(holder, { ...q, onDone: () => { q.onDone && q.onDone(holder); setTimeout(next, 650); } });
+    if (i > 1) holder.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+  };
+  next();
+}
+// run steps (functions that call their own "next") one after another
+function chain(steps, onAll) {
+  let i = 0;
+  const next = () => { if (i >= steps.length) return onAll && onAll(); steps[i++](next); };
+  next();
+}
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function whoSays(emoji, text) { return h('div', { class: 'who-says' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('span', {}, text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+// three or four different number options around an answer
+function numOpts(ans, extra, n = 3) {
+  const set = new Set([ans]);
+  for (const c of shuffle(extra.filter(x => x >= 0 && x !== ans))) { if (set.size >= n) break; set.add(c); }
+  for (let d = 1; set.size < n; d++) { if (ans + d >= 0) set.add(ans + d); if (set.size < n && ans - d >= 0) set.add(ans - d); }
+  return shuffle([...set]);
+}
+
+/* ---------- the number line ---------- */
+function numberLine(parent, { from, to }) {
+  const wrap = h('div', { class: 'nlwrap' });
+  parent.append(wrap);
+  const cnt = to - from + 1;
+  const avail = Math.max(260, (wrap.clientWidth || 320) - 4);
+  const cell = Math.max(30, Math.min(56, Math.floor((avail - 18) / cnt)));
+  const pad = Math.round(cell / 2) + 8, W = pad * 2 + (cnt - 1) * cell, H = 150, AY = 104, Y0 = AY - 10;
+  const X = n => pad + (n - from) * cell;
+  const svg = sv('svg', { class: 'nl', width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'group', 'aria-label': `Number line from ${from} to ${to}` });
+  const rings = sv('g', {}), arcs = sv('g', {});
+  svg.append(rings, arcs, sv('line', { x1: 6, y1: AY, x2: W - 6, y2: AY, class: 'axis' }));
+  const labs = {};
+  for (let n = from; n <= to; n++) {
+    svg.append(sv('line', { x1: X(n), y1: AY - 8, x2: X(n), y2: AY + 8, class: 'tk' }));
+    labs[n] = sv('text', { x: X(n), y: AY + 31, class: 'lab' }, String(n));
+    svg.append(labs[n]);
+  }
+  const whoG = sv('g', { class: 'whog' }), whoT = sv('text', { x: 0, y: AY - 8, class: 'who' });
+  whoG.append(whoT); svg.append(whoG);
+  const hints = sv('g', {}); svg.append(hints);
+  const hits = sv('g', {}); svg.append(hits);
+  const api = { el: svg, wrap, X, onTap: null };
+  for (let n = from; n <= to; n++) {
+    const r = sv('rect', { x: X(n) - cell / 2, y: 50, width: cell, height: H - 50, class: 'hit', tabindex: 0, role: 'button', 'aria-label': `Number ${n}`, 'data-n': n });
+    const go = () => api.onTap && api.onTap(n);
+    r.addEventListener('click', go);
+    r.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    hits.append(r);
+  }
+  wrap.append(svg);
+  if (W > wrap.clientWidth + 4) wrap.after(h('p', { class: 'swipe' }, '↔ Swipe the number line to see more'));
+  const ringR = Math.min(15, cell / 2 - 1);
+  api.who = e => { whoT.textContent = e; };
+  api.scrollTo = n => { if (wrap.scrollWidth > wrap.clientWidth + 2) { try { wrap.scrollTo({ left: X(n) - wrap.clientWidth / 2, behavior: reduce ? 'auto' : 'smooth' }); } catch (e) { wrap.scrollLeft = X(n) - wrap.clientWidth / 2; } } };
+  api.moveTo = (n, hopIt) => {
+    whoG.style.transform = `translate(${X(n)}px,0px)`;
+    if (hopIt && !reduce) { whoT.classList.remove('hop'); void whoT.getBoundingClientRect(); whoT.classList.add('hop'); }
+    api.scrollTo(n);
+  };
+  api.ring = (n, cls) => rings.append(sv('circle', { cx: X(n), cy: AY + 26, r: ringR, class: 'ring ' + (cls || '') }));
+  api.hint = n => { hints.replaceChildren(sv('circle', { cx: X(n), cy: AY + 26, r: ringR + 3, class: 'ring hint' })); api.scrollTo(n); };
+  api.clearHint = () => hints.replaceChildren();
+  api.flash = n => { const t = labs[n]; if (!t) return; t.classList.add('no'); setTimeout(() => t.classList.remove('no'), 700); };
+  api.arc = (a, b, text) => {
+    const xa = X(a), xb = X(b), d = Math.abs(xb - xa), hh = Math.min(76, 22 + d * 0.3), cls = b > a ? 'f' : 'b';
+    const mx = (xa + xb) / 2;
+    arcs.append(sv('path', { d: `M${xa} ${Y0} Q${mx} ${Y0 - hh * 2} ${xb} ${Y0}`, class: 'arc ' + cls }));
+    arcs.append(sv('polygon', { points: `${xb},${Y0 + 3} ${xb - 5},${Y0 - 7} ${xb + 5},${Y0 - 7}`, class: 'arrow ' + cls }));
+    if (text) arcs.append(sv('text', { x: mx, y: Y0 - hh - 5, class: 'alab ' + cls }, text));
+  };
+  return api;
+}
+
+// someone starts on a number and jumps; Ayansh taps each landing spot
+function jumpGame(api, parent, { from, to, start, step, jumps, who, name, onDone, intro, noFact }) {
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const trail = h('div', { class: 'trail', 'aria-live': 'polite' }, String(start));
+  box.append(trail);
+  const nl = numberLine(box, { from, to });
+  nl.who(who); nl.moveTo(start); nl.ring(start, 'start');
+  let cur = start, k = 0, miss = 0, over = false;
+  const s = Math.abs(step), dw = dirWord(step), you = name === 'You';
+  nl.el.dataset.next = cur + step;
+  api.guide(intro || `${name} ${you ? 'start' : 'starts'} at ${start} and ${you ? 'jump' : 'jumps'} ${dw} by ${s}. Tap where ${you ? 'you land' : name + ' lands'}!`);
+  nl.onTap = n => {
+    if (over) return;
+    if (n === cur + step) {
+      nl.arc(cur, n, op(step) + s);
+      cur = n; k++; miss = 0; nl.moveTo(n, true); sfx.hop(k); nl.clearHint();
+      trail.textContent += `  →  ${n}`;
+      if (k >= jumps) {
+        over = true; nl.ring(n, 'end'); delete nl.el.dataset.next; badge(step); sfx.good();
+        api.guide(`${praise()} ${you ? 'You' : name} landed on ${n}.`);
+        if (!noFact) box.append(fact(`${you ? 'You' : name} landed on ${n}!`, `${start}, then ${jumps} ${jumps === 1 ? 'jump' : 'jumps'} ${dw} by ${s}: ${range(start + step, step, jumps).join(', ')}.`));
+        onDone && onDone(n);
+      } else {
+        nl.el.dataset.next = cur + step;
+        api.guide(`${pickOne(['Yes!', 'Good jump!', 'Right!', 'Hop!'])} ${cur}. Now jump ${dw} by ${s} again.`);
+      }
+    } else {
+      run.mistakes++; miss++; sfx.oops(); nl.flash(n);
+      if (miss >= 2) nl.hint(cur + step);
+      const tip = s === 10 ? `Jumping ${dw} by 10 makes the tens digit ${step > 0 ? 'one more' : 'one less'}. The ones digit stays the same.`
+        : `Start at ${cur} and count ${s} little steps ${dw}. Say 1, 2${s > 2 ? ', 3' : ''}… as you go.`;
+      api.guide(`Not there. ${tip}${miss >= 2 ? ' Look for the gold dotted circle.' : ''}`);
+    }
+  };
+  return nl;
+}
+
+// tap each group to skip count, then say how many in all
+function groupCount(api, parent, { n, k, look, noun, intro, onDone, total = true }) {
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const counter = h('div', { class: 'counter', 'aria-live': 'polite' }, ' ');
+  const row = h('div', { class: 'grps' });
+  let c = 0;
+  for (let i = 0; i < n; i++) {
+    const ct = h('span', { class: 'ct' });
+    const b = h('button', { type: 'button', class: 'grp', 'aria-label': `Group ${i + 1} of ${k} ${noun}` }, ct, look());
+    b.addEventListener('click', () => {
+      if (b.classList.contains('on')) return;
+      c++; b.classList.add('on'); ct.textContent = c * k; sfx.hop(c);
+      counter.textContent = range(k, k, c).join(', ');
+      if (c === n) {
+        badge(k);
+        const q = h('div', { class: 'below' }); box.append(q);
+        if (!total) return onDone && onDone();
+        api.guide(`You skip counted by ${k}s! How many ${noun} are there in all?`);
+        askChoice(q, { prompt: `How many ${noun} in all?`, options: numOpts(n * k, [(n - 1) * k, (n + 1) * k, n * k + 1, n + k]), answer: n * k, cls: '',
+          hint: () => api.guide(`Look at the last number you said when you counted: ${range(k, k, n).join(', ')}.`),
+          onDone: () => { q.append(fact(`${n * k} ${noun}`, `${range(k, k, n).join(', ')}. We counted in ${k}s!`)); onDone && onDone(); } });
+        setTimeout(() => q.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }), 100);
+      } else if (c === 1) api.guide(`${k}! Tap the next one and add ${k} more.`);
+    });
+    row.append(b);
+  }
+  box.append(row, counter);
+  api.guide(intro || `Each group has ${k} ${noun}. Tap the groups one by one and count in ${k}s!`);
+}
+const lookDots = (e, k) => () => h('span', {}, h('span', { class: 'gbig', 'aria-hidden': 'true' }, e), h('span', { class: 'gdots', 'aria-hidden': 'true' }, Array.from({ length: k }, () => h('i'))));
+const lookEmoji = e => () => h('span', { class: 'gbig', 'aria-hidden': 'true' }, e);
+const lookBundle = () => () => h('span', { class: 'bundle', 'aria-hidden': 'true' }, Array.from({ length: 10 }, () => h('i')));
+
+// fill the missing numbers in a string of bulbs, flags, beads or lily pads
+function fillSeq(api, parent, { seq, blanks, shape, step, onDone, title, intro }) {
+  const wrap = h('div', { class: 'below' }); parent.append(wrap);
+  if (title) wrap.append(h('p', { class: 'q' }, title));
+  const row = h('div', { class: 'seq' });
+  const slots = seq.map((v, i) => { const b = blanks.includes(i); const el = h('span', { class: `slot ${shape} c${i % 5}${b ? ' empty' : ''}` }, b ? '?' : String(v)); row.append(el); return el; });
+  const qbox = h('div', { class: 'below' });
+  wrap.append(row, qbox);
+  const order = blanks.slice().sort((a, b) => a - b);
+  const s = Math.abs(step);
+  let j = 0;
+  const next = () => {
+    qbox.replaceChildren();
+    if (j >= order.length) { badge(step); return onDone && onDone(); }
+    const i = order[j], ans = seq[i];
+    slots.forEach(x => x.classList.remove('now')); slots[i].classList.add('now');
+    api.guide(j === 0 ? (intro || `Skip count ${dirWord(step)} by ${s}. What goes in the shining spot?`) : pickOne(['Next shining spot!', 'And this one?', 'Keep going!']));
+    askChoice(qbox, { options: numOpts(ans, [ans + 1, ans - 1, ans + 10, ans - 10, ans + s * 2, ans - s * 2].filter(x => x !== seq[i - 1] && x !== seq[i + 1])), answer: ans, cls: '',
+      hint: () => api.guide(`The number before it is ${seq[i - 1]}. ${seq[i - 1]} ${op(step)} ${s} = ?`),
+      onDone: () => { slots[i].textContent = ans; slots[i].classList.remove('empty', 'now'); slots[i].classList.add('filled'); j++; setTimeout(next, 600); } });
+  };
+  next();
+}
+
+// tap the number that does not belong, then fix it
+function oddOne(api, parent, { seq, odd, fix, step, onDone }) {
+  const s = Math.abs(step);
+  const row = h('div', { class: 'otiles', 'data-odd': odd });
+  const box = h('div', { class: 'below' });
+  let found = false;
+  const tiles = seq.map((v, i) => {
+    const b = h('button', { type: 'button', class: 'otile', onclick: () => {
+      if (found) return;
+      if (i === odd) {
+        found = true; b.classList.add('odd'); sfx.pop(); tiles.forEach(t => t.disabled = true);
+        api.guide(`Yes! ${v} does not belong. What number should be there?`);
+        askChoice(box, { prompt: `What should ${v} be?`, options: numOpts(fix, [v, fix + 1, fix - 1, fix + s, fix - s].filter(x => !seq.includes(x) || x === v)), answer: fix, cls: '',
+          hint: () => api.guide(`The number before it is ${seq[odd - 1]}. ${seq[odd - 1]} ${op(step)} ${s} = ?`),
+          onDone: () => { b.textContent = fix; b.classList.remove('odd'); b.classList.add('fixed'); badge(step); box.append(fact(seq.map((x, k) => k === odd ? fix : x).join(', '), `Each jump is ${dirWord(step)} by ${s}.`)); onDone && onDone(); } });
+      } else { run.mistakes++; sfx.oops(); shakeEl(b); api.guide(`${v} fits. Find the jump first: ${seq[0]} to ${seq[1]} is ${dirWord(step)} ${s}. Check every jump.`); }
+    } }, String(v));
+    row.append(b); return b;
+  });
+  parent.append(row, box);
+  api.guide('One number is the odd one out. It breaks the pattern. Tap it!');
+}
+
+// which number will NOT be counted?
+function notCounted(api, parent, { a, step, end, options, onDone }) {
+  const list = []; for (let x = a; step > 0 ? x <= end : x >= end; x += step) list.push(x);
+  const ans = options.find(x => !list.includes(x));
+  api.guide(`Count ${dirWord(step)} by ${Math.abs(step)}s from ${a} to ${end}. Which number will you NOT say?`);
+  askChoice(parent, { prompt: `Skip counting ${dirWord(step)} by ${Math.abs(step)}s from ${a} to ${end}. Which number will NOT be counted?`, options, answer: ans, cls: '',
+    hint: o => api.guide(`You do say ${o}. Count out loud: ${list.slice(0, 3).join(', ')}…`),
+    onDone: () => { parent.append(fact(list.join(', '), `${ans} is not in the count.`)); badge(step); onDone && onDone(); } });
+}
+
+/* ---------- Part 1 · Forward in 2s, 5s and 10s ---------- */
+const KIDS = [
+  { name: 'Lisa', who: '🏃‍♀️', step: 2, jumps: 4 },
+  { name: 'Frank', who: '🏃', step: 5, jumps: 2 },
+  { name: 'Joy', who: '🏃‍♂️', step: 10, jumps: 2 },
+];
+function playLine(api) {
+  const s = api.stage;
+  if (run.round < 3) {
+    const kid = KIDS[run.round];
+    if (run.round === 0) s.append(info('🎲', 'The number line game', 'Joy, Lisa and Frank are playing. Each one stands on 0 and jumps forward.'));
+    jumpGame(api, s, { from: 0, to: 20, start: 0, step: kid.step, jumps: kid.jumps, who: kid.who, name: kid.name, noFact: true,
+      intro: `${run.round === 0 ? 'Lisa goes first. ' : ''}${kid.name} stands on 0 and jumps forward by ${kid.step} each time. Tap where ${kid.name} lands!`,
+      onDone: () => {
+        const q = h('div', { class: 'below' }); s.append(q);
+        askChoice(q, { prompt: `${kid.name} jumped by how many each time?`, options: [2, 5, 10], answer: kid.step, cls: '',
+          hint: () => api.guide(`Look at the numbers on top of the jumps: +${kid.step}.`),
+          onDone: () => { q.append(fact(`+${kid.step} each time`, `${kid.name} added ${kid.step} each time: ${range(kid.step, kid.step, kid.jumps).join(', ')}.`)); api.done(); } });
+      } });
+    return;
+  }
+  api.guide('Lisa jumped by 2, Frank by 5 and Joy by 10. What is this kind of jumping and counting called?');
+  askSeq(api, s, [
+    { prompt: 'Jumping and counting by the same number is called…', options: shuffle(['Skip counting', 'Taking away', 'Tens and ones']), answer: 'Skip counting', hint: () => api.guide('We skip over some numbers when we jump. What is the chapter called?') },
+    { guide: 'Forward skip counting means counting forward by doing something again and again.', prompt: 'Forward skip counting means we ___ the same number again and again.', options: ['add', 'take away'], answer: 'add', hint: () => api.guide('Lisa went from 0 to 2 to 4. The numbers got bigger.'),
+      onDone: hold => hold.append(fact('2, 4, 6, 8', 'Forward skip counting: add the same number again and again.')) },
+  ], api.done);
+}
+
+function playGroups(api) {
+  const s = api.stage;
+  if (run.round === 0) groupCount(api, s, { n: 5, k: 2, look: lookEmoji('🏀⚽'), noun: 'balls', intro: 'Let\'s count the balls in 2s! Each group has 2 balls. Tap each group.', onDone: api.done });
+  else if (run.round === 1) groupCount(api, s, { n: 5, k: 5, look: lookDots('🍇', 5), noun: 'grapes', intro: 'Let\'s count the grapes in 5s! Each bunch has 5 grapes. Tap each bunch.', onDone: api.done });
+  else groupCount(api, s, { n: 10, k: 10, look: lookBundle(), noun: 'sticks', intro: 'Let\'s count the sticks in 10s! Each bundle has 10 sticks. Tap each bundle.', onDone: api.done });
+}
+
+function playFarina(api) {
+  const s = api.stage;
+  if (run.round === 0) jumpGame(api, s, { from: 42, to: 65, start: 45, step: 5, jumps: 4, who: '👧', name: 'Farina', intro: 'Farina starts at 45 and jumps forward in 5s four times. Tap where she lands each time!', onDone: api.done });
+  else jumpGame(api, s, { from: 67, to: 97, start: 67, step: 10, jumps: 3, who: '👦', name: 'Jacob', intro: 'Jacob starts at 67 and jumps forward in 10s three times. Tap where he lands each time!', onDone: api.done });
+}
+
+function playWings(api) {
+  const s = api.stage;
+  if (run.round === 0) groupCount(api, s, { n: 6, k: 2, look: lookDots('🐦', 2), noun: 'wings', intro: 'Each bird has 2 wings. Tap each bird and skip count the wings in 2s!', onDone: api.done });
+  else if (run.round === 1) groupCount(api, s, { n: 7, k: 5, look: lookDots('✋', 5), noun: 'fingers', intro: 'Each hand has 5 fingers. Tap each hand and skip count the fingers in 5s!', onDone: api.done });
+  else if (run.round === 2) fillSeq(api, s, { seq: range(32, 2, 7), blanks: [1, 2, 4, 5], shape: 'bulb', step: 2, title: 'Skip count by 2', intro: 'Some light bulbs lost their numbers! Skip count by 2. What goes in the shining bulb?', onDone: api.done });
+  else fillSeq(api, s, { seq: range(52, 5, 7), blanks: [1, 2, 4, 6], shape: 'bulb', step: 5, title: 'Skip count by 5', intro: 'Now skip count by 5. What goes in the shining bulb?', onDone: api.done });
+}
+
+/* ---------- Part 2 · Backward in 2s, 5s and 10s ---------- */
+function playBackLine(api) {
+  const s = api.stage;
+  if (run.round < 3) {
+    const kid = KIDS[run.round], jumps = [4, 3, 2][run.round];
+    if (run.round === 0) s.append(info('↩️', 'Now jump backwards!', 'This time everyone stands on 20 and jumps back.'));
+    jumpGame(api, s, { from: 0, to: 20, start: 20, step: -kid.step, jumps, who: kid.who, name: kid.name, noFact: true,
+      intro: `${kid.name} stands on 20 and jumps backwards by ${kid.step} each time. Tap where ${kid.name} lands!`,
+      onDone: end => {
+        const q = h('div', { class: 'below' }); s.append(q);
+        askChoice(q, { prompt: `${kid.name} took away how many each time?`, options: [2, 5, 10], answer: kid.step, cls: '',
+          hint: () => api.guide(`Look at the numbers on top of the jumps: −${kid.step}.`),
+          onDone: () => { q.append(fact(`20 → ${end}`, `${kid.name} took away ${kid.step} each time: ${range(20 - kid.step, -kid.step, jumps).join(', ')}.`)); api.done(); } });
+      } });
+    return;
+  }
+  api.guide('Spotlight time! What happens to the numbers when we count forward and backward?');
+  askSeq(api, s, [
+    { prompt: 'When we count forward, the numbers…', options: ['get bigger', 'get smaller'], answer: 'get bigger', hint: () => api.guide('Forward: 2, 4, 6, 8. Are they growing?') },
+    { prompt: 'When we count backward, the numbers…', options: ['get bigger', 'get smaller'], answer: 'get smaller', hint: () => api.guide('Backward: 20, 18, 16, 14. Are they growing or shrinking?') },
+    { prompt: 'Backward skip counting means we ___ the same number again and again.', options: ['add', 'take away'], answer: 'take away', hint: () => api.guide('Lisa went 20, 18, 16. She subtracted 2 each time.'),
+      onDone: hold => hold.append(fact('20, 18, 16, 14', 'Backward skip counting: take away the same number again and again.')) },
+  ], api.done);
+}
+
+function playSara(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    s.append(info('🪧', 'Backward skip counting', 'Back by 2s: take away 2. Back by 5s: take away 5. Back by 10s: take away 10.'));
+    chain([
+      next => fillSeq(api, s, { seq: range(10, -2, 6), blanks: [2, 4], shape: 'stone', step: -2, title: 'Backward by 2s', intro: 'Count back by 2s from 10 to 0. What goes in the shining spot?', onDone: next }),
+      next => fillSeq(api, s, { seq: range(25, -5, 6), blanks: [1, 3], shape: 'stone', step: -5, title: 'Backward by 5s', intro: 'Now count back by 5s from 25.', onDone: next }),
+      next => fillSeq(api, s, { seq: range(50, -10, 6), blanks: [2, 4], shape: 'stone', step: -10, title: 'Backward by 10s', intro: 'Now count back by 10s from 50.', onDone: next }),
+    ], api.done);
+    return;
+  }
+  if (run.round === 1) jumpGame(api, s, { from: 30, to: 47, start: 44, step: -2, jumps: 4, who: '👧', name: 'Sara', intro: 'Sara starts at 44 and jumps backward in 2s four times. Tap where she lands each time!', onDone: api.done });
+  else jumpGame(api, s, { from: 70, to: 90, start: 90, step: -5, jumps: 3, who: '🧕', name: 'Azra', intro: 'Azra starts at 90 and jumps backwards in 5s three times. Tap where she lands each time!', onDone: api.done });
+}
+
+function playFlags(api) {
+  const s = api.stage;
+  const rows = [
+    { seq: range(16, -2, 9), blanks: [1, 3, 5, 6, 7], step: -2, title: 'Backward skip count by 2s' },
+    { seq: range(55, -5, 9), blanks: [1, 3, 4, 6, 8], step: -5, title: 'Backward skip count by 5s' },
+    { seq: range(84, -10, 9), blanks: [2, 4, 6, 8], step: -10, title: 'Backward skip count by 10s' },
+  ];
+  const r = rows[run.round];
+  fillSeq(api, s, { ...r, shape: 'flag', intro: `Some party flags lost their numbers! ${r.title.replace('Backward skip count', 'Count backward')}. What goes on the shining flag?`, onDone: api.done });
+}
+
+const CP1_GRID = [12, 20, 63, 40, 18, 50, 70, 84, 45, 100, 80, 28];
+const CP1_TASKS = [
+  { c: 'purple', t: 'the number that comes next when you count forward by 2 from 10', ans: 12, tip: '10 + 2 = ?' },
+  { c: 'blue', t: 'the number that comes next when you count backward by 2 from 30', ans: 28, tip: '30 − 2 = ?' },
+  { c: 'yellow', t: 'the number that comes next when you count backward by 5 from 50', ans: 45, tip: '50 − 5 = ?' },
+  { c: 'green', t: 'the number that comes next when you count forward by 10 from 30', ans: 40, tip: '30 + 10 = ?' },
+];
+function playCheck1(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    const task = h('div', { class: 'ctask', 'aria-live': 'polite' });
+    const grid = h('div', { class: 'cgrid' });
+    let k = 0;
+    const show = () => {
+      const T = CP1_TASKS[k];
+      grid.dataset.ans = T.ans;
+      task.replaceChildren(h('span', { class: 'swatch ' + T.c, 'aria-hidden': 'true' }), h('span', {}, `Colour ${T.c}: ${T.t}.`));
+      api.guide(`Colour ${T.c}: tap ${T.t}.`);
+    };
+    CP1_GRID.forEach(n => {
+      const b = h('button', { type: 'button', class: 'cnum', 'data-n': n, onclick: () => {
+        if (k >= CP1_TASKS.length || b.disabled) return;
+        const T = CP1_TASKS[k];
+        if (n === T.ans) {
+          b.classList.add(T.c); b.disabled = true; sfx.good(); k++;
+          if (k < CP1_TASKS.length) show();
+          else { delete grid.dataset.ans; task.replaceChildren(h('span', {}, 'All four colours done! 🎨')); api.guide(`${praise()} 12, 28, 45 and 40 are coloured.`); api.done(); }
+        } else { run.mistakes++; sfx.oops(); shakeEl(b); api.guide(`Not ${n}. ${T.tip}`); }
+      } }, String(n));
+      grid.append(b);
+    });
+    s.append(task, grid);
+    show();
+    return;
+  }
+  const b = h('div', { class: 'below' }); s.append(b);
+  if (run.round === 1) notCounted(api, b, { a: 30, step: 10, end: 90, options: [50, 80, 20, 90], onDone: api.done });
+  else if (run.round === 2) {
+    b.append(whoSays('🧒', 'Rohan wrote: 20, 18, 16, 15, 12'));
+    api.guide('Rohan counted backward by 2s, but he made a mistake. Tap the wrong number!');
+    oddOne(api, b, { seq: [20, 18, 16, 15, 12], odd: 3, fix: 14, step: -2, onDone: api.done });
+    api.guide('Rohan counted backward by 2s, but he made one mistake. Find it and tap it!');
+  } else {
+    b.append(info('🧩', 'Which number am I?', 'I come when you count in 2s, 5s and 10s. I am less than 25 but more than 15.'));
+    api.guide('Riddle time! I come when you count in 2s, 5s and 10s. I am less than 25 but more than 15. Which number am I?');
+    askChoice(b, { prompt: 'Which number am I?', options: [18, 20, 22, 25], answer: 20, cls: '',
+      hint: o => api.guide(o === 25 ? '25 is not less than 25. And do you say 25 when counting in 2s?' : `Do you say ${o} when you count in 5s? 5, 10, 15, 20, 25…`),
+      onDone: () => { b.append(fact('20', 'In 2s: …18, 20. In 5s: …15, 20. In 10s: 10, 20. Yes!')); api.done(); } });
+  }
+}
+
+/* ---------- Part 3 · Forward in 3s, 4s and 6s ---------- */
+function playFloor(api) {
+  const s = api.stage;
+  if (run.round < 3) {
+    const t = [{ step: 3, jumps: 4 }, { step: 4, jumps: 5 }, { step: 6, jumps: 4 }][run.round];
+    if (run.round === 0) s.append(info('👣', 'A number line on the floor', 'Draw a number line from 0 to 24 on the floor. Stand at 0 and jump!'));
+    jumpGame(api, s, { from: 0, to: 24, start: 0, step: t.step, jumps: t.jumps, who: '🧒', name: 'You', noFact: true,
+      intro: `Task ${run.round + 1}: stand at 0 and jump forward by ${t.step}, ${t.jumps === 4 ? 'four' : 'five'} times. Tap where you land!`,
+      onDone: () => {
+        const q = h('div', { class: 'below' }); s.append(q);
+        const list = [{ prompt: 'How many numbers did you move forward each time?', options: [3, 4, 6], answer: t.step, cls: '', hint: () => api.guide(`Look at the jumps: +${t.step} each time.`),
+          onDone: hold => hold.append(fact(range(t.step, t.step, t.jumps).join(', '), `This is called skip counting by ${t.step}.`)) }];
+        if (run.round === 0) list.unshift({ prompt: 'Did all the jumps look the same?', options: ['Yes', 'No'], answer: 'Yes', hint: () => api.guide('Look at the jump arcs. Are they all the same size?') });
+        askSeq(api, q, list, api.done);
+      } });
+    return;
+  }
+  api.guide('Think and tell! You jumped in 3s, 4s and 6s on the same number line.');
+  askSeq(api, s, [
+    { prompt: 'Which skip count had the longest jump?', options: ['Counting in 3s', 'Counting in 4s', 'Counting in 6s'], answer: 'Counting in 6s', hint: () => api.guide('Which number is the biggest: 3, 4 or 6?') },
+    { prompt: 'How is skip counting by 6 different from skip counting by 3?', options: ['Each jump is bigger, so you need fewer jumps', 'Each jump is smaller', 'They are the same'], answer: 'Each jump is bigger, so you need fewer jumps', hint: () => api.guide('To reach 12: by 3 is 3, 6, 9, 12. By 6 is 6, 12. Which needs fewer jumps?'),
+      onDone: hold => hold.append(fact('6 = 3 + 3', 'One jump of 6 is the same as two jumps of 3. To reach 24: 8 jumps of 3, but only 4 jumps of 6!')) },
+  ], api.done);
+}
+
+function playBunches(api) {
+  const s = api.stage;
+  const L = [
+    { n: 8, k: 3, look: lookDots('🍒', 3), noun: 'cherries', intro: 'Ria is packing cherries in a box. Each bunch has 3 cherries. Tap each bunch and count in 3s!' },
+    { n: 8, k: 4, look: lookDots('🎈', 4), noun: 'balloons', intro: 'Ruhi is counting balloons for a party. Each bunch has 4 balloons. Tap each bunch and count in 4s!' },
+    { n: 8, k: 6, look: lookDots('📿', 6), noun: 'shells', intro: 'Shyam is counting shells. Each necklace has 6 shells. Tap each necklace and count in 6s!' },
+    { n: 6, k: 3, look: lookDots('🍎', 3), noun: 'apples', intro: 'Each bag has 3 apples. Tap each bag and count the apples in 3s!' },
+    { n: 4, k: 4, look: lookDots('🍦', 4), noun: 'scoops', intro: 'Each cone has 4 scoops of ice cream. Tap each cone and count the scoops in 4s!' },
+    { n: 5, k: 6, look: lookDots('🍌', 6), noun: 'bananas', intro: 'Each bunch has 6 bananas. Tap each bunch and count the bananas in 6s!' },
+  ][run.round];
+  if (run.round === 0) s.append(info('➕', 'Skip counting by 3, 4 or 6', 'By 3: add 3 each time. By 4: add 4 each time. By 6: add 6 each time.'));
+  groupCount(api, s, { ...L, onDone: api.done });
+}
+
+function playZahra(api) {
+  const s = api.stage;
+  if (run.round === 0) jumpGame(api, s, { from: 8, to: 40, start: 15, step: 3, jumps: 7, who: '👧', name: 'Zahra', intro: 'Zahra starts at 15 and jumps forward in 3s seven times. Tap where she lands each time!', onDone: api.done });
+  else if (run.round === 1) jumpGame(api, s, { from: 0, to: 32, start: 6, step: 6, jumps: 3, who: '👦', name: 'Sachin', intro: 'Sachin starts at 6 and jumps forward in 6s three times. Tap where he lands each time!', onDone: api.done });
+  else {
+    const r = [
+      { seq: range(33, 3, 6), blanks: [2, 3, 4], step: 3, title: 'Skip counting by 3s' },
+      { seq: range(78, 4, 6), blanks: [1, 3, 4], step: 4, title: 'Skip counting by 4s' },
+      { seq: range(56, 6, 6), blanks: [2, 3, 4], step: 6, title: 'Skip counting by 6s' },
+    ][run.round - 2];
+    fillSeq(api, s, { ...r, shape: 'bead', intro: `Complete the bead string. ${r.title}! What goes in the shining bead?`, onDone: api.done });
+  }
+}
+
+/* ---------- Part 4 · Backward in 3s, 4s and 6s ---------- */
+function playBee(api) {
+  const s = api.stage;
+  if (run.round === 0) {
+    api.guide('Think Route! Hoppy wants to reach 50 with as few jumps as possible.');
+    askChoice(s, { prompt: 'Which skip counting pattern reaches 50 the fastest?', options: ['Counting in 3s', 'Counting in 4s', 'Counting in 6s'], answer: 'Counting in 6s',
+      hint: () => api.guide('Bigger jumps cover more numbers each time. Which jump is the biggest?'),
+      onDone: () => { s.append(fact('Counting in 6s', 'Bigger jumps get there in fewer jumps. In 6s: 6, 12, 18, 24, 30, 36, 42, 48, then past 50!')); api.done(); } });
+    return;
+  }
+  if (run.round === 1) {
+    s.append(info('🐝', 'Watch the bee', 'The bee is on 20. It jumps along the number line. Help it jump!'));
+    jumpGame(api, s, { from: 0, to: 20, start: 20, step: -3, jumps: 4, who: '🐝', name: 'Bee', noFact: true, intro: 'The bee starts on 20 and jumps back by 3 each time. Tap where the bee lands!', onDone: () => { s.append(fact('20 → 17 → 14 → 11 → 8', 'The bee skip counted backward by 3s.')); api.done(); } });
+    return;
+  }
+  if (run.round === 2) {
+    s.append(fact('20, 17, 14, 11, 8', 'This is where the bee jumped.'));
+    askSeq(api, s, [
+      { guide: 'Look at where the bee jumped. Answer the bee\'s questions!', prompt: 'Is the bee moving forward or backward?', options: ['Forward', 'Backward'], answer: 'Backward', hint: () => api.guide('It started at 20 and went to 17. Is 17 bigger or smaller?') },
+      { prompt: 'How many numbers did the bee jump each time?', options: [2, 3, 4], answer: 3, cls: '', hint: () => api.guide('Count from 20 to 17: 19, 18, 17.') },
+      { prompt: 'What happens to the numbers as the bee moves backward?', options: ['They get smaller', 'They get bigger'], answer: 'They get smaller', hint: () => api.guide('20, 17, 14, 11, 8. Are they growing or shrinking?'),
+        onDone: hold => hold.append(fact('Take away 3 each time', 'When we skip count backward, we subtract the same number again and again.')) },
+    ], api.done);
+    return;
+  }
+  if (run.round === 3) {
+    askSeq(api, s, [
+      { guide: 'The bee took away 3 each time. That is backward skip counting by 3s.', prompt: 'If the bee skip counts backward by 4s, how much is taken away each time?', options: [3, 4, 6], answer: 4, cls: '', hint: () => api.guide('Backward by 3s takes away 3. So backward by 4s takes away…?') },
+      { prompt: 'And backward by 6s? How much is taken away each time?', options: [3, 4, 6], answer: 6, cls: '', hint: () => api.guide('Backward by 6s takes away the same number: 6.') },
+    ], () => fillSeq(api, s, { seq: range(21, -3, 8), blanks: [2, 4, 6], shape: 'stone', step: -3, title: 'Backward skip count by 3s from 21', intro: 'Let\'s count back by 3s from 21. What goes in the shining spot?', onDone: api.done }));
+    return;
+  }
+  chain([
+    next => fillSeq(api, s, { seq: range(44, -4, 12), blanks: [3, 6, 9], shape: 'stone', step: -4, title: 'Backward skip count by 4s from 44', intro: 'Count back by 4s from 44. What goes in the shining spot?', onDone: next }),
+    next => fillSeq(api, s, { seq: range(72, -6, 13), blanks: [2, 5, 8, 11], shape: 'stone', step: -6, title: 'Backward skip count by 6s from 72', intro: 'Now count back by 6s from 72!', onDone: next }),
+  ], api.done);
+}
+
+function playPads(api) {
+  const s = api.stage;
+  if (run.round === 0) jumpGame(api, s, { from: 2, to: 25, start: 21, step: -3, jumps: 5, who: '👧', name: 'Emma', intro: 'Emma was at 21. She jumps backwards in 3s five times. Tap where she lands each time!', onDone: api.done });
+  else if (run.round === 1) jumpGame(api, s, { from: 70, to: 93, start: 90, step: -4, jumps: 3, who: '👩', name: 'Emily', intro: 'Emily starts at 90. She jumps backwards in 4s three times. Tap where she lands each time!', onDone: api.done });
+  else {
+    const r = [
+      { seq: range(49, -3, 7), blanks: [1, 3], step: -3, title: 'Count backward by 3s' },
+      { seq: range(80, -4, 7), blanks: [1, 5], step: -4, title: 'Count backward by 4s' },
+      { seq: range(99, -6, 7), blanks: [3, 4], step: -6, title: 'Count backward by 6s' },
+    ][run.round - 2];
+    fillSeq(api, s, { ...r, shape: 'pad', intro: `Hoppy needs every lily pad to have a number! ${r.title}. What goes on the shining pad?`, onDone: api.done });
+  }
+}
+
+/* ---------- Part 5 · Checkpoint 2 ---------- */
+function playOdd(api) {
+  const r = [
+    { seq: [35, 32, 29, 25, 23], odd: 3, fix: 26, step: -3 },
+    { seq: [44, 40, 36, 32, 27], odd: 4, fix: 28, step: -4 },
+    { seq: [72, 66, 60, 50, 48], odd: 3, fix: 54, step: -6 },
+  ][run.round];
+  oddOne(api, api.stage, { ...r, onDone: api.done });
+}
+
+function playFarm(api) {
+  const s = api.stage;
+  if (run.round === 0) notCounted(api, s, { a: 50, step: -6, end: 20, options: [38, 26, 44, 46], onDone: api.done });
+  else if (run.round === 1) notCounted(api, s, { a: 20, step: 4, end: 40, options: [22, 28, 32, 24], onDone: api.done });
+  else if (run.round === 2) {
+    s.append(info('🚜', 'A visit to the farm!', 'There are 6 cows. Each cow has 4 legs.'));
+    groupCount(api, s, { n: 6, k: 4, look: lookDots('🐄', 4), noun: 'legs', intro: 'There are 6 cows and each cow has 4 legs. Tap each cow and skip count by 4!', onDone: api.done });
+  } else {
+    s.append(info('🐄', '2 more cows join the farm!', 'There were 6 cows. Now 2 more come.'));
+    api.guide('Two more cows join the farm! How many cows are there now?');
+    askChoice(s, { prompt: 'How many cows are there now?', options: [7, 8, 9], answer: 8, cls: '', hint: () => api.guide('6 cows and 2 more: 7, 8.'),
+      onDone: () => groupCount(api, s, { n: 8, k: 4, look: lookDots('🐄', 4), noun: 'legs', intro: 'Now skip count by 4 again to find all the legs. Tap each cow!', onDone: api.done }) });
+  }
+}
+
+/* ---------- Grand Review ---------- */
+function randSeqStart(step, len, min, max) { const s = Math.abs(step); if (step > 0) return rand(min, max); return rand(Math.max(min, s * (len - 1)), Math.max(max, s * (len - 1) + 10)); }
+function twoBlanks(len) { const a = rand(1, len - 1); let b; do { b = rand(1, len - 1); } while (b === a); return [a, b]; }
+const REVIEW_QS = [
+  { part: 1, from: 'Number Line Game', play: (api, b, done) => {
+    const step = pickOne([2, 5, 10]), start = step === 10 ? rand(11, 39) : rand(20, 60);
+    jumpGame(api, b, { from: start - 1, to: start + step * 3 + 1, start, step, jumps: 3, who: '🐸', name: 'Hoppy', intro: `Hoppy starts at ${start} and jumps forward by ${step}, three times. Tap where Hoppy lands!`, onDone: done });
+  } },
+  { part: 1, from: 'Wings & Bulbs', play: (api, b, done) => {
+    const step = pickOne([2, 5, 10]);
+    fillSeq(api, b, { seq: range(rand(10, 50), step, 6), blanks: twoBlanks(6), shape: 'bulb', step, title: `Skip count by ${step}`, onDone: done });
+  } },
+  { part: 2, from: 'Sara & Azra', play: (api, b, done) => {
+    const step = pickOne([2, 5, 10]), start = rand(step * 3 + 10, step === 10 ? 95 : 80);
+    jumpGame(api, b, { from: start - step * 3 - 1, to: start + 1, start, step: -step, jumps: 3, who: '🐸', name: 'Hoppy', intro: `Hoppy starts at ${start} and jumps back by ${step}, three times. Tap where Hoppy lands!`, onDone: done });
+  } },
+  { part: 2, from: 'Checkpoint 1', play: (api, b, done) => {
+    const step = pickOne([2, 5, 10]), a = step === 10 ? rand(6, 9) * 10 + rand(0, 9) : rand(40, 80), list = range(a, -step, 5);
+    const not = list[2] + (step === 2 ? 1 : step === 5 ? 2 : 5);
+    notCounted(api, b, { a, step: -step, end: list[4], options: shuffle([list[1], list[3], list[4], not]), onDone: done });
+  } },
+  { part: 3, from: 'Bunches & Bags', play: (api, b, done) => {
+    const k = pickOne([3, 4, 6]), n = rand(4, 6), it = pickOne([['🍒', 'cherries', 'bunch'], ['🎈', 'balloons', 'bunch'], ['🍎', 'apples', 'bag'], ['🍌', 'bananas', 'bunch']]);
+    groupCount(api, b, { n, k, look: lookDots(it[0], k), noun: it[1], intro: `Each ${it[2]} has ${k} ${it[1]}. Tap each ${it[2]} and count in ${k}s!`, onDone: done });
+  } },
+  { part: 3, from: 'Zahra\'s Beads', play: (api, b, done) => {
+    const step = pickOne([3, 4, 6]);
+    fillSeq(api, b, { seq: range(rand(10, 60), step, 6), blanks: twoBlanks(6), shape: 'bead', step, title: `Skip counting by ${step}s`, onDone: done });
+  } },
+  { part: 4, from: 'Busy Bee', play: (api, b, done) => {
+    const step = pickOne([3, 4, 6]), start = rand(step * 3 + 4, 50);
+    jumpGame(api, b, { from: start - step * 3 - 1, to: start + 1, start, step: -step, jumps: 3, who: '🐝', name: 'Bee', intro: `The bee starts at ${start} and jumps back by ${step}, three times. Tap where it lands!`, onDone: done });
+  } },
+  { part: 4, from: 'Emma\'s Lily Pads', play: (api, b, done) => {
+    const step = pickOne([3, 4, 6]);
+    fillSeq(api, b, { seq: range(rand(step * 6 + 5, 99), -step, 7), blanks: twoBlanks(7), shape: 'pad', step: -step, title: `Count backward by ${step}s`, onDone: done });
+  } },
+  { part: 5, from: 'Odd One Out', play: (api, b, done) => {
+    const s = pickOne([3, 4, 6]), step = pickOne([s, -s]), a = step > 0 ? rand(10, 40) : rand(40, 80), seq = range(a, step, 5), odd = rand(2, 4), fix = seq[odd];
+    seq[odd] = fix + pickOne([-1, 1]);
+    oddOne(api, b, { seq, odd, fix, step, onDone: done });
+  } },
+  { part: 5, from: 'Farm Visit', play: (api, b, done) => {
+    const step = pickOne([3, 4, 6]), a = rand(10, 40), list = range(a, step, 5), not = list[2] + pickOne([1, 2]);
+    notCounted(api, b, { a, step, end: list[4], options: shuffle([list[1], list[3], list[4], not]), onDone: done });
+  } },
+];
+function playReview(api) {
+  if (!run.qs) { run.qs = shuffle(REVIEW_QS.slice()); run.firstTry = {}; }
+  const q = run.qs[run.round], before = run.mistakes;
+  const below = h('div', { class: 'below' });
+  api.stage.append(h('span', { class: 'srctag' }, `Part ${q.part} · ${q.from}`), below);
+  q.play(api, below, () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'Forward 2s, 5s, 10s', 2: 'Backward 2s, 5s, 10s', 3: 'Forward 3s, 4s, 6s', 4: 'Backward 3s, 4s, 6s', 5: 'Checkpoint 2' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4, 5].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 4 Skip Counting Champion'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [r, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${r} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < r ? '' : 'off' }, '🐸'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Number Line Game', idea: 'Forward in 2s, 5s, 10s', page: 'Book pages 7–9', rounds: 4, cut: [1, 3], icon: '🦘', play: playLine },
+  { id: 2, part: 1, name: 'Count in Groups', idea: 'Balls, grapes and sticks', page: 'Book pages 9–10', rounds: 3, cut: [0, 2], icon: '🍇', play: playGroups },
+  { id: 3, part: 1, name: 'Farina & Jacob', idea: 'GRIP-1 number lines', page: 'Book page 10', rounds: 2, cut: [1, 3], icon: '👧', play: playFarina },
+  { id: 4, part: 1, name: 'Wings & Bulbs', idea: 'GRIP-1 missing numbers', page: 'Book page 11', rounds: 4, cut: [1, 3], icon: '💡', play: playWings },
+  { id: 5, part: 2, name: 'Jump Back Game', idea: 'Backward in 2s, 5s, 10s', page: 'Book pages 11–13', rounds: 4, cut: [1, 3], icon: '↩️', play: playBackLine },
+  { id: 6, part: 2, name: 'Sara & Azra', idea: 'GRIP-2 number lines', page: 'Book page 13', rounds: 3, cut: [1, 3], icon: '👟', play: playSara },
+  { id: 7, part: 2, name: 'Bunting Flags', idea: 'GRIP-2 missing numbers', page: 'Book page 14', rounds: 3, cut: [1, 3], icon: '🎏', play: playFlags },
+  { id: 8, part: 2, name: 'Checkpoint 1', idea: 'Colours, a mistake and a riddle', page: 'Book pages 14–15', rounds: 4, cut: [1, 2], icon: '🎨', play: playCheck1 },
+  { id: 9, part: 3, name: 'Floor Number Line', idea: 'Forward in 3s, 4s, 6s', page: 'Book pages 15–16', rounds: 4, cut: [1, 3], icon: '👣', play: playFloor },
+  { id: 10, part: 3, name: 'Bunches & Bags', idea: 'Counting things in 3s, 4s, 6s', page: 'Book pages 17–18', rounds: 6, cut: [1, 3], icon: '🍒', play: playBunches },
+  { id: 11, part: 3, name: 'Zahra\'s Beads', idea: 'GRIP-3 number lines and beads', page: 'Book page 19', rounds: 5, cut: [1, 3], icon: '📿', play: playZahra },
+  { id: 12, part: 4, name: 'Busy Bee', idea: 'Backward in 3s, 4s, 6s', page: 'Book pages 20–21', rounds: 5, cut: [1, 3], icon: '🐝', play: playBee },
+  { id: 13, part: 4, name: 'Emma\'s Lily Pads', idea: 'GRIP-4', page: 'Book pages 21–22', rounds: 5, cut: [1, 3], icon: '🐸', play: playPads },
+  { id: 14, part: 5, name: 'Odd One Out', idea: 'Checkpoint 2', page: 'Book page 22', rounds: 3, cut: [0, 2], icon: '🔍', play: playOdd },
+  { id: 15, part: 5, name: 'Farm Visit', idea: 'Checkpoint 2 and Skill Trail', page: 'Book page 23', rounds: 4, cut: [1, 2], icon: '🐄', play: playFarm },
+  { id: 16, part: 6, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 4 · pages 7–23', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: t => { guideText = t; bubble.textContent = t; },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function startLevel(L) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0, used: new Set() };
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  foot.replaceChildren(); stageEl.replaceChildren();
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 4 ? 'You can skip count forward in 2s, 5s and 10s! Part 2 is about jumping backward.'
+    : L.id === 8 ? 'Checkpoint 1 done! Part 3 is about counting in 3s, 4s and 6s.'
+    : L.id === 11 ? 'Forward in 3s, 4s and 6s, done! Part 4 is about jumping backward in 3s, 4s and 6s.'
+    : L.id === 13 ? 'Backward champion! Part 5 is Checkpoint 2.'
+    : L.id === 15 ? 'You finished Part 5! One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 4, Ayansh! Hop hop hooray!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the park'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC23D', '#D9572B', '#1C8A55', '#2F6FD0', '#FFFFFF'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() { $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`; }
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+const SIZES = [2, 3, 4, 5, 6, 10];
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, onclick: () => startLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      L.id === nextId ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 6; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  const cells = [h('span', { class: 'bd hd' }, 'Jump by')];
+  SIZES.forEach(n => cells.push(h('span', { class: 'bd hd' }, String(n))));
+  [['f', 'Forward ➜', '+'], ['b', '⬅ Backward', '−']].forEach(([d, lab, sign]) => {
+    cells.push(h('span', { class: 'bd rowhd' }, lab));
+    SIZES.forEach(n => { const got = badgeSet.has(d + n); cells.push(h('span', { class: `bd ${d}${got ? ' got' : ''}`, title: got ? `${sign}${n}` : 'Not yet' }, got ? sign + n : '')); });
+  });
+  $('badges').replaceChildren(...cells);
+  const lit = [...badgeSet].filter(k => /^[fb](2|3|4|5|6|10)$/.test(k)).length;
+  $('badgeCount').textContent = lit === 0 ? 'No badges yet. Start at Stop 1!' : `${lit} of 12 badges`;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* hero: the boy on the stairs skips steps */
+const STEPS = 11, stepEls = [];
+for (let i = 0; i < STEPS; i++) { const st = h('div', { class: 'step', style: `height:${18 + i * 11}px` }, String(i)); stepEls.push(st); $('stairs').append(st); }
+const climber = h('span', { class: 'climber', 'aria-hidden': 'true' }, '🧒');
+$('stairs').append(climber);
+const placeClimber = i => { climber.style.left = `${(i + 0.5) / STEPS * 100}%`; climber.style.bottom = `${18 + i * 11 + 2}px`; };
+placeClimber(0);
+$('showHow').addEventListener('click', async () => {
+  $('showHow').disabled = true;
+  stepEls.forEach(s => s.classList.remove('on', 'was'));
+  placeClimber(0); await wait(300);
+  for (let i = 2; i <= 10; i += 2) {
+    stepEls.forEach(s => s.classList.remove('on'));
+    stepEls[i].classList.add('on'); stepEls[i - 1].classList.add('was');
+    placeClimber(i); sfx.hop(i / 2); await wait(800);
+  }
+  $('reveal').hidden = false; sfx.good();
+  say('He skips steps! He jumps 2 steps each time: 2, 4, 6, 8, 10. That is skip counting.');
+  $('showHow').disabled = false; $('showHow').textContent = '↻ Show me again';
+});
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, badges: [], sound: P.sound, resetAt: Date.now() }; badgeSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, P, { badges: [...badgeSet] }) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
