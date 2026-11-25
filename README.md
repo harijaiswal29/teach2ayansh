@@ -13,9 +13,11 @@ maths/
   subtraction/      Take-Away Bazaar (Chapter 8)
   patterns/         Rangoli Lane (Chapter 6)
   skip-counting/    Skip-Hop Park (Chapter 4)
+english/
+  the-letter/       Snail Mail Trail (Chapter 4)
 ```
 
-See [maths/README.md](maths/README.md) for the full list.
+See [maths/README.md](maths/README.md) and [english/README.md](english/README.md) for the full lists.
 
 ## Games
 
@@ -27,10 +29,11 @@ See [maths/README.md](maths/README.md) for the full list.
 | Maths | Multiplication | [Multiplication Fair](maths/multiplication/) | Ch 9, pp. 28–57 |
 | Maths | Multiplication | [Times Quest](maths/multiplication/) | (not from the book) |
 | Maths | Time | [Tick-Tock Town](maths/time/) | Ch 10, pp. 58–76 |
+| English | The Letter | [Snail Mail Trail](english/the-letter/) | Ch 4, pp. 34–54 |
 
 ## Adding a new game
 
 - New topic in an existing subject: make `<subject>/<topic>/`, add the game HTML, a README and `book-notes.md`, then add a row to the subject README and the table above.
-- New subject (for example `english/` or `science/`): make the subject folder with its own README listing its topics, then follow the same pattern.
+- New subject (for example `science/`): make the subject folder with its own README listing its topics, then follow the same pattern.
 
 Every chapter game follows the same style: stops in book order using the book's own examples, up to 3 stars per stop, a Grand Review with a certificate at the end, and a "For grown-ups" section with tips.

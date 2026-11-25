@@ -1,0 +1,1780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Ayansh's Snail Mail Trail</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centred column down a garden path, from morning sky to meadow to an evening garden; white cards hold the play. Follows English Chapter 4, "The Letter", page by page. Frog is always green, Toad is always brown, the mailbox is red. A single-look game page (light only), like the other chapter games. */
+:root{
+  --sky:#CDEBFF; --sky2:#9ED5F5; --meadow:#8BCF73; --leaf:#3E8E4E; --night:#1F3B2A;
+  --board:#FFFFFF; --paper:#FFF6E2; --ink:#1F2A22; --ink-soft:#56645A; --shadow:#13241A;
+  --gold:#FFC23D; --gold-soft:#FFF2CC;
+  --frog:#2E9E5B; --frog-soft:#D6F2DF;
+  --toad:#9A6A3A; --toad-soft:#F3E3CF;
+  --mail:#D9463B; --mail-soft:#FCE0DC;
+  --blue:#2F6FD0; --blue-soft:#DDE8FA;
+  --good:#1C8A55; --oops:#C8323A; --oops-soft:#FFE0DC;
+  --lilac:#EFEAF8; --muted:#C9D2CB;
+  --on-dark:#FFFFFF; --on-dark-soft:#D9F0DF; --on-color:#FFFFFF;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background-color:var(--night)}
+body{
+  font-family:var(--body);font-size:17px;line-height:1.45;color:var(--ink);margin:0;
+  background-color:var(--night);
+  background-image:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 18%,var(--meadow) 40%,var(--leaf) 74%,var(--night) 96%);
+  min-height:100vh;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.app{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.app > .app{width:100%;max-width:none;margin:0;min-width:0}
+.card{background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow)}
+
+/* top bar with an airmail border */
+.topbar{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:24px 16px 10px;box-shadow:5px 6px 0 var(--shadow)}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:repeating-linear-gradient(135deg,var(--mail) 0 14px,var(--board) 14px 28px,var(--blue) 28px 42px,var(--board) 42px 56px)}
+.brand{font-size:clamp(26px,6vw,36px);letter-spacing:-.5px}
+.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:800;color:var(--on-dark-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);background:var(--gold);border:3px solid var(--on-dark);border-radius:999px;padding:2px 14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.btn{font-weight:800;font-size:17px;border:3px solid var(--ink);border-radius:999px;padding:8px 18px;min-height:48px;background:var(--board);box-shadow:0 4px 0 var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s,box-shadow .08s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--gold)}
+.btn.big{font-size:22px;padding:10px 30px;min-height:58px}
+.btn.small{font-size:15px;min-height:40px;padding:4px 14px}
+.topbar .btn{border-color:var(--on-dark);box-shadow:none}
+
+.mascot{flex:none;width:66px;height:66px;border-radius:50%;background:var(--gold-soft);border:3px solid var(--ink);display:grid;place-items:center;font-size:36px;line-height:1}
+.mascot.sm{width:54px;height:54px;font-size:29px}
+
+/* hero */
+.hello{display:flex;gap:18px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.hello-text{flex:1;min-width:240px;display:flex;flex-direction:column;gap:12px}
+.hello h2{font-size:clamp(24px,5vw,30px)}
+.note{color:var(--ink-soft);font-weight:700}
+.donebanner{background:var(--gold);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.resumebox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--frog-soft);border:3px solid var(--ink);border-radius:16px;padding:10px 14px;font-weight:800}
+.mailrow{display:flex;align-items:flex-end;gap:6px;font-size:40px;line-height:1;min-height:56px}
+.mailrow .trail{flex:1;border-bottom:4px dotted var(--ink-soft);margin-bottom:12px;position:relative;min-width:60px}
+.mailrow .snail{position:absolute;bottom:-6px;left:0;font-size:30px;transition:left 1.6s ease-in-out}
+
+/* stops */
+.section-title{align-self:flex-start;font-size:20px;margin-bottom:-6px;color:var(--on-dark);background:var(--ink);border-radius:999px;padding:4px 16px;box-shadow:3px 4px 0 var(--shadow)}
+.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;position:relative}
+.stops::before{content:"";position:absolute;left:50%;top:24px;bottom:24px;border-left:5px dotted var(--board);opacity:.6}
+.stop{position:relative;width:min(100%,480px)}
+.stop.right{margin-left:auto}
+.stopbtn{width:100%;display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;text-align:left;padding:12px 16px 12px 12px;cursor:pointer;background:var(--board);border:3px solid var(--ink);border-radius:20px;box-shadow:5px 6px 0 var(--shadow);transition:transform .1s}
+.stopbtn:hover:not(:disabled){transform:translateY(-2px)}
+.stopbtn:disabled{cursor:default;background:#DCE5DE;border-color:#8FA195}
+.stopicon{width:72px;height:72px;border-radius:18px;border:3px solid var(--ink);display:grid;place-items:center;font-size:40px;line-height:1;background:var(--gold-soft)}
+.stop:nth-child(3n+1) .stopicon{background:var(--frog-soft)}
+.stop:nth-child(3n+2) .stopicon{background:var(--toad-soft)}
+.stop:nth-child(3n) .stopicon{background:var(--blue-soft)}
+.stops.finale .stopicon{background:var(--gold)}
+.stopbtn:disabled .stopicon{filter:grayscale(1);opacity:.5}
+.stoptext{display:flex;flex-direction:column;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft)}
+.stopname{font-family:var(--display);font-weight:800;font-size:23px;line-height:1.1}
+.page{font-size:13px;font-weight:800;color:var(--mail)}
+.stars{font-size:22px;letter-spacing:2px;line-height:1.2}
+.stars span{color:var(--muted)}
+.stars span.on{color:var(--gold);-webkit-text-stroke:1.2px var(--ink)}
+.lock{font-size:24px}
+.playtag{position:absolute;right:8px;top:-14px;background:var(--mail);color:var(--on-color);font-family:var(--display);font-weight:800;font-size:16px;padding:0 12px;border:3px solid var(--ink);border-radius:999px;animation:bob 1.4s ease-in-out infinite}
+.halfway{position:absolute;left:8px;top:-14px;background:var(--frog);color:var(--on-color);font-weight:800;font-size:13px;padding:1px 10px;border:3px solid var(--ink);border-radius:999px}
+
+/* skills card */
+.skillcard{padding:20px;display:flex;flex-direction:column;gap:12px}
+.skillcard h2{font-size:24px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.skill{display:flex;gap:8px;align-items:center;border:3px solid var(--muted);border-radius:14px;padding:8px 10px;background:var(--lilac);font-weight:800;font-size:15px;line-height:1.2;color:var(--ink-soft)}
+.skill .e{font-size:26px;line-height:1;filter:grayscale(1);opacity:.45}
+.skill.got{border-color:var(--ink);background:var(--gold-soft);color:var(--ink)}
+.skill.got .e{filter:none;opacity:1}
+
+/* grown-ups */
+.parent{padding:16px 20px}
+.parent summary{font-family:var(--display);font-weight:800;font-size:21px;cursor:pointer}
+.parent-body{display:flex;flex-direction:column;gap:12px;margin-top:12px;max-width:66ch}
+.parent-body h3{font-size:18px}
+.parent-body ul,.parent-body ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.parent-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* level shell */
+.lvlhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--on-dark);background:var(--ink);border-radius:20px;padding:10px 14px;box-shadow:5px 6px 0 var(--shadow)}
+.lvlhead .btn{border-color:var(--on-dark);box-shadow:none}
+.lvlname{flex:1;min-width:150px;display:flex;flex-direction:column}
+.lvlname .eyebrow{color:var(--on-dark-soft)}
+.lvlname h2{font-size:clamp(24px,5vw,30px)}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dots i{width:15px;height:15px;border-radius:50%;border:2px solid var(--on-dark);background:transparent}
+.dots i.done{background:var(--frog)}
+.dots i.now{background:var(--gold);transform:scale(1.25)}
+.solotag{margin:6px 0 0;display:inline-block;font-family:var(--display);font-weight:800;font-size:17px;color:var(--ink);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 14px}
+.guide{display:flex;gap:12px;align-items:flex-start}
+.bubble{position:relative;flex:1;min-width:0;padding:12px 16px;font-size:clamp(18px,4.2vw,21px);font-weight:800;line-height:1.35;background:var(--board);border:3px solid var(--ink);border-radius:18px}
+.bubble::before{content:"";position:absolute;left:-14px;top:16px;border:8px solid transparent;border-right:12px solid var(--ink)}
+.say{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);background:var(--gold);box-shadow:0 3px 0 var(--shadow);font-size:22px;cursor:pointer}
+.stage{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;min-height:280px;min-width:0}
+.below{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;min-width:0}
+.foot{display:flex;justify-content:center;min-height:62px}
+
+/* choices + feedback */
+.ask{display:flex;flex-direction:column;align-items:center;width:100%}
+.q{font-weight:800;font-size:20px;text-align:center;margin-bottom:10px;max-width:46ch}
+.choices{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.choices.col{flex-direction:column;align-items:stretch;width:min(100%,460px)}
+.choice{font-family:var(--body);font-weight:800;font-size:19px;min-width:96px;min-height:60px;padding:6px 18px;border:3px solid var(--ink);border-radius:18px;background:var(--board);box-shadow:0 5px 0 var(--ink);cursor:pointer;max-width:100%;line-height:1.25}
+.choice.big{font-family:var(--display);font-size:28px}
+.choice.pic{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 14px}
+.choice:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 var(--ink)}
+.choice:disabled{cursor:default;opacity:.45}
+.choice.right{background:var(--good);color:var(--on-color);opacity:1;animation:pop .35s}
+.choice.wrong{background:var(--oops-soft);animation:shake .4s}
+.choice.sel{background:var(--gold-soft);box-shadow:0 0 0 4px var(--gold),0 5px 0 var(--ink)}
+.choice.glow{animation:glow 1s ease-in-out infinite}
+.fb{min-height:1.5em;margin-top:10px;font-weight:800;font-size:19px;text-align:center;max-width:46ch}
+.fb.good{color:var(--good)}
+.fb.oops{color:var(--oops)}
+.fact{background:var(--gold-soft);border:3px solid var(--ink);border-radius:18px;padding:12px 22px;text-align:center;animation:pop .4s;max-width:100%;display:flex;flex-direction:column;gap:4px}
+.fact .big{font-family:var(--display);font-weight:800;font-size:clamp(22px,5.5vw,30px);line-height:1.15}
+.fact .cap{font-weight:700;color:var(--ink-soft);max-width:44ch;align-self:center}
+.info{display:flex;gap:12px;align-items:center;background:var(--blue-soft);border:3px dashed var(--blue);border-radius:16px;padding:10px 14px;font-weight:700;max-width:540px;animation:pop .4s}
+.info .e{font-size:38px;line-height:1;flex:none}
+.info b{display:block;font-family:var(--display);font-size:18px}
+.hintcap{font-weight:800;color:var(--ink-soft);font-size:17px;text-align:center;max-width:44ch;background:var(--gold-soft);border-radius:12px;padding:6px 12px}
+.srctag{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--lilac);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;color:var(--ink-soft)}
+
+/* characters */
+.emo{display:inline-block;line-height:1}
+.toad{filter:sepia(1) saturate(2.4) hue-rotate(-28deg) brightness(.78)}
+.who{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800}
+.who .emo{font-size:52px}
+.duo{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.duo .who{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:10px 16px;max-width:220px;text-align:center}
+.duo .who small{font-weight:700;color:var(--ink-soft);font-size:14px}
+
+/* the story */
+.story{width:100%;max-width:580px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;display:flex;flex-direction:column;gap:10px;position:relative}
+.story .sline{font-size:clamp(18px,4.3vw,21px);font-weight:700;line-height:1.55;cursor:pointer;border-radius:8px;padding:0 4px;margin:0 -4px}
+.story .sline:hover{background:var(--gold-soft)}
+.story .sline.reading{background:var(--gold-soft)}
+.story .sscene{font-size:34px;line-height:1;letter-spacing:4px;text-align:center}
+.gw{font:inherit;font-weight:800;color:var(--blue);background:var(--blue-soft);border:none;border-bottom:3px solid var(--blue);border-radius:6px;padding:0 4px;cursor:pointer}
+.gloss{display:flex;gap:10px;align-items:center;background:var(--blue-soft);border:3px solid var(--blue);border-radius:14px;padding:8px 12px;font-weight:700;animation:pop .3s}
+.gloss b{font-family:var(--display);font-size:20px}
+.peek{width:100%;max-width:580px}
+.peek summary{cursor:pointer;font-weight:800;color:var(--ink-soft)}
+.storybtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.lettercard{background:#FFFDF6;border:3px solid var(--ink);border-radius:6px;padding:16px 20px;max-width:440px;width:100%;font-family:var(--display);font-size:20px;line-height:1.45;box-shadow:4px 4px 0 rgba(0,0,0,.15);background-image:repeating-linear-gradient(transparent 0 28px,#E5DCC6 28px 29px)}
+.lettercard .r{text-align:right}
+
+/* ordering */
+.slots{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:8px;width:min(100%,460px);counter-reset:s}
+.slot{counter-increment:s;display:flex;gap:10px;align-items:center;background:var(--frog-soft);border:3px solid var(--good);border-radius:14px;padding:8px 12px;font-weight:800;animation:pop .3s}
+.slot::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--good);color:var(--on-color);display:grid;place-items:center;font-family:var(--display)}
+.slot.empty{background:var(--board);border-style:dashed;border-color:var(--muted);color:var(--ink-soft);animation:none}
+.slot.empty::before{background:var(--muted)}
+
+/* tap the word */
+.wordline{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px;background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:12px}
+.wbtn{font-weight:800;font-size:20px;border:2px solid transparent;border-radius:10px;background:none;padding:2px 6px;cursor:pointer}
+.wbtn:hover:not(:disabled){border-color:var(--ink-soft)}
+.wbtn.found{background:var(--gold);border-color:var(--ink)}
+.wbtn.no{background:var(--oops-soft);animation:shake .4s}
+.wbtn.glow{animation:glow 1s ease-in-out infinite;border-color:var(--ink)}
+
+/* scenes */
+.scene{position:relative;width:min(100%,340px);aspect-ratio:34/24;border:3px solid var(--ink);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#BFE6FF 0 38%,#9BD67F 38% 100%)}
+.scene.room{background:linear-gradient(180deg,#FFF1D6 0 70%,#D9B48A 70% 100%)}
+.scene.sea{background:linear-gradient(180deg,#8FD3F0,#2F7FB6)}
+.scene.shop{background:linear-gradient(180deg,#FFF6E0 0 64%,#E8D6B5 64% 100%)}
+.scene.rain{background:linear-gradient(180deg,#9AA7B5 0 50%,#7C8A80 50% 100%)}
+.scene .it{position:absolute;transform:translate(-50%,-50%);line-height:1;transition:transform .4s}
+.scene .it.pulse{animation:pulse 1s ease-in-out infinite}
+.scene .it.ring::after{content:"";position:absolute;inset:-8px;border:4px solid var(--gold);border-radius:50%}
+.scene .table{position:absolute;left:27%;width:46%;top:52%;height:6%;background:#8B5A2B;border:2px solid var(--ink);border-radius:3px}
+.scene .leg{position:absolute;top:58%;width:3%;height:27%;background:#8B5A2B;border:2px solid var(--ink)}
+.scene .zone{position:absolute;left:0;right:0;border:3px dashed transparent;cursor:pointer;font-weight:800;font-size:14px;color:var(--ink-soft);display:flex;align-items:flex-start;justify-content:flex-end;padding:4px 8px}
+.scene .zone:hover{border-color:var(--gold);background:rgba(255,194,61,.15)}
+.scene .lab{position:absolute;font-size:12px;font-weight:800;background:rgba(255,255,255,.85);border-radius:6px;padding:0 5px;transform:translate(-50%,0);white-space:nowrap}
+
+/* window + snail */
+.window{width:min(100%,320px);aspect-ratio:16/10;border:10px solid #8B5A2B;border-radius:10px;background:linear-gradient(180deg,#BFE6FF 0 55%,#9BD67F 55%);position:relative;overflow:hidden;cursor:pointer}
+.window::before,.window::after{content:"";position:absolute;background:#8B5A2B}
+.window::before{left:50%;top:0;bottom:0;width:8px;transform:translateX(-50%)}
+.window::after{top:50%;left:0;right:0;height:8px;transform:translateY(-50%)}
+.window .mb{position:absolute;right:10%;bottom:12%;font-size:40px;line-height:1}
+.window .sn{position:absolute;bottom:10%;font-size:28px;line-height:1;transition:left 1.2s ease-in-out}
+.window.shut{background:#5C6B60}
+.window.shut::before{width:100%;left:0;transform:none;opacity:.25}
+.window.shut .sn,.window.shut .mb{visibility:hidden}
+.window.shut::after{content:"👀 Tap to look";top:50%;left:50%;right:auto;height:auto;width:auto;transform:translate(-50%,-50%);background:var(--gold);border:3px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:800;font-size:16px;color:var(--ink);white-space:nowrap}
+
+/* cover (book page 34) */
+.cover{position:relative;width:200px;height:150px;display:grid;place-items:end center}
+.cover .hid{font-size:90px;line-height:1;margin-bottom:6px}
+.cover .cloth{position:absolute;left:0;right:0;bottom:0;height:130px;background:linear-gradient(180deg,#8EC3F2,#4F8FD0);border:3px solid var(--ink);border-radius:60px 60px 14px 14px;transition:transform .9s ease-in,opacity .9s}
+.cover.lift .cloth{transform:translateY(-140px) rotate(-12deg);opacity:0}
+
+/* faces + scale */
+.face{font-size:42px;line-height:1}
+.scale{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.scale span{display:flex;flex-direction:column;align-items:center;font-weight:800;font-size:14px;gap:2px}
+.scale i{width:30px;height:30px;border-radius:50%;border:3px solid var(--ink)}
+.timeline{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:40px}
+.timeline .ar{font-size:22px;color:var(--ink-soft)}
+
+/* word search (book page 42) */
+.ws{display:grid;grid-template-columns:repeat(11,minmax(0,30px));border:3px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--board)}
+.ws button{aspect-ratio:1;border:1px solid #C9D2CB;background:var(--board);font-family:var(--display);font-weight:800;font-size:17px;padding:0;cursor:pointer;line-height:1}
+.ws button.a{background:var(--blue-soft);box-shadow:inset 0 0 0 3px var(--blue)}
+.ws button.c{background:#FFE36E}
+.ws button.p{background:#7FD69A}
+.ws button.t{background:var(--gold-soft)}
+.ws button.hint{box-shadow:inset 0 0 0 3px var(--mail)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-weight:800;font-size:15px}
+.legend i{display:inline-block;width:16px;height:16px;border:2px solid var(--ink);border-radius:4px;vertical-align:-2px;margin-right:4px}
+.clue{font-weight:800;font-size:19px;background:var(--lilac);border:3px solid var(--ink);border-radius:14px;padding:6px 14px;text-align:center}
+
+/* close-up guess (book page 47) */
+.zoom{width:160px;height:160px;border:4px solid var(--ink);border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#F4F1EA;filter:grayscale(.15)}
+.zoom span{font-size:120px;line-height:1;transition:transform 1.2s ease-in-out}
+.zoomwrap{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:800;color:var(--ink-soft)}
+
+/* win overlay + confetti */
+.overlay{position:fixed;inset:0;z-index:40;overflow-y:auto;background:rgba(19,36,26,.6);display:grid;place-items:center;padding:20px max(20px,env(safe-area-inset-right,0px)) 20px max(20px,env(safe-area-inset-left,0px))}
+.win{width:100%;max-width:430px;padding:24px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s}
+.win h2{font-size:32px}
+.bigstars{font-size:58px;letter-spacing:6px;line-height:1}
+.bigstars span{color:#D8DDD6;display:inline-block}
+.bigstars span.on{color:var(--gold);-webkit-text-stroke:2px var(--ink);animation:pop .45s backwards}
+.bigstars span:nth-child(2){animation-delay:.2s}
+.bigstars span:nth-child(3){animation-delay:.4s}
+.cert{width:100%;border:3px dashed var(--mail);border-radius:16px;background:var(--gold-soft);padding:12px 14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.cert .medal{font-size:54px;line-height:1;animation:pop .5s .3s backwards}
+.cert h3{font-size:24px}
+.cert .who{font-weight:800;color:var(--ink-soft)}
+.partrows{display:flex;flex-direction:column;gap:4px;width:100%;max-width:340px}
+.partrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:15px;text-align:left}
+.partrow .minis-ok{font-size:18px;letter-spacing:1px;white-space:nowrap}
+.partrow .minis-ok .off{filter:grayscale(1);opacity:.35}
+.winbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-16px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+
+.shake{animation:shake .4s}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 var(--gold),0 5px 0 var(--ink)}50%{box-shadow:0 0 0 6px var(--gold),0 5px 0 var(--ink)}}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.18)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg)}}
+
+@media (max-width:480px){
+  body{font-size:16px}
+  .stage{padding:16px 10px}
+  .stopbtn{grid-template-columns:60px 1fr auto;gap:10px}
+  .stopicon{width:60px;height:60px;font-size:32px}
+  .stopname{font-size:21px}
+  .stops::before{display:none}
+  .choice{min-width:80px;font-size:17px}
+  .mascot{width:54px;height:54px;font-size:29px}
+  .mascot.sm{width:44px;height:44px;font-size:23px}
+  .say{width:46px;height:46px}
+  .ws{grid-template-columns:repeat(11,minmax(0,27px))}
+  .ws button{font-size:15px}
+  .wbtn{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <h1 class="brand">Snail Mail Trail<small>Ayansh's English Chapter 4 · The Letter</small></h1>
+    <div class="tools">
+      <span class="pill" id="total" aria-label="Stars collected">★ 0 / 57</span>
+      <button class="btn small" id="sound" type="button" aria-pressed="true">🔊 Sound on</button>
+      <button class="btn small" id="voice" type="button" aria-pressed="true">🗣️ Read aloud on</button>
+    </div>
+  </header>
+
+  <!-- MAP -->
+  <main id="map" class="app">
+    <section class="hello card">
+      <div class="mascot" aria-hidden="true">🐌</div>
+      <div class="hello-text">
+        <h2>Hi Ayansh! I'm Speedy the snail.</h2>
+        <p>I carry letters for my friends Frog and Toad. I am not very fast… but I always get there! Walk the trail with me through the chapter <b>“The Letter”</b>.</p>
+        <div class="mailrow" aria-hidden="true"><span class="emo">🏡</span><span class="trail"><span class="snail" id="heroSnail">🐌</span></span><span>📫</span></div>
+        <p class="note">Each stop follows a page of your English book. Tap 🔊 to hear any sentence again.</p>
+        <div class="resumebox" id="resumeBox" hidden></div>
+        <p class="donebanner" id="allDone" hidden>🎉 You finished every stop on the Snail Mail Trail! You finished Chapter 4.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">Part 1 · Read the story</h2>
+    <ol class="stops" id="stops1"></ol>
+    <h2 class="section-title">Part 2 · Think about the story</h2>
+    <ol class="stops" id="stops2"></ol>
+    <h2 class="section-title">Part 3 · Word power (grammar)</h2>
+    <ol class="stops" id="stops3"></ol>
+    <h2 class="section-title">Part 4 · Nature, speaking and writing</h2>
+    <ol class="stops" id="stops4"></ol>
+    <h2 class="section-title">Part 5 · Reading on my own</h2>
+    <ol class="stops" id="stops5"></ol>
+    <h2 class="section-title">Grand Review · All of Chapter 4</h2>
+    <ol class="stops finale" id="stops6"></ol>
+
+    <section class="skillcard card">
+      <h2>My reading tools</h2>
+      <p class="note">Each tool lights up the first time you use it in a game.</p>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <details class="parent card">
+      <summary>For grown-ups</summary>
+      <div class="parent-body">
+        <p>This follows English Chapter 4, “The Letter” (from <i>Frog and Toad Are Friends</i> by Arnold Lobel), pages 34–54 of Ayansh's book, stop by stop in book order. The story is retold in short, simple sentences in the game; the questions, word meanings and exercises follow the book. Every story stop has blue words he can tap to hear what they mean. The last round of each stop is an “on your own” round: the story is folded away and clues only come after a second try. A wrong answer costs a little, so three stars means very few slips.</p>
+        <h3>Part 1 · Read the story (pages 34–38)</h3>
+        <ol>
+          <li><b>Under the Cover</b> (page 34, Embark): guess what is under the cover, meet Frog and Toad, and guess what the story is about from its title.</li>
+          <li><b>Toad's Sad Time</b> (page 35): why Toad is sad. Words: porch, sighed, mailbox.</li>
+          <li><b>Frog's Big Idea</b> (page 36): Frog's letter, the envelope and the snail. Putting the parts of Frog's letter and the steps of sending it in order. Words: envelope, nap.</li>
+          <li><b>Waiting at the Window</b> (page 37): he taps the window to look for the snail with Frog; who said it? Word: silly.</li>
+          <li><b>Four Days Later</b> (page 38 and Real Route): how long the snail took, the whole story in order, and why a note makes us happy. Word: pleased.</li>
+        </ol>
+        <h3>Part 2 · Think about the story (pages 39–41)</h3>
+        <ol start="6">
+          <li><b>Who Feels This Way?</b> (pages 39 and 41): Questions 1 and 4. Answers: a. Toad, b. Frog, c. Toad; head down = sad, looking out again and again = hopeful, smiling = happy.</li>
+          <li><b>How Long Was the Wait?</b> (page 40): Question 2 (the very short to very long scale) and Question 3 (Snail Speed thinking).</li>
+          <li><b>Pigeon to Phone</b> (page 41, Heritage Route): pigeon, letter, telephone, mobile, smartphone.</li>
+        </ol>
+        <h3>Part 3 · Word power (pages 42–48)</h3>
+        <ol start="9">
+          <li><b>Common or Proper?</b> (page 42): the book's word search with its 8 clues. Common: freedom, telescope, astronaut, forest. Proper: Sundarbans, Himalayas, Ganga, Earth.</li>
+          <li><b>This, That, These, Those</b> (pages 43–44): near or far, one or many, sentences about the garden picture, and the “opposite” task.</li>
+          <li><b>Where Is It?</b> (page 45): position words, the book's door-stopper riddle, and making his own two-clue riddle.</li>
+          <li><b>How Does It Look?</b> (page 45): adjectives of quality (size, colour, shape, feeling, taste) and the book's four example sentences.</li>
+          <li><b>How Many? How Much?</b> (page 46): adjectives of quantity, the book's examples, and the koala / binturong comparison.</li>
+          <li><b>Guess the Close-up</b> (pages 47–48): “I think it is a … because it looks … and …”, then one quality and one quantity sentence for the aquarium and the shop.</li>
+        </ol>
+        <h3>Part 4 · Nature, speaking and writing (pages 49–52)</h3>
+        <ol start="15">
+          <li><b>The Eco Map</b> (page 49, Eco Route): air pollution, a dirty river and fewer trees: what happened to the letter, and how to fix it.</li>
+          <li><b>My Friendship Podcast</b> (page 50): the four parts of the podcast in order, and he builds a short script he can say out loud.</li>
+          <li><b>Write a Letter</b> (pages 51–52): the parts of a friendly letter (date, greeting, opening line, the heart of the message, closing), then he builds his own letter on one of the book's topics.</li>
+        </ol>
+        <h3>Part 5 · Reading on my own (pages 53–54)</h3>
+        <ol start="18">
+          <li><b>The Whispering Forest</b>: the reading passage (retold), questions about it, and the book's “imagine the forest friend” task with describing words.</li>
+          <li><b>Grand Review</b>: 10 mixed questions, two from each part, new each time, and a Chapter 4 Letter Champion certificate that shows which part to revisit.</li>
+        </ol>
+        <h3>Notes and small choices</h3>
+        <ul>
+          <li>Page 34 does not say what is under the cover. Any guess is praised; Speedy then says his own guess (a mailbox) and that it is only a guess.</li>
+          <li>Page 40 Question 2 asks how long each wait <i>felt</i>, which has no single right answer. The game lets him choose, then explains why it felt long. In Question 3 the game counts four answers as right (the story would end quickly, Frog would not keep looking out, the wait would feel short, the letter would come the same day).</li>
+          <li>Open writing tasks (four sentences, two clues, two sentences, the letter, the podcast) are done by choosing and building sentences. Please also let him write them in his book and record the podcast at home as the book asks.</li>
+          <li>Page 55 (The Adventures of Tom Sawyer) looks like a separate class-reader page, so it is not in the game.</li>
+        </ul>
+        <h3>Do it for real</h3>
+        <ul>
+          <li>Write a short letter to a friend or grandparent and post it together. Count how many days it takes to arrive, just like Toad.</li>
+          <li>Play “I spy” with position words: “I spy something under the table and next to the door.”</li>
+          <li>At dinner, use this, that, these and those: “this spoon” (near), “those cups” (far).</li>
+        </ul>
+        <h3>Saving progress</h3>
+        <p>Stars, unlocked stops and a stop left halfway are saved after every round. Opened in claude.ai, progress is saved to the signed-in Claude account, so Ayansh can carry on in a later session or on another device. If a stop was left in the middle, the map shows a “Carry on” button.</p>
+        <p class="note" id="saveNote">💾 Progress is saved in this browser.</p>
+        <div class="parent-actions">
+          <button class="btn small" id="unlockAll" type="button">Unlock all stops</button>
+          <button class="btn small" id="resetAll" type="button">Reset progress</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- LEVEL -->
+  <section id="level" class="app" hidden>
+    <div class="lvlhead">
+      <button class="btn small" id="back" type="button">← Snail Mail Trail</button>
+      <div class="lvlname"><span class="eyebrow" id="lvlIdea"></span><h2 id="lvlTitle"></h2></div>
+      <div class="dots" id="dots"></div>
+      <p class="solotag" id="soloTag" hidden>💪 On your own! Clues come after your second try.</p>
+    </div>
+    <div class="guide">
+      <div class="mascot sm" aria-hidden="true">🐌</div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+      <button class="say" id="say" type="button" aria-label="Read it to me">🔊</button>
+    </div>
+    <div class="stage card" id="stage"></div>
+    <div class="foot" id="foot"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+const $ = id => document.getElementById(id);
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'style') el.setAttribute('style', v);
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) { if (kid == null || kid === false) continue; el.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return el;
+}
+
+/* ---------- progress ---------- */
+const KEY = 'ayansh-snail-mail-trail-v1';
+let P = { stars: {}, unlocked: 1, skills: [], sound: true, resetAt: 0, resume: null };
+let skillSet = new Set();
+// Progress lives in two places: this browser (instant), and, when the page is open in claude.ai,
+// a private record for the signed-in account, so it carries over to the next session, another
+// browser or another device. On opening, the two are merged: best stars for each stop, the
+// furthest unlock, every tool collected and the newest half-finished stop, so nothing earned is lost.
+function cleanResume(r) {
+  if (!r || typeof r !== 'object') return null;
+  const id = Math.round(Number(r.id)), round = Math.round(Number(r.round)), m = Math.round(Number(r.mistakes));
+  if (!(id >= 1 && id <= 99 && round >= 1 && round <= 20)) return null;
+  const ft = {};
+  if (r.ft && typeof r.ft === 'object') for (const k in r.ft) { const v = r.ft[k]; if (/^[1-5]$/.test(k) && Array.isArray(v) && v.length === 2) ft[k] = [Math.max(0, Math.round(Number(v[0])) || 0), Math.max(0, Math.round(Number(v[1])) || 0)]; }
+  return { id, round, mistakes: m >= 0 && m < 200 ? m : 0, ft, at: Number(r.at) || 0 };
+}
+function cleanSaved(saved) {
+  if (!saved || typeof saved !== 'object') return null;
+  const stars = {};
+  if (saved.stars && typeof saved.stars === 'object') for (const k in saved.stars) { const v = Math.round(Number(saved.stars[k])); if (/^\d{1,2}$/.test(k) && v >= 1 && v <= 3) stars[k] = v; }
+  return { stars, unlocked: Math.max(1, Math.min(99, Math.round(Number(saved.unlocked)) || 1)),
+    skills: Array.isArray(saved.skills) ? saved.skills.filter(x => typeof x === 'string' && x.length < 16) : [],
+    sound: saved.sound !== false, resetAt: Number(saved.resetAt) || 0, resume: cleanResume(saved.resume) };
+}
+function adopt(saved) {
+  const c = cleanSaved(saved);
+  if (c) P = c;
+  skillSet = new Set(P.skills);
+  const best = Math.max(0, ...Object.keys(P.stars).filter(k => P.stars[k]).map(Number));
+  P.unlocked = Math.max(P.unlocked, Math.min(LEVELS.length, best + 1));
+  if (P.resume && !LEVELS[P.resume.id - 1]) P.resume = null;
+}
+function load(data) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (!saved && data && data.P) saved = data.P;
+  adopt(saved);
+}
+// a reset wins over older progress; otherwise keep the best of both
+function mergeSaved(a, b) {
+  if (a.resetAt !== b.resetAt) return a.resetAt > b.resetAt ? a : Object.assign({}, b, { sound: a.sound });
+  const stars = Object.assign({}, a.stars);
+  for (const k in b.stars) stars[k] = Math.max(stars[k] || 0, b.stars[k]);
+  const ra = a.resume, rb = b.resume;
+  const resume = !ra ? rb : !rb ? ra : (rb.at > ra.at ? rb : ra);
+  return { stars, unlocked: Math.max(a.unlocked, b.unlocked), skills: [...new Set([...a.skills, ...b.skills])], sound: a.sound, resetAt: a.resetAt, resume };
+}
+const saveSig = x => JSON.stringify([Object.keys(x.stars).sort().map(k => k + ':' + x.stars[k]), x.unlocked, x.skills.slice().sort(), x.resetAt, x.resume ? [x.resume.id, x.resume.round, x.resume.at] : 0]);
+function current() { P.skills = [...skillSet]; return P; }
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(current())); } catch (e) {} }
+function save(now) { saveLocal(); cloudQueue(now); }
+
+/* the account copy (claude.ai's private per-person storage) */
+let cloudRef = null, cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudLast = '', cloudStarted = false;
+function setSaveNote(state) {
+  const el = $('saveNote'); if (!el) return;
+  el.textContent = state === 'cloud' ? '☁️ Progress is saved to your Claude account. Ayansh can stop at any time and carry on later, in this browser or on another device signed in to the same account.'
+    : state === 'checking' ? 'Looking for saved progress…'
+    : '💾 Progress is saved in this browser only. To carry on, open the game again in the same browser on this device.';
+}
+function cloudQueue(now) {
+  if (!cloudRef) return;
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (now) cloudPush(); else cloudTimer = setTimeout(cloudPush, 1500);
+}
+function cloudPush() {
+  clearTimeout(cloudTimer); cloudTimer = null;
+  if (!cloudRef) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  const body = JSON.parse(JSON.stringify(current())), sig = saveSig(body);
+  if (sig === cloudLast) return;
+  cloudBusy = true; body.savedAt = Date.now();
+  if (!body.resume) delete body.resume;
+  cloudRef.set(body).then(() => { cloudLast = sig; setSaveNote('cloud'); }, e => {
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') cloudTimer = setTimeout(cloudPush, 5000);
+    else { cloudRef = null; setSaveNote('local'); }
+  }).finally(() => { cloudBusy = false; if (cloudAgain) { cloudAgain = false; cloudPush(); } });
+}
+async function cloudInit() {
+  if (cloudStarted) return; cloudStarted = true;
+  const c = window.claude;
+  if (!c || typeof c.use !== 'function') return setSaveNote('local');
+  setSaveNote('checking');
+  try {
+    const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return setSaveNote('local');
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({ code: 'timeout' }), 12000))]);
+    const remote = snap && snap.exists ? cleanSaved(snap.data()) : null;
+    if (remote) {
+      cloudLast = saveSig(remote);
+      const mine = cleanSaved(current()), merged = mergeSaved(mine, remote);
+      if (saveSig(merged) !== saveSig(mine)) {
+        adopt(merged); saveLocal();
+        if (!$('map').hidden) renderMap(); else updateTotal();
+      }
+    }
+    cloudRef = ref;
+    setSaveNote('cloud');
+    cloudPush(); // sends only what the account copy is missing
+  } catch (e) { setSaveNote('local'); }
+}
+const cloudFlush = () => { if (cloudTimer) cloudPush(); };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') cloudFlush(); });
+window.addEventListener('pagehide', cloudFlush);
+function skill(k) { if (SKILLS.some(s => s.k === k) && !skillSet.has(k)) { skillSet.add(k); save(); } }
+
+/* ---------- sound + voice ---------- */
+let actx = null;
+function audio() {
+  if (!actx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; actx = new AC(); }
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(f, dur, type = 'sine', when = 0, vol = 0.13, f2) {
+  if (!P.sound) return;
+  try {
+    const c = audio(); if (!c) return;
+    const t = c.currentTime + when, o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => tone(620, 0.09, 'triangle', 0, 0.12, 880),
+  tap: i => tone([523, 659, 784, 659][i % 4], 0.12, 'triangle', 0, 0.1),
+  good: () => { tone(659, 0.12, 'sine', 0); tone(880, 0.12, 'sine', 0.1); tone(1175, 0.22, 'sine', 0.2); },
+  oops: () => { tone(330, 0.16, 'sine', 0, 0.1, 300); tone(262, 0.22, 'sine', 0.14, 0.1, 240); },
+  win: () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.11, 0.12)),
+};
+const canSpeak = 'speechSynthesis' in window;
+function say(text, onEnd) {
+  try {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    const t = String(text).replace(/[“”]/g, '').replace(/…/g, '. ').replace(/___/g, ' blank ').replace(/→/g, ' then ');
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = 0.88; u.pitch = 1.1; u.lang = 'en-IN';
+    if (onEnd) u.onend = onEnd;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const praise = () => pickOne(['Shabash, Ayansh!', 'Super!', 'You got it!', 'Brilliant!', 'Well done!', 'Wah! Correct!']);
+const oopsLine = () => pickOne(['Almost! Try again.', 'Not that one. Try again!', 'Oops! Have another go.']);
+let voiceOn = (() => { try { return localStorage.getItem(KEY + ':voice') !== '0'; } catch (e) { return true; } })();
+let speakT = null;
+function speakGuide(t) {
+  if (!voiceOn || !canSpeak || !t) return;
+  clearTimeout(speakT);
+  speakT = setTimeout(() => { if (run) say(String(t)); }, 250);
+}
+function syncVoice() {
+  const b = $('voice'); if (!b) return;
+  b.hidden = !canSpeak;
+  b.textContent = voiceOn ? '🗣️ Read aloud on' : '🤐 Read aloud off';
+  b.setAttribute('aria-pressed', String(voiceOn));
+}
+
+/* ---------- shared pieces ---------- */
+// timers that belong to a round are cancelled when the round ends or he leaves the stop
+const later = (fn, ms) => { const t = setTimeout(fn, reduce ? Math.min(ms, 80) : ms); cleanups.push(() => clearTimeout(t)); };
+const hintP = t => h('p', { class: 'hintcap' }, '💡 ' + t);
+function fact(big, cap) { return h('div', { class: 'fact' }, h('div', { class: 'big' }, big), cap ? h('p', { class: 'cap' }, cap) : null); }
+function info(emoji, title, text) { return h('div', { class: 'info' }, h('span', { class: 'e', 'aria-hidden': 'true' }, emoji), h('div', {}, h('b', {}, title), text)); }
+function shakeEl(el) { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+const srctag = t => h('span', { class: 'srctag' }, t);
+const wrongHint = (wrongs, hint, opt) => {
+  // practice rounds: clue at once; on-your-own rounds: clue after the second try
+  if (!hint) return null;
+  if (run && run.solo && wrongs < 2) return null;
+  return typeof hint === 'function' ? hint(opt) : hintP(hint);
+};
+const emo = (e, cls = '') => h('span', { class: 'emo ' + cls, 'aria-hidden': 'true' }, e);
+const FROG = () => h('span', { class: 'who' }, emo('🐸'), 'Frog');
+const TOAD = () => h('span', { class: 'who' }, emo('🐸', 'toad'), 'Toad');
+const SNAIL = () => h('span', { class: 'who' }, emo('🐌'), 'Snail');
+const RENDER = { Frog: FROG, Toad: TOAD, 'the snail': SNAIL };
+
+function askChoice(parent, { prompt, options, answer, onDone, hint, cls = '', render, col }) {
+  const answers = Array.isArray(answer) ? answer : [answer];
+  const wrap = h('div', { class: 'ask', 'data-answer': answers.join('|') });
+  if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' + (col ? ' col' : '') });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const btns = []; let over = false, wrongs = 0;
+  options.forEach(opt => {
+    const ok = answers.includes(opt);
+    const b = h('button', { type: 'button', class: 'choice ' + cls + (render ? ' pic' : ''), 'data-ok': ok ? '1' : null, onclick: () => {
+      if (over) return;
+      if (ok) {
+        over = true; b.classList.add('right'); btns.forEach(x => x.disabled = true);
+        sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(opt);
+      } else {
+        b.classList.add('wrong'); b.disabled = true; sfx.oops(); run.mistakes++; wrongs++;
+        fb.textContent = run.solo && wrongs < 2 ? 'Not quite. Have a think and try again!' : oopsLine(); fb.className = 'fb oops';
+        const x = wrongHint(wrongs, hint, opt);
+        if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); }
+      }
+    } }, render ? render(opt) : String(opt));
+    btns.push(b); row.append(b);
+  });
+  wrap.append(row, fb, hintBox); parent.append(wrap);
+  return wrap;
+}
+// any answer is fine: for the child's own ideas
+function freeChoice(parent, { prompt, options, onPick, render, col }) {
+  const wrap = h('div', { class: 'ask' }); if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' + (col ? ' col' : '') }); let over = false;
+  const btns = options.map(opt => h('button', { type: 'button', class: 'choice' + (render ? ' pic' : ''), 'data-ok': '1', onclick: e => { if (over) return; over = true; btns.forEach(b => b.disabled = true); e.currentTarget.disabled = false; e.currentTarget.classList.add('right'); sfx.good(); onPick(opt); } }, render ? render(opt) : opt));
+  row.append(...btns); wrap.append(row); parent.append(wrap);
+  return wrap;
+}
+// a list of questions, one after the other. Each: { g (what Speedy says first), q, a, w: [wrong options], hint, pic(), after(holder), render, col }
+function quiz(api, parent, list, onAll) {
+  let i = 0;
+  const box = h('div', { class: 'below' }); parent.append(box);
+  const next = () => {
+    if (i >= list.length) return onAll && onAll();
+    const x = list[i++];
+    api.guide((x.g ? x.g + ' ' : '') + x.q);
+    const holder = h('div', { class: 'below' }); box.replaceChildren(holder);
+    if (x.pic) holder.append(x.pic());
+    const opts = x.keep ? [x.a, ...x.w] : shuffle([x.a, ...x.w]);
+    askChoice(holder, { prompt: x.q, options: opts, answer: x.a, hint: x.hint, render: x.render, cls: x.cls, col: x.col !== false && !x.render && opts.some(o => String(o).length > 18),
+      onDone: () => { if (x.after) x.after(holder); x.skill && skill(x.skill); later(next, x.after ? 1600 : 800); } });
+  };
+  next();
+}
+const Q = (q, a, w, hint, more) => Object.assign({ q, a, w, hint }, more || {});
+
+// tap the cards in the right order
+function orderTap(api, parent, { prompt, items, onDone, hint }) {
+  const wrap = h('div', { class: 'ask' }); if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const slots = h('ol', { class: 'slots' }, items.map(() => h('li', { class: 'slot empty' }, '…')));
+  const pool = h('div', { class: 'choices col' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  let n = 0, wrongs = 0;
+  const btns = shuffle(items.map((t, i) => ({ t, i }))).map(o => {
+    const b = h('button', { type: 'button', class: 'choice', 'data-i': String(o.i), onclick: () => {
+      if (o.i === n) {
+        const s = slots.children[n]; s.className = 'slot'; s.textContent = o.t;
+        b.remove(); n++; wrongs = 0; sfx.tap(n); fb.textContent = ''; hintBox.replaceChildren();
+        pool.querySelectorAll('.glow').forEach(x => x.classList.remove('glow'));
+        if (n === items.length) { sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; onDone && onDone(); }
+      } else {
+        run.mistakes++; wrongs++; sfx.oops(); shakeEl(b);
+        fb.className = 'fb oops';
+        fb.textContent = n === 0 ? 'Not first. What happens at the very start?' : `Not yet. What comes after “${items[n - 1]}”?`;
+        const x = (hint || wrongs >= 2) && wrongHint(wrongs, hint ? () => hintP(typeof hint === 'function' ? hint(n) : hint) : () => { const r = pool.querySelector(`[data-i="${n}"]`); r && r.classList.add('glow'); return hintP('Look at the glowing card.'); });
+        if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); }
+      }
+    } }, o.t);
+    return b;
+  });
+  pool.append(...btns);
+  wrap.append(slots, pool, fb, hintBox); parent.append(wrap);
+}
+
+// tap ALL the right ones, then Check
+function multiPick(api, parent, { prompt, options, answers, need, onDone, hint, render }) {
+  const wrap = h('div', { class: 'ask' }); if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const row = h('div', { class: 'choices' + (options.some(o => String(o).length > 18) ? ' col' : '') });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const sel = new Set(); let wrongs = 0, over = false;
+  const btns = options.map(o => h('button', { type: 'button', class: 'choice', 'data-ok': answers.includes(o) ? '1' : null, 'aria-pressed': 'false', onclick: e => {
+    if (over) return; const b = e.currentTarget;
+    if (sel.has(o)) { sel.delete(o); b.classList.remove('sel'); b.setAttribute('aria-pressed', 'false'); } else { sel.add(o); b.classList.add('sel'); b.setAttribute('aria-pressed', 'true'); }
+    sfx.pop();
+  } }, render ? render(o) : o));
+  const want = need || answers.length;
+  const check = h('button', { type: 'button', class: 'btn primary', onclick: () => {
+    if (over) return;
+    const bad = [...sel].filter(o => !answers.includes(o));
+    const good = [...sel].filter(o => answers.includes(o));
+    if (!bad.length && good.length >= want) {
+      over = true; btns.forEach(b => b.disabled = true); check.disabled = true;
+      btns.forEach((b, i) => sel.has(options[i]) && b.classList.replace('sel', 'right'));
+      sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone([...sel]);
+      return;
+    }
+    run.mistakes++; wrongs++; sfx.oops(); fb.className = 'fb oops';
+    btns.forEach((b, i) => { if (bad.includes(options[i])) { b.classList.remove('sel'); b.classList.add('wrong'); b.disabled = true; sel.delete(options[i]); } });
+    fb.textContent = bad.length ? `${bad.length === 1 ? 'One' : bad.length} of those did not fit, so I took ${bad.length === 1 ? 'it' : 'them'} away.` : `Good so far! Find ${want - good.length} more.`;
+    const x = wrongHint(wrongs, hint); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); }
+  } }, 'Check ✓');
+  row.append(...btns);
+  wrap.append(row, h('div', { class: 'below' }, check), fb, hintBox); parent.append(wrap);
+}
+
+// tap the word(s) in a sentence. Words to find go in [brackets]: "A [rusty] [old] bicycle"
+function wordTap(api, parent, { prompt, sentence, onDone, hint }) {
+  const wrap = h('div', { class: 'ask' }); if (prompt) wrap.append(h('p', { class: 'q' }, prompt));
+  const line = h('div', { class: 'wordline' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'below' });
+  const parts = sentence.match(/\[[^\]]+\]|[^\s\[\]]+/g);
+  let left = parts.filter(p => p[0] === '[').length, wrongs = 0;
+  parts.forEach(p => {
+    const target = p[0] === '[', text = target ? p.slice(1, -1) : p;
+    const b = h('button', { type: 'button', class: 'wbtn', 'data-ok': target ? '1' : null, onclick: () => {
+      if (!left || b.classList.contains('found')) return;
+      if (target) {
+        b.classList.add('found'); left--; sfx.tap(left);
+        if (!left) { line.querySelectorAll('.wbtn').forEach(x => x.disabled = true); sfx.good(); fb.textContent = praise(); fb.className = 'fb good'; hintBox.replaceChildren(); onDone && onDone(); }
+        else { fb.textContent = 'Yes! There is one more.'; fb.className = 'fb good'; }
+      } else {
+        run.mistakes++; wrongs++; sfx.oops(); b.classList.add('no'); later(() => b.classList.remove('no'), 500);
+        fb.textContent = `“${text.replace(/[.,!?]/g, '')}” is not the one.`; fb.className = 'fb oops';
+        const x = wrongHint(wrongs, hint); if (x) { hintBox.replaceChildren(x); speakGuide(x.textContent); }
+      }
+    } }, text);
+    line.append(b);
+  });
+  wrap.append(line, fb, hintBox); parent.append(wrap);
+}
+
+// a story card: each sentence can be tapped to hear it; blue words show their meaning
+const GLOSS = {
+  porch: 'a small covered place at the front door of a house.',
+  sighed: 'took a long, deep breath out, because he felt sad or tired.',
+  mailbox: 'a box where letters are put, and where you collect them.',
+  envelope: 'a paper cover that a letter goes inside, so you can send it.',
+  nap: 'a short sleep in the daytime.',
+  silly: 'not serious; a little bit foolish.',
+  pleased: 'happy and glad about something.',
+  whispered: 'made a very soft, quiet sound, like talking very quietly.',
+  moss: 'a soft, green plant that grows like a carpet on soil, rocks and trees.',
+  humming: 'a soft singing sound with the mouth closed: hmm-hmm-hmm.',
+};
+function glossWord(w, box) {
+  const key = w.toLowerCase();
+  return h('button', { type: 'button', class: 'gw', onclick: e => {
+    e.stopPropagation(); sfx.pop(); skill('words');
+    box.replaceChildren(h('div', { class: 'gloss' }, h('span', { 'aria-hidden': 'true' }, '📖'), h('span', {}, h('b', {}, w), ' means ', GLOSS[key])));
+    say(`${w} means ${GLOSS[key]}`);
+  } }, w);
+}
+function storyCard(lines, scene) {
+  const defBox = h('div', { class: 'below' });
+  const re = new RegExp(`\\b(${Object.keys(GLOSS).join('|')})\\b`, 'i');
+  const card = h('div', { class: 'story' }, scene ? h('div', { class: 'sscene', 'aria-hidden': 'true' }, scene.split(' ').map(t => t === 'TOAD' ? emo('🐸', 'toad') : t + ' ')) : null,
+    lines.map(t => {
+      const p = h('p', { class: 'sline', title: 'Tap to hear this' });
+      t.split(new RegExp(`\\b(${Object.keys(GLOSS).join('|')})\\b`, 'i')).forEach(bit => {
+        if (re.test(bit) && bit.length === bit.match(re)[0].length) p.append(glossWord(bit, defBox)); else p.append(bit);
+      });
+      p.addEventListener('click', () => { card.querySelectorAll('.reading').forEach(x => x.classList.remove('reading')); p.classList.add('reading'); say(t, () => p.classList.remove('reading')); });
+      return p;
+    }));
+  return h('div', { class: 'below' }, card, defBox);
+}
+// read the story, then answer questions. On-your-own rounds fold the story away.
+function storyRound(api, { lines, scene, qs, intro }) {
+  const st = storyCard(lines, scene);
+  const done = () => api.done();
+  if (run.solo) {
+    api.guide('Can you remember the story? Answer on your own. You can peek if you need to.');
+    const peek = h('details', { class: 'peek' }, h('summary', {}, '👀 Peek at the story'), st);
+    api.stage.append(peek);
+    later(() => quiz(api, api.stage, qs, done), 1800);
+    return;
+  }
+  api.guide((intro || 'Read the story with me.') + ' Tap a blue word to find out what it means.', (intro || 'Read the story with me.') + ' ' + lines.join(' '));
+  const go = h('button', { type: 'button', class: 'btn primary big', onclick: () => { go.remove(); readAgain.remove(); quiz(api, api.stage, qs, done); } }, 'Questions ➜');
+  const readAgain = h('button', { type: 'button', class: 'btn', onclick: () => say(lines.join(' ')) }, '🔊 Read it again');
+  api.stage.append(st, h('div', { class: 'storybtns' }, readAgain, go));
+}
+
+// a picture made of emoji placed on a background
+function scene(cls, items, extra) {
+  const el = h('div', { class: 'scene ' + (cls || ''), role: 'img', 'aria-label': items.filter(i => i.label).map(i => i.label).join(', ') });
+  if (extra) extra(el);
+  items.forEach(it => {
+    const s = h('span', { class: 'it ' + (it.cls || ''), style: `left:${it.x}%;top:${it.y}%;font-size:${it.s || 34}px`, 'data-k': it.k || null }, it.e);
+    el.append(s);
+  });
+  return el;
+}
+const lit = (sc, k) => { sc.querySelectorAll('.it').forEach(x => x.classList.toggle('pulse', x.dataset.k === k)); };
+
+/* ================= STOPS ================= */
+
+/* 1 · Under the Cover (page 34, Embark) */
+function playCover(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Look at the first page of the chapter. Something is hiding under the blue cover! What do you think is under it?');
+    const cv = h('div', { class: 'cover', role: 'img', 'aria-label': 'Something under a blue cover' }, h('span', { class: 'hid' }, '📫'), h('div', { class: 'cloth' }));
+    api.stage.append(cv);
+    freeChoice(api.stage, { prompt: 'What is under the cover? Make a guess!', options: ['🎁 A present', '📫 A mailbox', '🐢 A pet', '🧸 A toy box'], onPick: () => {
+      skill('predict');
+      later(() => { cv.classList.add('lift'); sfx.good(); }, 400);
+      api.guide('Great guess! Good readers always make a guess before they read. The book does not tell us the answer. My guess is a mailbox, because this chapter is called “The Letter”!');
+      api.stage.append(info('🔮', 'Readers predict', 'Look at the title and the pictures, then guess what the story will be about.'));
+      api.done();
+    } });
+  } else if (r === 1) {
+    api.guide('Meet the two friends in our story! Frog is green and smooth. Toad is brown and bumpy. They are best friends.');
+    api.stage.append(h('div', { class: 'duo' },
+      h('div', { class: 'who' }, emo('🐸'), 'Frog', h('small', {}, 'green and smooth, kind and full of ideas')),
+      h('div', { class: 'who' }, emo('🐸', 'toad'), 'Toad', h('small', {}, 'brown and bumpy, and a bit grumpy today'))));
+    quiz(api, api.stage, [
+      Q('Tap Toad.', 'Toad', ['Frog'], 'Toad is the brown, bumpy one.', { render: o => RENDER[o]() }),
+      Q('Tap Frog.', 'Frog', ['Toad'], 'Frog is the green one.', { render: o => RENDER[o]() }),
+      Q('Frog and Toad are…', 'best friends', ['brothers', 'enemies'], 'The story comes from a book called “Frog and Toad Are Friends”.'),
+    ], () => api.done());
+  } else {
+    quiz(api, api.stage, [
+      Q('The chapter is called “The Letter”. What do you think the story is about?', 'Someone gets a letter', ['A cricket match', 'A trip to the moon'], 'Look at the title: The Letter.', { g: 'Use the title to predict.' }),
+      Q('What is a letter?', 'A written message you send to someone', ['A kind of food', 'A toy car'], 'You write it on paper and send it.'),
+      Q('Which one is Toad?', 'Toad', ['Frog'], 'Toad is brown and bumpy.', { render: o => RENDER[o]() }),
+    ], () => api.done());
+  }
+}
+
+/* 2 · Toad's Sad Time (page 35) */
+const S2A = ['One day Toad sat on his front porch with his head down. He felt very sad.', 'Frog came by. “What is wrong?” he asked.', 'Toad sighed. “This is my sad time of day,” he said. “It is when I wait for the mail.”'];
+const S2B = ['“Why does that make you sad?” asked Frog.', '“Because I never get any mail,” said Toad. “No one has ever sent me a letter. My mailbox is always empty.”', 'Frog thought for a moment. Someone as nice as Toad should get mail! Then Frog had a wonderful idea, and he hurried home.'];
+function playSad(api) {
+  const r = run.round;
+  if (r === 0) storyRound(api, { lines: S2A, scene: '🏡 TOAD 📪', qs: [
+    Q('Where did Toad sit?', 'On his front porch', ['In his bed', 'Up a tree'], 'Look at the first sentence. A porch is at the front door.'),
+    Q('Toad sighed. What does “sighed” mean?', 'Took a long, deep breath because he felt sad', ['Laughed very loudly', 'Jumped up and down'], 'Tap the blue word “sighed” in the story.'),
+    Q('How did Toad feel?', 'Sad', ['Happy', 'Excited'], 'He sat with his head down.', { skill: 'feel' }),
+  ] });
+  else if (r === 1) storyRound(api, { lines: S2B, scene: '🐸 💭 💡', intro: 'Here is what happened next.', qs: [
+    Q('Why was Toad sad?', 'He never gets any mail', ['He lost his hat', 'It was raining'], 'Toad says: “Because I never get any…”'),
+    Q('What is a mailbox?', 'A box where letters are put and collected', ['A box for toys', 'A lunch box'], 'Tap the blue word “mailbox”.'),
+    Q('What did Frog think?', 'Toad should get mail too', ['Toad is silly', 'Mail is boring'], 'Frog thought: someone as nice as Toad should get mail!'),
+  ] });
+  else storyRound(api, { lines: [...S2A, ...S2B], qs: [
+    Q('Toad\'s mailbox is always…', 'empty', ['full', 'broken'], 'No one has ever sent him a letter.'),
+    Q('Who had a wonderful idea?', 'Frog', ['Toad', 'the snail'], 'The friend who went home in a hurry.', { render: o => RENDER[o]() }),
+    Q('Toad waits for the mail. Why is it his sad time of day?', 'Because nothing ever comes', ['Because it is bedtime', 'Because it is too hot'], 'His mailbox is always empty.'),
+  ] });
+}
+
+/* 3 · Frog's Big Idea (page 36) */
+const S3A = ['At home, Frog sat at his desk and wrote a letter:', '“Dear Toad, I am glad that you are my best friend. Your best friend, Frog.”', 'He folded the letter and put it in an envelope. On the envelope he wrote: “A letter for Toad”.'];
+const S3B = ['Outside, Frog saw a snail. “Please take this letter to Toad\'s house and put it in his mailbox,” said Frog.', '“Right away!” said the snail. And off it went… very, very slowly.', 'Back at Toad\'s house, Toad was in bed, taking a nap. “Get up and wait for the mail a little more,” said Frog. “No,” said Toad. “I am tired of waiting for the mail.”'];
+function playIdea(api) {
+  const r = run.round;
+  if (r === 0) {
+    storyRound(api, { lines: S3A, scene: '🐸 ✍️ 📝 ✉️', qs: [
+      Q('What did Frog write in his letter?', 'I am glad that you are my best friend', ['Please give me a cake', 'I am going on holiday'], 'Read the letter in the story again.'),
+      Q('What is an envelope?', 'A paper cover that a letter goes inside', ['A kind of stamp', 'A pen'], 'Tap the blue word “envelope”.'),
+    ] });
+    const done0 = api.done; // after the questions, build Frog's letter in order
+    api.done = () => { api.done = done0; const box = h('div', { class: 'below' }); api.stage.append(box);
+      api.guide('Now put Frog\'s letter together. Tap the parts in order, from top to bottom.');
+      orderTap(api, box, { prompt: 'Build Frog\'s letter:', items: ['Dear Toad,', 'I am glad that you are my best friend.', 'Your best friend,', 'Frog'], hint: n => ['A letter starts with “Dear” and the name.', 'Next comes the message.', 'Then the goodbye words: Your best friend,', 'Last of all, who wrote it.'][n], onDone: () => { skill('letter'); done0(); } }); };
+  } else if (r === 1) {
+    storyRound(api, { lines: S3B, scene: '🐸 ✉️ 🐌 … 🛏️', intro: 'Who will carry the letter?', qs: [
+      Q('Who carried Frog\'s letter?', 'the snail', ['Frog', 'Toad'], 'Frog asked someone in the garden to take it.', { render: o => RENDER[o]() }),
+      Q('How did the snail go?', 'Very, very slowly', ['Very fast', 'By car'], 'Snails are slow!'),
+      Q('What was Toad doing when Frog came back?', 'Taking a nap in bed', ['Eating lunch', 'Writing a letter'], 'Tap the blue word “nap”.'),
+    ] });
+    const done0 = api.done;
+    api.done = () => { api.done = done0; const box = h('div', { class: 'below' }); api.stage.append(box);
+      api.guide('How did Frog send his letter? Tap the steps in order.');
+      orderTap(api, box, { prompt: 'Sending a letter, step by step:', items: ['Write the letter', 'Fold it', 'Put it in an envelope', 'Write the name on the envelope', 'Give it to the snail'], onDone: () => { skill('order'); done0(); } }); };
+  } else storyRound(api, { lines: [...S3A, ...S3B], qs: [
+    Q('Frog wrote “A letter for Toad” on the…', 'envelope', ['mailbox', 'desk'], 'The paper cover the letter goes inside.'),
+    Q('Toad said, “I am tired of waiting for the…”', 'mail', ['bus', 'rain'], 'He waits every day, but nothing comes.'),
+    Q('Why did Frog want Toad to get up and wait?', 'He knew a letter was coming', ['He wanted to play football', 'It was time for school'], 'Frog had just sent a letter!'),
+  ] });
+}
+
+/* 4 · Waiting at the Window (page 37) */
+const S4 = ['Frog looked out of the window at the mailbox. No snail yet.', '“You never know when someone may send you a letter,” said Frog. “No one will ever send me a letter,” said Toad.', 'Frog looked out of the window again. Still no snail.', '“Don\'t be silly,” said Toad. “No one has sent me a letter before, and no one will today.”', '“Frog, why do you keep looking out of the window?” asked Toad.', '“Because now I am waiting for the mail,” said Frog. “I have sent you a letter!”'];
+function playWindow(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Be Frog! Tap the window to look out for the snail. Look three times.');
+    const sn = h('span', { class: 'sn', style: 'left:4%' }, '🐌');
+    const win = h('button', { type: 'button', class: 'window shut', 'aria-label': 'Look out of the window' }, h('span', { class: 'mb' }, '📫'), sn);
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+    let looks = 0;
+    win.addEventListener('click', () => {
+      if (looks >= 3) return;
+      looks++; win.classList.remove('shut'); sfx.tap(looks);
+      sn.style.left = (4 + looks * 3) + '%';
+      fb.textContent = ['Look 1: the snail is far away…', 'Look 2: the snail moved a tiny bit!', 'Look 3: still a long way to go!'][looks - 1]; fb.className = 'fb';
+      if (looks < 3) later(() => win.classList.add('shut'), 1300);
+      else later(() => quiz(api, api.stage, [
+        Q('Why did Frog keep looking out of the window?', 'He was waiting for the snail with his letter', ['He was watching the birds', 'He wanted to see the rain'], 'Frog said: “Now I am waiting for the mail.”'),
+        Q('Is the snail fast or slow?', 'Very slow', ['Very fast', 'It flies'], 'Look how little it moved!'),
+      ], () => api.done()), 900);
+    });
+    api.stage.append(win, fb);
+  } else if (r === 1) storyRound(api, { lines: S4, scene: '🐸 🪟 TOAD 🛏️', qs: [
+    Q('Toad said, “Don\'t be silly.” What does silly mean?', 'Not serious; a little bit foolish', ['Very clever', 'Very sleepy'], 'Tap the blue word “silly”.'),
+    Q('Did Toad think a letter would come?', 'No, he was sure no letter would come', ['Yes, he was sure', 'He did not care'], 'Toad said: “No one will ever send me a letter.”'),
+    Q('How did Toad find out about the letter?', 'Frog told him', ['The snail told him', 'He saw it in the mailbox'], 'Read the last sentence.'),
+  ] });
+  else {
+    api.guide('Who said it? Was it Frog or Toad? Answer on your own.');
+    const who = { Frog: FROG, Toad: TOAD };
+    quiz(api, api.stage, shuffle([
+      Q('“What is wrong?”', 'Frog', ['Toad'], 'This friend came to help.'),
+      Q('“I am tired of waiting for the mail.”', 'Toad', ['Frog'], 'This friend never gets mail.'),
+      Q('“Don\'t be silly.”', 'Toad', ['Frog'], 'This friend thinks no letter will come.'),
+      Q('“I have sent you a letter!”', 'Frog', ['Toad'], 'This friend wrote the letter.'),
+    ]).map(x => Object.assign(x, { g: 'Who said it?', render: o => who[o](), keep: true, w: x.a === 'Frog' ? ['Toad'] : ['Frog'], skill: 'who' })), () => api.done());
+  }
+}
+
+/* 5 · Four Days Later (page 38 and Real Route) */
+const S5 = ['“You have?” said Toad. “What did you write?”', 'Frog told him: “Dear Toad, I am glad that you are my best friend.”', '“Oh,” said Toad. “That makes a very good letter.”', 'Then Frog and Toad sat on the porch together and waited for the mail. They felt happy.', 'They waited a long time. Four days later, the snail reached Toad\'s house and gave him the letter. Toad was very pleased to have it.'];
+function playFourDays(api) {
+  const r = run.round;
+  if (r === 0) storyRound(api, { lines: S5, scene: '🐸 TOAD 🏡 … 🐌 ✉️', qs: [
+    Q('How many days did the snail take?', 'Four days', ['One day', 'Ten days'], 'Find “days” in the last sentence.'),
+    Q('What does “pleased” mean?', 'Happy and glad', ['Angry', 'Tired'], 'Tap the blue word “pleased”.'),
+    Q('How did Frog and Toad feel while they waited together?', 'Happy', ['Sad', 'Scared'], 'They sat on the porch together…'),
+  ] });
+  else if (r === 1) {
+    api.guide('Can you tell the whole story? Tap what happened, in order.');
+    orderTap(api, api.stage, { prompt: 'The Letter, from start to end:', items: ['Toad is sad. His mailbox is empty.', 'Frog writes Toad a letter.', 'The snail takes the letter… very slowly.', 'Frog and Toad wait on the porch together.', 'Four days later, Toad gets his letter!'], onDone: () => { skill('order'); api.done(); } });
+  } else {
+    api.stage.append(info('🧠', 'Real Route', 'When we get a message or a note, our brain feels happy.'));
+    quiz(api, api.stage, [
+      Q('When we get a note from a friend, our brain feels…', 'happy', ['sleepy', 'angry'], 'Think of how Toad felt.'),
+      Q('Toad felt happy even BEFORE the letter came. Why?', 'He knew his best friend cared about him', ['The snail was fast', 'It was his birthday'], 'Frog told him what the letter said.'),
+      Q('What is the story mostly about?', 'A friend making his sad friend happy', ['How to grow flowers', 'A snail race'], 'Think about what Frog did for Toad.'),
+    ], () => api.done());
+  }
+}
+
+/* 6 · Who Feels This Way? (pages 39 and 41) */
+const FACES = { sad: '😢', worried: '😟', happy: '😊', hopeful: '🤞', excited: '🤩' };
+const faceOpt = o => h('span', { class: 'who' }, h('span', { class: 'face', 'aria-hidden': 'true' }, FACES[o]), o);
+function playFeel(api) {
+  const r = run.round;
+  if (r === 0) {
+    quiz(api, api.stage, [
+      Q('Feeling sad because the mailbox is empty.', 'Toad', ['Frog'], 'Whose mailbox is always empty?', { g: 'Book page 39: tap the friend who feels this way.', render: o => RENDER[o](), keep: true }),
+      Q('Feeling hopeful while waiting.', 'Frog', ['Toad'], 'Hopeful means you think something good may happen. Who knew a letter was coming?', { render: o => RENDER[o](), keep: true }),
+      Q('Feeling happy after getting the letter.', 'Toad', ['Frog'], 'Who got the letter?', { render: o => RENDER[o](), keep: true, skill: 'feel' }),
+    ], () => api.done());
+  } else if (r === 1) {
+    api.guide('Book page 41: the friends do not always SAY how they feel. We can tell from what they DO. Here are five feelings.');
+    api.stage.append(h('div', { class: 'scale' }, Object.keys(FACES).map(k => h('span', {}, h('span', { class: 'face' }, FACES[k]), k))));
+    api.stage.append(info('🤞', 'Hopeful', 'You think something good may happen soon.'));
+    quiz(api, api.stage, [
+      Q('Toad puts his head down.', 'sad', ['excited', 'happy'], 'When do you put your head down?', { g: 'What is the feeling?', render: faceOpt }),
+      Q('Frog looks out of the window again and again.', 'hopeful', ['sad', 'worried'], 'Frog thinks something good is coming: the letter!', { render: faceOpt }),
+      Q('Toad smiles when he gets the letter.', 'happy', ['worried', 'sad'], 'A smile shows…', { render: faceOpt }),
+    ], () => api.done());
+  } else {
+    quiz(api, api.stage, [
+      Q('Frog has a wonderful idea and runs home.', 'excited', ['sad', 'worried'], 'A great idea makes you jump up!', { g: 'What is the feeling?', render: faceOpt }),
+      Q('Toad goes back to bed. He is tired of waiting.', 'sad', ['excited', 'happy'], 'He thinks no letter will ever come.', { render: faceOpt }),
+      Q('Toad says: “No one will ever send me a letter.”', 'sad', ['excited', 'happy'], 'Is that a happy thing to say?', { render: faceOpt }),
+      Q('Frog and Toad sit together on the porch.', 'happy', ['sad', 'worried'], 'The story says they felt…', { render: faceOpt }),
+    ], () => api.done());
+  }
+}
+
+/* 7 · How Long Was the Wait? (page 40) */
+const SCALE = [['very short', '#1FA9E8'], ['short', '#E0198C'], ['medium', '#E52A2A'], ['long', '#11A04A'], ['very long', '#FFC600']];
+const scaleOpt = o => h('span', { class: 'who' }, h('i', { style: `display:block;width:28px;height:28px;border-radius:50%;border:3px solid #1F2A22;background:${SCALE.find(s => s[0] === o)[1]}` }), o);
+function playWait(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Some waits are short and some are long. Let\'s practise with real things first.');
+    api.stage.append(h('div', { class: 'scale' }, SCALE.map(s => h('span', {}, h('i', { style: `background:${s[1]}` }), s[0]))));
+    quiz(api, api.stage, [
+      Q('Waiting for one blink of your eye 😉', 'very short', ['long', 'very long'], 'A blink is over in a moment!', { render: scaleOpt }),
+      Q('Waiting for your birthday to come again 🎂', 'very long', ['very short', 'short'], 'It comes once a year.', { render: scaleOpt }),
+      Q('Which wait was the LONGEST in the story?', 'Waiting for the snail to bring the letter', ['Frog writing the letter', 'Frog folding the letter'], 'It took four whole days!', { g: 'Now the story.' }),
+    ], () => api.done());
+  } else if (r === 1) {
+    const qs = [
+      ['Waiting for the mail on Day 1', 'Toad waits every day and nothing comes, so even one day of waiting feels long to him.'],
+      ['Waiting while the snail walks', 'The snail is very slow, so the wait feels long!'],
+      ['Waiting until the letter arrives', 'Four whole days is a very long wait!'],
+    ];
+    let i = 0;
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    const next = () => {
+      if (i >= qs.length) return api.done();
+      const [q, why] = qs[i++];
+      api.guide(`Book page 40: how long did the wait FEEL? ${q}. There is no wrong answer: choose what you think.`);
+      box.replaceChildren();
+      freeChoice(box, { prompt: q, options: SCALE.map(s => s[0]), render: scaleOpt, onPick: () => { box.append(info('🐌', 'Speedy thinks…', why)); say(why); later(next, 2600); } });
+    };
+    next();
+  } else {
+    api.guide('Snail Speed thinking! In the story the snail is very slow. What if the snail was FAST? Tap ALL the things that would happen, then tap Check.');
+    multiPick(api, api.stage, { prompt: 'If the snail was fast…', options: shuffle(['The story would end very quickly.', 'Frog would not keep looking out of the window.', 'The wait would feel short, not long.', 'The letter would arrive on the same day.', 'Toad would never get the letter.', 'The snail would get lost.']),
+      answers: ['The story would end very quickly.', 'Frog would not keep looking out of the window.', 'The wait would feel short, not long.', 'The letter would arrive on the same day.'],
+      hint: 'There are 4 right ones. A fast snail means everything happens sooner.', onDone: () => { api.stage.append(fact('Slow snail = long wait', 'That is why the story is funny!')); api.done(); } });
+  }
+}
+
+/* 8 · Pigeon to Phone (page 41, Heritage Route) */
+const COMMS = [['🕊️', 'pigeon', 'A bird carried a small note tied to its leg.'], ['✉️', 'letter', 'You write on paper and post it, like Frog.'], ['☎️', 'telephone', 'You talk to someone far away, using a phone with a wire.'], ['📟', 'mobile', 'A phone with no wire that you carry with you.'], ['📱', 'smartphone', 'A phone for calls, messages, photos and video.']];
+const commOpt = o => { const c = COMMS.find(x => x[1] === o); return h('span', { class: 'who' }, emo(c[0]), o); };
+function playPhone(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Heritage Route: how people sent messages long ago, and today. Tap each one to learn about it.');
+    const tl = h('div', { class: 'choices' });
+    const box = h('div', { class: 'below' });
+    let seen = new Set();
+    COMMS.forEach(c => tl.append(h('button', { type: 'button', class: 'choice pic', onclick: () => { seen.add(c[1]); sfx.pop(); box.replaceChildren(info(c[0], c[1], c[2])); say(`${c[1]}. ${c[2]}`); if (seen.size === COMMS.length && !box.dataset.d) { box.dataset.d = 1; later(() => { orderTap(api, api.stage, { prompt: 'Now put them in order, from long ago to today:', items: COMMS.map(c => c[0] + ' ' + c[1]) , onDone: () => { skill('order'); api.done(); } }); api.guide('Now put them in order, from long ago to today.'); }, 1500); } } }, commOpt(c[1]))));
+    api.stage.append(tl, box);
+  } else if (r === 1) {
+    quiz(api, api.stage, [
+      Q('If Frog had a smartphone, how long would Toad wait for his message?', 'A few seconds', ['Four days', 'A whole year'], 'Phone messages arrive straight away.'),
+      Q('Which one carried notes tied to its leg?', 'pigeon', ['telephone', 'smartphone'], 'It is a bird.', { render: commOpt }),
+      Q('Which came first, long ago?', 'letter', ['mobile', 'smartphone'], 'People wrote letters long before phones.', { render: commOpt }),
+    ], () => api.done());
+  } else {
+    quiz(api, api.stage, [
+      Q('You talk using a phone with a wire, at home.', 'telephone', ['pigeon', 'letter'], 'It has a wire.', { g: 'Which one is it?', render: commOpt }),
+      Q('Paper in an envelope, sent by post.', 'letter', ['mobile', 'telephone'], 'Like Frog sent to Toad.', { render: commOpt }),
+      Q('Calls, messages, photos and video.', 'smartphone', ['pigeon', 'letter'], 'The newest one.', { render: commOpt }),
+    ], () => api.done());
+  }
+}
+
+/* 9 · Common or Proper? (page 42) */
+const WS = ['QSUNDARBANS', 'HAPKLTBNCAE', 'IHSJAQWERTA', 'MAFONVCXZFF', 'AFREEDOMKJO', 'LASTRONAUTR', 'APGQGLPEMZE', 'YMARMUCAPES', 'AMNIQMKRJWT', 'SBGJSOQTQYN', 'ARAXTOMHPEG', 'TELESCOPEDA'];
+const WSW = {
+  SUNDARBANS: { r: 0, c: 1, d: 'a', proper: true, clue: 'Across: a mangrove forest in India', show: 'Sundarbans' },
+  FREEDOM: { r: 4, c: 1, d: 'a', clue: 'Across: being able to live without fear', show: 'freedom' },
+  TELESCOPE: { r: 11, c: 0, d: 'a', clue: 'Across: used to see far objects', show: 'telescope' },
+  ASTRONAUT: { r: 5, c: 1, d: 'a', clue: 'Across: a person who travels in space', show: 'astronaut' },
+  HIMALAYAS: { r: 1, c: 0, d: 'd', proper: true, clue: 'Down: very high mountains in India', show: 'Himalayas' },
+  GANGA: { r: 6, c: 2, d: 'd', proper: true, clue: 'Down: a holy river in India', show: 'Ganga' },
+  FOREST: { r: 3, c: 10, d: 'd', clue: 'Down: a large area full of trees', show: 'forest' },
+  EARTH: { r: 6, c: 7, d: 'd', proper: true, clue: 'Down: the planet we live on', show: 'Earth' },
+};
+const cellsOf = (w, x) => Array.from({ length: w.length }, (_, i) => x.d === 'a' ? [x.r, x.c + i] : [x.r + i, x.c]);
+function wordSearch(api, parent, words, onDone) {
+  const grid = h('div', { class: 'ws', role: 'grid', 'aria-label': 'Word search' });
+  const cells = WS.map((row, r) => [...row].map((ch, c) => { const b = h('button', { type: 'button', 'data-rc': r + ',' + c, 'aria-label': ch }, ch); grid.append(b); return b; }));
+  const clue = h('p', { class: 'clue' });
+  const below = h('div', { class: 'below' });
+  const fb = h('p', { class: 'fb', 'aria-live': 'polite' });
+  parent.append(clue, h('div', { class: 'legend' }, h('span', {}, h('i', { style: 'background:#FFE36E' }), 'common noun'), h('span', {}, h('i', { style: 'background:#7FD69A' }), 'proper noun')), grid, fb, below);
+  let wi = 0, first = null, wrongs = 0;
+  const showClue = () => {
+    const w = words[wi], x = WSW[w];
+    clue.textContent = `🔎 ${x.clue} (${w.length} letters)`;
+    api.guide(`${x.clue}. Find the word in the grid: tap its first letter, then its last letter.`);
+    wrongs = 0; fb.textContent = ''; below.replaceChildren();
+  };
+  const clear = () => { cells.flat().forEach(b => b.classList.remove('a', 'hint')); first = null; };
+  grid.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || wi >= words.length || below.childElementCount) return;
+    const [r, c] = b.dataset.rc.split(',').map(Number);
+    if (!first) { first = [r, c]; b.classList.add('a'); sfx.pop(); return; }
+    const w = words[wi], x = WSW[w], want = cellsOf(w, x), s = want[0], t = want[want.length - 1];
+    const hit = (first[0] === s[0] && first[1] === s[1] && r === t[0] && c === t[1]) || (first[0] === t[0] && first[1] === t[1] && r === s[0] && c === s[1]);
+    clear();
+    if (hit) {
+      want.forEach(([rr, cc]) => cells[rr][cc].classList.add('t')); sfx.good(); fb.textContent = `You found ${x.show.toUpperCase()}!`; fb.className = 'fb good';
+      api.guide(`${x.show}! Is it a common noun or a proper noun?`);
+      askChoice(below, { prompt: `Is “${x.show}” a common noun or a proper noun?`, options: ['common noun', 'proper noun'], answer: x.proper ? 'proper noun' : 'common noun',
+        hint: x.proper ? `${x.show} is the special name of ONE place, so it starts with a capital letter.` : `There are lots of ${x.show === 'freedom' ? 'kinds of freedom' : x.show + 's'}. It is not a special name.`,
+        onDone: () => { want.forEach(([rr, cc]) => { cells[rr][cc].classList.remove('t'); cells[rr][cc].classList.add(x.proper ? 'p' : 'c'); }); skill('nouns'); wi++; later(() => { if (wi >= words.length) onDone(); else showClue(); }, 900); } });
+    } else {
+      run.mistakes++; wrongs++; sfx.oops(); fb.textContent = 'That is not the word. Try again!'; fb.className = 'fb oops';
+      if (!run.solo || wrongs >= 2) { cells[s[0]][s[1]].classList.add('hint'); fb.textContent = `Look for the red box: the word starts with ${w[0]} and goes ${x.d === 'a' ? 'across →' : 'down ↓'}.`; }
+    }
+  });
+  showClue();
+}
+function playNouns(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('A noun is a naming word. A common noun names ANY person, place or thing: river, boy, city. A proper noun is a SPECIAL name for one: Ganga, Ayansh, Mumbai. Proper nouns start with a capital letter.');
+    api.stage.append(h('div', { class: 'duo' }, h('div', { class: 'who' }, 'Common noun', h('small', {}, 'river · boy · city · planet')), h('div', { class: 'who' }, 'Proper noun', h('small', {}, 'Ganga · Ayansh · Mumbai · Earth'))));
+    quiz(api, api.stage, [
+      Q('“river”', 'common noun', ['proper noun'], 'There are many rivers. “river” is not a special name.', { g: 'Common or proper?', keep: true }),
+      Q('“Ayansh”', 'proper noun', ['common noun'], 'It is your special name, with a capital A!', { keep: true }),
+      Q('“city”', 'common noun', ['proper noun'], 'There are lots of cities.', { keep: true }),
+      Q('“Mumbai”', 'proper noun', ['common noun'], 'The special name of one city.', { keep: true }),
+    ], () => api.done());
+  } else if (r === 1) wordSearch(api, api.stage, ['SUNDARBANS', 'FREEDOM', 'TELESCOPE', 'ASTRONAUT'], () => api.done());
+  else wordSearch(api, api.stage, ['HIMALAYAS', 'GANGA', 'FOREST', 'EARTH'], () => api.done());
+}
+
+/* 10 · This, That, These, Those (pages 43–44) */
+const TT = ['this', 'that', 'these', 'those'];
+const ttHint = (near, many) => `${near ? 'It is NEAR the boy' : 'It is FAR from the boy'} and there ${many ? 'are MANY' : 'is ONE'}. ${near ? (many ? 'Near + many = these.' : 'Near + one = this.') : (many ? 'Far + many = those.' : 'Far + one = that.')}`;
+function playThis(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('We point with these words. Near and one: THIS. Near and many: THESE. Far and one: THAT. Far and many: THOSE.');
+    api.stage.append(h('div', { class: 'duo' }, h('div', { class: 'who' }, '👇 Near', h('small', {}, 'this (one) · these (many)')), h('div', { class: 'who' }, '👉 Far', h('small', {}, 'that (one) · those (many)'))));
+    const sc = scene('', [
+      { e: '🧒', x: 12, y: 74, s: 54, label: 'a boy' },
+      { e: '⚽', x: 30, y: 84, s: 34, k: 'ball', label: 'a ball near him' },
+      { e: '🌷', x: 44, y: 80, s: 30, k: 'tulips' }, { e: '🌷', x: 52, y: 84, s: 30, k: 'tulips' }, { e: '🌷', x: 60, y: 80, s: 30, k: 'tulips', label: 'three tulips near him' },
+      { e: '🏠', x: 78, y: 30, s: 26, k: 'house', label: 'a house far away' },
+      { e: '🌳', x: 44, y: 30, s: 22, k: 'trees' }, { e: '🌳', x: 54, y: 28, s: 22, k: 'trees', label: 'two trees far away' },
+    ]);
+    api.stage.append(sc);
+    const qs = [['ball', '___ is a ball.', 'This', true, false], ['house', '___ is a house.', 'That', false, false], ['tulips', '___ are tulips.', 'These', true, true], ['trees', '___ are trees.', 'Those', false, true]];
+    quiz(api, api.stage, qs.map(([k, q, a, near, many]) => Q(q, a, TT.map(t => t[0].toUpperCase() + t.slice(1)).filter(t => t !== a), ttHint(near, many), { g: 'Look at the glowing picture.', keep: true, pic: () => { lit(sc, k); return h('span'); }, skill: 'point' })), () => { lit(sc, ''); api.done(); });
+  } else if (r === 1) {
+    api.guide('Book page 43: here is the garden. Make a sentence about it with each word: this, that, these, those.');
+    const sc = scene('', [
+      { e: '🧒', x: 10, y: 78, s: 50 },
+      { e: '⛱️', x: 30, y: 74, s: 40, k: 'umb', label: 'an umbrella near' },
+      { e: '🌼', x: 50, y: 86, s: 26, k: 'fl' }, { e: '🌼', x: 58, y: 82, s: 26, k: 'fl' }, { e: '🌼', x: 66, y: 86, s: 26, k: 'fl', label: 'yellow flowers near' },
+      { e: '🏠', x: 72, y: 32, s: 26, k: 'house', label: 'a house far away' },
+      { e: '☁️', x: 22, y: 14, s: 22, k: 'cl' }, { e: '☁️', x: 40, y: 10, s: 22, k: 'cl', label: 'clouds far away' },
+      { e: '🏊', x: 86, y: 50, s: 22 },
+    ]);
+    api.stage.append(sc);
+    const qs = [['umb', '___ is a big umbrella.', 'This', true, false], ['house', '___ is a purple house.', 'That', false, false], ['fl', '___ are yellow flowers.', 'These', true, true], ['cl', '___ are fluffy clouds.', 'Those', false, true]];
+    quiz(api, api.stage, shuffle(qs).map(([k, q, a, near, many]) => Q(q, a, TT.map(t => t[0].toUpperCase() + t.slice(1)).filter(t => t !== a), ttHint(near, many), { keep: true, pic: () => { lit(sc, k); return h('span'); }, after: hd => hd.append(fact(q.replace('___', a))) })), () => { lit(sc, ''); api.done(); });
+  } else {
+    api.guide('Book page 44: do the OPPOSITE! The sentence says “one thing NEAR the boy”. Tap the part of the picture where the opposite goes.');
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    const tasks = [
+      { say: 'One thing NEAR the boy. Draw the opposite: where does the ball go?', kid: '🧒', thing: '⚽', zone: 'far', word: 'That', hint: 'The opposite of near is far. Tap the far part, at the back.' },
+      { say: 'One thing FAR away from the girl. Draw the opposite: where does the kite go?', kid: '👧', thing: '🪁', zone: 'near', word: 'This', hint: 'The opposite of far is near. Tap the near part, next to the girl.' },
+    ];
+    let i = 0;
+    const next = () => {
+      if (i >= tasks.length) return api.done();
+      const t = tasks[i++]; box.replaceChildren(); api.guide(t.say);
+      let wrongs = 0; const fb = h('p', { class: 'fb', 'aria-live': 'polite' }), hb = h('div', { class: 'below' });
+      const sc = scene('', [{ e: t.kid, x: 14, y: 76, s: 54 }], el => {
+        const mk = (where, top, height, label) => h('button', { type: 'button', class: 'zone', style: `top:${top}%;height:${height}%`, 'aria-label': label, onclick: () => {
+          if (where === t.zone) {
+            sfx.good(); el.querySelectorAll('.zone').forEach(z => z.disabled = true);
+            el.append(h('span', { class: 'it', style: `left:${where === 'far' ? 70 : 34}%;top:${where === 'far' ? 30 : 80}%;font-size:${where === 'far' ? 22 : 40}px` }, t.thing));
+            fb.textContent = 'Yes!'; fb.className = 'fb good'; hb.replaceChildren();
+            askChoice(box, { prompt: `Now the ${t.thing} is ${t.zone} and there is one. Which word?`, options: TT.map(w => w[0].toUpperCase() + w.slice(1)), answer: t.word, hint: ttHint(t.zone === 'near', false), onDone: () => later(next, 900) });
+          } else { run.mistakes++; wrongs++; sfx.oops(); fb.textContent = 'That is the same, not the opposite!'; fb.className = 'fb oops'; const x = wrongHint(wrongs, t.hint); if (x) hb.replaceChildren(x); }
+        } }, label);
+        el.append(mk('far', 0, 55, 'far'), mk('near', 55, 45, 'near'));
+      });
+      box.append(sc, fb, hb);
+    };
+    next();
+  }
+}
+
+/* 11 · Where Is It? position words (page 45) */
+function roomScene() {
+  return scene('room', [
+    { e: '🕰️', x: 50, y: 14, s: 30, k: 'clock', label: 'a clock above the table' },
+    { e: '📕', x: 38, y: 43, s: 30, k: 'book', label: 'a book on the table' },
+    { e: '🪴', x: 62, y: 41, s: 32, k: 'plant', label: 'a plant on the table, next to the book' },
+    { e: '🐱', x: 50, y: 76, s: 34, k: 'cat', label: 'a cat under the table' },
+    { e: '🎒', x: 86, y: 74, s: 34, k: 'bag', label: 'a bag beside the table' },
+    { e: '🪑', x: 12, y: 72, s: 44, k: 'chair', label: 'a chair' },
+    { e: '🧸', x: 12, y: 58, s: 26, k: 'ted', label: 'a teddy on the chair' },
+  ], el => el.append(h('span', { class: 'table' }), h('span', { class: 'leg', style: 'left:29%' }), h('span', { class: 'leg', style: 'left:68%' })));
+}
+const ITEM = { clock: '🕰️ clock', book: '📕 book', plant: '🪴 plant', cat: '🐱 cat', bag: '🎒 bag', ted: '🧸 teddy' };
+function playWhere(api) {
+  const r = run.round;
+  const sc = roomScene(); api.stage.append(sc);
+  if (r === 0) {
+    api.guide('Position words tell us WHERE something is: on, under, above, next to, beside, between, behind, in front of.');
+    quiz(api, api.stage, [
+      Q('Where is the cat?', 'under the table', ['on the table', 'above the table'], 'The cat is below the table top.', { pic: () => { lit(sc, 'cat'); return h('span'); } }),
+      Q('Where is the book?', 'on the table', ['under the table', 'beside the bag'], 'It is sitting on top.', { pic: () => { lit(sc, 'book'); return h('span'); } }),
+      Q('Where is the clock?', 'above the table', ['under the table', 'on the chair'], 'It is high up, over the table.', { pic: () => { lit(sc, 'clock'); return h('span'); } }),
+      Q('Where is the bag?', 'beside the table', ['on the table', 'above the clock'], 'It is next to the table, on the floor.', { pic: () => { lit(sc, 'bag'); return h('span'); }, skill: 'where' }),
+    ], () => { lit(sc, ''); api.done(); });
+  } else if (r === 1) {
+    api.guide('Book page 45 has a riddle: “I am near the teacher and behind the door.” The answer is a door stopper! Now solve my riddles.');
+    const ro = o => h('span', {}, ITEM[o]);
+    quiz(api, api.stage, [
+      Q('I am on the table and next to the plant. What am I?', 'book', ['cat', 'clock'], 'Look on top of the table.', { render: ro }),
+      Q('I am under the table. What am I?', 'cat', ['bag', 'book'], 'Look below the table top.', { render: ro }),
+      Q('I am on the chair. What am I?', 'ted', ['plant', 'bag'], 'Look at the chair.', { render: ro }),
+    ], () => api.done());
+  } else {
+    api.guide('Make your OWN riddle, like the book. Choose a thing in the room.');
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    const TRUE = { plant: [['on the table', 'next to the book'], ['under the table', 'on the chair', 'above the clock']], cat: [['under the table', 'below the clock'], ['on the table', 'on the chair', 'above the clock']], clock: [['above the table', 'above the cat'], ['under the table', 'on the chair', 'next to the bag']], bag: [['beside the table', 'on the floor'], ['on the table', 'above the clock', 'on the chair']] };
+    freeChoice(box, { prompt: 'Which thing is your riddle about?', options: Object.keys(TRUE), render: o => h('span', {}, ITEM[o]), onPick: k => {
+      lit(sc, k);
+      const [yes, no] = TRUE[k]; const got = [];
+      const step = () => {
+        if (got.length === 2) {
+          const riddle = `I am ${got[0]} and ${got[1]}. What am I?`;
+          box.append(fact(riddle, `Answer: the ${ITEM[k].split(' ')[1]}. Ask a grown-up to guess it!`)); say(riddle); skill('where');
+          return api.done();
+        }
+        const opts = shuffle([yes[got.length], ...shuffle(no.slice()).slice(0, 2)]);
+        api.guide(`Clue ${got.length + 1}: which one is TRUE for the ${ITEM[k].split(' ')[1]}?`);
+        askChoice(box, { prompt: `Clue ${got.length + 1}: I am…`, options: opts, answer: yes[got.length], hint: 'Look at the glowing thing in the picture.', onDone: o => { got.push(o); later(step, 700); } });
+      };
+      later(step, 600);
+    } });
+  }
+}
+
+/* 12 · How Does It Look? adjectives of quality (page 45) */
+const KINDS = { size: '📏', colour: '🎨', shape: '🔺', feeling: '😊', taste: '🍋' };
+const kindOpt = o => h('span', { class: 'who' }, emo(KINDS[o]), o);
+function playQuality(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Describing words tell us HOW someone or something is. They are called adjectives. They can tell size, colour, shape, feeling or taste.');
+    api.stage.append(h('div', { class: 'scale' }, Object.keys(KINDS).map(k => h('span', {}, h('span', { class: 'face' }, KINDS[k]), k))));
+    const others = k => shuffle(Object.keys(KINDS).filter(x => x !== k)).slice(0, 2);
+    quiz(api, api.stage, [
+      ['a tiny ant 🐜', 'tiny', 'size'], ['a round ball ⚽', 'round', 'shape'], ['a green frog 🐸', 'green', 'colour'], ['a sleepy koala 🐨', 'sleepy', 'feeling'], ['a sweet mango 🥭', 'sweet', 'taste'],
+    ].map(([phrase, adj, k]) => Q(`“${phrase}”: what does “${adj}” tell us?`, k, others(k), `Is “${adj}” about how big, what colour, what shape, how it feels, or how it tastes?`, { g: 'What kind of describing word?', render: kindOpt, skill: 'describe' })), () => api.done());
+  } else if (r === 1) {
+    const ss = [['Near the shore a [playful] dolphin leaps.', 'How is the dolphin?'], ['In the library corner, the afternoon feels [quiet].', 'How does the afternoon feel?'], ['A [rusty] [old] bicycle stands by the gate.', 'There are TWO describing words here.'], ['Beside me sits an [honest] friend.', 'What kind of friend?']];
+    let i = 0; const box = h('div', { class: 'below' }); api.stage.append(box);
+    const next = () => { if (i >= ss.length) return api.done(); const [s, hnt] = ss[i++]; box.replaceChildren(); api.guide('Book page 45: tap the describing word.', 'Tap the describing word. ' + s.replace(/[\[\]]/g, '')); wordTap(api, box, { sentence: s, hint: hnt, onDone: () => later(next, 900) }); };
+    next();
+  } else {
+    quiz(api, api.stage, [
+      Q('At the start of the story, Toad was a ___ toad.', 'sad', ['fast', 'tiny'], 'How did Toad feel on his porch?', { g: 'Pick the best describing word.' }),
+      Q('The snail was very ___.', 'slow', ['loud', 'sour'], 'It took four days!'),
+      Q('Frog wrote a ___ letter.', 'kind', ['wet', 'square'], 'Frog said Toad was his best friend.'),
+      Q('A lemon 🍋 tastes ___.', 'sour', ['blue', 'tall'], 'This is a taste word.'),
+    ], () => api.done());
+  }
+}
+
+/* 13 · How Many? How Much? adjectives of quantity (page 46) */
+function playQuantity(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Some describing words tell us HOW MANY or HOW MUCH. They are adjectives of quantity: some, many, a few, several, a lot of, a handful.');
+    const ss = ['Hot-air balloons drift over the valley in [large] [numbers].', 'Dugongs can be seen floating in [some] parts of the water.', 'Seashells lie scattered across the beach in [a] [handful].', 'We saw [several] seashells on the beach.'];
+    let i = 0; const box = h('div', { class: 'below' }); api.stage.append(box);
+    const next = () => { if (i >= ss.length) return api.done(); const s = ss[i++]; box.replaceChildren(); api.guide('Book page 46: tap the words that tell how many.', 'Tap the words that tell how many. ' + s.replace(/[\[\]]/g, '')); wordTap(api, box, { sentence: s, hint: 'Look for a number word or an amount word.', onDone: () => { skill('howmany'); later(next, 900); } }); };
+    next();
+  } else if (r === 1) {
+    api.guide('We use adjectives of QUALITY to describe how something is. We use adjectives of QUANTITY to count or measure. Book page 46: a sleepy koala (quality), a lot of plants (quantity).');
+    api.stage.append(h('div', { class: 'duo' }, h('div', { class: 'who' }, emo('🐨'), 'quality', h('small', {}, 'A sleepy koala is hugging a tree.')), h('div', { class: 'who' }, emo('🌿'), 'quantity', h('small', {}, 'There are a lot of plants and trees.'))));
+    quiz(api, api.stage, [['a sleepy koala', 'sleepy', 'quality'], ['a lot of plants', 'a lot of', 'quantity'], ['a few people', 'a few', 'quantity'], ['gloomy weather', 'gloomy', 'quality'], ['a playful dolphin', 'playful', 'quality'], ['several shells', 'several', 'quantity']]
+      .map(([p, w, k]) => Q(`“${p}”: does “${w}” tell how it is, or how many?`, k === 'quality' ? 'quality: how it is' : 'quantity: how many', [k === 'quality' ? 'quantity: how many' : 'quality: how it is'], k === 'quality' ? `“${w}” tells how it is.` : `“${w}” tells how many.`, { keep: true })), () => api.done());
+  } else {
+    quiz(api, api.stage, [
+      Q('There are ___ apples.', 'a few', ['a lot of', 'no'], 'Count them: just two.', { pic: () => fact('🍎 🍎'), g: 'Look and choose.' }),
+      Q('There are ___ apples.', 'a lot of', ['a few', 'no'], 'So many apples!', { pic: () => fact('🍎🍎🍎🍎🍎🍎 🍎🍎🍎🍎🍎🍎 🍎🍎🍎🍎🍎🍎') }),
+      Q('There are ___ biscuits on the plate.', 'no', ['many', 'several'], 'The plate is empty!', { pic: () => fact('🍽️') }),
+      Q('“Toad waited four days.” Which word tells how many?', 'four', ['waited', 'Toad'], 'A number word tells how many.'),
+    ], () => api.done());
+  }
+}
+
+/* 14 · Guess the Close-up (pages 47–48) */
+function zoomPic(e, origin, scale) {
+  const sp = h('span', { 'aria-hidden': 'true', style: `transform:scale(${scale});transform-origin:${origin}` }, e);
+  const el = h('div', { class: 'zoomwrap' }, h('div', { class: 'zoom', role: 'img', 'aria-label': 'A close-up picture' }, sp), 'A close-up!');
+  el.reveal = () => { sp.style.transform = 'scale(1)'; };
+  return el;
+}
+function closeUp(api, { e, origin, scale, name, art, wrong, adj, bad }, done) {
+  const z = zoomPic(e, origin, scale); api.stage.append(z);
+  const box = h('div', { class: 'below' }); api.stage.append(box);
+  api.guide('This is a close-up: we only see a small part! What do you think it is?');
+  askChoice(box, { prompt: 'I think it is…', options: shuffle([name, ...wrong]), answer: name, hint: 'Look at the shape and the colour.', onDone: () => {
+    z.reveal();
+    later(() => {
+      box.replaceChildren(); api.guide(`Yes, ${art} ${name}! Now pick TWO describing words that tell how it looks.`);
+      multiPick(api, box, { prompt: 'It looks… (pick two)', options: shuffle([...adj, ...bad]), answers: adj, need: 2, hint: `Look closely at the ${name}.`, onDone: pk => {
+        const s = `I think it is ${art} ${name} because it looks ${pk[0]} and ${pk[1]}.`;
+        box.append(fact(s)); say(s); skill('describe'); done();
+      } });
+    }, 1300);
+  } });
+}
+function playCloseUp(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.stage.append(info('🦆', 'Book example', 'I think it is a duck because it looks wet and small.'));
+    closeUp(api, { e: '🐘', origin: '38% 30%', scale: 3.6, name: 'elephant', art: 'an', wrong: ['parrot', 'goldfish'], adj: ['grey', 'wrinkly', 'big'], bad: ['fluffy', 'yellow'] }, () => api.done());
+  } else if (r === 1) {
+    if (Math.random() < 0.5) closeUp(api, { e: '☂️', origin: '58% 86%', scale: 3.4, name: 'umbrella', art: 'an', wrong: ['banana', 'snake'], adj: ['curved', 'long', 'shiny'], bad: ['fluffy', 'sweet'] }, () => api.done());
+    else closeUp(api, { e: '📱', origin: '50% 88%', scale: 3.4, name: 'phone', art: 'a', wrong: ['book', 'brick'], adj: ['smooth', 'flat', 'shiny'], bad: ['hairy', 'soft'] }, () => api.done());
+  } else {
+    api.guide('Book page 48: write two sentences, one with a QUALITY word and one with a QUANTITY word. Here is the aquarium.');
+    const sea = scene('sea', [{ e: '🦈', x: 30, y: 30, s: 54, label: 'a big shark' }, ...[[60, 20], [72, 40], [82, 26], [58, 60], [70, 70], [86, 58], [44, 72], [24, 70], [90, 80], [50, 44]].map(([x, y], i) => ({ e: ['🐠', '🐟', '🐡'][i % 3], x, y, s: 22 })), { e: '👧', x: 12, y: 88, s: 30 }, { e: '🧒', x: 22, y: 90, s: 30 }]);
+    api.stage.append(sea);
+    quiz(api, api.stage, [
+      Q('The shark looks ___.', 'big', ['tiny', 'fluffy'], 'Compare the shark with the little fish.', { g: 'Quality: how does it look?', after: hd => hd.append(fact('The shark looks big.')) }),
+      Q('There are ___ fish in the tank.', 'a lot of', ['no', 'one'], 'Count the little fish!', { g: 'Quantity: how many?', after: hd => hd.append(fact('There are a lot of fish in the tank.')) }),
+      Q('The shopkeeper looks ___.', 'cheerful', ['wet', 'sour'], 'He is smiling and waving.', { g: 'Now the shop! Quality:', pic: () => scene('shop', [{ e: '🧑‍🌾', x: 24, y: 50, s: 54, label: 'a smiling shopkeeper' }, { e: '😊', x: 34, y: 22, s: 20 }, ...['🥕', '🥦', '🍅', '🥕', '🥦', '🍅', '🌽', '🍆', '🥔'].map((e, i) => ({ e, x: 52 + (i % 3) * 14, y: 56 + Math.floor(i / 3) * 14, s: 24 }))]) }),
+      Q('There are ___ vegetables.', 'many', ['no', 'one'], 'Look at all the boxes!', { g: 'Quantity:', after: hd => hd.append(fact('There are many vegetables.')) }),
+    ], () => api.done());
+  }
+}
+
+/* 15 · The Eco Map (page 49, Eco Route) */
+function playEco(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Eco Route! Imagine Frog\'s letter did NOT reach Toad. Something in nature stopped it! Every problem has a cause, and the cause has an effect.');
+    api.stage.append(info('🌍', 'Cause → effect', 'The cause is WHY something happens. The effect is WHAT happens.'));
+    quiz(api, api.stage, [
+      Q('Air pollution: the air is full of smoke 🏭. What happened to the letter?', 'The snail could not see the way and got lost', ['The letter came faster', 'The snail grew wings'], 'Smoke makes it hard to see.', { g: 'What happened to the letter?' }),
+      Q('A dirty river: full of rubbish and smelly 🗑️. What happened?', 'The snail could not cross the river with the letter', ['The river cleaned the letter', 'Toad went swimming'], 'Could a snail cross a dirty, smelly river?'),
+      Q('Fewer trees: no shade 🌞. What happened?', 'The hot sun made the snail too tired to go on', ['The snail had a picnic', 'The letter turned into a tree'], 'Trees give shade from the hot sun.', { skill: 'eco' }),
+    ], () => api.done());
+  } else if (r === 1) {
+    api.guide('Every cause has a solution! How can we fix each problem?');
+    quiz(api, api.stage, [
+      Q('How can we fix air pollution?', 'Walk, cycle or share cars, and plant trees', ['Burn more rubbish', 'Leave the car engine on'], 'Less smoke means cleaner air.'),
+      Q('How can we fix a dirty river?', 'Never throw rubbish in the river', ['Throw toys in the river', 'Wash cars in the river'], 'Keep rubbish out of the water.'),
+      Q('How can we fix “fewer trees”?', 'Plant new trees and look after them', ['Cut down more trees', 'Paint the trees blue'], 'More trees, more shade!'),
+    ], () => api.done());
+  } else {
+    quiz(api, api.stage, [
+      Q('If we fix the problem, who does it help?', 'Both nature and people', ['Only people', 'Nobody'], 'Clean air and water help animals AND us.', { g: 'Think and speak.' }),
+      Q('Every problem has a…', 'cause', ['cake', 'colour'], 'Cause → effect.'),
+      Q('Every cause has a…', 'solution', ['secret', 'smell'], 'A way to fix it!'),
+    ], () => {
+      const box = h('div', { class: 'below' }); api.stage.append(box);
+      api.guide('Just like Toad waited for his letter, nature is waiting for our help. What will you do today?');
+      freeChoice(box, { prompt: 'What action will you take today?', options: ['🌱 Water a plant', '🚮 Put rubbish in the bin', '💡 Switch off lights', '🚶 Walk instead of the car'], col: true, onPick: o => { box.append(fact('Eco Message', 'Every problem has a cause. Every cause has a solution, and we are part of it.')); api.done(); } });
+    });
+  }
+}
+
+/* 16 · My Friendship Podcast (page 50) */
+function playPodcast(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('A podcast is a short talk that people listen to. Your topic: A Letter from My Friend. What goes in your podcast? Tap the parts in order.');
+    orderTap(api, api.stage, { prompt: 'My podcast, in order:', items: ['Say “Hello! My name is…”', 'Tell a story about your friend', 'Say why you like friendship', 'End with what your friend means to you'], onDone: () => { skill('speak'); api.done(); } });
+  } else if (r === 1) {
+    api.guide('Let\'s build your podcast script. Choose what YOU want to say.');
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    const lines = ['Hello! My name is Ayansh.'];
+    const steps = [
+      ['Tell a story about your friend:', ['My friend and I built a big sandcastle together.', 'My friend shared his lunch with me when I forgot mine.', 'My friend and I played cricket in the park.']],
+      ['Say why you like friendship:', ['I like friendship because friends make me laugh.', 'Friends help each other when things are hard.', 'With a friend, every game is more fun.']],
+      ['End with what your friend means to you:', ['My friend is like a brother to me.', 'My friend makes every day happy.', 'I am glad that he is my best friend, just like Frog and Toad!']],
+    ];
+    let i = 0;
+    const next = () => {
+      if (i >= steps.length) {
+        box.replaceChildren(h('div', { class: 'lettercard' }, lines.map(l => h('p', {}, l))));
+        const b = h('button', { type: 'button', class: 'btn primary', onclick: () => say(lines.join(' ')) }, '🔊 Hear my podcast');
+        box.append(b, info('🎙️', 'Your turn', 'Now say it out loud to a grown-up. Speak clearly and slowly, like a radio star! The book asks you to record it at home.'));
+        api.guide('Here is your podcast script! Say it out loud to a grown-up.'); return api.done();
+      }
+      const [q, opts] = steps[i++];
+      box.replaceChildren(h('div', { class: 'lettercard' }, lines.map(l => h('p', {}, l))));
+      api.guide(q);
+      freeChoice(box, { prompt: q, options: opts, col: true, onPick: o => { lines.push(o); later(next, 700); } });
+    };
+    next();
+  } else {
+    quiz(api, api.stage, [
+      Q('A podcast is…', 'a short talk that people listen to', ['a kind of food', 'a painting'], 'You listen to it, like a radio show.'),
+      Q('How long should your podcast be?', '1 to 2 minutes', ['1 hour', '5 seconds'], 'The book says 1–2 minutes.'),
+      Q('What do you say first?', 'Hello! My name is…', ['Goodbye!', 'The end.'], 'Start by saying who you are.'),
+      Q('Speaking confidently means…', 'speaking clearly and loudly enough', ['whispering very softly', 'talking very fast'], 'So everyone can hear you!'),
+    ], () => api.done());
+  }
+}
+
+/* 17 · Write a Letter (pages 51–52) */
+const MYLETTER = [
+  ['date', '15 August 2026', 'r'],
+  ['greeting', 'Dear Kabir,'],
+  ['opening line', 'I had the best day today because we flew kites on the roof!'],
+  ['heart of the message', 'My red kite went so high that it looked like a tiny bird. Mum made hot pakoras and we ate them together. I wish you had been there. I hope we can fly kites together soon.'],
+  ['closing', 'Your friend,', 'r'],
+  ['name', 'Ayansh', 'r'],
+];
+function playLetter(api) {
+  const r = run.round;
+  if (r === 0) {
+    api.guide('Book page 51 shows a friendly letter. A letter has parts: the date, a greeting, an opening line, the heart of the message, and a closing. Here is a letter like the one in the book. Tap the part I ask for.');
+    const card = h('div', { class: 'lettercard' });
+    const lines = MYLETTER.map(([k, t, cls]) => { const b = h('button', { type: 'button', class: 'wbtn' + (cls ? ' r' : ''), style: `display:block;width:100%;text-align:${cls ? 'right' : 'left'};font-family:inherit;font-size:inherit`, 'data-k': k }, t); card.append(b); return b; });
+    const box = h('div', { class: 'below' }); api.stage.append(card, box);
+    const asks = shuffle(['date', 'greeting', 'opening line', 'heart of the message', 'closing']);
+    const HINT = { date: 'The date is at the top, on the right.', greeting: 'The greeting says “Dear…”', 'opening line': 'The first sentence after the greeting.', 'heart of the message': 'The biggest part, in the middle.', closing: 'The goodbye words near the end.' };
+    let i = 0, wrongs = 0;
+    const fb = h('p', { class: 'fb', 'aria-live': 'polite' }); const hb = h('div', { class: 'below' }); box.append(fb, hb);
+    const ask = () => { if (i >= asks.length) { skill('letter'); return api.done(); } api.guide(`Tap the ${asks[i]}.`); fb.textContent = `Tap the ${asks[i]}.`; fb.className = 'fb'; wrongs = 0; hb.replaceChildren(); };
+    lines.forEach(b => b.addEventListener('click', () => {
+      if (i >= asks.length) return;
+      if (b.dataset.k === asks[i]) { b.classList.add('found'); sfx.good(); i++; later(ask, 600); fb.textContent = praise(); fb.className = 'fb good'; }
+      else { run.mistakes++; wrongs++; sfx.oops(); b.classList.add('no'); later(() => b.classList.remove('no'), 500); fb.textContent = `That is the ${b.dataset.k}.`; fb.className = 'fb oops'; const x = wrongHint(wrongs, HINT[asks[i]]); if (x) hb.replaceChildren(x); }
+    }));
+    ask();
+  } else if (r === 1) {
+    api.guide('Oh no, this letter got jumbled! Tap the parts in the right order, from top to bottom.');
+    orderTap(api, api.stage, { prompt: 'Fix the letter:', items: ['12 July 2026', 'Dear Ali,', 'I felt so happy today because we went to the park!', 'We raced on the grass and played on the swings. I wish you were there.', 'Your friend,', 'Sara'], hint: n => ['The date comes first.', 'Then the greeting: “Dear…”', 'Then the opening line.', 'Then the heart of the message.', 'Then the closing.', 'Last, the name of the writer.'][n], onDone: () => api.done() });
+  } else {
+    api.guide('Book page 52: now write your OWN letter. Choose a topic.');
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    const TOP = {
+      '🦁 Being brave': { to: ['Dear Dadi,', 'Your friend,', 'I felt scared.'], open: ['I want to tell you about something that scares me.', 'Your loving grandson,', '20 May 2026'], heart: ['I feel scared of the dark at night.', 'To be brave, I switch on a small lamp and take a deep breath.', 'Courage means doing something even when you feel scared.'] },
+      '🤝 A friend who didn\'t share': { to: ['Dear Rohan,', 'Your friend,', 'I felt sad.'], open: ['I want to tell you how I felt at playtime.', 'Your friend,', '20 May 2026'], heart: ['When you did not share the ball, I felt sad and left out.', 'Next time, we can take turns with the ball.', 'I still want to be your friend.'] },
+    };
+    freeChoice(box, { prompt: 'My letter is about…', options: Object.keys(TOP), col: true, onPick: k => {
+      const T = TOP[k], today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const out = [[today, 'r']];
+      const paper = () => h('div', { class: 'lettercard' }, out.map(([t, c]) => h('p', { class: c || '' }, t)));
+      const steps = [
+        ['Start with a greeting:', T.to, T.to[0], 'A greeting starts with “Dear”.'],
+        ['Add an opening line:', T.open, T.open[0], 'The opening line tells what the letter is about.'],
+        ['Write the heart of the message (1):', [T.heart[0], 'Your friend,', 'Dear Mum,'], T.heart[0], 'The heart of the message tells your feelings and ideas.'],
+        ['Write the heart of the message (2):', [T.heart[1], 'Dear Sir,', '12 July 2026'], T.heart[1], 'Keep telling your ideas.'],
+        ['End with a closing:', [k.startsWith('🦁') ? 'Your loving grandson,' : 'Your friend,', 'Dear Rohan,', 'I felt sad.'], k.startsWith('🦁') ? 'Your loving grandson,' : 'Your friend,', 'The closing says goodbye, like “Your friend,”.'],
+      ];
+      let i = 0;
+      const next = () => {
+        if (i >= steps.length) {
+          out.push(['Ayansh', 'r']); box.replaceChildren(paper()); skill('letter');
+          api.guide('Your letter is ready! Copy it into your notebook, or write your own words.');
+          box.append(info('✉️', 'Now write it for real', 'Copy your letter onto the page in your book, then read it aloud.'));
+          return api.done();
+        }
+        const [q, opts, ans, hint] = steps[i++];
+        box.replaceChildren(paper()); api.guide(q);
+        askChoice(box, { prompt: q, options: shuffle(opts.slice()), answer: ans, hint, col: true, onDone: o => { out.push([o, /^Your/.test(o) ? 'r' : '']); later(next, 600); } });
+      };
+      next();
+    } });
+  }
+}
+
+/* 18 · The Whispering Forest (pages 53–54) */
+const S18 = ['Amaan loved walking in the forest behind his house. The trees were tall, and their leaves whispered when the wind blew.', 'One morning he saw tiny footprints on the wet soil. They came from deep in the woods.', 'He followed them carefully. He tried not to step on the soft moss.', 'Then he heard a gentle humming, like someone singing a secret song. The forest felt alive!', 'Amaan\'s heart beat fast. Should he go on, or turn back?', 'In the end, he left a small note on a tree branch for the “forest friend” who made the footprints.'];
+function playForest(api) {
+  const r = run.round;
+  if (r === 0) storyRound(api, { lines: S18, scene: '🌳 🧒 👣 🌲', intro: 'A new story to read on your own: The Whispering Forest.', qs: [
+    Q('Where did Amaan love to walk?', 'In the forest behind his house', ['On the beach', 'In a big shop'], 'Read the first sentence.'),
+    Q('What did he see on the wet soil?', 'Tiny footprints', ['A big ball', 'A lost shoe'], 'Something small that was walking…'),
+    Q('What did the leaves do when the wind blew?', 'They whispered', ['They shouted', 'They turned blue'], 'Tap the blue word “whispered”.'),
+  ] });
+  else if (r === 1) storyRound(api, { lines: S18, intro: 'Let\'s read The Whispering Forest again.', qs: [
+    Q('What did Amaan hear?', 'A gentle humming, like a secret song', ['A loud drum', 'A car horn'], 'Tap the blue word “humming”.'),
+    Q('His heart beat fast. How did he feel?', 'Curious and a little scared', ['Bored', 'Angry'], 'He did not know who was there!', { skill: 'feel' }),
+    Q('What did he leave on the branch?', 'A small note', ['His shoes', 'A sandwich'], 'Read the last sentence.'),
+    Q('How is Amaan like Frog?', 'They both left a note for someone', ['They are both green', 'They are both very slow'], 'Frog wrote a letter. Amaan wrote a…'),
+  ] });
+  else {
+    api.guide('Book page 54: imagine the forest friend! It can be an animal or a magical creature.');
+    const box = h('div', { class: 'below' }); api.stage.append(box);
+    freeChoice(box, { prompt: 'Who is the forest friend?', options: ['🦊 fox', '🦉 owl', '🧚 fairy', '🐉 tiny dragon'], onPick: o => {
+      const [e, name] = o.split(' ').length > 2 ? [o.split(' ')[0], o.split(' ').slice(1).join(' ')] : o.split(' ');
+      box.replaceChildren(fact(e));
+      api.guide(`Now describe your ${name} in 2 or 3 words. Pick only DESCRIBING words!`);
+      const adj = ['tiny', 'fluffy', 'glowing', 'friendly', 'shy', 'magical'], not = ['run', 'tree', 'quickly'];
+      multiPick(api, box, { prompt: `My ${name} is… (pick 2 or 3 describing words)`, options: shuffle([...adj, ...not]), answers: adj, need: 2, hint: '“run” is a doing word, “tree” is a naming word, “quickly” tells how you do something. Describing words tell how it IS.', onDone: pk => {
+        const words = pk.slice(0, 3);
+        const s = `My forest friend is a ${words.length === 3 ? words[0] + ', ' + words[1] + ' and ' + words[2] : words.join(' and ')} ${name}.`;
+        box.append(fact(s)); say(s); skill('describe');
+        later(() => {
+          api.guide('If the forest could talk, what might it say to Amaan?');
+          freeChoice(box, { prompt: 'If the forest could talk, it might say…', options: ['“Welcome, Amaan! Do not be afraid.”', '“Please walk gently on my moss.”', '“Follow the footprints to meet a friend!”'], col: true, onPick: () => { box.append(info('📝', 'Write it in your book', 'Write your answer in your book too, and draw your forest friend!')); api.done(); } });
+        }, 1500);
+      } });
+    } });
+  }
+}
+
+/* 19 · Grand Review */
+const REVIEW = [
+  { part: 1, from: 'Page 35', ...Q('Why was Toad sad at the start?', 'He never gets any mail', ['He lost his hat', 'It was raining'], 'His mailbox is always empty.') },
+  { part: 1, from: 'Page 36', ...Q('Who carried Frog\'s letter?', 'the snail', ['Frog', 'Toad'], 'A very slow animal!', { render: o => RENDER[o]() }) },
+  { part: 1, from: 'Page 38', ...Q('What does “pleased” mean?', 'Happy and glad', ['Angry', 'Sleepy'], 'Toad was very pleased to get his letter.') },
+  { part: 1, from: 'Page 36', ...Q('What did Frog write?', 'I am glad that you are my best friend', ['Please send me a cake', 'I am going away'], 'A kind message for a best friend.') },
+  { part: 1, from: 'Page 38', ...Q('How long did the snail take?', 'Four days', ['One minute', 'One day'], 'A long, long time!') },
+  { part: 2, from: 'Page 41', ...Q('Frog looks out of the window again and again. He feels…', 'hopeful', ['sad', 'worried'], 'He thinks something good is coming.', { render: faceOpt }) },
+  { part: 2, from: 'Page 41', ...Q('Toad smiles when he gets the letter. He feels…', 'happy', ['sad', 'worried'], 'A smile shows…', { render: faceOpt }) },
+  { part: 2, from: 'Page 41', ...Q('Which way of sending messages is the oldest?', 'pigeon', ['smartphone', 'mobile'], 'A bird carried notes long, long ago.', { render: commOpt }) },
+  { part: 2, from: 'Page 40', ...Q('If the snail was fast, the wait would feel…', 'short', ['very long', 'long'], 'Fast snail = quick letter.', { render: scaleOpt }) },
+  { part: 3, from: 'Page 42', ...Q('“Ganga” is a…', 'proper noun', ['common noun'], 'It is the special name of one river.', { keep: true }) },
+  { part: 3, from: 'Page 42', ...Q('“telescope” is a…', 'common noun', ['proper noun'], 'There are lots of telescopes.', { keep: true }) },
+  { part: 3, from: 'Pages 43–44', ...Q('Far away and many: ___ are clouds.', 'Those', ['This', 'These', 'That'], 'Far + many = those.', { keep: true }) },
+  { part: 3, from: 'Pages 43–44', ...Q('Near and one: ___ is my bag.', 'This', ['Those', 'These', 'That'], 'Near + one = this.', { keep: true }) },
+  { part: 3, from: 'Page 45', ...Q('The cat is below the table. The cat is ___ the table.', 'under', ['on', 'above'], 'Below means under.') },
+  { part: 3, from: 'Page 45', ...Q('Which is a describing word (adjective of quality)?', 'playful', ['dolphin', 'leaps'], 'It tells how the dolphin is.') },
+  { part: 3, from: 'Page 46', ...Q('Which word tells how many?', 'several', ['seashells', 'beach'], 'An amount word.') },
+  { part: 4, from: 'Page 49', ...Q('Every cause has a…', 'solution', ['secret', 'smell'], 'A way to fix it.') },
+  { part: 4, from: 'Page 51', ...Q('What comes right after the date in a letter?', 'The greeting: Dear…', ['The closing', 'The name'], 'Date, greeting, opening line…') },
+  { part: 4, from: 'Page 51', ...Q('“Your friend,” is the… of a letter.', 'closing', ['greeting', 'date'], 'The goodbye words near the end.') },
+  { part: 4, from: 'Page 50', ...Q('A podcast starts with…', '“Hello! My name is…”', ['“Goodbye!”', '“The end.”'], 'Say who you are first.') },
+  { part: 5, from: 'Page 53', ...Q('In The Whispering Forest, what did Amaan follow?', 'Tiny footprints', ['A red kite', 'A river'], 'He saw them on the wet soil.') },
+  { part: 5, from: 'Page 53', ...Q('What did Amaan leave on a branch?', 'A small note', ['His shoes', 'A sandwich'], 'Like Frog, he wrote something.') },
+  { part: 5, from: 'Page 53', ...Q('The leaves “whispered”. That means they made…', 'a very soft sound', ['a very loud sound', 'no sound at all'], 'Whispering is very quiet talking.') },
+];
+function playReview(api) {
+  if (!run.qs) { run.qs = []; [1, 2, 3, 4, 5].forEach(p => run.qs.push(...shuffle(REVIEW.filter(q => q.part === p)).slice(0, 2))); shuffle(run.qs); }
+  if (!run.firstTry) run.firstTry = {};
+  const q = run.qs[run.round % run.qs.length], before = run.mistakes;
+  api.stage.append(srctag(`Part ${q.part} · ${q.from}`));
+  quiz(api, api.stage, [q], () => {
+    const t = run.firstTry[q.part] || (run.firstTry[q.part] = [0, 0]); t[1]++; if (run.mistakes === before) t[0]++;
+    api.done();
+  });
+}
+const PART_NAMES = { 1: 'The story', 2: 'Thinking', 3: 'Word power', 4: 'Speaking and writing', 5: 'Reading' };
+function reviewCert() {
+  const ft = run.firstTry || {};
+  const parts = [1, 2, 3, 4, 5].filter(p => ft[p]);
+  const right = parts.reduce((n, p) => n + ft[p][0], 0), total = parts.reduce((n, p) => n + ft[p][1], 0);
+  const weak = parts.filter(p => ft[p][0] < ft[p][1]);
+  return h('div', { class: 'cert' },
+    h('span', { class: 'medal', 'aria-hidden': 'true' }, '🏅'),
+    h('h3', {}, 'Chapter 4 Letter Champion'),
+    h('span', { class: 'who' }, `Awarded to Ayansh · ${right} of ${total} right first time`),
+    h('div', { class: 'partrows' }, parts.map(p => {
+      const [r, n] = ft[p];
+      return h('div', { class: 'partrow' }, h('span', {}, `Part ${p} · ${PART_NAMES[p]}`),
+        h('span', { class: 'minis-ok', 'aria-label': `${r} of ${n} right first time` }, Array.from({ length: n }, (_, i) => h('span', { class: i < r ? '' : 'off' }, '✉️'))));
+    })),
+    h('p', { class: 'note' }, weak.length ? `For extra practice, visit the ${weak.length === 1 ? 'Part ' + weak[0] : 'Parts ' + weak.slice(0, -1).join(', ') + ' and ' + weak[weak.length - 1]} stops again.` : 'Every part right first time. Wah!'));
+}
+
+/* ---------- level engine ---------- */
+const LEVELS = [
+  { id: 1, part: 1, name: 'Under the Cover', idea: 'Embark · predict', page: 'Book page 34', rounds: 3, cut: [0, 1], icon: '🔮', play: playCover },
+  { id: 2, part: 1, name: 'Toad\'s Sad Time', idea: 'The story, part 1', page: 'Book page 35', rounds: 3, cut: [1, 3], icon: '📪', play: playSad },
+  { id: 3, part: 1, name: 'Frog\'s Big Idea', idea: 'The story, part 2', page: 'Book page 36', rounds: 3, cut: [1, 3], icon: '✍️', play: playIdea },
+  { id: 4, part: 1, name: 'Waiting at the Window', idea: 'The story, part 3', page: 'Book page 37', rounds: 3, cut: [1, 3], icon: '🪟', play: playWindow },
+  { id: 5, part: 1, name: 'Four Days Later', idea: 'The story, part 4 · Real Route', page: 'Book page 38', rounds: 3, cut: [1, 3], icon: '💌', play: playFourDays },
+  { id: 6, part: 2, name: 'Who Feels This Way?', idea: 'Feelings', page: 'Book pages 39 and 41', rounds: 3, cut: [1, 3], icon: '😊', play: playFeel },
+  { id: 7, part: 2, name: 'How Long Was the Wait?', idea: 'Snail Speed thinking', page: 'Book page 40', rounds: 3, cut: [1, 3], icon: '🐌', play: playWait },
+  { id: 8, part: 2, name: 'Pigeon to Phone', idea: 'Heritage Route', page: 'Book page 41', rounds: 3, cut: [1, 2], icon: '🕊️', play: playPhone },
+  { id: 9, part: 3, name: 'Common or Proper?', idea: 'Nouns · word search', page: 'Book page 42', rounds: 3, cut: [1, 3], icon: '🔎', play: playNouns },
+  { id: 10, part: 3, name: 'This, That, These, Those', idea: 'Pointing words', page: 'Book pages 43–44', rounds: 3, cut: [1, 3], icon: '👉', play: playThis },
+  { id: 11, part: 3, name: 'Where Is It?', idea: 'Position words', page: 'Book page 45', rounds: 3, cut: [1, 3], icon: '📍', play: playWhere },
+  { id: 12, part: 3, name: 'How Does It Look?', idea: 'Adjectives of quality', page: 'Book page 45', rounds: 3, cut: [1, 3], icon: '🎨', play: playQuality },
+  { id: 13, part: 3, name: 'How Many? How Much?', idea: 'Adjectives of quantity', page: 'Book page 46', rounds: 3, cut: [1, 3], icon: '🍎', play: playQuantity },
+  { id: 14, part: 3, name: 'Guess the Close-up', idea: 'Two describing words', page: 'Book pages 47–48', rounds: 3, cut: [1, 3], icon: '🔍', play: playCloseUp },
+  { id: 15, part: 4, name: 'The Eco Map', idea: 'Eco Route · cause and effect', page: 'Book page 49', rounds: 3, cut: [1, 2], icon: '🌍', play: playEco },
+  { id: 16, part: 4, name: 'My Friendship Podcast', idea: 'Listening and speaking', page: 'Book page 50', rounds: 3, cut: [0, 2], icon: '🎙️', play: playPodcast },
+  { id: 17, part: 4, name: 'Write a Letter', idea: 'Writing', page: 'Book pages 51–52', rounds: 3, cut: [1, 3], icon: '✉️', play: playLetter },
+  { id: 18, part: 5, name: 'The Whispering Forest', idea: 'Reading', page: 'Book pages 53–54', rounds: 3, cut: [1, 3], icon: '🌳', play: playForest },
+  { id: 19, part: 6, name: 'Grand Review', idea: 'Mixed questions', page: 'All of Chapter 4 · pages 34–54', rounds: 10, cut: [1, 3], icon: '🏆', play: playReview, reward: reviewCert },
+];
+const SKILLS = [
+  { k: 'predict', e: '🔮', t: 'Predict' },
+  { k: 'words', e: '📖', t: 'New words' },
+  { k: 'order', e: '🔢', t: 'Story order' },
+  { k: 'feel', e: '💛', t: 'Feelings' },
+  { k: 'who', e: '💬', t: 'Who said it?' },
+  { k: 'nouns', e: '🏷️', t: 'Nouns' },
+  { k: 'point', e: '👉', t: 'This and that' },
+  { k: 'where', e: '📍', t: 'Position words' },
+  { k: 'describe', e: '🎨', t: 'Describing words' },
+  { k: 'howmany', e: '🍎', t: 'How many words' },
+  { k: 'eco', e: '🌍', t: 'Cause and effect' },
+  { k: 'speak', e: '🎙️', t: 'Podcast planner' },
+  { k: 'letter', e: '✉️', t: 'Letter writer' },
+];
+let run = null, cleanups = [], guideText = '';
+const stageEl = $('stage'), foot = $('foot'), bubble = $('bubble');
+const api = {
+  get stage() { return stageEl; },
+  guide: (t, speakText) => { guideText = speakText || t; bubble.textContent = t; speakGuide(guideText); },
+  done: roundDone,
+  cleanup: fn => cleanups.push(fn),
+};
+function runCleanups() { cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = []; }
+const starsFor = (m, cut) => m <= cut[0] ? 3 : m <= cut[1] ? 2 : 1;
+
+function askResume(L) {
+  const r = P.resume;
+  const close = () => overlay.remove();
+  const go = h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(L, r); } }, `Carry on from round ${r.round + 1}`);
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'resTitle' },
+    h('div', { class: 'win card' },
+      h('h2', { id: 'resTitle' }, 'Welcome back!'),
+      h('p', {}, `Last time you finished ${r.round} of ${L.rounds} rounds of ${L.name}.`),
+      h('div', { class: 'winbtns' }, go,
+        h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Start again'))));
+  document.body.append(overlay); go.focus();
+}
+function openLevel(L) {
+  if (P.resume && P.resume.id === L.id && P.resume.round < L.rounds) askResume(L); else startLevel(L);
+}
+function startLevel(L, resume) {
+  runCleanups();
+  run = { lvl: L, round: 0, mistakes: 0 };
+  if (resume) { run.round = resume.round; run.mistakes = resume.mistakes; run.firstTry = resume.ft || {}; }
+  $('map').hidden = true; $('level').hidden = false;
+  $('lvlTitle').textContent = L.name; $('lvlIdea').textContent = `Stop ${L.id} · ${L.page}`;
+  window.scrollTo(0, 0);
+  nextRound();
+}
+function nextRound() {
+  runCleanups();
+  if (run.round >= run.lvl.rounds) return finishLevel();
+  if (run.round > 0) { P.resume = { id: run.lvl.id, round: run.round, mistakes: run.mistakes, ft: run.firstTry || {}, at: Date.now() }; save(); }
+  foot.replaceChildren(); stageEl.replaceChildren();
+  api.done = roundDone;
+  $('dots').replaceChildren(...Array.from({ length: run.lvl.rounds }, (_, i) => h('i', { class: i < run.round ? 'done' : i === run.round ? 'now' : '' })));
+  $('dots').setAttribute('aria-label', `Round ${run.round + 1} of ${run.lvl.rounds}`);
+  if (window.scrollY > 60) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  run.solo = !!run.lvl.reward || (run.lvl.rounds > 1 && run.round === run.lvl.rounds - 1);
+  $('soloTag').hidden = !run.solo;
+  run.lvl.play(api);
+}
+function roundDone() {
+  if (!run) return;
+  const last = run.round + 1 >= run.lvl.rounds;
+  const btn = h('button', { class: 'btn primary big', type: 'button', id: 'nextBtn', onclick: () => { run.round++; nextRound(); } }, last ? 'Finish ★' : 'Next ➜');
+  foot.replaceChildren(btn);
+  setTimeout(() => { btn.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }, 300);
+}
+function finishLevel() {
+  const L = run.lvl, st = starsFor(run.mistakes, L.cut);
+  P.stars[L.id] = Math.max(P.stars[L.id] || 0, st);
+  if (L.id < LEVELS.length) P.unlocked = Math.max(P.unlocked, L.id + 1);
+  if (P.resume && P.resume.id === L.id) P.resume = null;
+  save(true); updateTotal(); foot.replaceChildren();
+  sfx.win(); confetti();
+  const next = LEVELS[L.id];
+  const title = st === 3 ? 'Perfect run!' : st === 2 ? 'Great work!' : 'You did it!';
+  const msg = L.id === 5 ? 'You read the whole story! Part 2 is about thinking and feelings.'
+    : L.id === 8 ? 'You finished Part 2! Part 3 is all about word power.'
+    : L.id === 14 ? 'Word wizard! Part 4 is about nature, speaking and writing.'
+    : L.id === 17 ? 'Lovely letter! Part 5 is a new story to read on your own.'
+    : L.id === 18 ? 'One last stop is open: the Grand Review, with questions from the whole chapter.'
+    : L.id === LEVELS.length ? 'You finished the whole of Chapter 4, Ayansh! Shabash!'
+    : `You finished ${L.name}.${next ? ` Next stop: ${next.name}.` : ''}`;
+  const tip = st < 3 ? 'Play this stop again to win all 3 stars.' : 'No slips at all. Amazing!';
+  const close = () => overlay.remove();
+  const btns = [];
+  if (next) btns.push(h('button', { class: 'btn primary', type: 'button', onclick: () => { close(); startLevel(next); } }, 'Next stop ➜'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); startLevel(L); } }, 'Play again'));
+  btns.push(h('button', { class: 'btn', type: 'button', onclick: () => { close(); showMap(); } }, 'Back to the trail'));
+  const overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'winTitle' },
+    h('div', { class: 'win card' },
+      h('div', { class: 'bigstars', 'aria-label': `${st} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= st ? 'on' : '' }, '★'))),
+      h('h2', { id: 'winTitle' }, title), h('p', {}, msg), L.reward ? L.reward() : null, h('p', { class: 'note' }, tip),
+      h('div', { class: 'winbtns' }, btns)));
+  document.body.append(overlay);
+  btns[0].focus();
+}
+function confetti() {
+  if (reduce) return;
+  const box = h('div', { class: 'confetti', 'aria-hidden': 'true' });
+  const cols = ['#FFC23D', '#D9463B', '#2E9E5B', '#2F6FD0', '#FFFFFF', '#9A6A3A'];
+  for (let i = 0; i < 70; i++) {
+    const p = h('i');
+    p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = Math.random() * 0.5 + 's'; p.style.animationDuration = 1.6 + Math.random() * 1.4 + 's';
+    box.append(p);
+  }
+  document.body.append(box); setTimeout(() => box.remove(), 3600);
+}
+
+/* ---------- map ---------- */
+const totalStars = () => LEVELS.reduce((n, L) => n + (P.stars[L.id] || 0), 0);
+function updateTotal() {
+  $('total').textContent = `★ ${totalStars()} / ${LEVELS.length * 3}`;
+  const done = LEVELS.filter(L => P.stars[L.id]).length;
+  $('heroSnail').style.left = `calc(${Math.round(done / LEVELS.length * 100)}% - ${Math.round(done / LEVELS.length * 30)}px)`;
+}
+const starRow = n => h('span', { class: 'stars', 'aria-label': `${n} of 3 stars` }, [1, 2, 3].map(i => h('span', { class: i <= n ? 'on' : '' }, '★')));
+function renderMap() {
+  const nextId = (LEVELS.find(L => L.id <= P.unlocked && !P.stars[L.id]) || {}).id;
+  const item = (L, i) => {
+    const locked = L.id > P.unlocked, st = P.stars[L.id] || 0, half = P.resume && P.resume.id === L.id;
+    return h('li', { class: 'stop' + (i % 2 ? ' right' : '') },
+      h('button', { class: 'stopbtn', type: 'button', disabled: locked, 'data-stop': String(L.id), onclick: () => openLevel(L), 'aria-label': `Stop ${L.id}: ${L.name}${locked ? ', locked' : `, ${st} stars`}${half ? ', halfway' : ''}` },
+        h('span', { class: 'stopicon', 'aria-hidden': 'true' }, L.icon),
+        h('span', { class: 'stoptext' }, h('span', { class: 'eyebrow' }, `Stop ${L.id} · ${L.idea}`), h('span', { class: 'stopname' }, L.name), h('span', { class: 'page' }, L.page), starRow(st)),
+        locked ? h('span', { class: 'lock', 'aria-hidden': 'true' }, '🔒') : null),
+      half ? h('span', { class: 'halfway', 'aria-hidden': 'true' }, `Round ${P.resume.round + 1} of ${L.rounds}`) : null,
+      L.id === nextId && !half ? h('span', { class: 'playtag', 'aria-hidden': 'true' }, 'Play!') : null);
+  };
+  for (let p = 1; p <= 6; p++) $('stops' + p).replaceChildren(...LEVELS.filter(L => L.part === p).map(item));
+  $('skills').replaceChildren(...SKILLS.map(s => h('div', { class: 'skill' + (skillSet.has(s.k) ? ' got' : '') }, h('span', { class: 'e', 'aria-hidden': 'true' }, s.e), h('span', {}, s.t, skillSet.has(s.k) ? '' : h('span', { class: 'note' }, ' (not yet)')))));
+  const rb = $('resumeBox'), r = P.resume, RL = r && LEVELS[r.id - 1];
+  if (RL && r.round < RL.rounds) {
+    rb.hidden = false;
+    rb.replaceChildren(h('span', {}, `Welcome back! You stopped in the middle of Stop ${RL.id}, ${RL.name}.`),
+      h('button', { class: 'btn primary small', type: 'button', id: 'carryOn', onclick: () => startLevel(RL, r) }, `Carry on from round ${r.round + 1} ➜`));
+  } else rb.hidden = true;
+  $('allDone').hidden = !LEVELS.every(L => P.stars[L.id]);
+  updateTotal();
+}
+function showMap() {
+  runCleanups(); run = null;
+  clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {}
+  $('level').hidden = true; $('map').hidden = false;
+  renderMap(); window.scrollTo(0, 0);
+}
+
+/* ---------- wiring ---------- */
+function syncSound() { const b = $('sound'); b.textContent = P.sound ? '🔊 Sound on' : '🔈 Sound off'; b.setAttribute('aria-pressed', String(P.sound)); }
+$('voice').addEventListener('click', () => { voiceOn = !voiceOn; try { localStorage.setItem(KEY + ':voice', voiceOn ? '1' : '0'); } catch (e) {} syncVoice(); if (!voiceOn) { clearTimeout(speakT); try { canSpeak && speechSynthesis.cancel(); } catch (e) {} } else if (run) speakGuide(guideText); });
+$('sound').addEventListener('click', () => { P.sound = !P.sound; save(); syncSound(); if (P.sound) sfx.pop(); });
+$('back').addEventListener('click', showMap);
+if (canSpeak) $('say').addEventListener('click', () => say(guideText)); else $('say').hidden = true;
+$('unlockAll').addEventListener('click', () => { P.unlocked = LEVELS.length; save(true); renderMap(); $('unlockAll').textContent = 'All stops unlocked'; });
+let resetArmed = null;
+$('resetAll').addEventListener('click', () => {
+  const b = $('resetAll');
+  if (!resetArmed) { b.textContent = 'Tap again to erase all stars'; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = 'Reset progress'; }, 4000); return; }
+  clearTimeout(resetArmed); resetArmed = null;
+  P = { stars: {}, unlocked: 1, skills: [], sound: P.sound, resetAt: Date.now(), resume: null }; skillSet = new Set(); save(true); renderMap();
+  b.textContent = 'Progress cleared';
+});
+
+function boot(data) { load(data); syncSound(); syncVoice(); renderMap(); cloudInit(); }
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') { try { hot.snapshot(() => ({ P: Object.assign({}, current()) })); } catch (e) {} }
+if (hot && typeof hot.ready === 'function') hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>
